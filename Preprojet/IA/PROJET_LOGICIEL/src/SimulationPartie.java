@@ -8,21 +8,25 @@ public class SimulationPartie {
 		
 		Map map;
 		IntelligenceArtificielle IA;
-		Point CoupAJouer;
 		Scanner sc = new Scanner(System.in);
 		Point posJouee= new Point(0,0);
-		boolean TourJoueur = true;
+		boolean TourJoueur = false;
+		int niveauDifficulte = 3; // 1 = facile, 2 = moyen, 3 = difficile
 		
 		if(args.length > 1) // Taille fournie en paramètres
 		{
 			map = new Map(Integer.parseInt(args[0]),Integer.parseInt(args[1]));
+			
+			if(args.length > 2)
+				niveauDifficulte = Integer.parseInt(args[2]);
 		}
 		else
 		{
 			map = new Map(4,4);	
 		}
+		
 			
-		IA = new IntelligenceArtificielle();
+		IA = new IntelligenceArtificielle(niveauDifficulte);
 		
 		while(!partieTerminee(map))
 		{
@@ -59,6 +63,7 @@ public class SimulationPartie {
 			System.out.print("Bravo vous avez gagné !");
 		
 		System.out.println(" Map finale : \n"+map.ToString());
+		sc.close();
 	}
 	
 	public static boolean partieTerminee(Map map)

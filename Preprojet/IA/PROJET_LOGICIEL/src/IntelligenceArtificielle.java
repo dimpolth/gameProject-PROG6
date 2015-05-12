@@ -5,10 +5,43 @@ import java.util.*;
 public class IntelligenceArtificielle {
 	
 	private Map map;
+	private int profondeurMinMax;
+	
 	private static final int MIN = -100;
 	private static final int MAX = 100;
 	
+	/* Niveaux de difficulté de l'IA, plus elle est difficile plus minmax va en profondeur */
+	private static final int profondeurDifficile = 15; 
+	private static final int profondeurMoyen = 2;
+	private static final int profondeurFacile = 1;
 	
+	public IntelligenceArtificielle(int niveauDifficulte)
+	{
+		// On règle la profondeur de l'arbre exploré dans minmax selon le niveau de difficulté
+		switch(niveauDifficulte)
+		{
+			case 1 :
+				this.profondeurMinMax = IntelligenceArtificielle.getProfondeurfacile();
+			break;
+				
+			case 2 :
+				this.profondeurMinMax = IntelligenceArtificielle.getProfondeurmoyen();
+			break;
+			
+			case 3 :
+				this.profondeurMinMax = IntelligenceArtificielle.getProfondeurdifficile();
+			break;
+			
+			default :
+				this.profondeurMinMax = IntelligenceArtificielle.getProfondeurfacile();
+			break;
+		}
+	}
+	
+	/*
+	 * PosGagnante 	: Retourne un point (coup à jouer) parmi les meilleures solutions (ou la meilleure solution)
+	 * 		entrée	: map, la map courante à l'instant t de la partie
+	 */
 	public Point PosGagnante(Map map)
 	{
 		//ArrayList<Point> ListePos = new ArrayList<Point>();
@@ -38,7 +71,7 @@ public class IntelligenceArtificielle {
 			mapClonee =  this.map.clone();
 			mapClonee.mangerPart(pointCourantJoue); // on applique la modification sur une copie de la map de base
 			
-			tmp = Max(mapClonee,1);
+			tmp = Max(mapClonee,this.profondeurMinMax);
 		
 			if(tmp > maxCourant || (tmp >= maxCourant && (nombreAleatoire%2 == 0)))
 			{
@@ -52,13 +85,17 @@ public class IntelligenceArtificielle {
 		
 		return pointGagnant;
 	}
+	
 	/*
-	 * Max : 
-	 * entrées : mapClone, une map modifiée en fonction des coups simulés
+	 * Max		: 
+	 * entrées 	: mapClone, une map modifiée en fonction des coups simulés
 	 * 			 niveau, le niveau de profondeur auquel on se trouve (ex : 3 = 3 coups simulés joués, 2 = 2 coups, etc)
 	 */
 	public int Max(Map mapClone, int niveau)
 	{	
+		if(niveau == 0)
+			return 0;
+		
 		ArrayList<Point> CoupsJouables = new ArrayList<Point>();
 		Iterator<Point> it = null;
 		Point pointCourantJoue = new Point();
@@ -70,7 +107,6 @@ public class IntelligenceArtificielle {
 		if(SimulationPartie.partieTerminee(mapClone))
 			return IntelligenceArtificielle.getMax();
 	
-			
 		else
 		{
 			CoupsJouables = listeCoupsJouables(mapClone);
@@ -82,7 +118,7 @@ public class IntelligenceArtificielle {
 				mapClonee =  mapClone.clone();
 				mapClonee.mangerPart(pointCourantJoue);
 				
-				tmp = Min(mapClonee, niveau+1);
+				tmp = Min(mapClonee, niveau-1);
 				
 				if(tmp < minCourant)
 				{
@@ -94,8 +130,16 @@ public class IntelligenceArtificielle {
 		return minCourant;
 	}
 	
+	/*
+	 * Min		: 
+	 * entrées 	: mapClone, une map modifiée en fonction des coups simulés
+	 * 			 niveau, le niveau de profondeur auquel on se trouve (ex : 3 = 3 coups simulés joués, 2 = 2 coups, etc)
+	 */
 	public int Min(Map mapClone, int niveau)
 	{
+		if(niveau == 0)
+			return 0;
+		
 		ArrayList<Point> CoupsJouables = new ArrayList<Point>();
 		Iterator<Point> it = null;
 		Point pointCourantJoue = new Point();
@@ -123,7 +167,7 @@ public class IntelligenceArtificielle {
 				mapClonee =  mapClone.clone();
 				mapClonee.mangerPart(pointCourantJoue);
 				
-				tmp = Max(mapClonee,niveau+1);
+				tmp = Max(mapClonee,niveau-1);
 				
 				//System.out.println("\tValTmp (Min) = "+tmp + " ; niveau : "+ niveau);
 				
@@ -137,6 +181,10 @@ public class IntelligenceArtificielle {
 		return maxCourant;
 	}
 	
+	/*
+	 * listeCoupsJouables 	: retourne une ArrayList<Point> des coups jouables càd ou la gauffre n'est pas encore mangée
+	 * entrée				: map, la map à l'instant t de la partie
+	 */
 	public ArrayList<Point> listeCoupsJouables(Map map)
 	{
 		ArrayList<Point> CoupsJouables = new ArrayList<Point>();
@@ -148,10 +196,23 @@ public class IntelligenceArtificielle {
 		
 		return CoupsJouables;
 	}
+	
 	public static int getMin() {
 		return MIN;
 	}
 	public static int getMax() {
 		return MAX;
+	}
+
+	public static int getProfondeurdifficile() {
+		return profondeurDifficile;
+	}
+
+	public static int getProfondeurmoyen() {
+		return profondeurMoyen;
+	}
+
+	public static int getProfondeurfacile() {
+		return profondeurFacile;
 	}
 }
