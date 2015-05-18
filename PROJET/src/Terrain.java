@@ -23,4 +23,5 @@ public class Terrain {
 	public void setTableau(Case tableau[][]) {
 		this.tableau = tableau;
 	}
+	
 }
