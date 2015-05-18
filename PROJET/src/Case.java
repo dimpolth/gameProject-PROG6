@@ -31,6 +31,10 @@ public class Case {
 		return this;
 	}
 	
+	ArrayList<Point> getSucc() {
+		return succ;
+	}
+	
 	void initSuccesseurs(){
 		this.succ = new ArrayList<Point>();
 		boolean diagonales = false;

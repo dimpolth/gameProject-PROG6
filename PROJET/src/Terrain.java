@@ -1,4 +1,5 @@
 import java.awt.Point;
+import java.util.ArrayList;
 
 
 public class Terrain {
@@ -42,20 +43,6 @@ public class Terrain {
 	public void setCase(Case.Etat e, int ligne, int colonne) {
 		tableau[ligne][colonne].setOccupation(e);
 	}
-	
-	public void afficherTableau() {
-		for(int ligne = 0 ; ligne < Terrain.LIGNES; ligne++) {
-			for(int colonne = 0 ; colonne < Terrain.COLONNES; colonne++) {
-				if(tableau[ligne][colonne].getOccupation() == Case.Etat.joueur1)
-					System.out.print("1 ");
-				else if(tableau[ligne][colonne].getOccupation() == Case.Etat.joueur2)
-					System.out.print("2 ");
-				else
-					System.out.print("v ");
-			}
-			System.out.println();
-		}
-	}
 
 	public void dessineTableauAvecIntersections()
 	{
@@ -79,6 +66,28 @@ public class Terrain {
 			
 				else 
 					System.out.println("|/|\\|/|\\|/|\\|/|\\|");
+		}
+	}
+	
+	public boolean deplacement(Point depart, Point arrive) {
+		if(tableau[depart.x][depart.y].getOccupation() == Case.Etat.vide) {
+			return false;
+		}
+		else {
+			if(tableau[arrive.x][arrive.y].getOccupation() != Case.Etat.vide) {
+				return false;
+			} else {
+				ArrayList<Point> l = tableau[depart.x][depart.y].getSucc();
+				for(int it = 0; it < l.size(); it++) {
+					Point p = l.get(it);
+					if(arrive.equals(p)) {
+						tableau[arrive.x][arrive.y].setOccupation(tableau[depart.x][depart.y].getOccupation());
+						tableau[depart.x][depart.y].setOccupation(Case.Etat.vide);
+						return true;
+					}
+				}
+				return false;	
+			}
 		}
 	}
 }
