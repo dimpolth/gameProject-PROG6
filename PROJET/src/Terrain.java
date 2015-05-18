@@ -10,8 +10,20 @@ public class Terrain {
 	public Terrain() 
 	{	
 		for(int ligne = 0 ; ligne < Terrain.LIGNES; ligne++)
-			for(int colonne = 0 ; colonne < Terrain.COLONNES; colonne++)
-				this.tableau[ligne][colonne] = new Case(new Point(ligne,colonne));
+			for(int colonne = 0 ; colonne < Terrain.COLONNES; colonne++) {
+				if(ligne == 0 || ligne == 1) 
+					this.tableau[ligne][colonne] = new Case(new Point(ligne,colonne), Case.Etat.joueur1);
+				else if(ligne == 3 || ligne == 4)
+					this.tableau[ligne][colonne] = new Case(new Point(ligne,colonne), Case.Etat.joueur2);
+				else {
+					if(colonne == 0 || colonne == 2 || colonne == 5 || colonne == 7)
+						this.tableau[ligne][colonne] = new Case(new Point(ligne,colonne), Case.Etat.joueur1);
+					else if(colonne == 1 || colonne == 3 || colonne == 6 || colonne == 8)
+						this.tableau[ligne][colonne] = new Case(new Point(ligne,colonne), Case.Etat.joueur2);
+					else
+						this.tableau[ligne][colonne] = new Case(new Point(ligne,colonne), Case.Etat.vide);
+				}
+			}
 			
 		System.out.println("ok");
 	}

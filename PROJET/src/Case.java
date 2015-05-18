@@ -1,21 +1,20 @@
-
 import java.awt.*;
 import java.util.*;
+
 public class Case {
-	private enum Etat {
+	public enum Etat {
 	joueur1,
 	joueur2,
 	vide;
 	}
 	
-	ArrayList<Point> succ;
-	Etat occupation;
-	Point pos;
+	private ArrayList<Point> succ;
+	private Etat occupation;
+	private Point pos;
 	
-	public Case(Point p) {
-		occupation = Etat.vide;
+	public Case(Point p, Etat e) {
+		occupation = e;
 		pos = p;
-		
 		this.initSuccesseurs();
 	}
 
