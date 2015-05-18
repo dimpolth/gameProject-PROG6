@@ -1,5 +1,6 @@
 import java.awt.*;
 import java.util.*;
+
 public class Case {
 	private enum Etat {
 	joueur1,
@@ -7,17 +8,15 @@ public class Case {
 	vide;
 	}
 	
-	ArrayList<Point> succ;
-	Etat occupation;
-	Point pos;
+	private ArrayList<Point> succ;
+	private Etat occupation;
+	private Point pos;
 	
 	Case(Etat e, Point p) {
 		occupation = e;
 		pos = p;
 		succ = new ArrayList<Point>();
-		if(pos.x%2 != 0 && pos.y%2 != 0) {
 		
-		}
 	}
 	
 	Etat getOccupation() {
