@@ -27,6 +27,10 @@ public class Case {
 		occupation = e;
 	}
 	
+	Case getCase() {
+		return this;
+	}
+	
 	void initSuccesseurs(){
 		this.succ = new ArrayList<Point>();
 		boolean diagonales = false;

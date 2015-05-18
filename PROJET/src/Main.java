@@ -7,6 +7,10 @@ public class Main {
 		// le c++ sent la moule !
 		
 		Terrain t = new Terrain();
+		t.afficherTableau();
+		t.setCase(Case.Etat.vide, 3, 8);
+		System.out.println();
+		t.afficherTableau();
 	}
 
 }

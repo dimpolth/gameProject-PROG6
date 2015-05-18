@@ -35,4 +35,26 @@ public class Terrain {
 	public void setTableau(Case tableau[][]) {
 		this.tableau = tableau;
 	}
+	
+	public Case getCase(int ligne, int colonne) {
+		return tableau[ligne][colonne];
+	}
+	
+	public void setCase(Case.Etat e, int ligne, int colonne) {
+		tableau[ligne][colonne].setOccupation(e);
+	}
+	
+	public void afficherTableau() {
+		for(int ligne = 0 ; ligne < Terrain.LIGNES; ligne++) {
+			for(int colonne = 0 ; colonne < Terrain.COLONNES; colonne++) {
+				if(tableau[ligne][colonne].getOccupation() == Case.Etat.joueur1)
+					System.out.print("1 ");
+				else if(tableau[ligne][colonne].getOccupation() == Case.Etat.joueur2)
+					System.out.print("2 ");
+				else
+					System.out.print("v ");
+			}
+			System.out.println();
+		}
+	}
 }
