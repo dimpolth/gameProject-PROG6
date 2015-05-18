@@ -12,15 +12,14 @@ public class Case {
 	Etat occupation;
 	Point pos;
 	
-	Case(Etat e, Point p) {
-		occupation = e;
+	public Case(Point p) {
+		occupation = Etat.vide;
 		pos = p;
-		succ = new ArrayList<Point>();
-		if(pos.x%2 != 0 && pos.y%2 != 0) {
 		
-		}
+		this.initSuccesseurs();
 	}
-	
+
+
 	Etat getOccupation() {
 		return occupation;
 	}
