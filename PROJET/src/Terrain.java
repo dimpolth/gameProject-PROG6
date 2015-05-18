@@ -24,8 +24,6 @@ public class Terrain {
 						this.tableau[ligne][colonne] = new Case(new Point(ligne,colonne), Case.Etat.vide);
 				}
 			}
-			
-		System.out.println("ok");
 	}
 
 	public Case[][] getTableau() {
@@ -36,4 +34,29 @@ public class Terrain {
 		this.tableau = tableau;
 	}
 	
+	public void dessineTableauAvecIntersections()
+	{
+		for(int ligne = 0 ; ligne < Terrain.LIGNES; ligne++){
+			for(int colonne = 0 ; colonne < Terrain.COLONNES; colonne++){
+				if(this.tableau[ligne][colonne].getOccupation() == Case.Etat.joueur1)
+					System.out.print("X");
+				else if(this.tableau[ligne][colonne].getOccupation() == Case.Etat.joueur2)
+					System.out.print("O");
+				else 
+					System.out.print(" ");
+				
+				if(colonne < Terrain.COLONNES - 1)
+					System.out.print("-");
+			}
+			System.out.println();
+			
+			if(ligne < Terrain.LIGNES - 1)
+				if(ligne % 2 == 0)
+					System.out.println("|\\|/|\\|/|\\|/|\\|/|");
+			
+				else 
+					System.out.println("|/|\\|/|\\|/|\\|/|\\|");
+		}
+				
+	}
 }

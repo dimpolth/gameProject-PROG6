@@ -7,6 +7,7 @@ public class Main {
 		// le c++ sent la moule !
 		
 		Terrain t = new Terrain();
+		t.dessineTableauAvecIntersections();
 	}
 
 }
