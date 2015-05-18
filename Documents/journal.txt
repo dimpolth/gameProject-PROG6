@@ -1,0 +1,2 @@
+Lundi 18/05 :
+	-les max et mathieu -> création des structures de base (plateau de jeu)
