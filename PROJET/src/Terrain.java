@@ -22,7 +22,7 @@ public class Terrain {
 	
 	private final static int LIGNES = 5;
 	private final static int COLONNES = 9;
-	private Case tableau[][] = new Case[5][9];
+	public Case tableau[][] = new Case[5][9];
 	private Scanner sc;
 	
 	public Terrain() 
@@ -343,8 +343,7 @@ public class Terrain {
 			return ChoixPrise.parPercussion;
 		else
 			return ChoixPrise.parAspiration;	
-	}
-	
+	}	
 	
 }
 
