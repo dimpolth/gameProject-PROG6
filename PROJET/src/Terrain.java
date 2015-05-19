@@ -67,15 +67,16 @@ public class Terrain {
 				else 
 					System.out.println("|/|\\|/|\\|/|\\|/|\\|");
 		}
+		System.out.println();
 	}
 	
-	public boolean deplacement(Point depart, Point arrive) {
+	public int deplacement(Point depart, Point arrive) {
 		if(tableau[depart.x][depart.y].getOccupation() == Case.Etat.vide) {
-			return false;
+			return 3;
 		}
 		else {
 			if(tableau[arrive.x][arrive.y].getOccupation() != Case.Etat.vide) {
-				return false;
+				return 2;
 			} else {
 				ArrayList<Point> l = tableau[depart.x][depart.y].getSucc();
 				for(int it = 0; it < l.size(); it++) {
@@ -83,11 +84,15 @@ public class Terrain {
 					if(arrive.equals(p)) {
 						tableau[arrive.x][arrive.y].setOccupation(tableau[depart.x][depart.y].getOccupation());
 						tableau[depart.x][depart.y].setOccupation(Case.Etat.vide);
-						return true;
+						return 0;
 					}
 				}
-				return false;	
+				return 1;	
 			}
 		}
+	}
+	
+	public void manger() {
+		
 	}
 }
