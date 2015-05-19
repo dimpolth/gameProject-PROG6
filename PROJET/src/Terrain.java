@@ -1,5 +1,6 @@
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 
 public class Terrain {
@@ -22,6 +23,7 @@ public class Terrain {
 	private final static int LIGNES = 5;
 	private final static int COLONNES = 9;
 	private Case tableau[][] = new Case[5][9];
+	private Scanner sc;
 	
 	public Terrain() 
 	{	
@@ -87,8 +89,8 @@ public class Terrain {
 		System.out.println();
 	}
 	
-	public int deplacement(Point depart, Point arrive) {
-		if(tableau[depart.x][depart.y].getOccupation() == Case.Etat.vide) {
+	public int deplacement(Point depart, Point arrive, Case.Etat joueurCourant) {
+		if(tableau[depart.x][depart.y].getOccupation() != joueurCourant) {
 			return 3;
 		}
 		else {
@@ -133,21 +135,20 @@ public class Terrain {
 		return dir;
 	}
 	
-	public void manger(Case.Etat joueurCourant, Direction dir, Point pDepart, Point pArrivee) {
+	public int manger(Case.Etat joueurCourant, Direction dir, Point pDepart, Point pArrivee) {
 		
 		Case.Etat joueurOppose;
 		Point offsetPercu, offsetAspi;
 		Point pTestOffset = new Point(0,0);
 		boolean priseParPercussion = false, priseParAspiration = false;
-		
+		int nbPionsManges = 0;
 		
 		// On indique dans une variable qui est l'adversaire pour reconnaître ses pions
 		if(joueurCourant == Case.Etat.joueur1)
 			joueurOppose = Case.Etat.joueur2;
 		else if(joueurCourant == Case.Etat.joueur2)
 			joueurOppose = Case.Etat.joueur1;
-		else
-			return;
+		else return 0;
 			
 		// Gestion de l'offset pour une éventuelle prise par percussion
 		offsetPercu = this.offsetPercussion(dir, pArrivee);
@@ -172,23 +173,59 @@ public class Terrain {
 		 */
 		if(priseParAspiration && priseParPercussion){ // Si on a deux types de prise un choix s'impose
 			if(this.choixPrise() == ChoixPrise.parPercussion){
-				this.tableau[pArrivee.x + offsetPercu.x][pArrivee.y + offsetPercu.y].setOccupation(Case.Etat.vide);
-				this.manger(joueurCourant, dir, pDepart, new Point(pArrivee.x + offsetPercu.x,pArrivee.y + offsetPercu.y));
+				nbPionsManges = this.prisePercussion(pArrivee, dir, joueurOppose);
 			}
 			else{
-				this.tableau[pDepart.x + offsetAspi.x][pDepart.y + offsetAspi.y].setOccupation(Case.Etat.vide);
-				this.manger(joueurCourant, dir, new Point(pDepart.x + offsetAspi.x, pDepart.y + offsetAspi.y), pArrivee );
+				nbPionsManges = this.priseAspiration(pDepart, dir, joueurOppose);
 			}
 		}
 		else if(priseParPercussion){ // Sinon on applique la prise selon le seul choix possible
-			this.tableau[pArrivee.x + offsetPercu.x][pArrivee.y + offsetPercu.y].setOccupation(Case.Etat.vide);
-			this.manger(joueurCourant, dir, pDepart, new Point(pArrivee.x + offsetPercu.x,pArrivee.y + offsetPercu.y));
+			nbPionsManges = this.prisePercussion(pArrivee, dir, joueurOppose);
 		}
 		else if(priseParAspiration){
-			this.tableau[pDepart.x + offsetAspi.x][pDepart.y + offsetAspi.y].setOccupation(Case.Etat.vide);
-			this.manger(joueurCourant, dir, new Point(pDepart.x + offsetAspi.x, pDepart.y + offsetAspi.y), pArrivee );
+			nbPionsManges = this.priseAspiration(pDepart, dir, joueurOppose);
 		}
 
+		return nbPionsManges;
+	}
+	
+	/*
+	 * Méthode récursive permettant la prise de pions par percussion et de renvoyer le nombre de pions capturés
+	 * paramètres : - pArrivee, le point précédent le point testé (potentiellement mangé)
+	 * 				- dir, la direction explorée permettant de trouver l'offset nécessaire
+	 * 				- le type de pion du joueur opposé (joueur1 ou joueur2)
+	 */
+	public int prisePercussion(Point pArrivee, Direction dir, Case.Etat joueurOppose){
+	
+		int nbPionsManges = 0;
+		Point offsetPercu = this.offsetPercussion(dir, pArrivee);
+		
+		// Ici si la case suivante à la position d'arrivée est à l'adversaire on a une percussion
+		if(this.tableau[pArrivee.x + offsetPercu.x][pArrivee.y + offsetPercu.y].getCase().getOccupation() == joueurOppose){
+			this.tableau[pArrivee.x + offsetPercu.x][pArrivee.y + offsetPercu.y].setOccupation(Case.Etat.vide);
+			nbPionsManges += 1 + this.prisePercussion(new Point(pArrivee.x + offsetPercu.x,pArrivee.y + offsetPercu.y),dir,joueurOppose);			
+			return nbPionsManges;
+		}
+		
+		return 0;
+	}
+	
+	/*
+	 * Idem à la méthode "prisePercussion" mais adaptée à la prise par aspiration
+	 */
+	public int priseAspiration(Point pDepart, Direction dir, Case.Etat joueurOppose){
+		
+		int nbPionsManges = 0;
+		Point offsetPercu = this.offsetAspiration(dir, pDepart);
+			
+		// Ici si la case suivante à la position d'arrivée est à l'adversaire on a une percussion
+		if(this.tableau[pDepart.x + offsetPercu.x][pDepart.y + offsetPercu.y].getCase().getOccupation() == joueurOppose){
+			this.tableau[pDepart.x + offsetPercu.x][pDepart.y + offsetPercu.y].setOccupation(Case.Etat.vide);
+			nbPionsManges += 1 + this.priseAspiration(new Point(pDepart.x + offsetPercu.x,pDepart.y + offsetPercu.y),dir,joueurOppose);			
+			return nbPionsManges;
+		}
+		
+		return 0;
 	}
 	
 	public Point offsetPercussion(Direction dir, Point pArrivee){
@@ -294,8 +331,18 @@ public class Terrain {
 	}
 	
 	ChoixPrise choixPrise(){
-		System.out.println("Choisissez votre prise.");
-		return ChoixPrise.parPercussion; // prise par percussion
+		sc = new Scanner(System.in);
+		char choixPrise;
+		
+		do{
+			System.out.println("Prise par percussion ? (Y/N) : ");
+			choixPrise = sc.nextLine().charAt(0);
+		}while(choixPrise != 'Y' && choixPrise != 'N');
+		
+		if(choixPrise == 'Y')
+			return ChoixPrise.parPercussion;
+		else
+			return ChoixPrise.parAspiration;	
 	}
 	
 	
