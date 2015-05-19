@@ -1,1 +1,6 @@
-*.class
+Main.java
+/.gitignore
+/Case$Etat.class
+/Case.class
+/Terrain.class
+/Main.class
