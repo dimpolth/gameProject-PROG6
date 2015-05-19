@@ -1,5 +1,6 @@
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Scanner;
 
 
@@ -89,7 +90,16 @@ public class Terrain {
 		System.out.println();
 	}
 	
-	public int deplacement(Point depart, Point arrive, Case.Etat joueurCourant) {
+	public int deplacement(Point depart, Point arrive, Case.Etat joueurCourant, ArrayList<Point> listePredecesseurs) {
+		
+		Iterator<Point> iterator = listePredecesseurs.iterator();
+		
+		while(iterator.hasNext()){
+			Point pNext = iterator.next();
+			if(arrive.equals(pNext))
+				return 4;
+		}
+		
 		if(tableau[depart.x][depart.y].getOccupation() != joueurCourant) {
 			return 3;
 		}
