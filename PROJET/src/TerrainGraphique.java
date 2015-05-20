@@ -22,28 +22,20 @@ public class TerrainGraphique extends JComponent {
 	
 	public void paintComponent(Graphics g) {
 		Graphics2D gra = (Graphics2D) g;
-		/*gra.setColor(Color.red);
-		gra.fillRect(0, 0, getWidth(), getHeight());
-		gra.setColor(Color.white);
-		gra.fillRect(10, 10, getWidth()-20, getHeight()-20);*/
-		int origX = 0, origY = 0, echelle = 0, largeur = getWidth(), hauteur = getHeight();
-		if((double)largeur/(double)hauteur > 1900.0/1100.0) {
-			origX = (int) (((double)largeur - ((double)hauteur * 19.0/11.0))/2.0);
-			largeur = (int) ((double)hauteur*19.0/11.0);
-			echelle = (int) ((double)hauteur/5.5);
+		double largeur = getWidth(), hauteur = getHeight(), echelle = -1, origX = 0, origY = 0;
+		if(largeur/hauteur > 19.0/11.0) {
+			origX = (int)((largeur - (hauteur * 19.0/11.0))/2.0);
+			largeur = hauteur * 19/11;
+			echelle = hauteur/5.5;
 		} else {
-			origY = (int) (((double)hauteur - ((double)largeur * 11.0/19.0))/2.0);
-			hauteur = (int) ((double)largeur * 11.0/19.0);
-			echelle = (int) ((double)largeur/9.5);
+			origY = (int)((hauteur - (largeur * 11.0/19.0))/2.0);
+			hauteur = largeur * 11/19;
+			echelle = largeur/9.5;
 		}
-		gra.drawImage(imgPlateau, origX, origY, largeur, hauteur, null);
-		Random r = new Random();
+		gra.drawImage(imgPlateau, (int)origX, (int)origY, (int)largeur, (int)hauteur, null);
 		for(int i=0 ; i<9 ; i++) {
 			for(int j=0 ; j<5 ; j++) {
-				if(r.nextInt(2) == 10)
-					gra.drawImage(imgPiece1, i*echelle+origX+echelle/2, j*echelle+origY+echelle/2, echelle/2, echelle/2, null);
-				else
-					gra.drawImage(imgPiece2, i*echelle+origX+echelle/2, j*echelle+origY+echelle/2, echelle/2, echelle/2, null);
+				gra.drawImage(imgPiece1, (int)((i+0.5)*echelle+origX), (int)((j+0.5)*echelle+origY), (int)(echelle/2), (int)(echelle/2), null);
 			}
 		}
 	}
