@@ -3,6 +3,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Scanner;
 
+
 public class Terrain {
 	public enum Direction {
 		haut, bas, gauche, droite, hautGauche, hautDroite, basGauche, basDroite
@@ -234,8 +235,7 @@ public class Terrain {
 	public Point offsetPercussion(Direction dir, Point pArrivee) {
 		Point offsetPercu = new Point(0, 0);
 
-		if (pArrivee.x > 0 && pArrivee.x < 4 && pArrivee.y > 0 && pArrivee.y < 8) {
-			switch (dir) { // c'est ce switch qui effectue l'attribution du
+		switch (dir) { // c'est ce switch qui effectue l'attribution du
 							// offset nécessaire
 			case hautGauche:
 				offsetPercu.x = -1;
@@ -276,8 +276,11 @@ public class Terrain {
 				offsetPercu.x = 0;
 				offsetPercu.y = -1;
 				break;
-			}
 		}
+		
+		if( (pArrivee.x + offsetPercu.x) < 0 || (pArrivee.x + offsetPercu.x > 4) || (pArrivee.y + offsetPercu.y < 0) || (pArrivee.y + offsetPercu.y > 8) )
+			return new Point(0,0);
+					
 		return offsetPercu;
 	}
 
@@ -332,6 +335,9 @@ public class Terrain {
 				break;
 			}
 		}
+		if( (pDepart.x + offsetAspi.x) < 0 || (pDepart.x + offsetAspi.x > 4) || (pDepart.y + offsetAspi.y < 0) || (pDepart.y + offsetAspi.y > 8) )
+			return new Point(0,0);
+		
 		return offsetAspi;
 	}
 	/*
