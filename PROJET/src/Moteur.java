@@ -40,4 +40,16 @@ public class Moteur {
 		
 		return listeSucPossibles;
 	}
+	
+	ArrayList<Point> listePionsJouables(Case.Etat joueur){
+		ArrayList<Point> listePions = new ArrayList<Point>();
+		
+		for(int ligne = 0; ligne < 5; ligne++)
+			for(int colonne = 0; colonne < 9; colonne++)
+				if(this.t.tableau[ligne][colonne].getOccupation() == joueur)
+					if(this.deplacementPossible((Point) new Point(ligne,colonne).clone(),new ArrayList<Point>()).size() > 0)
+						listePions.add((Point) new Point(ligne,colonne).clone());
+		
+		return listePions;
+	}
 }

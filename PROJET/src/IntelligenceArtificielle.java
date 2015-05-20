@@ -1,4 +1,6 @@
 import java.awt.Point;
+import java.util.ArrayList;
+import java.util.Random;
 
 
 public class IntelligenceArtificielle {
@@ -9,9 +11,13 @@ public class IntelligenceArtificielle {
 	}
 	
 	private difficulteIA niveauDifficulte;
+	private Case.Etat joueurIA;
+	private Moteur moteur;
 	
-	public IntelligenceArtificielle(difficulteIA niveauDifficulte){
+	public IntelligenceArtificielle(difficulteIA niveauDifficulte, Case.Etat joueurIA, Moteur m){
 		this.setNiveauDifficulte(niveauDifficulte);
+		this.setJoueurIA(joueurIA);
+		this.setMoteur(m);
 	}
 
 	public Point jouerIA(){
@@ -44,6 +50,10 @@ public class IntelligenceArtificielle {
 	 */
 	private Point coupFacile(){
 		Point pSolution = null;
+		ArrayList<Point> listePionsJouables;
+		Random rand = new Random();
+		
+		System.out.println(this.moteur.listePionsJouables(this.joueurIA));
 		
 		return pSolution;
 	}
@@ -72,5 +82,21 @@ public class IntelligenceArtificielle {
 
 	public void setNiveauDifficulte(difficulteIA niveauDifficulte) {
 		this.niveauDifficulte = niveauDifficulte;
+	}
+
+	public Case.Etat getJoueurIA() {
+		return joueurIA;
+	}
+
+	public void setJoueurIA(Case.Etat joueurIA) {
+		this.joueurIA = joueurIA;
+	}
+
+	public Moteur getMoteur() {
+		return moteur;
+	}
+
+	public void setMoteur(Moteur m) {
+		this.moteur = m;
 	}
 }
