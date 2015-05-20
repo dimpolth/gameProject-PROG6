@@ -18,16 +18,15 @@ public class Moteur {
 		h = new Historique();
 	}
 	
-	ArrayList<Point> deplacementPossible (Point p){
+	ArrayList<Point> deplacementPossible (Point p, ArrayList<Point> listePredecesseurs){
 		ArrayList<Point> l = t.tableau[p.x][p.y].getSucc();
 		ArrayList<Point> listeSucPossibles = new ArrayList<Point>();
 		
 		Iterator<Point> it = l.iterator();
-		
-		
+
 		while(it.hasNext()){
 			Point temp = (Point) it.next().clone();
-			if(t.tableau[temp.x][temp.y].getOccupation() == Case.Etat.vide)
+			if(t.tableau[temp.x][temp.y].getOccupation() == Case.Etat.vide && (!listePredecesseurs.contains(temp)))
 				listeSucPossibles.add(temp);
 		}
 		
