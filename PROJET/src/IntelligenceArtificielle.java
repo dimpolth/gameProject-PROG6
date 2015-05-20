@@ -60,24 +60,24 @@ public class IntelligenceArtificielle {
 		
 		listePionsJouables = this.moteur.listePionsJouables(this.joueurIA);
 		
-		/*
-		 * Sélection du point de départ et d'arrivée au hasard
-		 */
-		
-		if(pDep == null){
+		//***** 	Sélection du point de départ et d'arrivée 
+		if(pDep == null){ // Ce cas est présent lors du début de tour d'une IA aucun point de départ imposé
 			do{
 			pDepart = listePionsJouables.get(rand.nextInt(listePionsJouables.size()));
 			listeSuccesseursPionsJouables = this.moteur.deplacementPossible(pDepart, listePredecesseurs);
 			}while(listeSuccesseursPionsJouables.size() <= 0);
 		}
-		else
+		
+					 // Ce cas est donc lors d'un xième coup d'un tour (x > 1) on a un point de départ imposé qui
+		else 		 //	est le point d'arrivée précédent
 			listeSuccesseursPionsJouables = this.moteur.deplacementPossible(pDepart, listePredecesseurs);
 		
 		// Dans le cas ci-dessous on a aucune coup jouable on renvoie donc en pArrivee (-1;-1)
 		if(listeSuccesseursPionsJouables.size() == 0)
 			pArrivee = new Point(-1,-1);
-			
+		
 		pArrivee = listeSuccesseursPionsJouables.get(rand.nextInt(listeSuccesseursPionsJouables.size()));
+		//***** 
 		
 		coupSolution = new Coup(pDepart,pArrivee);
 		

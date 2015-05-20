@@ -398,10 +398,11 @@ public class Terrain {
 			cible.y = depart.y - 2;
 			break;
 		}
-		if (!(cible.x > 4 || cible.x < 0 || cible.y > 8 || cible.y < 0)) {
+		
+		
+		if (!(cible.x > 4 || cible.x < 0 || cible.y > 8 || cible.y < 0)) 
 			b = ((tableau[cible.x][cible.y].getOccupation() != tableau[depart.x][depart.y].getOccupation()) && (tableau[cible.x][cible.y].getOccupation() != Case.Etat.vide));
-			//System.out.println("cible.x " +cible.x+" cible.y "+cible.y);
-		}
+		
 		return b;
 	}
 	
@@ -443,11 +444,9 @@ public class Terrain {
 			cible.y = depart.y+1;
 			break;
 		}
-		if (!(cible.x > 4 || cible.x < 0 || cible.y > 8 || cible.y < 0)) {
+		if (!(cible.x > 4 || cible.x < 0 || cible.y > 8 || cible.y < 0)) 
 			b = ((tableau[cible.x][cible.y].getOccupation() != tableau[depart.x][depart.y].getOccupation()) && (tableau[cible.x][cible.y].getOccupation() != Case.Etat.vide));
-			//System.out.println("cible.x " +cible.x+" cible.y "+cible.y);
-		
-		}
+
 		return b;
 	}
 	
