@@ -21,20 +21,40 @@ public class Historique {
 				histoPrincipal.remove(i);
 			}
 		}
-		histoPrincipal.add(t);
+		Terrain c = new Terrain();
+		for(int i = 0; i < 5; i++) {
+			for(int j = 0; j < 9; j++) {
+				c.tableau[i][j] = t.tableau[i][j];
+			}
+		}
+		histoPrincipal.add(c);
 		itPrincipal = histoPrincipal.size()-1;
+		System.out.println("itprincipal"+itPrincipal);
+		
 	}
 	
 	Terrain annuler() {
 		if(histoPrincipal.isEmpty())
 			return null;
 		else {
-			itPrincipal--;
-			return histoPrincipal.get(itPrincipal+1);
+			return histoPrincipal.get(itPrincipal--);
 		}
 	}
 	
-	void refaire() {
-		
+	Terrain refaire() {
+		if(itPrincipal == histoPrincipal.size()-1)
+			return null;
+		else {
+			return histoPrincipal.get(itPrincipal++);
+		}
+	}
+	
+	void afficher() {
+		System.out.println("----------------");
+		for(int it = 0; it < histoPrincipal.size(); it++) {
+			Terrain tmp = histoPrincipal.get(it);
+			tmp.dessineTableauAvecIntersections();
+		}
+		System.out.println("----------------");
 	}
 }
