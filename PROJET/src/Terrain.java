@@ -154,11 +154,10 @@ public class Terrain {
 		int nbPionsManges = 0;
 		
 		// On indique dans une variable qui est l'adversaire pour reconnaître ses pions
-		if(joueurCourant == Case.Etat.joueur1)
-			joueurOppose = Case.Etat.joueur2;
-		else if(joueurCourant == Case.Etat.joueur2)
-			joueurOppose = Case.Etat.joueur1;
-		else return 0;
+		joueurOppose = Main.recupereJoueurOpposant(joueurCourant, false);
+
+		if(joueurOppose == Case.Etat.vide)
+			return 0;
 			
 		// Gestion de l'offset pour une éventuelle prise par percussion
 		offsetPercu = this.offsetPercussion(dir, pArrivee);
@@ -340,6 +339,10 @@ public class Terrain {
 		return offsetAspi;
 	}
 	
+	/*
+	 * Cette méthode intervient lorsque le joueur peut lors d'un déplacement effectuer soit une prise par 
+	 * percussion soit par aspiration, il doit donc choisir entre une des deux solutions
+	 */
 	ChoixPrise choixPrise(){
 		sc = new Scanner(System.in);
 		char choixPrise;
