@@ -20,49 +20,66 @@ public class IntelligenceArtificielle {
 		this.setMoteur(m);
 	}
 
-	public Point jouerIA(){
+	public Coup jouerIA(ArrayList<Point> listePredecesseurs){
 		
-		Point pSolution;
+		Coup coupSolution;
 		
 		switch(this.getNiveauDifficulte()){
 			case facile :
-				pSolution = this.coupFacile();
+				coupSolution = this.coupFacile(listePredecesseurs);
 			break;
 			
 			case normal :
-				pSolution = this.coupNormal();
+				coupSolution = this.coupNormal(listePredecesseurs);
 			break;
 			
 			case difficile :
-				pSolution = this.coupDifficile();
+				coupSolution = this.coupDifficile(listePredecesseurs);
 			break;
 			
 			default :
-				pSolution = this.coupNormal();
+				coupSolution = this.coupNormal(listePredecesseurs);
 			break;
 		}
 		
-		return pSolution;
+		return coupSolution;
 	}
 	
 	/*
 	 * Applique l'algorithme permettant à l'ordinateur de jouer un coup en difficulté "facile"
 	 */
-	private Point coupFacile(){
-		Point pSolution = null;
-		ArrayList<Point> listePionsJouables;
+	private Coup coupFacile(ArrayList<Point> listePredecesseurs){
+		Coup coupSolution;
+		Point pDepart, pArrivee;
+		
+		ArrayList<Point> listePionsJouables, listeSuccesseursPionsJouables;
 		Random rand = new Random();
 		
-		System.out.println(this.moteur.listePionsJouables(this.joueurIA));
+		listePionsJouables = this.moteur.listePionsJouables(this.joueurIA);
 		
-		return pSolution;
+		/*
+		 * Sélection du point de départ et d'arrivée au hasard
+		 */
+		do{
+		pDepart = listePionsJouables.get(rand.nextInt(listePionsJouables.size()));
+		listeSuccesseursPionsJouables = this.moteur.deplacementPossible(pDepart, listePredecesseurs);
+		}while(listeSuccesseursPionsJouables.size() <= 0);
+		
+		pArrivee = listeSuccesseursPionsJouables.get(rand.nextInt(listeSuccesseursPionsJouables.size()));
+		
+		coupSolution = new Coup(pDepart,pArrivee);
+		
+		
+		System.out.println("IA joue : Depart("+ pDepart.x +";"+ pDepart.y +") -> Arrivee("+ pDepart.x +";"+ pArrivee.y +")");
+		
+		return coupSolution;
 	}
 	
 	/*
 	 * Applique l'algorithme permettant à l'ordinateur de jouer un coup en difficulté "normal"
 	 */
-	private Point coupNormal(){
-		Point pSolution = null;
+	private Coup coupNormal(ArrayList<Point> listePredecesseurs){
+		Coup pSolution = null;
 		
 		return pSolution;
 	}
@@ -70,8 +87,8 @@ public class IntelligenceArtificielle {
 	/*
 	 * Applique l'algorithme permettant à l'ordinateur de jouer un coup en difficulté "difficile"
 	 */
-	private Point coupDifficile(){
-		Point pSolution = null;
+	private Coup coupDifficile(ArrayList<Point> listePredecesseurs){
+		Coup pSolution = null;
 		
 		return pSolution;
 	}
