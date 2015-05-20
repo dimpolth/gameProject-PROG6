@@ -1,8 +1,6 @@
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.*;
 
@@ -41,6 +39,9 @@ public class IHM extends JFrame implements ComponentListener {
 		JButton boutonMenu = new JButton("Menu");
 		boutonMenu.addActionListener(new Ecouteur(Ecouteur.Bouton.MENU, this));
 		panneauMenu.add(boutonMenu);
+		JButton boutonParam= new JButton("Paramétrer");
+		boutonParam.addActionListener(new Ecouteur(Ecouteur.Bouton.PARAMETRES, this));
+		panneauMenu.add(boutonParam);
 		JPanel panneauScore = new JPanel();
 		voletNord.add(panneauScore);
 		JLabel nomJoueur1 = new JLabel("Joueur 1");
@@ -93,10 +94,6 @@ public class IHM extends JFrame implements ComponentListener {
 			break;
 		case CHARGER:
 			break;
-		case OPTIONS:
-			popupM.setVisible(false);
-			popupO.setVisible(true);
-			break;
 		case REGLES:
 			popupM.setVisible(false);
 			popupR.setVisible(true);
@@ -110,18 +107,22 @@ public class IHM extends JFrame implements ComponentListener {
 			popupB.setVisible(true);
 			popupM.setVisible(true);
 			break;
+		case PARAMETRES:
+			popupB.setVisible(true);
+			popupO.setVisible(true);
+			break;
 		case ANNULER:
 			break;
 		case REFAIRE:
 			break;
 		case OPTION_ANNULER:
 			popupO.setVisible(false);
-			popupM.setVisible(true);
+			popupB.setVisible(false);
 			break;
 		case OPTION_VALIDER:
 			//TODO Modifications
 			popupO.setVisible(false);
-			popupM.setVisible(true);
+			popupB.setVisible(false);
 			break;
 		case REGLES_RETOUR:
 			popupR.setVisible(false);
@@ -174,7 +175,7 @@ class PopupBloquant extends JPanel {
 class PopupMenu extends JPanel {
 	public PopupMenu(IHM i) {
 		super();
-		setLayout(new GridLayout(7, 1));
+		setLayout(new GridLayout(6, 1));
 		JButton boutonMenuReprendre = new JButton("Reprendre");
 		boutonMenuReprendre.addActionListener(new Ecouteur(Ecouteur.Bouton.REPRENDRE, i));
 		add(boutonMenuReprendre);
@@ -184,9 +185,6 @@ class PopupMenu extends JPanel {
 		JButton boutonMenuCharger = new JButton("Charger");
 		boutonMenuCharger.addActionListener(new Ecouteur(Ecouteur.Bouton.CHARGER, i));
 		add(boutonMenuCharger);
-		JButton boutonMenuOptions = new JButton("Options");
-		boutonMenuOptions.addActionListener(new Ecouteur(Ecouteur.Bouton.OPTIONS, i));
-		add(boutonMenuOptions);
 		JButton boutonMenuRegles = new JButton("Regles");
 		boutonMenuRegles.addActionListener(new Ecouteur(Ecouteur.Bouton.REGLES, i));
 		add(boutonMenuRegles);
@@ -263,7 +261,7 @@ class PopupRegles extends JPanel {
 }
 
 class Ecouteur implements ActionListener {
-	public enum Bouton {REPRENDRE, SAUVEGARDER, CHARGER, OPTIONS, REGLES, RECOMMENCER, QUITTER, MENU, ANNULER, REFAIRE, OPTION_ANNULER, OPTION_VALIDER, REGLES_RETOUR}
+	public enum Bouton {REPRENDRE, SAUVEGARDER, CHARGER, REGLES, RECOMMENCER, QUITTER, MENU, PARAMETRES, ANNULER, REFAIRE, OPTION_ANNULER, OPTION_VALIDER, REGLES_RETOUR}
 	Bouton id;
 	IHM i;
 	public Ecouteur(Bouton id, IHM i) {
