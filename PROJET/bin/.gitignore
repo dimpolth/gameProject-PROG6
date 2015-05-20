@@ -6,7 +6,18 @@ Main.java
 /Main.class
 /Terrain$Direction.class
 /Terrain$ChoixPrise.class
+/TerrainGraphique.class
 /Historique.class
 /Moteur.class
 /IntelligenceArtificielle.class
 /IntelligenceArtificielle$difficulteIA.class
+/images/
+/Ecouteur$Bouton.class
+/Ecouteur.class
+/IHM.class
+/PopupBloquant$1.class
+/PopupBloquant.class
+/PopupMenu.class
+/PopupOptions.class
+/PopupRegles.class
+>>>>>>> branch 'master' of https://github.com/dimpolth/gameProject-PROG6.git
