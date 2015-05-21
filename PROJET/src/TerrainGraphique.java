@@ -33,6 +33,26 @@ public class TerrainGraphique extends JPanel implements ComponentListener{
 			}
 		}
 	}
+	
+	public void dessinerTerrain( Case[][] c ){
+		
+		Image img;
+		
+		for(int i=0 ; i<5 ; i++) {
+			for(int j=0 ; j<9 ; j++) {
+				if(c[i][j].getOccupation() == Case.Etat.joueur1)
+					img = imgPiece1;
+				else if(c[i][j].getOccupation() == Case.Etat.joueur2)
+					img = imgPiece2;
+				else
+					img = null;
+				pions[i][j] = new Pion(new Point(i,j), img);
+				
+			}
+		}
+		
+		
+	}
 
 	public void deplacer(Point o, Point a) {
 		
@@ -91,7 +111,7 @@ class Pion extends JComponent implements MouseListener, ActionListener {
 		co = p;
 		img = i;
 	}
-	public void paintComponent(Graphics g) {
+	public void paintComponent(Graphics g) {		
 		g.drawImage(img, 0, 0, getWidth(), getHeight(), null);
 	}
 	@Override

@@ -1,11 +1,14 @@
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Point;
 import java.awt.event.*;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 
 @SuppressWarnings("serial")
 public class IHM extends JFrame implements ComponentListener {
@@ -35,9 +38,12 @@ public class IHM extends JFrame implements ComponentListener {
 		coucheJeu = new JPanel(new BorderLayout());
 		coucheJeu.setBounds(0, 0, getSize().width, getSize().height);
 		add(coucheJeu);
-		JPanel voletNord = new JPanel(new BorderLayout());
+		
+		// ZONE NORD
+		JPanel voletNord = new JPanel(new BorderLayout());		
 		coucheJeu.add(voletNord, BorderLayout.NORTH);
 		
+		// Boutons
 		JPanel panneauMenu = new JPanel();
 		voletNord.add(panneauMenu, BorderLayout.NORTH);
 		
@@ -47,22 +53,36 @@ public class IHM extends JFrame implements ComponentListener {
 		Bouton boutonParam= new Bouton("Paramètres");
 		boutonParam.addActionListener(new Ecouteur(Ecouteur.Bouton.PARAMETRES, this));
 		panneauMenu.add(boutonParam);
-		JPanel panneauScore = new JPanel();
+		
+		// Infos partie en cours
+		JPanel panneauScore = new JPanel( new GridBagLayout() );
+		
+		GridBagConstraints contraintes = new GridBagConstraints();		
+	    contraintes.gridwidth = 1;	    
+	    contraintes.fill = GridBagConstraints.BOTH;
+	    contraintes.weightx = 1;
+	    contraintes.weighty = 1;
+	    //contraintes.anchor = GridBagConstraints.CENTER;
+		panneauScore.setBorder(BorderFactory.createLineBorder(Color.black));
 		voletNord.add(panneauScore);
-		JLabel nomJoueur1 = new JLabel("Joueur 1");
-		panneauScore.add(nomJoueur1);
-		JLabel scoreJoueur1 = new JLabel("10");
-		panneauScore.add(scoreJoueur1);
-		JLabel tour = new JLabel("Au tour de Joueur 2");
-		panneauScore.add(tour);
-		JLabel scoreJoueur2 = new JLabel("3");
-		panneauScore.add(scoreJoueur2);
-		JLabel nomJoueur2 = new JLabel("Joueur 2");
-		panneauScore.add(nomJoueur2);
-
+		JLabel nomJoueur1 = new JLabel("Joueur 1",JLabel.CENTER);
+		panneauScore.add(nomJoueur1,contraintes);
+		JLabel scoreJoueur1 = new JLabel("10",JLabel.CENTER);
+		panneauScore.add(scoreJoueur1,contraintes);
+		JLabel tour = new JLabel("Au tour de Joueur 2",JLabel.CENTER);
+		contraintes.weightx = 3;
+		panneauScore.add(tour,contraintes);
+		contraintes.weightx = 1;
+		JLabel scoreJoueur2 = new JLabel("3",JLabel.CENTER);
+		panneauScore.add(scoreJoueur2,contraintes);
+		JLabel nomJoueur2 = new JLabel("Joueur 2",JLabel.CENTER);		
+		panneauScore.add(nomJoueur2,contraintes);
+		
+		// ZONE CENTRE
 		tg = new TerrainGraphique();
-		coucheJeu.add(tg);
-
+		coucheJeu.add(tg, BorderLayout.CENTER);
+		
+		// ZONE SUD
 		JPanel voletSud = new JPanel();
 		coucheJeu.add(voletSud, BorderLayout.SOUTH);
 		Bouton boutonAnnuler = new Bouton("Annuler");
