@@ -2,26 +2,25 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.GridLayout;
+import java.awt.Point;
 import java.awt.event.*;
 
 import javax.swing.*;
 
 @SuppressWarnings("serial")
 public class IHM extends JFrame implements ComponentListener {
-	// Lancement du programme
 	public static void main(String[] args) {
 		IHM m = new IHM();
 		m.setVisible(true);
 	}
 
-	// Variables
 	JPanel coucheJeu;
 	PopupBloquant popupB;
 	PopupMenu popupM;
 	PopupOptions popupO;
 	PopupRegles popupR;
+	TerrainGraphique tg;
 
-	// Constructeur du moteur
 	public IHM() {
 		// Initialisation de la fenêtre
 		super("Fanorona");
@@ -55,7 +54,7 @@ public class IHM extends JFrame implements ComponentListener {
 		JLabel nomJoueur2 = new JLabel("Joueur 2");
 		panneauScore.add(nomJoueur2);
 
-		TerrainGraphique tg = new TerrainGraphique();
+		tg = new TerrainGraphique();
 		coucheJeu.add(tg);
 
 		JPanel voletSud = new JPanel();
@@ -82,6 +81,10 @@ public class IHM extends JFrame implements ComponentListener {
 		popupR.setVisible(false);
 
 		setSize(1000, 750);
+	}
+	
+	public void deplacer(Point o, Point a) {
+		tg.deplacer(o,a);
 	}
 	
 	public void action(Ecouteur.Bouton id) {
@@ -139,7 +142,6 @@ public class IHM extends JFrame implements ComponentListener {
 	public void componentMoved(ComponentEvent e) {
 	}
 
-	// Gestion du redimensionnement de la fenêtre
 	@Override
 	public void componentResized(ComponentEvent e) {
 		coucheJeu.setBounds(0, 0, getWidth(), getHeight());

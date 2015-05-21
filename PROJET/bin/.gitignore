@@ -23,3 +23,5 @@ Main.java
 >>>>>>> branch 'master' of https://github.com/dimpolth/gameProject-PROG6.git
 /Case$Coup.class
 /Coup.class
+/Pion.class
+/TerrainGraphique$Pion.class
