@@ -46,10 +46,12 @@ public class Historique {
 	
 	void afficher() {
 		System.out.println("----------------");
-		for(int it = 0; it < histoPrincipal.size(); it++) {
-			Terrain tmp = histoPrincipal.get(it);
+		//for(int it = 0; it < histoPrincipal.size(); it++) {
+			//Terrain tmp = histoPrincipal.get(it);
+			Terrain tmp = histoPrincipal.get(itPrincipal);
 			tmp.dessineTableauAvecIntersections();
-		}
+		//}
 		System.out.println("----------------");
 	}
+	
 }
