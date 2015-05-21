@@ -365,13 +365,13 @@ public class Terrain {
 	ChoixPrise choixPrise(){
 
 		sc = new Scanner(System.in);
-		char choixPrise;
+		char choixPrise = 'Y';
 
 		do {
 			System.out.println("Prise par percussion ? (Y/N) : ");
 			choixPrise = sc.nextLine().charAt(0);
 		} while (choixPrise != 'Y' && choixPrise != 'N');
-
+		
 		if (choixPrise == 'Y')
 			return ChoixPrise.parPercussion;
 		else
