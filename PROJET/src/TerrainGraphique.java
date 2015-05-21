@@ -18,9 +18,10 @@ public class TerrainGraphique extends JPanel implements ComponentListener{
 	Pion[][] pions;
 	Image imgPiece1;
 	Image imgPiece2;
-
+	IHM ihm;
 	public TerrainGraphique() {
 		super(null);
+		
 		addComponentListener(this);
 		imgPlateau = new ImageIcon("images/plateau.png").getImage();
 		imgPiece1 = new ImageIcon("images/pionBlanc.png").getImage();
@@ -46,10 +47,12 @@ public class TerrainGraphique extends JPanel implements ComponentListener{
 					img = imgPiece2;
 				else
 					img = null;
-				pions[i][j] = new Pion(new Point(i,j), img);
 				
+				pions[i][j].setImage(img);
+				pions[i][j].repaint();
 			}
 		}
+	
 		
 		
 	}
@@ -109,6 +112,10 @@ class Pion extends JComponent implements MouseListener, ActionListener {
 	Pion(Point p, Image i) {
 		addMouseListener(this);
 		co = p;
+		img = i;
+	}
+	
+	public void setImage(Image i){
 		img = i;
 	}
 	public void paintComponent(Graphics g) {		

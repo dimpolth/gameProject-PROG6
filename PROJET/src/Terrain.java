@@ -89,7 +89,7 @@ public class Terrain {
 	}
 
 
-	public int deplacement(Point depart, Point arrive, Case.Etat joueurCourant, ArrayList<Point> listePredecesseurs) {
+	public int deplacement(Point depart, Point arrive, Joueur joueurCourant, ArrayList<Point> listePredecesseurs) {
 
 		Iterator<Point> iterator = listePredecesseurs.iterator();
 
@@ -101,7 +101,7 @@ public class Terrain {
 			}
 
 
-		if (tableau[depart.x][depart.y].getOccupation() != joueurCourant) {
+		if (tableau[depart.x][depart.y].getOccupation() != joueurCourant.getJoueurID()) {
 			return 3;
 		} else {
 			if (tableau[arrive.x][arrive.y].getOccupation() != Case.Etat.vide) {
@@ -147,7 +147,7 @@ public class Terrain {
 		return dir;
 	}
 
-	public int manger(Case.Etat joueurCourant, Direction dir, Point pDepart, Point pArrivee, ArrayList<Point> listePionsManges) {
+	public int manger(Joueur joueurCourant, Direction dir, Point pDepart, Point pArrivee, ArrayList<Point> listePionsManges) {
 
 		Case.Etat joueurOppose;
 		Point offsetPercu, offsetAspi;
@@ -157,9 +157,9 @@ public class Terrain {
 
 		// On indique dans une variable qui est l'adversaire pour reconnaître ses pions
 		
-		if (joueurCourant == Case.Etat.joueur1)
+		if (joueurCourant.getJoueurID() == Case.Etat.joueur1)
 			joueurOppose = Case.Etat.joueur2;
-		else if (joueurCourant == Case.Etat.joueur2)
+		else if (joueurCourant.getJoueurID() == Case.Etat.joueur2)
 			joueurOppose = Case.Etat.joueur1;
 		else
 			return 0;
@@ -190,7 +190,7 @@ public class Terrain {
 		if (priseParAspiration && priseParPercussion) { // Si on a deux types de
 														// prise un choix
 														// s'impose
-			if (this.choixPrise() == ChoixPrise.parPercussion) {
+			if (this.choixPriseHumain() == ChoixPrise.parPercussion) {
 				this.prisePercussion(pArrivee, dir, joueurOppose, listePionsManges);
 			} else {
 				this.priseAspiration(pDepart, dir, joueurOppose, listePionsManges);
@@ -223,8 +223,7 @@ public class Terrain {
 		if (this.tableau[pArrivee.x + offsetPercu.x][pArrivee.y + offsetPercu.y].getCase().getOccupation() == joueurOppose) {
 			this.tableau[pArrivee.x + offsetPercu.x][pArrivee.y + offsetPercu.y].setOccupation(Case.Etat.vide);
 			this.prisePercussion(new Point(pArrivee.x + offsetPercu.x, pArrivee.y + offsetPercu.y), dir, joueurOppose,listePionsManges);
-			listePionsManges.add(new Point((pArrivee.x + offsetPercu.x),(pArrivee.y + offsetPercu.y)));
-			
+			listePionsManges.add(new Point((pArrivee.x + offsetPercu.x),(pArrivee.y + offsetPercu.y)));		
 		}
 
 	}
@@ -362,14 +361,14 @@ public class Terrain {
 	 * Cette méthode intervient lorsque le joueur peut lors d'un déplacement effectuer soit une prise par 
 	 * percussion soit par aspiration, il doit donc choisir entre une des deux solutions
 	 */
-	ChoixPrise choixPrise(){
+	ChoixPrise choixPriseHumain(){
 
-		sc = new Scanner(System.in);
+		this.sc = new Scanner(System.in);
 		char choixPrise = 'Y';
 
 		do {
 			System.out.println("Prise par percussion ? (Y/N) : ");
-			choixPrise = sc.nextLine().charAt(0);
+			choixPrise = this.sc.nextLine().charAt(0);
 		} while (choixPrise != 'Y' && choixPrise != 'N');
 		
 		if (choixPrise == 'Y')
@@ -469,7 +468,7 @@ public class Terrain {
 
 
 
-	ArrayList<Point> couplibre(Case.Etat e) {
+	ArrayList<Point> couplibre(Joueur joueurCourant) {
 		ArrayList<Point> reponse = new ArrayList<Point>();
 	
 		for (int x = 0; x < 5; x++) {
@@ -483,7 +482,7 @@ public class Terrain {
 	
 					Point pointSucc = c.getSucc().get(z);
 					Direction d = recupereDirection(c.getPos(), pointSucc);
-					if (c.getOccupation() == e) {
+					if (c.getOccupation() == joueurCourant.getJoueurID()) {
 						if ((estUnePriseAspiration(c.getPos(), d) || estUnePrisePercussion(c.getPos(), d)) && (tableau[pointSucc.x][pointSucc.y].getOccupation() == Case.Etat.vide)) {
 							reponse.add(c.getPos());
 							drap = false;

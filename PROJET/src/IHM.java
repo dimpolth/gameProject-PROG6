@@ -17,7 +17,6 @@ public class IHM extends JFrame implements ComponentListener {
 		IHM m = new IHM();
 		m.setVisible(true);
 		
-
 	}
 	
 	Theme theme;
@@ -113,6 +112,7 @@ public class IHM extends JFrame implements ComponentListener {
 		theme.setTheme(Theme.Type.BOIS);
 
 		setSize(1000, 750);
+		setVisible(true);
 	}
 	
 	public void deplacer(Point o, Point a) {
