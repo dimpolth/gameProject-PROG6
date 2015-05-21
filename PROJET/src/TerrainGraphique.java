@@ -1,6 +1,8 @@
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.MouseEvent;
@@ -81,7 +83,7 @@ public class TerrainGraphique extends JPanel implements ComponentListener{
 }
 
 @SuppressWarnings("serial")
-class Pion extends JComponent implements MouseListener {
+class Pion extends JComponent implements MouseListener, ActionListener {
 	private Image img;
 	protected Point co;
 	Pion(Point p, Image i) {
@@ -108,5 +110,8 @@ class Pion extends JComponent implements MouseListener {
 	public void mouseReleased(MouseEvent e) {
 		if(e.getX()  >= 0 && e.getX() < getHeight() && e.getY() >= 0 && e.getY() < getHeight())
 			System.out.println(co.x+"-"+co.y);
+	}
+	@Override
+	public void actionPerformed(ActionEvent e) {
 	}
 }

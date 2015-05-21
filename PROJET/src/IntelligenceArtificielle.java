@@ -49,6 +49,8 @@ public class IntelligenceArtificielle {
 	 * Applique l'algorithme permettant à l'ordinateur de jouer un coup en difficulté "facile"
 	 */
 	private Coup coupFacile(ArrayList<Point> listePredecesseurs, Point pDep){
+		
+		System.out.println("Je m'appelle Roger");
 		Coup coupSolution;
 		Point pDepart = null, pArrivee;
 		
@@ -59,6 +61,8 @@ public class IntelligenceArtificielle {
 		Random rand = new Random();
 		
 		listePionsJouables = this.moteur.listePionsJouables(this.joueurIA);
+		
+		System.out.println("Je m'appelle Roger");
 		
 		//***** 	Sélection du point de départ et d'arrivée 
 		if(pDep == null){ // Ce cas est présent lors du début de tour d'une IA aucun point de départ imposé
@@ -82,7 +86,9 @@ public class IntelligenceArtificielle {
 		coupSolution = new Coup(pDepart,pArrivee);
 		
 		System.out.println("IA joue : Depart("+ pDepart.x +";"+ pDepart.y +") -> Arrivee("+ pArrivee.x +";"+ pArrivee.y +")");
+
 		
+		System.out.println("Je m'appelle Roger");
 		return coupSolution;
 	}
 	
