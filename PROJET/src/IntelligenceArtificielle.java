@@ -103,6 +103,14 @@ public class IntelligenceArtificielle {
 		return coupSolution;
 	}
 	
+	public static Terrain.ChoixPrise choixPriseIAFacile(){
+		Random rand = new Random();
+
+		if(rand.nextInt(2) == 1)
+			return Terrain.ChoixPrise.parAspiration;
+		return Terrain.ChoixPrise.parPercussion;
+	}
+	
 	/*
 	 * Applique l'algorithme permettant à l'ordinateur de jouer un coup en difficulté "normal"
 	 */

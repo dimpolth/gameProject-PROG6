@@ -188,9 +188,15 @@ public class Terrain {
 		 * effectue un appel récursif à manger
 		 */
 		if (priseParAspiration && priseParPercussion) { // Si on a deux types de
-														// prise un choix
-														// s'impose
-			if (this.choixPriseHumain() == ChoixPrise.parPercussion) {
+														// prise un choix													
+			ChoixPrise choix;							// s'impose
+			
+			if(joueurCourant.isJoueurHumain())
+				choix = this.choixPriseHumain();
+			else
+				choix = IntelligenceArtificielle.choixPriseIAFacile();
+			
+			if (choix == ChoixPrise.parPercussion) {
 				this.prisePercussion(pArrivee, dir, joueurOppose, listePionsManges);
 			} else {
 				this.priseAspiration(pDepart, dir, joueurOppose, listePionsManges);
