@@ -83,11 +83,12 @@ public class Terrain {
 
 		Iterator<Point> iterator = listePredecesseurs.iterator();
 
-		while (iterator.hasNext()) {
-			Point pNext = iterator.next();
-			if (arrive.equals(pNext))
-				return 4;
-		}
+		if(listePredecesseurs != null)
+			while (iterator.hasNext()) {
+				Point pNext = iterator.next();
+				if (arrive.equals(pNext))
+					return 4;
+			}
 
 
 		if (tableau[depart.x][depart.y].getOccupation() != joueurCourant) {
@@ -136,7 +137,7 @@ public class Terrain {
 		return dir;
 	}
 
-	public int manger(Case.Etat joueurCourant, Direction dir, Point pDepart, Point pArrivee) {
+	public int manger(Case.Etat joueurCourant, Direction dir, Point pDepart, Point pArrivee, ArrayList<Point> listePionsManges) {
 
 		Case.Etat joueurOppose;
 		Point offsetPercu, offsetAspi;
@@ -180,17 +181,19 @@ public class Terrain {
 														// prise un choix
 														// s'impose
 			if (this.choixPrise() == ChoixPrise.parPercussion) {
-				nbPionsManges = this.prisePercussion(pArrivee, dir, joueurOppose);
+				this.prisePercussion(pArrivee, dir, joueurOppose, listePionsManges);
 			} else {
-				nbPionsManges = this.priseAspiration(pDepart, dir, joueurOppose);
+				this.priseAspiration(pDepart, dir, joueurOppose, listePionsManges);
 			}
-		} else if (priseParPercussion) { // Sinon on applique la prise selon le
-											// seul choix possible
-			nbPionsManges = this.prisePercussion(pArrivee, dir, joueurOppose);
-		} else if (priseParAspiration) {
-			nbPionsManges = this.priseAspiration(pDepart, dir, joueurOppose);
-		}
-
+		} 	
+		else if (priseParPercussion)  							// Sinon on applique la prise selon le								
+			this.prisePercussion(pArrivee, dir, joueurOppose, listePionsManges); // seul choix possible
+			
+		else if (priseParAspiration) 
+			this.priseAspiration(pDepart, dir, joueurOppose, listePionsManges);
+		
+		
+		nbPionsManges = listePionsManges.size();
 		return nbPionsManges;
 	}
 
@@ -201,40 +204,37 @@ public class Terrain {
 	 * explorée permettant de trouver l'offset nécessaire - le type de pion du
 	 * joueur opposé (joueur1 ou joueur2)
 	 */
-	public int prisePercussion(Point pArrivee, Direction dir, Case.Etat joueurOppose) {
+	public void prisePercussion(Point pArrivee, Direction dir, Case.Etat joueurOppose, ArrayList<Point> listePionsManges) {
 
-		int nbPionsManges = 0;
 		Point offsetPercu = this.offsetPercussion(dir, pArrivee);
 
 		// Ici si la case suivante à la position d'arrivée est à l'adversaire on
 		// a une percussion
 		if (this.tableau[pArrivee.x + offsetPercu.x][pArrivee.y + offsetPercu.y].getCase().getOccupation() == joueurOppose) {
 			this.tableau[pArrivee.x + offsetPercu.x][pArrivee.y + offsetPercu.y].setOccupation(Case.Etat.vide);
-			nbPionsManges += 1 + this.prisePercussion(new Point(pArrivee.x + offsetPercu.x, pArrivee.y + offsetPercu.y), dir, joueurOppose);
-			return nbPionsManges;
+			this.prisePercussion(new Point(pArrivee.x + offsetPercu.x, pArrivee.y + offsetPercu.y), dir, joueurOppose,listePionsManges);
+			listePionsManges.add(new Point((pArrivee.x + offsetPercu.x),(pArrivee.y + offsetPercu.y)));
+			
 		}
 
-		return 0;
 	}
 
 	/*
 	 * Idem à la méthode "prisePercussion" mais adaptée à la prise par
 	 * aspiration
 	 */
-	public int priseAspiration(Point pDepart, Direction dir, Case.Etat joueurOppose) {
+	public void priseAspiration(Point pDepart, Direction dir, Case.Etat joueurOppose, ArrayList<Point> listePionsManges) {
 
-		int nbPionsManges = 0;
-		Point offsetPercu = this.offsetAspiration(dir, pDepart);
+		Point offsetAspi = this.offsetAspiration(dir, pDepart);
 
 		// Ici si la case suivante à la position d'arrivée est à l'adversaire on
 		// a une percussion
-		if (this.tableau[pDepart.x + offsetPercu.x][pDepart.y + offsetPercu.y].getCase().getOccupation() == joueurOppose) {
-			this.tableau[pDepart.x + offsetPercu.x][pDepart.y + offsetPercu.y].setOccupation(Case.Etat.vide);
-			nbPionsManges += 1 + this.priseAspiration(new Point(pDepart.x + offsetPercu.x, pDepart.y + offsetPercu.y), dir, joueurOppose);
-			return nbPionsManges;
+		if (this.tableau[pDepart.x + offsetAspi.x][pDepart.y + offsetAspi.y].getCase().getOccupation() == joueurOppose) {
+			this.tableau[pDepart.x + offsetAspi.x][pDepart.y + offsetAspi.y].setOccupation(Case.Etat.vide);
+			this.priseAspiration(new Point(pDepart.x + offsetAspi.x, pDepart.y + offsetAspi.y), dir, joueurOppose,listePionsManges);
+			listePionsManges.add(new Point((pDepart.x + offsetAspi.x),(pDepart.y + offsetAspi.y)));
 		}
 
-		return 0;
 	}
 
 	public Point offsetPercussion(Direction dir, Point pArrivee) {
@@ -460,31 +460,31 @@ public class Terrain {
 
 
 	ArrayList<Point> couplibre(Case.Etat e) {
-	ArrayList<Point> reponse = new ArrayList<Point>();
-
-	for (int x = 0; x < 5; x++) {
-		for (int y = 0; y < 9; y++) {
-			int nbSucc = tableau[x][y].getSucc().size();
-			Case c = tableau[x][y].getCase();
-			// for(int z=0; z< nbSucc-1 ;z++ ){
-			int z = 0;
-			boolean drap = true;
-			while (z < nbSucc && drap) {
-
-				Point pointSucc = c.getSucc().get(z);
-				Direction d = recupereDirection(c.getPos(), pointSucc);
-				if (c.getOccupation() == e) {
-					if ((estUnePriseAspiration(c.getPos(), d) || estUnePrisePercussion(c.getPos(), d)) && (tableau[pointSucc.x][pointSucc.y].getOccupation() == Case.Etat.vide)) {
-						reponse.add(c.getPos());
-						drap = false;
+		ArrayList<Point> reponse = new ArrayList<Point>();
+	
+		for (int x = 0; x < 5; x++) {
+			for (int y = 0; y < 9; y++) {
+				int nbSucc = tableau[x][y].getSucc().size();
+				Case c = tableau[x][y].getCase();
+				// for(int z=0; z< nbSucc-1 ;z++ ){
+				int z = 0;
+				boolean drap = true;
+				while (z < nbSucc && drap) {
+	
+					Point pointSucc = c.getSucc().get(z);
+					Direction d = recupereDirection(c.getPos(), pointSucc);
+					if (c.getOccupation() == e) {
+						if ((estUnePriseAspiration(c.getPos(), d) || estUnePrisePercussion(c.getPos(), d)) && (tableau[pointSucc.x][pointSucc.y].getOccupation() == Case.Etat.vide)) {
+							reponse.add(c.getPos());
+							drap = false;
+						}
 					}
+					z++;
 				}
-				z++;
 			}
 		}
-	}
-	return reponse;
-}	
+		return reponse;
+	}	
 	
 	
 }
