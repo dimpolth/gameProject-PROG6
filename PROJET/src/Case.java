@@ -12,12 +12,18 @@ public class Case {
 	private Etat occupation;
 	private Point pos;
 	
+	
+	
 	public Case(Point p, Etat e) {
 		occupation = e;
 		pos = p;
 		this.initSuccesseurs();
 	}
-
+	
+	public Case copie(){
+		return new Case(pos,occupation); 
+	}
+	
 	Etat getOccupation() {
 		return occupation;
 	}

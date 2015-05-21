@@ -21,12 +21,7 @@ public class Historique {
 				histoPrincipal.remove(i);
 			}
 		}
-		Terrain c = new Terrain();
-		for(int i = 0; i < 5; i++) {
-			for(int j = 0; j < 9; j++) {
-				c.tableau[i][j] = t.tableau[i][j];
-			}
-		}
+		Terrain c = t.copie();
 		histoPrincipal.add(c);
 		itPrincipal = histoPrincipal.size()-1;
 		System.out.println("itprincipal"+itPrincipal);

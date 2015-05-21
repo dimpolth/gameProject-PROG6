@@ -36,6 +36,16 @@ public class Terrain {
 			}
 	}
 
+	public Terrain copie(){
+		Terrain copieTerrain = new Terrain();
+		for (int i=0;i<LIGNES;i++){
+			for (int j=0;j<COLONNES;j++){
+				copieTerrain.tableau[i][j]=this.tableau[i][j].copie();
+			}
+		}
+		return copieTerrain;
+	}
+	
 	public Case[][] getTableau() {
 		return tableau;
 	}
