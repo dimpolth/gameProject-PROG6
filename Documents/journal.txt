@@ -3,3 +3,9 @@ Lundi 18/05 :
 	
 Mardi 19/05 :
 	Adrien : classe "Bouton" + classe "Theme" 
+
+Jeudi 21/05 :
+	Mise au point du protocole d'échange entre le moteur et les ihm
+	1ère rencontre avec le le tuteur.
+	
+	Adrien : Implementation des boutons sur le projet + Echange + ihm.dessinerTerrain
