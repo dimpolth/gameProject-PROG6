@@ -1,9 +1,11 @@
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.Insets;
 import java.awt.Point;
 import java.awt.event.*;
 import java.util.HashMap;
@@ -29,7 +31,7 @@ public class IHM extends JFrame implements ComponentListener {
 	TerrainGraphique tg;
 
 	public IHM() {
-		// Initialisation de la fenêtre
+		// Initialisation de la fenÃªtre
 		super("Fanorona");
 
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -52,7 +54,7 @@ public class IHM extends JFrame implements ComponentListener {
 		Bouton boutonMenu = new Bouton("Menu");
 		boutonMenu.addActionListener(new Ecouteur(Ecouteur.Bouton.MENU, this));
 		panneauMenu.add(boutonMenu);
-		Bouton boutonParam= new Bouton("Paramètres");
+		Bouton boutonParam= new Bouton("ParamÃ¨tres");
 		boutonParam.addActionListener(new Ecouteur(Ecouteur.Bouton.PARAMETRES, this));
 		panneauMenu.add(boutonParam);
 		
@@ -220,30 +222,42 @@ class PopupBloquant extends JPanel {
 @SuppressWarnings("serial")
 class PopupMenu extends JPanel {
 	public PopupMenu(IHM i) {
-		super();
-		setLayout(new GridLayout(6, 1));
-		Bouton boutonMenuReprendre = new Bouton("Reprendre");
-		boutonMenuReprendre.addActionListener(new Ecouteur(Ecouteur.Bouton.REPRENDRE, i));
-		add(boutonMenuReprendre);
-		Bouton boutonMenuSauvegarder = new Bouton("Sauvegarder");
+		super( new GridBagLayout() );
+		//this.setBorder(BorderFactory.createLineBorder(Color.black));
+		GridBagConstraints contraintes = new GridBagConstraints();		
+	    contraintes.gridwidth = GridBagConstraints.REMAINDER;	
+	    contraintes.fill = GridBagConstraints.BOTH;	  
+	    contraintes.insets =  new Insets(2,2,2,2);
+	    contraintes.ipady = 35;
+	    contraintes.ipadx = 80;
+	    
+	    GridBagConstraints contraintesCategorie = (GridBagConstraints) contraintes.clone();
+	    contraintesCategorie.insets = new Insets(2,2,25,2);
+		
+		Bouton boutonMenuReprendre = new Bouton("Reprendre la partie");
+		boutonMenuReprendre.addActionListener(new Ecouteur(Ecouteur.Bouton.REPRENDRE, i));		
+		add(boutonMenuReprendre,contraintesCategorie);
+		
+		Bouton boutonMenuSauvegarder = new Bouton("Sauvegarder cette partie");
 		boutonMenuSauvegarder.addActionListener(new Ecouteur(Ecouteur.Bouton.SAUVEGARDER, i));
-		add(boutonMenuSauvegarder);
-		Bouton boutonMenuCharger = new Bouton("Charger");
+		add(boutonMenuSauvegarder,contraintes);
+		Bouton boutonMenuCharger = new Bouton("Charger une partie");
 		boutonMenuCharger.addActionListener(new Ecouteur(Ecouteur.Bouton.CHARGER, i));
-		add(boutonMenuCharger);
-		Bouton boutonMenuRegles = new Bouton("Regles");
+		add(boutonMenuCharger,contraintes);
+		Bouton boutonMenuRegles = new Bouton("Regles du jeu");
 		boutonMenuRegles.addActionListener(new Ecouteur(Ecouteur.Bouton.REGLES, i));
-		add(boutonMenuRegles);
-		Bouton buttonRecommencer = new Bouton("Recommencer");
+		add(boutonMenuRegles,contraintesCategorie);
+		
+		Bouton buttonRecommencer = new Bouton("Nouvelle partie");
 		buttonRecommencer.addActionListener(new Ecouteur(Ecouteur.Bouton.RECOMMENCER, i));
-		add(buttonRecommencer);
-		Bouton boutonMenuQuitter = new Bouton("Quitter");
+		add(buttonRecommencer,contraintes);
+		Bouton boutonMenuQuitter = new Bouton("Quitter le jeu");
 		boutonMenuQuitter.addActionListener(new Ecouteur(Ecouteur.Bouton.QUITTER, i));
-		add(boutonMenuQuitter);
+		add(boutonMenuQuitter,contraintes);
 	}
 
 	public void paintComponent(Graphics g) {
-		g.setColor(Color.red);
+		g.setColor(Color.GRAY);
 		g.fillRect(0, 0, getWidth(), getHeight());
 		g.setColor(Color.white);
 		g.fillRect(10, 10, getWidth() - 20, getHeight() - 20);
@@ -263,11 +277,11 @@ class PopupOptions extends JPanel {
 		add(selectJoueur2Etiq);
 		JComboBox<String> selectJoueur2 = new JComboBox<>(new String[] {"Humain", "Facile", "Normal", "Difficile"});
 		add(selectJoueur2);
-		JLabel themeEtiq = new JLabel("Thème : ");
+		JLabel themeEtiq = new JLabel("ThÃ¨me : ");
 		add(themeEtiq);
 		JComboBox<String> theme = new JComboBox<>(new String[] {"Bois"});
 		add(theme);
-		JLabel tourEtiq = new JLabel("Premier joueur aléatoire : ");
+		JLabel tourEtiq = new JLabel("Premier joueur alÃ©atoire : ");
 		add(tourEtiq);
 		JCheckBox tour = new JCheckBox();
 		add(tour);
@@ -290,16 +304,33 @@ class PopupOptions extends JPanel {
 @SuppressWarnings("serial")
 class PopupRegles extends JPanel {
 	public PopupRegles(IHM i) {
-		super();
-		setLayout(new GridLayout(2, 1));
-		JLabel regles = new JLabel("<html><h1>Les règles du Fanorona</h1><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis rhoncus ut est nec posuere. In molestie est augue, sed fermentum felis accumsan quis. Suspendisse potenti. Morbi pharetra purus vitae blandit vehicula. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin elit dui, consequat tristique dictum ac, vulputate congue felis. Cras consequat augue nec suscipit maximus. Etiam fringilla erat lacinia sem tincidunt gravida. Vestibulum porttitor orci ut ante eleifend, tincidunt molestie elit ornare. Suspendisse placerat neque odio, a posuere quam congue non. Nulla diam orci, lobortis ut orci et, interdum malesuada arcu. Vestibulum porttitor vehicula urna, et ornare mi eleifend eget. In consequat congue eros eget volutpat. Proin quis rhoncus velit. </p></html>");
-		add(regles);
-		Bouton retour = new Bouton("Retour");
+		super( new GridBagLayout() );
+		
+		GridBagConstraints contraintes = new GridBagConstraints();	
+		contraintes.gridx = 0;
+		
+	    contraintes.weightx = 2;
+	    contraintes.weighty = 1;
+	    contraintes.fill = GridBagConstraints.BOTH;
+	    contraintes.anchor = GridBagConstraints.CENTER;	  	  
+	    contraintes.insets =  new Insets(50,50,50,50);	   	    
+		
+	    JEditorPane regles = new JEditorPane();
+	    regles.setContentType("text/html");
+	    regles.setEditable(false);	    		
+	    regles.setText("<html><h1>Les rÃ¨gles du Fanorona</h1><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis rhoncus ut est nec posuere. In molestie est augue, sed fermentum felis accumsan quis. Suspendisse potenti. Morbi pharetra purus vitae blandit vehicula. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin elit dui, consequat tristique dictum ac, vulputate congue felis. Cras consequat augue nec suscipit maximus. Etiam fringilla erat lacinia sem tincidunt gravida. Vestibulum porttitor orci ut ante eleifend, tincidunt molestie elit ornare. Suspendisse placerat neque odio, a posuere quam congue non. Nulla diam orci, lobortis ut orci et, interdum malesuada arcu. Vestibulum porttitor vehicula urna, et ornare mi eleifend eget. In consequat congue eros eget volutpat. Proin quis rhoncus velit.</p></html>"); 
+		add(regles,contraintes);
+		contraintes.fill = GridBagConstraints.NONE;
+		contraintes.ipadx = 100;
+		contraintes.ipady = 40;
+		
+		Bouton retour = new Bouton("Retour au menu");
 		retour.addActionListener(new Ecouteur(Ecouteur.Bouton.REGLES_RETOUR, i));
-		add(retour);
+		add(retour,contraintes);
+		
 	}
 	public void paintComponent(Graphics g) {
-		g.setColor(Color.red);
+		g.setColor(Color.GRAY);
 		g.fillRect(0, 0, getWidth(), getHeight());
 		g.setColor(Color.white);
 		g.fillRect(10, 10, getWidth() - 20, getHeight() - 20);
