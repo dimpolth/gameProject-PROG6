@@ -12,10 +12,10 @@ public class IntelligenceArtificielle {
 	}
 	
 	private difficulteIA niveauDifficulte;
-	private Case.Etat joueurIA;
+	private Joueur joueurIA;
 	private Moteur moteur;
 	
-	public IntelligenceArtificielle(difficulteIA niveauDifficulte, Case.Etat joueurIA, Moteur m){
+	public IntelligenceArtificielle(difficulteIA niveauDifficulte, Joueur joueurIA, Moteur m){
 		this.setNiveauDifficulte(niveauDifficulte);
 		this.setJoueurIA(joueurIA);
 		this.setMoteur(m);
@@ -67,7 +67,7 @@ public class IntelligenceArtificielle {
 		//*****   Sélection du point de départ et d'arrivée ****************//
 		
 		if(pDep == null){ // DEBUT DE TOUR - Ce cas est présent lors du début de tour d'une IA aucun point de départ imposé
-			listePionsJouables = this.moteur.listePionsJouables(this.joueurIA);
+			listePionsJouables = this.moteur.listePionsJouables(this.joueurIA.getJoueurID());
 			
 			do{
 				pDepart = listePionsJouables.get(rand.nextInt(listePionsJouables.size()));
@@ -129,11 +129,11 @@ public class IntelligenceArtificielle {
 		this.niveauDifficulte = niveauDifficulte;
 	}
 
-	public Case.Etat getJoueurIA() {
+	public Joueur getJoueurIA() {
 		return joueurIA;
 	}
 
-	public void setJoueurIA(Case.Etat joueurIA) {
+	public void setJoueurIA(Joueur joueurIA) {
 		this.joueurIA = joueurIA;
 	}
 

@@ -12,9 +12,8 @@ import javax.swing.border.Border;
 
 @SuppressWarnings("serial")
 public class IHM extends JFrame implements ComponentListener {
-	public static void main(String[] args) {
+	public static void main(String[] args) throws InterruptedException {
 		IHM m = new IHM();
-		m.setVisible(true);
 	}
 	
 	Theme theme;
@@ -110,6 +109,7 @@ public class IHM extends JFrame implements ComponentListener {
 		theme.setTheme(Theme.Type.BOIS);
 
 		setSize(1000, 750);
+		setVisible(true);
 	}
 	
 	public void deplacer(Point o, Point a) {
