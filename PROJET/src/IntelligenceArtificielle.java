@@ -63,7 +63,8 @@ public class IntelligenceArtificielle {
 
 		if(pDep != null)
 			pDepart = pDep;
-		//***** 	Sélection du point de départ et d'arrivée 
+		
+		//*****   Sélection du point de départ et d'arrivée ****************//
 		
 		if(pDep == null){ // DEBUT DE TOUR - Ce cas est présent lors du début de tour d'une IA aucun point de départ imposé
 			listePionsJouables = this.moteur.listePionsJouables(this.joueurIA);
@@ -88,17 +89,17 @@ public class IntelligenceArtificielle {
 		}
 		
 		// Dans le cas ci-dessous on a aucune coup jouable on renvoie donc en pArrivee (-1;-1)
-		if(listeSolution.size() == 0)
+		if(listeSolution.size() == 0) // Ce cas peut se présenter dans une continuité de tour
 			pArrivee = new Point(-1,-1);
 		else
 			pArrivee = listeSolution.get(rand.nextInt(listeSolution.size()));
-		//***** 
+		
+		//******************************************************************//
 		
 		coupSolution = new Coup(pDepart,pArrivee);
 		
 		System.out.println("IA joue : Depart("+ pDepart.x +";"+ pDepart.y +") -> Arrivee("+ pArrivee.x +";"+ pArrivee.y +")");
 
-		
 		return coupSolution;
 	}
 	
