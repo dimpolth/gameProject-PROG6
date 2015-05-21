@@ -292,8 +292,8 @@ public class Terrain {
 	public Point offsetAspiration(Direction dir, Point pDepart) {
 		Point offsetAspi = new Point(0, 0);
 
-		if (pDepart.x > 0 && pDepart.x < 4 && pDepart.y > 0 && pDepart.y < 8) {
-			switch (dir) {
+	
+		switch (dir) {
 			case hautGauche:
 				offsetAspi.x = 1;
 				offsetAspi.y = 1;
@@ -333,8 +333,8 @@ public class Terrain {
 				offsetAspi.x = 0;
 				offsetAspi.y = 1;
 				break;
-			}
 		}
+		
 		if( (pDepart.x + offsetAspi.x) < 0 || (pDepart.x + offsetAspi.x > 4) || (pDepart.y + offsetAspi.y < 0) || (pDepart.y + offsetAspi.y > 8) )
 			return new Point(0,0);
 		

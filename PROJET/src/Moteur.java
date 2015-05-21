@@ -30,14 +30,6 @@ public class Moteur {
 				listeSucPossibles.add(temp);
 		}
 		
-		/*
-		for(int i = 0; i < l.size(); i++) {
-			Point temp = l.get(i);
-			if(t.tableau[temp.x][temp.y].getOccupation() != Case.Etat.vide)
-				l.remove(i);
-		}
-		*/
-		
 		return listeSucPossibles;
 	}
 	

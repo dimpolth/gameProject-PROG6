@@ -1,6 +1,7 @@
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.Iterator;
 
 
 public class IntelligenceArtificielle {
@@ -47,40 +48,50 @@ public class IntelligenceArtificielle {
 	
 	/*
 	 * Applique l'algorithme permettant à l'ordinateur de jouer un coup en difficulté "facile"
+	 * Paramètres : 	listePredecesseurs -> contient la liste des prédécesseurs et donc des points que l'on a pas le droit
+	 * 					de retraverser pour ce tour
+	 * 					pDep 			   -> dans le cadre d'un tour qui se prolonge (prises multiples) on indique le 
+	 * 					point de départ qui est le point d'arrivée du coup précédent
 	 */
 	private Coup coupFacile(ArrayList<Point> listePredecesseurs, Point pDep){
 		
-		System.out.println("Je m'appelle Roger");
 		Coup coupSolution;
-		Point pDepart = null, pArrivee;
-		
+		Point pDepart = null, pArrivee, pArriveeTemp;
+		ArrayList<Point> listePionsJouables, listeSuccesseursPionsJouables, listeSolution = new ArrayList<Point>();
+		Random rand = new Random();
+		Iterator<Point> it;
+
 		if(pDep != null)
 			pDepart = pDep;
-		
-		ArrayList<Point> listePionsJouables, listeSuccesseursPionsJouables;
-		Random rand = new Random();
-		
-		listePionsJouables = this.moteur.listePionsJouables(this.joueurIA);
-		
-		System.out.println("Je m'appelle Roger");
-		
 		//***** 	Sélection du point de départ et d'arrivée 
-		if(pDep == null){ // Ce cas est présent lors du début de tour d'une IA aucun point de départ imposé
+		
+		if(pDep == null){ // DEBUT DE TOUR - Ce cas est présent lors du début de tour d'une IA aucun point de départ imposé
+			listePionsJouables = this.moteur.listePionsJouables(this.joueurIA);
+			
 			do{
-			pDepart = listePionsJouables.get(rand.nextInt(listePionsJouables.size()));
-			listeSuccesseursPionsJouables = this.moteur.deplacementPossible(pDepart, listePredecesseurs);
-			}while(listeSuccesseursPionsJouables.size() <= 0);
+				pDepart = listePionsJouables.get(rand.nextInt(listePionsJouables.size()));
+				listeSolution = this.moteur.deplacementPossible(pDepart, listePredecesseurs);
+			}while(listeSolution.size() <= 0);
 		}
 		
-					 // Ce cas est donc lors d'un xième coup d'un tour (x > 1) on a un point de départ imposé qui
-		else 		 //	est le point d'arrivée précédent
+					 // MILIEU/FIN DE TOUR - Ce cas est donc lors d'un xième coup d'un tour (x > 1) on a un point de départ 
+		else {		 //	imposé qui est le point d'arrivée précédent
 			listeSuccesseursPionsJouables = this.moteur.deplacementPossible(pDepart, listePredecesseurs);
+			it = listeSuccesseursPionsJouables.iterator();
+			
+			while(it.hasNext()){
+				pArriveeTemp = (Point) it.next().clone();
+				Terrain.Direction dir = this.moteur.t.recupereDirection(pDepart, pArriveeTemp);
+				if(this.moteur.t.estUnePriseAspiration(pDepart, dir) || this.moteur.t.estUnePrisePercussion(pDepart, dir))
+					listeSolution.add(pArriveeTemp);
+			}
+		}
 		
 		// Dans le cas ci-dessous on a aucune coup jouable on renvoie donc en pArrivee (-1;-1)
-		if(listeSuccesseursPionsJouables.size() == 0)
+		if(listeSolution.size() == 0)
 			pArrivee = new Point(-1,-1);
-		
-		pArrivee = listeSuccesseursPionsJouables.get(rand.nextInt(listeSuccesseursPionsJouables.size()));
+		else
+			pArrivee = listeSolution.get(rand.nextInt(listeSolution.size()));
 		//***** 
 		
 		coupSolution = new Coup(pDepart,pArrivee);
@@ -88,7 +99,6 @@ public class IntelligenceArtificielle {
 		System.out.println("IA joue : Depart("+ pDepart.x +";"+ pDepart.y +") -> Arrivee("+ pArrivee.x +";"+ pArrivee.y +")");
 
 		
-		System.out.println("Je m'appelle Roger");
 		return coupSolution;
 	}
 	
