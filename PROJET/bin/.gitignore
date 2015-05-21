@@ -1,8 +1,10 @@
 Main.java
 /.gitignore
+/Bouton.class
 /Case$Etat.class
 /Case.class
 /Coup.class
+/Echange.class
 /Ecouteur$Bouton.class
 /Ecouteur.class
 /Historique.class
@@ -20,7 +22,5 @@ Main.java
 /Terrain$Direction.class
 /Terrain.class
 /TerrainGraphique.class
-/Bouton.class
-/Echange.class
 /Theme$Type.class
 /Theme.class
