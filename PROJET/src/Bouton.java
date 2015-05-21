@@ -1,4 +1,5 @@
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 //import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+
 
 //import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -31,24 +33,23 @@ public class Bouton extends JButton implements MouseListener{
 		this.setBorderPainted(false);
 		Bouton.boutons.add( this );
 		this.addMouseListener(this);
+		this.setPreferredSize(new Dimension(110,25));
+		
 		
 	}
 	
 	
 	
-	 public void paintComponent(Graphics gr) {
-		 
-		System.out.println("paintComponent");
-		Graphics2D g = (Graphics2D)gr;
+	 public void paintComponent(Graphics gr) {		
+		Graphics2D g = (Graphics2D)gr;		 
+		Font font = new Font("Arial",Font.BOLD,14);
+		g.setFont(font); 	 	
+		FontMetrics fm = g.getFontMetrics();
 		
-		
-		
-		 
-		Font font = new Font("Arial",Font.BOLD,20);
-		g.setFont(font);		 
- 	 	
-		FontMetrics fm = g.getFontMetrics();		
- 	     
+		//System.out.println(" Dimension texte : "+fm.stringWidth(texte) );
+		//this.setPreferredSize(new Dimension(fm.stringWidth(texte)+10,fm.getHeight()+7));
+		//System.out.println(" Dimension préférée : "+fm.stringWidth(texte) );
+ 	    //System.out.println("Hauteur bouton : "+this.getHeight());
 		g.drawImage(fond,0,0,this.getWidth(), this.getHeight(),null);
 		
 		g.setColor(Color.WHITE);		
@@ -64,7 +65,7 @@ public class Bouton extends JButton implements MouseListener{
 		 fondSurvol = new ImageIcon("images/themes/"+pTheme.getId()+"/bouton_survol.png").getImage();
 		 fondClique = new ImageIcon("images/themes/"+pTheme.getId()+"/bouton_clique.png").getImage();
 		 fond = fondNormal;
-		 this.repaint();	
+		
 	 }
 	 
 	 public static void setThemeTous(Theme.Type pTheme){

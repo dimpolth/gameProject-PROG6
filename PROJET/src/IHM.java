@@ -13,7 +13,9 @@ public class IHM extends JFrame implements ComponentListener {
 		IHM m = new IHM();
 		m.setVisible(true);
 	}
-
+	
+	Theme theme;
+	
 	JPanel coucheJeu;
 	PopupBloquant popupB;
 	PopupMenu popupM;
@@ -27,18 +29,22 @@ public class IHM extends JFrame implements ComponentListener {
 
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		addComponentListener(this);
+		
+		theme = new Theme();
 
 		coucheJeu = new JPanel(new BorderLayout());
 		coucheJeu.setBounds(0, 0, getSize().width, getSize().height);
 		add(coucheJeu);
 		JPanel voletNord = new JPanel(new BorderLayout());
 		coucheJeu.add(voletNord, BorderLayout.NORTH);
+		
 		JPanel panneauMenu = new JPanel();
 		voletNord.add(panneauMenu, BorderLayout.NORTH);
-		JButton boutonMenu = new JButton("Menu");
+		
+		Bouton boutonMenu = new Bouton("Menu");
 		boutonMenu.addActionListener(new Ecouteur(Ecouteur.Bouton.MENU, this));
 		panneauMenu.add(boutonMenu);
-		JButton boutonParam= new JButton("Paramétrer");
+		Bouton boutonParam= new Bouton("Paramètres");
 		boutonParam.addActionListener(new Ecouteur(Ecouteur.Bouton.PARAMETRES, this));
 		panneauMenu.add(boutonParam);
 		JPanel panneauScore = new JPanel();
@@ -59,10 +65,10 @@ public class IHM extends JFrame implements ComponentListener {
 
 		JPanel voletSud = new JPanel();
 		coucheJeu.add(voletSud, BorderLayout.SOUTH);
-		JButton boutonAnnuler = new JButton("Annuler");
+		Bouton boutonAnnuler = new Bouton("Annuler");
 		boutonAnnuler.addActionListener(new Ecouteur(Ecouteur.Bouton.ANNULER, this));
 		voletSud.add(boutonAnnuler);
-		JButton boutonRefaire = new JButton("Refaire");
+		Bouton boutonRefaire = new Bouton("Refaire");
 		boutonRefaire.addActionListener(new Ecouteur(Ecouteur.Bouton.REFAIRE, this));
 		voletSud.add(boutonRefaire);
 
@@ -77,8 +83,11 @@ public class IHM extends JFrame implements ComponentListener {
 		gestionCouche.add(popupO, new Integer(3));
 		popupO.setVisible(false);
 		popupR = new PopupRegles(this);
-		gestionCouche.add(popupR, new Integer(3));
+		gestionCouche.add(popupR, new Integer(3));	
+		
 		popupR.setVisible(false);
+		
+		theme.setTheme(Theme.Type.BOIS);
 
 		setSize(1000, 750);
 	}
@@ -178,22 +187,22 @@ class PopupMenu extends JPanel {
 	public PopupMenu(IHM i) {
 		super();
 		setLayout(new GridLayout(6, 1));
-		JButton boutonMenuReprendre = new JButton("Reprendre");
+		Bouton boutonMenuReprendre = new Bouton("Reprendre");
 		boutonMenuReprendre.addActionListener(new Ecouteur(Ecouteur.Bouton.REPRENDRE, i));
 		add(boutonMenuReprendre);
-		JButton boutonMenuSauvegarder = new JButton("Sauvegarder");
+		Bouton boutonMenuSauvegarder = new Bouton("Sauvegarder");
 		boutonMenuSauvegarder.addActionListener(new Ecouteur(Ecouteur.Bouton.SAUVEGARDER, i));
 		add(boutonMenuSauvegarder);
-		JButton boutonMenuCharger = new JButton("Charger");
+		Bouton boutonMenuCharger = new Bouton("Charger");
 		boutonMenuCharger.addActionListener(new Ecouteur(Ecouteur.Bouton.CHARGER, i));
 		add(boutonMenuCharger);
-		JButton boutonMenuRegles = new JButton("Regles");
+		Bouton boutonMenuRegles = new Bouton("Regles");
 		boutonMenuRegles.addActionListener(new Ecouteur(Ecouteur.Bouton.REGLES, i));
 		add(boutonMenuRegles);
-		JButton buttonRecommencer = new JButton("Recommencer");
+		Bouton buttonRecommencer = new Bouton("Recommencer");
 		buttonRecommencer.addActionListener(new Ecouteur(Ecouteur.Bouton.RECOMMENCER, i));
 		add(buttonRecommencer);
-		JButton boutonMenuQuitter = new JButton("Quitter");
+		Bouton boutonMenuQuitter = new Bouton("Quitter");
 		boutonMenuQuitter.addActionListener(new Ecouteur(Ecouteur.Bouton.QUITTER, i));
 		add(boutonMenuQuitter);
 	}
@@ -227,10 +236,10 @@ class PopupOptions extends JPanel {
 		add(tourEtiq);
 		JCheckBox tour = new JCheckBox();
 		add(tour);
-		JButton annuler = new JButton("Annuler");
+		Bouton annuler = new Bouton("Annuler");
 		annuler.addActionListener(new Ecouteur(Ecouteur.Bouton.OPTION_ANNULER, i));
 		add(annuler);
-		JButton valider = new JButton("Valider");
+		Bouton valider = new Bouton("Valider");
 		valider.addActionListener(new Ecouteur(Ecouteur.Bouton.OPTION_VALIDER, i));
 		add(valider);
 	}
@@ -250,7 +259,7 @@ class PopupRegles extends JPanel {
 		setLayout(new GridLayout(2, 1));
 		JLabel regles = new JLabel("<html><h1>Les règles du Fanorona</h1><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis rhoncus ut est nec posuere. In molestie est augue, sed fermentum felis accumsan quis. Suspendisse potenti. Morbi pharetra purus vitae blandit vehicula. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin elit dui, consequat tristique dictum ac, vulputate congue felis. Cras consequat augue nec suscipit maximus. Etiam fringilla erat lacinia sem tincidunt gravida. Vestibulum porttitor orci ut ante eleifend, tincidunt molestie elit ornare. Suspendisse placerat neque odio, a posuere quam congue non. Nulla diam orci, lobortis ut orci et, interdum malesuada arcu. Vestibulum porttitor vehicula urna, et ornare mi eleifend eget. In consequat congue eros eget volutpat. Proin quis rhoncus velit. </p></html>");
 		add(regles);
-		JButton retour = new JButton("Retour");
+		Bouton retour = new Bouton("Retour");
 		retour.addActionListener(new Ecouteur(Ecouteur.Bouton.REGLES_RETOUR, i));
 		add(retour);
 	}
