@@ -6,6 +6,7 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Point;
 import java.awt.event.*;
+import java.util.HashMap;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -15,6 +16,8 @@ public class IHM extends JFrame implements ComponentListener {
 	public static void main(String[] args) {
 		IHM m = new IHM();
 		m.setVisible(true);
+		
+
 	}
 	
 	Theme theme;
@@ -182,6 +185,18 @@ public class IHM extends JFrame implements ComponentListener {
 
 	@Override
 	public void componentShown(ComponentEvent e) {
+	}
+	
+	public void notifier(Echange e){
+		
+		if(e.getTerrain() != null){
+			//tg.dessinerTerrain(e.getTerrain());
+		}
+		
+		if(e.getIndication() != null){
+			
+		}
+		
 	}
 }
 
