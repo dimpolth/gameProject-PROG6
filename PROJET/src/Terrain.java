@@ -36,6 +36,16 @@ public class Terrain {
 			}
 	}
 
+	public Terrain copie(){
+		Terrain copieTerrain = new Terrain();
+		for (int i=0;i<LIGNES;i++){
+			for (int j=0;j<COLONNES;j++){
+				copieTerrain.tableau[i][j]=this.tableau[i][j].copie();
+			}
+		}
+		return copieTerrain;
+	}
+	
 	public Case[][] getTableau() {
 		return tableau;
 	}
@@ -78,15 +88,18 @@ public class Terrain {
 		System.out.println();
 	}
 
+
 	public int deplacement(Point depart, Point arrive, Case.Etat joueurCourant, ArrayList<Point> listePredecesseurs) {
 
 		Iterator<Point> iterator = listePredecesseurs.iterator();
 
-		while (iterator.hasNext()) {
-			Point pNext = iterator.next();
-			if (arrive.equals(pNext))
-				return 4;
-		}
+		if(listePredecesseurs != null)
+			while (iterator.hasNext()) {
+				Point pNext = iterator.next();
+				if (arrive.equals(pNext))
+					return 4;
+			}
+
 
 		if (tableau[depart.x][depart.y].getOccupation() != joueurCourant) {
 			return 3;
@@ -95,7 +108,9 @@ public class Terrain {
 				return 2;
 
 			} else {
+
 				ArrayList<Point> l = tableau[depart.x][depart.y].getSucc(); // on regarde si la case d'arrivée est bien un successeur
+
 				for (int it = 0; it < l.size(); it++) {
 					Point p = l.get(it);
 					if (arrive.equals(p)) {
@@ -132,7 +147,7 @@ public class Terrain {
 		return dir;
 	}
 
-	public int manger(Case.Etat joueurCourant, Direction dir, Point pDepart, Point pArrivee) {
+	public int manger(Case.Etat joueurCourant, Direction dir, Point pDepart, Point pArrivee, ArrayList<Point> listePionsManges) {
 
 		Case.Etat joueurOppose;
 		Point offsetPercu, offsetAspi;
@@ -141,13 +156,14 @@ public class Terrain {
 		int nbPionsManges = 0;
 
 		// On indique dans une variable qui est l'adversaire pour reconnaître ses pions
+		
 		if (joueurCourant == Case.Etat.joueur1)
 			joueurOppose = Case.Etat.joueur2;
 		else if (joueurCourant == Case.Etat.joueur2)
 			joueurOppose = Case.Etat.joueur1;
 		else
 			return 0;
-		
+
 		// Gestion de l'offset pour une éventuelle prise par percussion
 		offsetPercu = this.offsetPercussion(dir, pArrivee);
 		// Gestion de l'offset pour une éventuelle prise par aspiration
@@ -175,17 +191,19 @@ public class Terrain {
 														// prise un choix
 														// s'impose
 			if (this.choixPrise() == ChoixPrise.parPercussion) {
-				nbPionsManges = this.prisePercussion(pArrivee, dir, joueurOppose);
+				this.prisePercussion(pArrivee, dir, joueurOppose, listePionsManges);
 			} else {
-				nbPionsManges = this.priseAspiration(pDepart, dir, joueurOppose);
+				this.priseAspiration(pDepart, dir, joueurOppose, listePionsManges);
 			}
-		} else if (priseParPercussion) { // Sinon on applique la prise selon le
-											// seul choix possible
-			nbPionsManges = this.prisePercussion(pArrivee, dir, joueurOppose);
-		} else if (priseParAspiration) {
-			nbPionsManges = this.priseAspiration(pDepart, dir, joueurOppose);
-		}
-
+		} 	
+		else if (priseParPercussion)  							// Sinon on applique la prise selon le								
+			this.prisePercussion(pArrivee, dir, joueurOppose, listePionsManges); // seul choix possible
+			
+		else if (priseParAspiration) 
+			this.priseAspiration(pDepart, dir, joueurOppose, listePionsManges);
+		
+		
+		nbPionsManges = listePionsManges.size();
 		return nbPionsManges;
 	}
 
@@ -196,46 +214,45 @@ public class Terrain {
 	 * explorée permettant de trouver l'offset nécessaire - le type de pion du
 	 * joueur opposé (joueur1 ou joueur2)
 	 */
-	public int prisePercussion(Point pArrivee, Direction dir, Case.Etat joueurOppose) {
+	public void prisePercussion(Point pArrivee, Direction dir, Case.Etat joueurOppose, ArrayList<Point> listePionsManges) {
 
-		int nbPionsManges = 0;
 		Point offsetPercu = this.offsetPercussion(dir, pArrivee);
 
 		// Ici si la case suivante à la position d'arrivée est à l'adversaire on
 		// a une percussion
 		if (this.tableau[pArrivee.x + offsetPercu.x][pArrivee.y + offsetPercu.y].getCase().getOccupation() == joueurOppose) {
 			this.tableau[pArrivee.x + offsetPercu.x][pArrivee.y + offsetPercu.y].setOccupation(Case.Etat.vide);
-			nbPionsManges += 1 + this.prisePercussion(new Point(pArrivee.x + offsetPercu.x, pArrivee.y + offsetPercu.y), dir, joueurOppose);
-			return nbPionsManges;
+			this.prisePercussion(new Point(pArrivee.x + offsetPercu.x, pArrivee.y + offsetPercu.y), dir, joueurOppose,listePionsManges);
+			listePionsManges.add(new Point((pArrivee.x + offsetPercu.x),(pArrivee.y + offsetPercu.y)));
+			
 		}
 
-		return 0;
 	}
 
 	/*
 	 * Idem à la méthode "prisePercussion" mais adaptée à la prise par
 	 * aspiration
 	 */
-	public int priseAspiration(Point pDepart, Direction dir, Case.Etat joueurOppose) {
+	public void priseAspiration(Point pDepart, Direction dir, Case.Etat joueurOppose, ArrayList<Point> listePionsManges) {
 
-		int nbPionsManges = 0;
-		Point offsetPercu = this.offsetAspiration(dir, pDepart);
+		Point offsetAspi = this.offsetAspiration(dir, pDepart);
 
 		// Ici si la case suivante à la position d'arrivée est à l'adversaire on
 		// a une percussion
-		if (this.tableau[pDepart.x + offsetPercu.x][pDepart.y + offsetPercu.y].getCase().getOccupation() == joueurOppose) {
-			this.tableau[pDepart.x + offsetPercu.x][pDepart.y + offsetPercu.y].setOccupation(Case.Etat.vide);
-			nbPionsManges += 1 + this.priseAspiration(new Point(pDepart.x + offsetPercu.x, pDepart.y + offsetPercu.y), dir, joueurOppose);
-			return nbPionsManges;
+		if (this.tableau[pDepart.x + offsetAspi.x][pDepart.y + offsetAspi.y].getCase().getOccupation() == joueurOppose) {
+			this.tableau[pDepart.x + offsetAspi.x][pDepart.y + offsetAspi.y].setOccupation(Case.Etat.vide);
+			this.priseAspiration(new Point(pDepart.x + offsetAspi.x, pDepart.y + offsetAspi.y), dir, joueurOppose,listePionsManges);
+			listePionsManges.add(new Point((pDepart.x + offsetAspi.x),(pDepart.y + offsetAspi.y)));
 		}
 
-		return 0;
 	}
 
 	public Point offsetPercussion(Direction dir, Point pArrivee) {
 		Point offsetPercu = new Point(0, 0);
 
+
 		switch (dir) { // c'est ce switch qui effectue l'attribution du
+
 							// offset nécessaire
 			case hautGauche:
 				offsetPercu.x = -1;
@@ -292,8 +309,8 @@ public class Terrain {
 	public Point offsetAspiration(Direction dir, Point pDepart) {
 		Point offsetAspi = new Point(0, 0);
 
-	
-		switch (dir) {
+
+			switch (dir) {
 			case hautGauche:
 				offsetAspi.x = 1;
 				offsetAspi.y = 1;
@@ -333,13 +350,14 @@ public class Terrain {
 				offsetAspi.x = 0;
 				offsetAspi.y = 1;
 				break;
-		}
-		
+			}
+
 		if( (pDepart.x + offsetAspi.x) < 0 || (pDepart.x + offsetAspi.x > 4) || (pDepart.y + offsetAspi.y < 0) || (pDepart.y + offsetAspi.y > 8) )
 			return new Point(0,0);
 		
 		return offsetAspi;
 	}
+
 	/*
 	 * Cette méthode intervient lorsque le joueur peut lors d'un déplacement effectuer soit une prise par 
 	 * percussion soit par aspiration, il doit donc choisir entre une des deux solutions
@@ -398,58 +416,85 @@ public class Terrain {
 			cible.y = depart.y - 2;
 			break;
 		}
-		
-		
-		if (!(cible.x > 4 || cible.x < 0 || cible.y > 8 || cible.y < 0)) 
+		if (!(cible.x > 4 || cible.x < 0 || cible.y > 8 || cible.y < 0)) {
 			b = ((tableau[cible.x][cible.y].getOccupation() != tableau[depart.x][depart.y].getOccupation()) && (tableau[cible.x][cible.y].getOccupation() != Case.Etat.vide));
-		
+		}
 		return b;
 	}
-	
+
 	boolean estUnePriseAspiration(Point depart, Direction d) {
 		Point cible = new Point();
 		boolean b = false;
 
 		switch (d) {
 		case hautGauche:
-			cible.x = depart.x+1;
-			cible.y = depart.y+1;
+			cible.x = depart.x + 1;
+			cible.y = depart.y + 1;
 			break;
 		case haut:
-			cible.x = depart.x+1;
+			cible.x = depart.x + 1;
 			cible.y = depart.y;
 			break;
 		case hautDroite:
-			cible.x = depart.x+1;
-			cible.y = depart.y-1;
+			cible.x = depart.x + 1;
+			cible.y = depart.y - 1;
 			break;
 		case droite:
 			cible.x = depart.x;
-			cible.y = depart.y-1;
+			cible.y = depart.y - 1;
 			break;
 		case basDroite:
-			cible.x = depart.x-1;
-			cible.y = depart.y-1;
+			cible.x = depart.x - 1;
+			cible.y = depart.y - 1;
 			break;
 		case bas:
-			cible.x = depart.x-1;
+			cible.x = depart.x - 1;
 			cible.y = depart.y;
 			break;
 		case basGauche:
-			cible.x = depart.x-1;
-			cible.y = depart.y+1;
+			cible.x = depart.x - 1;
+			cible.y = depart.y + 1;
 			break;
 		case gauche:
 			cible.x = depart.x;
-			cible.y = depart.y+1;
+			cible.y = depart.y + 1;
 			break;
 		}
-		if (!(cible.x > 4 || cible.x < 0 || cible.y > 8 || cible.y < 0)) 
+		if (!(cible.x > 4 || cible.x < 0 || cible.y > 8 || cible.y < 0)) {
 			b = ((tableau[cible.x][cible.y].getOccupation() != tableau[depart.x][depart.y].getOccupation()) && (tableau[cible.x][cible.y].getOccupation() != Case.Etat.vide));
 
+		}
 		return b;
 	}
+
+
+
+	ArrayList<Point> couplibre(Case.Etat e) {
+		ArrayList<Point> reponse = new ArrayList<Point>();
 	
-
-
+		for (int x = 0; x < 5; x++) {
+			for (int y = 0; y < 9; y++) {
+				int nbSucc = tableau[x][y].getSucc().size();
+				Case c = tableau[x][y].getCase();
+				// for(int z=0; z< nbSucc-1 ;z++ ){
+				int z = 0;
+				boolean drap = true;
+				while (z < nbSucc && drap) {
+	
+					Point pointSucc = c.getSucc().get(z);
+					Direction d = recupereDirection(c.getPos(), pointSucc);
+					if (c.getOccupation() == e) {
+						if ((estUnePriseAspiration(c.getPos(), d) || estUnePrisePercussion(c.getPos(), d)) && (tableau[pointSucc.x][pointSucc.y].getOccupation() == Case.Etat.vide)) {
+							reponse.add(c.getPos());
+							drap = false;
+						}
+					}
+					z++;
+				}
+			}
+		}
+		return reponse;
+	}	
+	
+	
 }
