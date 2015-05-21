@@ -22,6 +22,10 @@ public class Case {
 		return occupation;
 	}
 	
+	Point getPos(){
+		return pos;
+	}
+	
 	void setOccupation(Etat e) {
 		occupation = e;
 	}
