@@ -52,4 +52,22 @@ public class Moteur {
 		
 		return listePions;
 	}
+	
+	boolean partieTerminee(){
+		int nbPionsJoueur1 = 0, nbPionsJoueur2 = 0;
+		
+		for(int ligne = 0; ligne < 5; ligne++)
+			for(int colonne = 0; colonne < 9; colonne++){
+				if(this.t.tableau[ligne][colonne].getOccupation() == Case.Etat.joueur1)
+					nbPionsJoueur1++;
+				else if(this.t.tableau[ligne][colonne].getOccupation() == Case.Etat.joueur2)
+					nbPionsJoueur2++;
+			}
+		
+		if(nbPionsJoueur1 == 0 || nbPionsJoueur2 == 0){
+			return true;
+		}
+		
+		return false;
+	}
 }
