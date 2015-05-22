@@ -21,3 +21,9 @@ Main.java
 /TerrainGraphique.class
 /Theme$Type.class
 /Theme.class
+/Coup.class
+/Echange.class
+/Historique.class
+/Case.class
+/Case$Etat.class
+/Bouton.class
