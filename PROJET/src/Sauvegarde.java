@@ -2,9 +2,9 @@ import java.io.Serializable;
 
 
 public class Sauvegarde implements Serializable {
-	Terrain plateau;
-	Boolean joueur;
-	Historique histo;
+	public Terrain plateau;
+	public Boolean joueur;
+	public Historique histo;
 	
 	Sauvegarde(Terrain t, Boolean j, Historique h){
 		plateau=t.copie();
