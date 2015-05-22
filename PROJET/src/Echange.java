@@ -16,7 +16,7 @@ public class Echange {
 		infos.clear();
 	}
 	// Moteur -> IHM
-	public void addIndication(String indic){
+	public void addIndication(String indic){ 
 		infos.put("indication", indic);
 	}
 	

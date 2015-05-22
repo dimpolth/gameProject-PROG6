@@ -10,7 +10,7 @@ public class Terrain {
 	}
 
 	public enum ChoixPrise {
-		parPercussion, parAspiration
+		parPercussion, parAspiration 
 	}
 
 	private final static int LIGNES = 5;

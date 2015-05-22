@@ -15,8 +15,8 @@ public class Moteur {
 	Moteur(Terrain t) {
 		this.t = t;
 		h = new Historique();
-	}
-
+	} 
+  
 	ArrayList<Point> deplacementPossible(Point p, ArrayList<Point> listePredecesseurs) {
 		ArrayList<Point> l = t.tableau[p.x][p.y].getSucc();
 		ArrayList<Point> listeSucPossibles = new ArrayList<Point>();

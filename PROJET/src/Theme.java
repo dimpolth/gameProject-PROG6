@@ -18,8 +18,8 @@ public class Theme  {
 	Type id ;
 	
 	Theme(){
-		this.id = Type.BOIS;
-		
+		this.id = Type.BOIS; 
+		 
 	}
 	
 	public void setTheme(Type pId){

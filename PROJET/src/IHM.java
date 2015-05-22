@@ -30,7 +30,7 @@ public class IHM extends JFrame implements ComponentListener {
 	PopupRegles popupR;
 	TerrainGraphique tg;
 
-	public IHM() {
+	public IHM() {  
 		// Initialisation de la fenÃªtre
 		super("Fanorona");
 

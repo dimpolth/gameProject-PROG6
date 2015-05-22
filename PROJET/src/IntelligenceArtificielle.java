@@ -18,7 +18,7 @@ public class IntelligenceArtificielle {
 	public IntelligenceArtificielle(difficulteIA niveauDifficulte, Joueur joueurIA, Moteur m){
 		this.setNiveauDifficulte(niveauDifficulte);
 		this.setJoueurIA(joueurIA);
-		this.setMoteur(m);
+		this.setMoteur(m); 
 	}
 
 	public Coup jouerIA(ArrayList<Point> listePredecesseurs, Point pDepart){

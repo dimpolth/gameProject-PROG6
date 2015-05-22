@@ -18,7 +18,7 @@ public class Case {
 		occupation = e;
 		pos = p;
 		this.initSuccesseurs();
-	}
+	} 
 	
 	public Case copie(){
 		return new Case(pos,occupation); 

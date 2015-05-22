@@ -17,7 +17,7 @@ public class Historique {
 	
 	void ajouterTour(Terrain t) {
 		if(itPrincipal < histoPrincipal.size()-1) {
-			for(int i = itPrincipal; i < histoPrincipal.size(); i++) {
+			for(int i = itPrincipal; i < histoPrincipal.size(); i++) { 
 				histoPrincipal.remove(i);
 			}
 		}

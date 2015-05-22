@@ -8,7 +8,7 @@ public class Sauvegarde implements Serializable {
 	
 	Sauvegarde(Terrain t, Boolean j, Historique h){
 		plateau=t.copie();
-		joueur = j;
+		joueur = j; 
 		histo=h;
 	}
 

@@ -31,7 +31,7 @@ public class TerrainGraphique extends JPanel implements ComponentListener{
 			for(int j=0 ; j<9 ; j++) {
 				pions[i][j] = new Pion(new Point(i,j), imgPiece1);
 				add(pions[i][j]);
-			}
+			} 
 		}
 	}
 	

@@ -21,7 +21,7 @@ public class Coup {
 		this.pDepart = pDepart;
 	}
 
-	public Point getpArrivee() {
+	public Point getpArrivee() { 
 		return pArrivee;
 	}
 

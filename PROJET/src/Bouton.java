@@ -36,7 +36,7 @@ public class Bouton extends JButton implements MouseListener{
 		this.setPreferredSize(new Dimension(110,25));
 		
 		
-	}
+	} 
 	
 	
 	

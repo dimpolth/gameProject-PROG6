@@ -14,7 +14,7 @@ public class Joueur {
 		
 		if(joueur == typeJoueur.humain)
 			this.setJoueurHumain(true);
-		else
+		else 
 			this.setJoueurHumain(false);
 	}
 
