@@ -15,17 +15,23 @@ public class Theme  {
 		}
 	}
 	
-	Type id ;
+	IHM ihm;
+	Type id = null;
 	
-	Theme(){
-		this.id = Type.BOIS; 
-		 
+	Theme(IHM ihm){
+		this.ihm = ihm;
+		
+	}
+	
+	public Type getTheme(){
+		return id;
 	}
 	
 	public void setTheme(Type pId){
-		this.id = pId;
-		Bouton.setThemeTous(pId);
-		
+		if(this.id == null || !this.id.equals(pId)){
+			this.id = pId;
+			Bouton.setThemeTous(pId);
+		}		
 	}
 	
 }

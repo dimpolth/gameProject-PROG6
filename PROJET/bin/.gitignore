@@ -1,4 +1,5 @@
 Main.java
+/.gitignore
 /Bouton.class
 /Case$Etat.class
 /Case.class
@@ -26,3 +27,4 @@ Main.java
 /TerrainGraphique.class
 /Theme$Type.class
 /Theme.class
+/BandeauInfos.class
