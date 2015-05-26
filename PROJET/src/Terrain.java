@@ -36,6 +36,31 @@ public class Terrain {
 			}
 	}
 
+	public void TerrainTest(int numTest){
+		for (int ligne = 0; ligne < Terrain.LIGNES; ligne++)
+			for (int colonne = 0; colonne < Terrain.COLONNES; colonne++)
+				this.tableau[ligne][colonne].setOccupation(Case.Etat.vide);
+			
+		switch(numTest){ // Pour tous les tests le joueur 1 doit commencer
+			case 1 : // Test deux prises dans direction identique d'affilée impossible
+				this.tableau[0][4].setOccupation(Case.Etat.joueur1);
+				this.tableau[1][3].setOccupation(Case.Etat.joueur1);
+				this.tableau[2][2].setOccupation(Case.Etat.joueur1);
+				this.tableau[3][0].setOccupation(Case.Etat.joueur2);
+				this.tableau[3][1].setOccupation(Case.Etat.joueur1);
+				this.tableau[3][4].setOccupation(Case.Etat.joueur2);
+				// Joueur 2 PEUT gagner en un seul tour
+			break;
+			
+			case 2 : // Test impossible de revenir sur ses pas
+				this.tableau[2][0].setOccupation(Case.Etat.joueur2);
+				this.tableau[2][1].setOccupation(Case.Etat.joueur1);
+				this.tableau[2][3].setOccupation(Case.Etat.joueur2);
+				// Joueur 2 doit gagner
+			break;
+		}
+	}
+	
 	public Terrain copie(){
 		Terrain copieTerrain = new Terrain();
 		for (int i=0;i<LIGNES;i++){
@@ -147,22 +172,21 @@ public class Terrain {
 		return dir;
 	}
 
-	public int manger(Joueur joueurCourant, Direction dir, Point pDepart, Point pArrivee, ArrayList<Point> listePionsManges) {
+	public ArrayList<Point> manger(Joueur joueurCourant, Direction dir, Point pDepart, Point pArrivee) {
 
-		Case.Etat joueurOppose;
+		Case.Etat joueurOppose = null;
 		Point offsetPercu, offsetAspi;
 		Point pTestOffset = new Point(0, 0);
 		boolean priseParPercussion = false, priseParAspiration = false;
-		int nbPionsManges = 0;
+		ArrayList<Point> listePionsManges = new ArrayList<Point>();
 
 		// On indique dans une variable qui est l'adversaire pour reconnaître ses pions
 		
 		if (joueurCourant.getJoueurID() == Case.Etat.joueur1)
 			joueurOppose = Case.Etat.joueur2;
-		else if (joueurCourant.getJoueurID() == Case.Etat.joueur2)
+		else if(joueurCourant.getJoueurID() == Case.Etat.joueur2)
 			joueurOppose = Case.Etat.joueur1;
-		else
-			return 0;
+
 
 		// Gestion de l'offset pour une éventuelle prise par percussion
 		offsetPercu = this.offsetPercussion(dir, pArrivee);
@@ -208,9 +232,7 @@ public class Terrain {
 		else if (priseParAspiration) 
 			this.priseAspiration(pDepart, dir, joueurOppose, listePionsManges);
 		
-		
-		nbPionsManges = listePionsManges.size();
-		return nbPionsManges;
+		return listePionsManges;
 	}
 
 	/*
