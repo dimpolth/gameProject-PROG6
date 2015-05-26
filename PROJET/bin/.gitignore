@@ -1,5 +1,8 @@
 Main.java
-/.gitignore
+/TerrainGraphique.class
+/Dimensions.class
+/Pion.class
+/BandeauInfos.class
 /Bouton.class
 /Case$Etat.class
 /Case.class
@@ -14,7 +17,6 @@ Main.java
 /Joueur$typeJoueur.class
 /Joueur.class
 /Moteur.class
-/Pion.class
 /PopupBloquant$1.class
 /PopupBloquant.class
 /PopupMenu.class
@@ -24,8 +26,5 @@ Main.java
 /Terrain$ChoixPrise.class
 /Terrain$Direction.class
 /Terrain.class
-/TerrainGraphique.class
 /Theme$Type.class
 /Theme.class
-/BandeauInfos.class
-/Dimensions.class

@@ -88,7 +88,7 @@ public class IHM extends JFrame implements ComponentListener {
 		*/
 		
 		// ZONE CENTRE
-		tg = new TerrainGraphique();
+		tg = new TerrainGraphique(this);
 		coucheJeu.add(tg, BorderLayout.CENTER);
 		
 		// ZONE SUD
