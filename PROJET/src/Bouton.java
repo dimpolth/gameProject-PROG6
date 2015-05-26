@@ -60,7 +60,6 @@ public class Bouton extends JButton implements MouseListener{
 	 }
 	 
 	 public void setTheme(Theme.Type pTheme){
-		 System.out.println("Thème "+pTheme.getId()+" qz");
 		 fondNormal = new ImageIcon("images/themes/"+pTheme.getId()+"/bouton_normal.png").getImage();
 		 fondSurvol = new ImageIcon("images/themes/"+pTheme.getId()+"/bouton_survol.png").getImage();
 		 fondClique = new ImageIcon("images/themes/"+pTheme.getId()+"/bouton_clique.png").getImage();

@@ -3,7 +3,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 public class Moteur {
-
+	public Communication com;
 	Terrain t;
 	Historique h;
 
@@ -115,5 +115,16 @@ public class Moteur {
 		}
 
 		return false;
+	}
+	
+	void action(Echange e){
+		
+		if(e.getAnnuler()){
+			//this.annuler();
+		}
+			
+		
+		
+		
 	}
 }

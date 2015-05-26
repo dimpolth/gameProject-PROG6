@@ -1,6 +1,7 @@
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -15,12 +16,19 @@ import javax.swing.border.Border;
 
 @SuppressWarnings("serial")
 public class IHM extends JFrame implements ComponentListener {
+	
 	public static void main(String[] args) {
-		IHM m = new IHM();
-		m.setVisible(true);
+		
+		Moteur m = new Moteur();		
+		IHM i = new IHM();
+		i.setVisible(true);
+		
+		i.com = new Communication(i,m,Communication.IHM);
+		m.com = new Communication(i,m,Communication.MOTEUR);
 		
 	}
 	
+	public Communication com;
 	Theme theme;
 	
 	JPanel coucheJeu;
@@ -30,14 +38,17 @@ public class IHM extends JFrame implements ComponentListener {
 	PopupRegles popupR;
 	TerrainGraphique tg;
 
-	public IHM() {  
+	public IHM() {
+		
+		
+		
 		// Initialisation de la fenÃªtre
 		super("Fanorona");
-
+		
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		addComponentListener(this);
 		
-		theme = new Theme();
+		theme = new Theme( this );
 
 		coucheJeu = new JPanel(new BorderLayout());
 		coucheJeu.setBounds(0, 0, getSize().width, getSize().height);
@@ -54,12 +65,15 @@ public class IHM extends JFrame implements ComponentListener {
 		Bouton boutonMenu = new Bouton("Menu");
 		boutonMenu.addActionListener(new Ecouteur(Ecouteur.Bouton.MENU, this));
 		panneauMenu.add(boutonMenu);
-		Bouton boutonParam= new Bouton("ParamÃ¨tres");
+		Bouton boutonParam= new Bouton("Paramètres");
 		boutonParam.addActionListener(new Ecouteur(Ecouteur.Bouton.PARAMETRES, this));
 		panneauMenu.add(boutonParam);
 		
 		// Infos partie en cours
-		JPanel panneauScore = new JPanel( new GridBagLayout() );
+		
+		voletNord.add( new BandeauInfos() );
+		
+		/*JPanel panneauScore = new JPanel( new GridBagLayout() );
 		
 		GridBagConstraints contraintes = new GridBagConstraints();		
 	    contraintes.gridwidth = 1;	    
@@ -67,7 +81,7 @@ public class IHM extends JFrame implements ComponentListener {
 	    contraintes.weightx = 1;
 	    contraintes.weighty = 1;
 	    //contraintes.anchor = GridBagConstraints.CENTER;
-		panneauScore.setBorder(BorderFactory.createLineBorder(Color.black));
+		
 		voletNord.add(panneauScore);
 		JLabel nomJoueur1 = new JLabel("Joueur 1",JLabel.CENTER);
 		panneauScore.add(nomJoueur1,contraintes);
@@ -81,9 +95,10 @@ public class IHM extends JFrame implements ComponentListener {
 		panneauScore.add(scoreJoueur2,contraintes);
 		JLabel nomJoueur2 = new JLabel("Joueur 2",JLabel.CENTER);		
 		panneauScore.add(nomJoueur2,contraintes);
+		*/
 		
 		// ZONE CENTRE
-		tg = new TerrainGraphique();
+		tg = new TerrainGraphique(this);
 		coucheJeu.add(tg, BorderLayout.CENTER);
 		
 		// ZONE SUD
@@ -128,8 +143,16 @@ public class IHM extends JFrame implements ComponentListener {
 			popupM.setVisible(false);
 			break;
 		case SAUVEGARDER:
+			JFileChooser fcSauver = new JFileChooser();
+			if(fcSauver.showOpenDialog(null) == JFileChooser.APPROVE_OPTION){
+				System.out.println("Action : sauvegarder");
+			}		
 			break;
 		case CHARGER:
+			JFileChooser fcCharger = new JFileChooser();
+			if(fcCharger.showSaveDialog(null) == JFileChooser.APPROVE_OPTION){
+				System.out.println("Action : charger");
+			}
 			break;
 		case REGLES:
 			popupM.setVisible(false);
@@ -138,7 +161,13 @@ public class IHM extends JFrame implements ComponentListener {
 		case RECOMMENCER:
 			break;
 		case QUITTER:
-			System.exit(0);
+			// Confirmation avant de quitter
+			String choix[] = {"Oui","Non"};
+			int retour = JOptionPane.showOptionDialog(this, "Voulez-vous sauvegarder la partie avant de quitter ?", "Attention", 1, 1, null, choix, choix[1]);
+			if(retour == 1)
+				System.exit(0);
+			else
+				action(Ecouteur.Bouton.SAUVEGARDER);
 			break;
 		case MENU:
 			popupB.setVisible(true);
@@ -149,6 +178,9 @@ public class IHM extends JFrame implements ComponentListener {
 			popupO.setVisible(true);
 			break;
 		case ANNULER:
+			Echange e = new Echange();
+			e.addAnnuler();
+			com.envoyer(e);
 			break;
 		case REFAIRE:
 			break;
@@ -203,6 +235,60 @@ public class IHM extends JFrame implements ComponentListener {
 }
 
 @SuppressWarnings("serial")
+class BandeauInfos extends JPanel{
+	
+	JLabel j1_identifiant, 
+	j1_score,
+	j2_identifiant,
+	j2_score,
+	texte;
+	
+	
+	BandeauInfos(){
+		super( new GridBagLayout() );	
+		
+		GridBagConstraints contraintes = new GridBagConstraints();		
+	    contraintes.gridwidth = 1;	    
+	    contraintes.fill = GridBagConstraints.BOTH;
+	    contraintes.insets = new Insets(5,5,5,5);
+		
+		j1_identifiant = formater( new JLabel("Joueur 1") );
+		contraintes.weightx = 4;
+		add(j1_identifiant,contraintes);
+		
+		j1_score = formater ( new JLabel("10") );
+		contraintes.weightx = 1;
+		add(j1_score,contraintes);		
+		  
+		texte = formater( new JLabel("Au tour de Joueur 2") );
+		contraintes.weightx = 10;
+		add(texte,contraintes);	  
+		
+		j2_score = formater( new JLabel("3") );
+		contraintes.weightx = 1;
+		add(j2_score,contraintes);
+		
+		j2_identifiant = formater( new JLabel("Joueur 2") );
+		contraintes.weightx = 4;
+		add(j2_identifiant,contraintes);
+	}
+	
+	JLabel formater(JLabel lab){
+		lab.setBorder(BorderFactory.createLineBorder(Color.black));
+		lab.setOpaque(true);
+		lab.setBackground(Color.LIGHT_GRAY);
+		lab.setForeground(Color.BLACK);
+		lab.setHorizontalAlignment(JLabel.CENTER);
+		lab.setFont( new Font(getToolTipText(), Font.BOLD, 18) );
+		return lab;
+	}
+	
+	
+	
+	
+}
+
+@SuppressWarnings("serial")
 class PopupBloquant extends JPanel {
 	public PopupBloquant() {
 		super();
@@ -218,6 +304,7 @@ class PopupBloquant extends JPanel {
 		super.paintComponent(g);
 	}
 }
+
 
 @SuppressWarnings("serial")
 class PopupMenu extends JPanel {
@@ -267,30 +354,67 @@ class PopupMenu extends JPanel {
 @SuppressWarnings("serial")
 class PopupOptions extends JPanel {
 	public PopupOptions(IHM i) {
-		super();
-		setLayout(new GridLayout(5, 2));
-		JLabel selectJoueur1Etiq = new JLabel("Joueur 1 : ");
-		add(selectJoueur1Etiq);
-		JComboBox<String> selectJoueur1 = new JComboBox<>(new String[] {"Humain", "Facile", "Normal", "Difficile"});
-		add(selectJoueur1);
-		JLabel selectJoueur2Etiq = new JLabel("Joueur 2 : ");
-		add(selectJoueur2Etiq);
+		super( new GridBagLayout() );
+		
+		GridBagConstraints contraintes = new GridBagConstraints();		
+	    contraintes.gridwidth = GridBagConstraints.REMAINDER;	
+	    contraintes.fill = GridBagConstraints.BOTH;	  
+	    contraintes.insets =  new Insets(5,5,5,5);
+	    contraintes.ipady = 15;
+	    contraintes.ipadx = 15;
+	    
+	    GridBagConstraints contraintes_groupe = (GridBagConstraints) contraintes.clone();
+	    contraintes_groupe.gridwidth = 1;
+	    GridBagConstraints contraintes_groupe_fin = (GridBagConstraints) contraintes.clone();
+	    contraintes_groupe_fin.gridwidth = GridBagConstraints.REMAINDER;
+		
+		JLabel selectJoueur1Etiq = new JLabel("1er joueur : ");
+		contraintes.gridwidth = GridBagConstraints.REMAINDER;
+		add(selectJoueur1Etiq, contraintes);
+		
+		JTextField identifiantJoueur1 = new JTextField("Joueur 1");		
+		contraintes.gridwidth = 1;
+		add(identifiantJoueur1, contraintes);
+		JComboBox<String> selectJoueur1 = new JComboBox<>(new String[] {"Humain", "Facile", "Normal", "Difficile"});	
+		contraintes.gridwidth = GridBagConstraints.REMAINDER;;
+		add(selectJoueur1,contraintes);
+		
+		JLabel selectJoueur2Etiq = new JLabel("2ème joueur : ");
+		contraintes.gridwidth = GridBagConstraints.REMAINDER;;
+		add(selectJoueur2Etiq,contraintes);
+		JTextField identifiantJoueur2 = new JTextField("Joueur 2");
+		contraintes.gridwidth = 1;
+		add(identifiantJoueur2, contraintes);
 		JComboBox<String> selectJoueur2 = new JComboBox<>(new String[] {"Humain", "Facile", "Normal", "Difficile"});
-		add(selectJoueur2);
-		JLabel themeEtiq = new JLabel("ThÃ¨me : ");
-		add(themeEtiq);
-		JComboBox<String> theme = new JComboBox<>(new String[] {"Bois"});
-		add(theme);
+		contraintes.gridwidth = GridBagConstraints.REMAINDER;;
+		add(selectJoueur2,contraintes);
+		
+		JLabel themeEtiq = new JLabel("Thème graphique : ");
+		contraintes.gridwidth = GridBagConstraints.REMAINDER;;
+		add(themeEtiq,contraintes);
+		JComboBox<String> theme = new JComboBox<>(new String[] {"Boisé"});
+		contraintes.gridwidth = GridBagConstraints.REMAINDER;;
+		add(theme,contraintes);
+		
+		/*
 		JLabel tourEtiq = new JLabel("Premier joueur alÃ©atoire : ");
-		add(tourEtiq);
+		contraintes.gridwidth = 1;
+		add(tourEtiq,contraintes);
 		JCheckBox tour = new JCheckBox();
-		add(tour);
+		contraintes.gridwidth = GridBagConstraints.REMAINDER;;
+		add(tour,contraintes);
+		*/
 		Bouton annuler = new Bouton("Annuler");
 		annuler.addActionListener(new Ecouteur(Ecouteur.Bouton.OPTION_ANNULER, i));
-		add(annuler);
+		contraintes.gridwidth = 1;
+		add(annuler,contraintes);
 		Bouton valider = new Bouton("Valider");
 		valider.addActionListener(new Ecouteur(Ecouteur.Bouton.OPTION_VALIDER, i));
-		add(valider);
+		contraintes.gridwidth = GridBagConstraints.REMAINDER;;
+		add(valider,contraintes);
+		
+		
+		
 	}
 
 	public void paintComponent(Graphics g) {
@@ -329,6 +453,7 @@ class PopupRegles extends JPanel {
 		add(retour,contraintes);
 		
 	}
+	
 	public void paintComponent(Graphics g) {
 		g.setColor(Color.GRAY);
 		g.fillRect(0, 0, getWidth(), getHeight());
