@@ -16,12 +16,19 @@ import javax.swing.border.Border;
 
 @SuppressWarnings("serial")
 public class IHM extends JFrame implements ComponentListener {
+	
 	public static void main(String[] args) {
-		IHM m = new IHM();
-		m.setVisible(true);
+		
+		Moteur m = new Moteur();		
+		IHM i = new IHM();
+		i.setVisible(true);
+		
+		i.com = new Communication(i,m,Communication.IHM);
+		m.com = new Communication(i,m,Communication.MOTEUR);
 		
 	}
 	
+	public Communication com;
 	Theme theme;
 	
 	JPanel coucheJeu;
@@ -32,9 +39,12 @@ public class IHM extends JFrame implements ComponentListener {
 	TerrainGraphique tg;
 
 	public IHM() {
+		
+		
+		
 		// Initialisation de la fenÃªtre
 		super("Fanorona");
-
+		
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		addComponentListener(this);
 		
@@ -168,6 +178,9 @@ public class IHM extends JFrame implements ComponentListener {
 			popupO.setVisible(true);
 			break;
 		case ANNULER:
+			Echange e = new Echange();
+			e.addAnnuler();
+			com.envoyer(e);
 			break;
 		case REFAIRE:
 			break;

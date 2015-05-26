@@ -1,21 +1,24 @@
 
 public class Communication {
 	
-	static final boolean IHM = false;
-	static final boolean MOTEUR= true;
+	static Communication canaux[]= new Communication[2];
+	
+	static final int IHM = 0;
+	static final int MOTEUR= 1;
 	
 	boolean reseau = false;
 	
 	IHM ihm = null;
 	Moteur moteur = null;
-	boolean loc;
+	int loc;
 	
 	
-	// Constructeur Globale
-	Communication(IHM i, Moteur m, boolean l){
+	// Constructeur Global
+	Communication(IHM i, Moteur m, int l){
 		ihm = i;
 		moteur = m;
 		loc = l;
+		Communication.canaux[l] = this;
 	}
 	
 	void setReseau(boolean b){
@@ -24,8 +27,12 @@ public class Communication {
 	
 	void envoyer(Echange e){
 		
-		if(!reseau){
-			recevoir(e);
+				
+		if(loc == Communication.IHM && !reseau){
+			Communication.canaux[ Communication.MOTEUR ].recevoir(e);			
+		}
+		else if(loc == Communication.MOTEUR && !reseau){
+			Communication.canaux[ Communication.IHM ].recevoir(e);			
 		}
 		else{
 			
@@ -37,10 +44,11 @@ public class Communication {
 	void recevoir(Echange e){
 		
 		if(loc == Communication.IHM){
-			//moteur.action(e);
+			//ihm.notifier(e);			
 		}
 		else if(loc == Communication.MOTEUR){
-			//ihm.notifier(e);
+			System.out.println("Reception");
+			moteur.action(e);
 		}
 	}
 	
