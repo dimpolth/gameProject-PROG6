@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Point;
@@ -62,6 +63,8 @@ public class TerrainGraphique extends JPanel implements ComponentListener{
 	}
 	
 	public void paintComponent(Graphics g) {
+		g.setColor(Color.WHITE);
+		g.fillRect(0, 0, getWidth(), getHeight());
 		double largeur = getWidth(), hauteur = getHeight(), origX = 0, origY = 0;
 		if (largeur / hauteur > 19.0 / 11.0) {
 			origX = (int) ((largeur - (hauteur * 19.0 / 11.0)) / 2.0);
@@ -142,3 +145,72 @@ class Pion extends JComponent implements MouseListener, ActionListener {
 	public void actionPerformed(ActionEvent e) {
 	}
 }
+
+class Dimensions {
+	public int origX;
+	public int origY;
+	public double echelle;
+	public double largeur;
+	public double hauteur;
+}
+
+/*
+@SuppressWarnings("serial")
+class Pion extends JComponent implements MouseListener, ActionListener, ComponentListener {
+	private Dimensions d;
+	private Image img;
+	protected Point co;
+	Timer t;
+	Pion(Dimensions d, Point p, Image i) {
+		this.d = d;
+		addMouseListener(this);
+		co = p;
+		img = i;
+		t = null;
+		t = new Timer(1000,this);
+		t.start();
+	}
+	public void deplacer(Point o, Point a) {
+		
+	}
+	public void paintComponent(Graphics g) {
+		System.out.println("caca");
+		g.drawImage(img, 0, 0, getWidth(), getHeight(), null);
+	}
+	@Override
+	public void mouseClicked(MouseEvent e) {
+	}
+	@Override
+	public void mouseEntered(MouseEvent e) {
+	}
+	@Override
+	public void mouseExited(MouseEvent e) {
+	}
+	@Override
+	public void mousePressed(MouseEvent e) {
+	}
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		if(e.getX()  >= 0 && e.getX() < getHeight() && e.getY() >= 0 && e.getY() < getHeight())
+			System.out.println(co.x+"-"+co.y);
+	}
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		System.out.println("bonjour");
+	}
+	@Override
+	public void componentHidden(ComponentEvent e) {
+	}
+	@Override
+	public void componentMoved(ComponentEvent e) {
+	}
+	@Override
+	public void componentResized(ComponentEvent e) {
+		setBounds((int) ((co.y + 0.5) * d.echelle + d.origX), (int) ((co.x + 0.5) * d.echelle + d.origY), (int) (d.echelle / 2), (int) (d.echelle / 2));
+		System.out.println("resize"+d.echelle);
+	}
+	@Override
+	public void componentShown(ComponentEvent e) {
+	}
+}
+*/
