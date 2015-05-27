@@ -29,6 +29,9 @@ Main.java
 /Terrain.class
 /Theme$Type.class
 /Theme.class
+/Moteur$EtatTour.class
+/Moteur$Joueur.class
+/Main.class
 /Communication.class
 /Animation.class
 /AnimDeplacement.class

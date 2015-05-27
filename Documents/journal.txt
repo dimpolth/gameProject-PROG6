@@ -1,11 +1,26 @@
 Lundi 18/05 :
 	-les max et mathieu -> création des structures de base (plateau de jeu)
+	Laurent : mise en place du système de "popup"
 	
 Mardi 19/05 :
 	Adrien : classe "Bouton" + classe "Theme" 
+	Laurent : ordonnancement de l'interface du jeu (menu popup inclut)
+
+Mercredi 20/05 :
+	Laurent : Gestion du TerrainGraphique (Affichage, Sprites)
 
 Jeudi 21/05 :
 	Mise au point du protocole d'échange entre le moteur et les ihm
 	1ère rencontre avec le le tuteur.
 	
 	Adrien : Implementation des boutons sur le projet + Echange + ihm.dessinerTerrain
+	Laurent : Gestion du TerrainGraphique (Events)
+
+Vendredi 21/05 :
+	Laurent : Gestion du TerrainGraphique (debug)
+
+Lundi 25/05 :
+	Laurent : Réflexion sur la mise en place des animations
+
+Mardi 26/05 :
+	Laurent : Mise en place des animations
