@@ -8,6 +8,7 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
@@ -20,14 +21,16 @@ public class TerrainGraphique extends JPanel implements ComponentListener{
 	private Image imgPion1;
 	private Image imgPion2;
 	private IHM ihm;
+	protected long tempsGele;
 	private Dimensions dim;
-	private Pion[][] pions;
+	protected Pion[][] pions;
 	public TerrainGraphique(IHM i) {
 		super(null);
 		imgPlateau = new ImageIcon("images/plateau.png").getImage();
 		imgPion1 = new ImageIcon("images/pionBlanc.png").getImage();
 		imgPion2 = new ImageIcon("images/pionNoir.png").getImage();
 		ihm = i;
+		tempsGele = 0;
 		dim = new Dimensions();
 		pions = new Pion[5][9];
 		for(int j = 0 ; j<5 ; j++) {
@@ -52,8 +55,8 @@ public class TerrainGraphique extends JPanel implements ComponentListener{
 			}
 		}
 	}
-	public void deplacer(Point o, Point a) {
-		pions[o.x][o.y].deplacer(o);
+	public void deplacer(Point o, Point a, ArrayList<Point> l) {
+		pions[o.x][o.y].deplacer((Point)o.clone(), (Point)a.clone(), l);
 		Point tmp = pions[o.x][o.y].coord;
 		pions[o.x][o.y].coord = pions[a.x][a.y].coord;
 		pions[a.x][a.y].coord = tmp;
@@ -62,7 +65,7 @@ public class TerrainGraphique extends JPanel implements ComponentListener{
 		pions[a.x][a.y] = tmpP;
 	}
 	public void paintComponent(Graphics g) {
-		g.setColor(Color.WHITE);
+		g.setColor(new Color(238,238,238));
 		g.fillRect(0, 0, getWidth(), getHeight());
 		double largeur = getWidth(), hauteur = getHeight(), origX = 0, origY = 0;
 		if (largeur / hauteur > 19.0 / 11.0) {
@@ -104,33 +107,27 @@ public class TerrainGraphique extends JPanel implements ComponentListener{
 }
 
 @SuppressWarnings("serial")
-class Pion extends JComponent implements MouseListener, ActionListener, ComponentListener {
-	public Point coord;
-	private TerrainGraphique tg;
-	private Dimensions dim;
+class Pion extends JComponent implements MouseListener, ComponentListener {
+	protected Point coord;
+	protected TerrainGraphique tg;
+	protected Dimensions dim;
 	private Image img;
-	private Timer anim;
-	private long animT;
-	private Point animO;
 	public Pion(Point p, TerrainGraphique t, Dimensions d) {
 		super();
 		coord = p;
 		tg = t;
 		dim = d;
 		img = null;
-		anim = new Timer(17, this);
 		addComponentListener(this);
 		addMouseListener(this);
 	}
 	public void setImg(Image i) {
 		img = i;
 	}
-	public void deplacer(Point o) {
-		anim.start();
-		animT = System.currentTimeMillis();
-		animO = o;
+	public void deplacer(Point o, Point d, ArrayList<Point> l) {
+		new AnimDeplacement(this, o, d, l);
 	}
-	public void paintComponent(Graphics g) {		
+	public void paintComponent(Graphics g) {
 		g.drawImage(img, 0, 0, getWidth(), getHeight(), null);
 	}
 	@Override
@@ -147,23 +144,6 @@ class Pion extends JComponent implements MouseListener, ActionListener, Componen
 	public void componentShown(ComponentEvent e) {
 	}
 	@Override
-	public void actionPerformed(ActionEvent e) {
-		long actuel = System.currentTimeMillis();
-		if(actuel - animT > 750) {
-			anim.stop();
-			animT = 0;
-			animO = null;
-			setBounds((int) ((coord.y + 0.5) * dim.echelle + dim.origX), (int) ((coord.x + 0.5) * dim.echelle + dim.origY), (int) (dim.echelle / 2), (int) (dim.echelle / 2));
-		} else {
-			double xo = ((animO.y + 0.5) * dim.echelle + dim.origX);
-			double xa = ((coord.y + 0.5) * dim.echelle + dim.origX);
-			double yo =((animO.x + 0.5) * dim.echelle + dim.origY);
-			double ya = ((coord.x + 0.5) * dim.echelle + dim.origY);
-			double facteur = (double)(actuel - animT)/750;
-			setBounds((int)((xa-xo)*facteur+xo),(int)((ya-yo)*facteur+yo), (int) (dim.echelle / 2), (int) (dim.echelle / 2));
-		}
-	}
-	@Override
 	public void mouseClicked(MouseEvent e) {
 	}
 	@Override
@@ -177,8 +157,72 @@ class Pion extends JComponent implements MouseListener, ActionListener, Componen
 	}
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		if(e.getX()  >= 0 && e.getX() < getHeight() && e.getY() >= 0 && e.getY() < getHeight())
-			tg.deplacer(new Point(coord.x, coord.y), new Point(coord.x+1, coord.y+1));
+		if(System.currentTimeMillis() > tg.tempsGele && e.getX()  >= 0 && e.getX() < getHeight() && e.getY() >= 0 && e.getY() < getHeight()) {
+			ArrayList<Point> l = new ArrayList<Point>();
+			l.add(new Point(0,0));
+			tg.deplacer(new Point(coord.x, coord.y), new Point(coord.x+1, coord.y+1), l);
+		}
+	}
+}
+
+class AnimDeplacement implements ActionListener {
+	private Pion pion;
+	private long tempsDepart;
+	private Point origine;
+	private Point destination;
+	private ArrayList<Point> aSupprimer;
+	private Timer horloge;
+	public AnimDeplacement(Pion p, Point o, Point d, ArrayList<Point> l) {
+		pion = p;
+		pion.tg.tempsGele = System.currentTimeMillis();
+		tempsDepart = System.currentTimeMillis();
+		origine = o;
+		destination = d;
+		aSupprimer = l;
+		horloge = new Timer(10,this);
+		horloge.start();
+	}
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		long actuel = System.currentTimeMillis();
+		if(actuel - tempsDepart > 1500) {
+			horloge.stop();
+			pion.setBounds((int) ((destination.y + 0.5) * pion.dim.echelle + pion.dim.origX), (int) ((destination.x + 0.5) * pion.dim.echelle + pion.dim.origY), (int) (pion.dim.echelle / 2), (int) (pion.dim.echelle / 2));
+			for(int i=0 ; i<aSupprimer.size() ; i++) {
+				new AnimDisparition(pion.tg.pions[aSupprimer.get(i).x][aSupprimer.get(i).y]);
+			}
+		} else {
+			double xo = ((origine.y + 0.5) * pion.dim.echelle + pion.dim.origX);
+			double xa = ((destination.y + 0.5) * pion.dim.echelle + pion.dim.origX);
+			double yo =((origine.x + 0.5) * pion.dim.echelle + pion.dim.origY);
+			double ya = ((destination.x + 0.5) * pion.dim.echelle + pion.dim.origY);
+			double x = (double)(actuel - tempsDepart)/1500*12;
+			double facteur = (1/(1+Math.exp(-x+6)));
+			pion.setBounds((int)((xa-xo)*facteur+xo),(int)((ya-yo)*facteur+yo), (int) (pion.dim.echelle / 2), (int) (pion.dim.echelle / 2));
+		}
+	}
+}
+class AnimDisparition implements ActionListener {
+	private Pion pion;
+	private long tempsDepart;
+	private Timer horloge;
+	public AnimDisparition(Pion p) {
+		pion = p;
+		tempsDepart = System.currentTimeMillis();
+		horloge = new Timer(10,this);
+		horloge.start();
+	}
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		long actuel = System.currentTimeMillis();
+		if(actuel - tempsDepart > 500) {
+			horloge.stop();
+			pion.setImg(null);
+			pion.repaint();
+		} else {
+			pion.setImg(null);
+			pion.repaint();
+		}
 	}
 }
 
