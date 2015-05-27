@@ -4,11 +4,10 @@ import java.util.Iterator;
 
 public class Moteur {
 
-
 	public enum EtatTour {
 		selectionPion, selectionDestination, choixPrise;
 	}
-	
+
 	public enum Joueur {
 		humain, IA;
 	}
@@ -55,9 +54,9 @@ public class Moteur {
 					listeSolution.add(temp);
 				else {
 
-					pointPrec = listePredecesseurs.get(listePredecesseurs.size()-1);
-					Terrain.Direction dirPrec = t.recupereDirection(pointPrec,p);
-					Terrain.Direction dirSuiv = t.recupereDirection(p,temp);
+					pointPrec = listePredecesseurs.get(listePredecesseurs.size() - 1);
+					Terrain.Direction dirPrec = t.recupereDirection(pointPrec, p);
+					Terrain.Direction dirSuiv = t.recupereDirection(p, temp);
 					if (dirPrec != dirSuiv) {
 						listeSolution.add(temp);
 					}
@@ -116,32 +115,22 @@ public class Moteur {
 		ArrayList<Point> listePions = t.couplibre(joueur);
 		if (listePions.isEmpty()) {
 
-<<<<<<< HEAD
-			for (int ligne = 0; ligne < 5; ligne++)
-				for (int colonne = 0; colonne < 9; colonne++)
+			for (int ligne = 0; ligne < Terrain.LIGNES; ligne++)
+				for (int colonne = 0; colonne < Terrain.COLONNES; colonne++)
 					if (this.t.tableau[ligne][colonne].getOccupation() == joueur)
 						if (this.deplacementPossible((Point) new Point(ligne, colonne).clone(), new ArrayList<Point>()).size() > 0)
 							listePions.add((Point) new Point(ligne, colonne).clone());
 		}
-=======
-		for (int ligne = 0; ligne < Terrain.LIGNES; ligne++)
-			for (int colonne = 0; colonne < Terrain.COLONNES; colonne++)
-				if (this.t.tableau[ligne][colonne].getOccupation() == joueur)
-					if (this.deplacementPossible((Point) new Point(ligne, colonne).clone(), new ArrayList<Point>()).size() > 0)
-						listePions.add((Point) new Point(ligne, colonne).clone());
-
->>>>>>> branch 'master' of https://github.com/dimpolth/gameProject-PROG6.git
 		return listePions;
 	}
 
 	boolean partieTerminee() {
-		if(scoreJ1 == 22 || scoreJ2 == 22)
+		if (scoreJ1 == 22 || scoreJ2 == 22)
 			return true;
 		else
 			return false;
 	}
 
-<<<<<<< HEAD
 	boolean selectionPion(Point p) {
 		if ((t.getCase(p.x, p.y).getOccupation() != joueur) || (e != EtatTour.selectionPion))
 			return false;
@@ -155,72 +144,65 @@ public class Moteur {
 				return false;
 		}
 	}
-	
+
 	boolean selectionDestination(Point p) {
-		ArrayList<Point> l = deplacementPossible(pDepart,h.histoTour );
-		if(l.contains(p)) {
+		ArrayList<Point> l = deplacementPossible(pDepart, h.histoTour);
+		if (l.contains(p)) {
 			pArrive = p;
-			if(t.deplacement(pDepart, pArrive, joueur, l) == 0) {
+			if (t.deplacement(pDepart, pArrive, joueur, l) == 0) {
 				prise();
 				return true;
 			} else
 				return false;
-		}
-		else
+		} else
 			return false;
 	}
-	
+
 	void prise() {
 		Terrain.Direction d = t.recupereDirection(pDepart, pArrive);
 		ArrayList<Point> l = new ArrayList<Point>();
-		if(t.estUnePriseAspiration(pDepart, d) && t.estUnePrisePercussion(pDepart, d)) {
+		if (t.estUnePriseAspiration(pDepart, d) && t.estUnePrisePercussion(pDepart, d)) {
 			Terrain.ChoixPrise choix;
-			if((joueur == Case.Etat.joueur1 && j1 == Joueur.humain) || (joueur == Case.Etat.joueur2 && j2 == Joueur.humain)) {
-				//choix = ech.getChoix();
+			if ((joueur == Case.Etat.joueur1 && j1 == Joueur.humain) || (joueur == Case.Etat.joueur2 && j2 == Joueur.humain)) {
+				// choix = ech.getChoix();
 			} else {
 				choix = IntelligenceArtificielle.choixPriseIAFacile();
 			}
-			//t.manger(joueur, d, pDepart, pArrive, l, choix);
-		} else if(t.estUnePriseAspiration(pDepart, d) && !t.estUnePrisePercussion(pDepart, d)) {
+			// t.manger(joueur, d, pDepart, pArrive, l, choix);
+		} else if (t.estUnePriseAspiration(pDepart, d) && !t.estUnePrisePercussion(pDepart, d)) {
 			t.manger(joueur, d, pDepart, pArrive, l, Terrain.ChoixPrise.parAspiration);
-		} else if(!t.estUnePriseAspiration(pDepart, d) && t.estUnePrisePercussion(pDepart, d)) {
+		} else if (!t.estUnePriseAspiration(pDepart, d) && t.estUnePrisePercussion(pDepart, d)) {
 			t.manger(joueur, d, pDepart, pArrive, l, Terrain.ChoixPrise.parPercussion);
 		}
-		
+
 	}
-	
+
 	void calculerScore() {
 		for (int ligne = 0; ligne < 5; ligne++)
 			for (int colonne = 0; colonne < 9; colonne++) {
-=======
-		for (int ligne = 0; ligne < Terrain.LIGNES; ligne++)
-			for (int colonne = 0; colonne < Terrain.COLONNES; colonne++) {
->>>>>>> branch 'master' of https://github.com/dimpolth/gameProject-PROG6.git
+
 				if (this.t.tableau[ligne][colonne].getOccupation() == Case.Etat.joueur1)
 					scoreJ1++;
 				else if (this.t.tableau[ligne][colonne].getOccupation() == Case.Etat.joueur2)
 					scoreJ2++;
 			}
 	}
-	
+
 	void finTour() {
-		if(joueur == Case.Etat.joueur1)
+		if (joueur == Case.Etat.joueur1)
 			joueur = Case.Etat.joueur2;
 		else
 			joueur = Case.Etat.joueur1;
 		h.effacerHistoTour();
 		e = EtatTour.selectionPion;
 	}
-	
 
-	void action(Echange e){
-		
-		if(e.getAnnuler()){
-			//this.annuler();
+	void action(Echange e) {
+
+		if (e.getAnnuler()) {
+			// this.annuler();
 		}
-			
-		
+
 	}
-		
 
 }
