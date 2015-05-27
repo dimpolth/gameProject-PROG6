@@ -162,19 +162,20 @@ public class Moteur {
 		Terrain.Direction d = t.recupereDirection(pDepart, pArrive);
 		ArrayList<Point> l = new ArrayList<Point>();
 		if (t.estUnePriseAspiration(pDepart, d) && t.estUnePrisePercussion(pDepart, d)) {
+			e = EtatTour.choixPrise;
 			Terrain.ChoixPrise choix;
 			if ((joueur == Case.Etat.joueur1 && j1 == Joueur.humain) || (joueur == Case.Etat.joueur2 && j2 == Joueur.humain)) {
 				// choix = ech.getChoix();
 			} else {
 				choix = IntelligenceArtificielle.choixPriseIAFacile();
 			}
-			// t.manger(joueur, d, pDepart, pArrive, l, choix);
+			//t.manger(joueur, d, pDepart, pArrive, l, choix);
 		} else if (t.estUnePriseAspiration(pDepart, d) && !t.estUnePrisePercussion(pDepart, d)) {
 			t.manger(joueur, d, pDepart, pArrive, l, Terrain.ChoixPrise.parAspiration);
 		} else if (!t.estUnePriseAspiration(pDepart, d) && t.estUnePrisePercussion(pDepart, d)) {
 			t.manger(joueur, d, pDepart, pArrive, l, Terrain.ChoixPrise.parPercussion);
 		}
-
+		
 	}
 
 	void calculerScore() {
@@ -194,11 +195,13 @@ public class Moteur {
 		else
 			joueur = Case.Etat.joueur1;
 		h.effacerHistoTour();
+		h.ajouterTour(t);
 		e = EtatTour.selectionPion;
 	}
 
 	void action(Echange e) {
 
+			
 		if (e.getAnnuler()) {
 			// this.annuler();
 		}
