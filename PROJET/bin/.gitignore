@@ -1,9 +1,9 @@
 Main.java
-/.gitignore
 /BandeauInfos.class
 /Bouton.class
 /Case$Etat.class
 /Case.class
+/Communication.class
 /Coup.class
 /Dimensions.class
 /Echange.class
@@ -29,4 +29,3 @@ Main.java
 /TerrainGraphique.class
 /Theme$Type.class
 /Theme.class
-/Communication.class

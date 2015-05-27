@@ -119,9 +119,9 @@ public class Moteur {
 	
 	void action(Echange e){
 		
-		if(e.getAnnuler()){
+		/*if(e.getAnnuler()){
 			//this.annuler();
-		}
+		}*/
 			
 		
 		

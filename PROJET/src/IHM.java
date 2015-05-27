@@ -102,14 +102,25 @@ public class IHM extends JFrame implements ComponentListener {
 		coucheJeu.add(tg, BorderLayout.CENTER);
 		
 		// ZONE SUD
-		JPanel voletSud = new JPanel();
+		JPanel voletSud = new JPanel( new GridBagLayout() );
 		coucheJeu.add(voletSud, BorderLayout.SOUTH);
+		
+		GridBagConstraints contraintes = new GridBagConstraints();	  
+	    contraintes.fill = GridBagConstraints.BOTH;	  
+	    contraintes.insets =  new Insets(2,2,5,2);
+	  
+		
+	    Bouton boutonValidation = new Bouton("Valider mon tour");
+	    boutonValidation.addActionListener(new Ecouteur(Ecouteur.Bouton.ANNULER, this));
+		contraintes.gridwidth = GridBagConstraints.REMAINDER;
+		voletSud.add(boutonValidation,contraintes);
 		Bouton boutonAnnuler = new Bouton("Annuler");
 		boutonAnnuler.addActionListener(new Ecouteur(Ecouteur.Bouton.ANNULER, this));
-		voletSud.add(boutonAnnuler);
+		contraintes.gridwidth = 1;
+		voletSud.add(boutonAnnuler,contraintes);
 		Bouton boutonRefaire = new Bouton("Refaire");
 		boutonRefaire.addActionListener(new Ecouteur(Ecouteur.Bouton.REFAIRE, this));
-		voletSud.add(boutonRefaire);
+		voletSud.add(boutonRefaire,contraintes);
 
 		JLayeredPane gestionCouche = getLayeredPane();
 		popupB = new PopupBloquant();
@@ -179,7 +190,7 @@ public class IHM extends JFrame implements ComponentListener {
 			break;
 		case ANNULER:
 			Echange e = new Echange();
-			e.addAnnuler();
+			//e.setAnnuler();
 			com.envoyer(e);
 			break;
 		case REFAIRE:
@@ -223,13 +234,13 @@ public class IHM extends JFrame implements ComponentListener {
 	
 	public void notifier(Echange e){
 		
-		if(e.getTerrain() != null){
+		/*if(e.getTerrain() != null){
 			//tg.dessinerTerrain(e.getTerrain());
 		}
 		
 		if(e.getIndication() != null){
 			
-		}
+		}*/
 		
 	}
 }
@@ -249,28 +260,47 @@ class BandeauInfos extends JPanel{
 		
 		GridBagConstraints contraintes = new GridBagConstraints();		
 	    contraintes.gridwidth = 1;	    
-	    contraintes.fill = GridBagConstraints.BOTH;
-	    contraintes.insets = new Insets(5,5,5,5);
+	    contraintes.weightx = 1;
+	    //contraintes.insets = new Insets(5,5,5,5);
 		
+	    contraintes.fill = GridBagConstraints.HORIZONTAL;
 		j1_identifiant = formater( new JLabel("Joueur 1") );
-		contraintes.weightx = 4;
+		contraintes.gridwidth = 5;
+		contraintes.gridheight = 1;
+		contraintes.gridx = 0;
+		contraintes.gridy = 0;
+		
 		add(j1_identifiant,contraintes);
 		
-		j1_score = formater ( new JLabel("10") );
-		contraintes.weightx = 1;
-		add(j1_score,contraintes);		
+		j1_score = formater ( new JLabel("Pions : 10") );		
+		contraintes.gridx = 0;
+		contraintes.gridy = 1;
+		add(j1_score,contraintes);	
+		
 		  
 		texte = formater( new JLabel("Au tour de Joueur 2") );
-		contraintes.weightx = 10;
+		contraintes.fill = GridBagConstraints.BOTH;
+		contraintes.gridwidth = 10;
+		contraintes.gridheight = 2;
+		contraintes.gridx = 7;
+		contraintes.gridy = 0;
+		
 		add(texte,contraintes);	  
 		
-		j2_score = formater( new JLabel("3") );
-		contraintes.weightx = 1;
+		j2_identifiant = formater( new JLabel("Joueur 2") );
+		contraintes.gridx = 17;
+		contraintes.gridy = 0;	
+		contraintes.gridwidth = 5;
+		contraintes.gridheight = 1;
+		//contraintes.fill = GridBagConstraints.HORIZONTAL;
+		add(j2_identifiant,contraintes);
+		
+		j2_score = formater( new JLabel("Pions: 3") );		
+		
+		contraintes.gridy = 1;	
 		add(j2_score,contraintes);
 		
-		j2_identifiant = formater( new JLabel("Joueur 2") );
-		contraintes.weightx = 4;
-		add(j2_identifiant,contraintes);
+		
 	}
 	
 	JLabel formater(JLabel lab){
@@ -325,7 +355,7 @@ class PopupMenu extends JPanel {
 		boutonMenuReprendre.addActionListener(new Ecouteur(Ecouteur.Bouton.REPRENDRE, i));		
 		add(boutonMenuReprendre,contraintesCategorie);
 		
-		Bouton boutonMenuSauvegarder = new Bouton("Sauvegarder cette partie");
+		Bouton boutonMenuSauvegarder = new Bouton("Sauvegarder la partie");
 		boutonMenuSauvegarder.addActionListener(new Ecouteur(Ecouteur.Bouton.SAUVEGARDER, i));
 		add(boutonMenuSauvegarder,contraintes);
 		Bouton boutonMenuCharger = new Bouton("Charger une partie");
@@ -442,7 +472,7 @@ class PopupRegles extends JPanel {
 	    JEditorPane regles = new JEditorPane();
 	    regles.setContentType("text/html");
 	    regles.setEditable(false);	    		
-	    regles.setText("<html><h1>Les rÃ¨gles du Fanorona</h1><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis rhoncus ut est nec posuere. In molestie est augue, sed fermentum felis accumsan quis. Suspendisse potenti. Morbi pharetra purus vitae blandit vehicula. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin elit dui, consequat tristique dictum ac, vulputate congue felis. Cras consequat augue nec suscipit maximus. Etiam fringilla erat lacinia sem tincidunt gravida. Vestibulum porttitor orci ut ante eleifend, tincidunt molestie elit ornare. Suspendisse placerat neque odio, a posuere quam congue non. Nulla diam orci, lobortis ut orci et, interdum malesuada arcu. Vestibulum porttitor vehicula urna, et ornare mi eleifend eget. In consequat congue eros eget volutpat. Proin quis rhoncus velit.</p></html>"); 
+	    regles.setText("<html><h1>Les règles du Fanorona</h1><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis rhoncus ut est nec posuere. In molestie est augue, sed fermentum felis accumsan quis. Suspendisse potenti. Morbi pharetra purus vitae blandit vehicula. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin elit dui, consequat tristique dictum ac, vulputate congue felis. Cras consequat augue nec suscipit maximus. Etiam fringilla erat lacinia sem tincidunt gravida. Vestibulum porttitor orci ut ante eleifend, tincidunt molestie elit ornare. Suspendisse placerat neque odio, a posuere quam congue non. Nulla diam orci, lobortis ut orci et, interdum malesuada arcu. Vestibulum porttitor vehicula urna, et ornare mi eleifend eget. In consequat congue eros eget volutpat. Proin quis rhoncus velit.</p></html>"); 
 		add(regles,contraintes);
 		contraintes.fill = GridBagConstraints.NONE;
 		contraintes.ipadx = 100;
