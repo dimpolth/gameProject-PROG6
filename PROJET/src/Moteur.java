@@ -19,7 +19,7 @@ public class Moteur {
   
 	ArrayList<Point> deplacementPossible(Point p, ArrayList<Point> listePredecesseurs) {
 		ArrayList<Point> listeSuc = t.tableau[p.x][p.y].getSucc();
-		ArrayList<Point> listeSucPossibles = new ArrayList<Point>();
+		ArrayList<Point> listeSolution = new ArrayList<Point>();
 
 		Iterator<Point> it = listeSuc.iterator();
 
@@ -29,20 +29,20 @@ public class Moteur {
 			Point temp = (Point) it.next().clone();
 			if (t.tableau[temp.x][temp.y].getOccupation() == Case.Etat.vide && (!listePredecesseurs.contains(temp))) {
 				if (listePredecesseurs.size() == 0)
-					listeSucPossibles.add(temp);
+					listeSolution.add(temp);
 				else {
 					pointPrec = listePredecesseurs.get(listePredecesseurs.size()-1);
 					Terrain.Direction dirPrec = t.recupereDirection(pointPrec,p);
 					Terrain.Direction dirSuiv = t.recupereDirection(p,temp);
 					if (dirPrec != dirSuiv) {
-						listeSucPossibles.add(temp);
+						listeSolution.add(temp);
 					}
 				}
 
 			}
 		}
 
-		return listeSucPossibles;
+		return listeSolution;
 	}
 
 	boolean memeDirection(Point p1, Point p2, Point p3) {
@@ -90,8 +90,8 @@ public class Moteur {
 	ArrayList<Point> listePionsJouables(Case.Etat joueur) {
 		ArrayList<Point> listePions = new ArrayList<Point>();
 
-		for (int ligne = 0; ligne < 5; ligne++)
-			for (int colonne = 0; colonne < 9; colonne++)
+		for (int ligne = 0; ligne < Terrain.LIGNES; ligne++)
+			for (int colonne = 0; colonne < Terrain.COLONNES; colonne++)
 				if (this.t.tableau[ligne][colonne].getOccupation() == joueur)
 					if (this.deplacementPossible((Point) new Point(ligne, colonne).clone(), new ArrayList<Point>()).size() > 0)
 						listePions.add((Point) new Point(ligne, colonne).clone());
@@ -102,8 +102,8 @@ public class Moteur {
 	boolean partieTerminee() {
 		int nbPionsJoueur1 = 0, nbPionsJoueur2 = 0;
 
-		for (int ligne = 0; ligne < 5; ligne++)
-			for (int colonne = 0; colonne < 9; colonne++) {
+		for (int ligne = 0; ligne < Terrain.LIGNES; ligne++)
+			for (int colonne = 0; colonne < Terrain.COLONNES; colonne++) {
 				if (this.t.tableau[ligne][colonne].getOccupation() == Case.Etat.joueur1)
 					nbPionsJoueur1++;
 				else if (this.t.tableau[ligne][colonne].getOccupation() == Case.Etat.joueur2)
