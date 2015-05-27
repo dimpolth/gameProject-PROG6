@@ -59,26 +59,38 @@ public class IntelligenceArtificielle {
 		
 		Coup coupSolution;
 		Point pDepart = null, pArrivee, pArriveeTemp;
-		ArrayList<Point> listePionsJouables, listeSuccesseursPionsJouables, listeSolution = new ArrayList<Point>();
+		ArrayList<Point> listePionsJouables, listeCoupsObligatoires, listeSuccesseursPionsJouables = new ArrayList<Point>(), listeSolution = new ArrayList<Point>();
 		Random rand = new Random();
+		boolean triSuccesseurs = false;
 		Iterator<Point> it;
 
-		if(pDep != null)
-			pDepart = pDep;
+		if(pDep != null) 
+			pDepart = pDep; 
 		
 		//*****   Sélection du point de départ et d'arrivée ****************//
+	
 		
-		if(pDep == null){ // DEBUT DE TOUR - Ce cas est présent lors du début de tour d'une IA et qu'aucun point de départ n'est imposé
-			listePionsJouables = this.moteur.listePionsJouables(this.joueurIA.getJoueurID());
-			do{
+		if(pDep == null){ // DEBUT DE TOUR
+			listeCoupsObligatoires = this.moteur.t.couplibre(this.joueurIA); // On regarde si on a des coups obligatoires
+			
+			if(listeCoupsObligatoires.isEmpty()){ // DEBUT DE TOUR - Sans coup obligatoire (mouvement libre n'amenant aucune prise)
+				listePionsJouables = this.moteur.listePionsJouables(this.joueurIA.getJoueurID());
 				pDepart = listePionsJouables.get(rand.nextInt(listePionsJouables.size()));
-				listeSolution = this.moteur.deplacementPossible(pDepart, listePredecesseurs);
-			}while(listeSolution.size() <= 0);
+				listeSolution = this.moteur.t.getTableau()[pDepart.x][pDepart.y].getSucc();
+			}
+			else{ // DEBUT DE TOUR - Avec coup/prise obligatoire
+				listePionsJouables = listeCoupsObligatoires;
+				pDepart = listePionsJouables.get(rand.nextInt(listePionsJouables.size()));
+				listeSuccesseursPionsJouables = this.moteur.t.getTableau()[pDepart.x][pDepart.y].getSucc();
+				triSuccesseurs = true;
+			}
+		}	
+		else { // MILIEU/FIN DE TOUR - Ce cas est donc lors d'un xième coup d'un tour (x > 1) on a un point de départ 
+			listeSuccesseursPionsJouables = this.moteur.deplacementPossible(pDepart, listePredecesseurs);
+			triSuccesseurs = true;
 		}
 		
-					 // MILIEU/FIN DE TOUR - Ce cas est donc lors d'un xième coup d'un tour (x > 1) on a un point de départ 
-		else {		 //	imposé qui est le point d'arrivée précédent
-			listeSuccesseursPionsJouables = this.moteur.deplacementPossible(pDepart, listePredecesseurs);
+		if(triSuccesseurs){ // Si ce booléen vaut vrai il faut trier les successeurs pour n'avoir que des coups/prises
 			it = listeSuccesseursPionsJouables.iterator();
 			
 			while(it.hasNext()){
@@ -89,9 +101,8 @@ public class IntelligenceArtificielle {
 			}
 		}
 		
-		
 		// Dans le cas ci-dessous on a aucune coup jouable on renvoie donc en pArrivee (-1;-1)
-		if(listeSolution.size() == 0) // Ce cas peut se présenter dans une continuité de tour
+		if(listeSolution.size() == 0) // Ce cas peut se présenter dans une continuité de tour lorsque plus aucune prise n'est possible
 			pArrivee = new Point(-1,-1);
 		else
 			pArrivee = listeSolution.get(rand.nextInt(listeSolution.size()));
@@ -118,8 +129,8 @@ public class IntelligenceArtificielle {
 	 */
 	private Coup coupNormal(ArrayList<Point> listePredecesseurs, Point pDep){
 		Coup coupSolution = null;
-		Point pDepart = null, pArrivee, pArriveeTemp;
-		ArrayList<Point> listePionsJouables, listeSuccesseursPionsJouables, listeSolution = new ArrayList<Point>();
+		Point pDepart = null;
+		ArrayList<Point> listeCoupsObligatoires, listeSuccesseursPionsJouables, listePionsJouables = new ArrayList<Point>();
 		Random rand = new Random();
 		Iterator<Point> it;
 		int alpha = MIN, beta = MAX;
@@ -128,8 +139,22 @@ public class IntelligenceArtificielle {
 			pDepart = pDep;
 		
 		//*****   Sélection du point de départ et d'arrivée ****************//
+		if(pDep == null){ // DEBUT DE TOUR - Ce cas est présent lors du début de tour d'une IA 
+			listeCoupsObligatoires = this.moteur.t.couplibre(this.joueurIA); // On regarde si on a des coups obligatoires
+			
+			if(!listeCoupsObligatoires.isEmpty()) // Si oui les pions jouables sont uniquement dans cette liste
+				listePionsJouables = listeCoupsObligatoires;
+			else 								  // Sinon on peut récupérer les pions qui n'effectuent aucune prise
+				listePionsJouables = this.moteur.listePionsJouables(this.joueurIA.getJoueurID());
+		}
+		
+		
+		
+		
+		
 		// ALPHA BETA
-		coupSolution = alphaBeta(5,alpha,beta);
+		
+		coupSolution = alphaBeta(5,alpha,beta, listePionsJouables);
 		
 		return coupSolution;
 	}
@@ -137,12 +162,27 @@ public class IntelligenceArtificielle {
 	/*
 	 * Application de l'algorithme alpha beta
 	 */
-	private Coup alphaBeta(int profondeur, int alpha, int beta){
+	private Coup alphaBeta(int profondeur, int alpha, int beta, ArrayList<Point> listePionsJouables){
 		Coup coupSolution = null;
+		Iterator<Point> it;
+		Point pArrivee = null, pArriveeTemp = null, pDepart = null, pDepartTemp;
+		int valMax = MIN, valTemp;
 		
+		it = listePionsJouables.iterator();
 		
+		while(it.hasNext()){
+			pDepartTemp = (Point) it.next().clone();
+			
+			valTemp = beta(profondeur, alpha, beta);
+			
+			if(valTemp > valMax){
+				valMax = valTemp;
+				pArrivee = (Point) pArriveeTemp.clone();
+			}
+			
+		}
 		
-		return null;
+		return new Coup(pDepart, pArrivee);
 	}
 	
 	/*

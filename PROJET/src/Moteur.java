@@ -199,13 +199,7 @@ public class Moteur {
 		e = EtatTour.selectionPion;
 	}
 
-	void action(Echange e) {
-
-			
-		if (e.getAnnuler()) {
-			// this.annuler();
-		}
-
+	void action(Echange e) {			
+		
 	}
-
 }

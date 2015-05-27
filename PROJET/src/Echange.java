@@ -1,6 +1,8 @@
-import java.awt.Point;
 import java.util.HashMap;
 //import java.util.Iterator;
+
+import java.util.Map;
+
 
 /*
  * 
@@ -11,11 +13,34 @@ import java.util.HashMap;
 
 public class Echange {
 	
-	HashMap<String,Object> infos = new HashMap<String,Object>();
+	Map<String,Object> infos = new HashMap<String,Object>();
 	
 	public void vider(){
 		infos.clear();
 	}
+	
+	public void ajouter(String id, Object donnee){
+		infos.put(id, donnee);
+	}
+	
+	public java.util.Set<String> getAll(){
+		return infos.keySet();
+	}
+	
+	public Object get(String cle){
+		return infos.get(cle);
+	}
+	
+	/*
+	public void setPoint(Point pt){
+		infos.put("point", pt);
+	}
+	
+	public Point getPoint(){
+		return (Point)infos.get("point");
+	}
+	
+	
 	// Moteur -> IHM
 	public void addIndication(String indic){ 
 		infos.put("indication", indic);
@@ -39,17 +64,25 @@ public class Echange {
 	
 	// IHM -> MOTEUR
 	
-	public void addAnnuler(){
+	public void setAnnuler(){
 		infos.put("annuler", true);
 	}
 	public boolean getAnnuler(){
 		return (boolean)infos.get("annuler");
 	}
-	public void addCaseCliquee(Point pt){
-		infos.put("caseCliquee", pt);
-	}
+	*/
 	
-
+	public void toto(){
+	
+		for (String dataType : this.getAll()) {		   
+		    Object dataValue = this.get(dataType);
+		    
+		    switch(dataType){
+		    	case "point" : System.out.println("Point reçu :"+((java.awt.Point)dataValue).toString()+""); break;
+		    }
+		    // ...
+		}
+	}
 	
 	
 	
@@ -59,6 +92,16 @@ public class Echange {
 		
 
 }
+
+/*
+ * 
+ 
+
+ 
+ 
+ 
+ */
+
 
 /*
 // Moteur

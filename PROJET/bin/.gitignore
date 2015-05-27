@@ -6,6 +6,7 @@ Main.java
 /Bouton.class
 /Case$Etat.class
 /Case.class
+/Communication.class
 /Coup.class
 /Dimensions.class
 /Echange.class
@@ -29,10 +30,12 @@ Main.java
 /Terrain.class
 /Theme$Type.class
 /Theme.class
-<<<<<<< HEAD
 /Moteur$EtatTour.class
 /Moteur$Joueur.class
-=======
 /Main.class
 /Communication.class
->>>>>>> branch 'master' of https://github.com/dimpolth/gameProject-PROG6.git
+/Animation.class
+/AnimDeplacement.class
+/Anim$Dimensions.class
+/Anim.class
+/AnimDisparition.class
