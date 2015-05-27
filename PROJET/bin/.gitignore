@@ -26,3 +26,5 @@ Main.java
 /TerrainGraphique.class
 /Theme$Type.class
 /Theme.class
+/Moteur$EtatTour.class
+/Moteur$Joueur.class
