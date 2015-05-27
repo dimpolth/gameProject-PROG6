@@ -158,9 +158,6 @@ class Pion extends JComponent implements MouseListener, ComponentListener {
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		if(System.currentTimeMillis() > tg.tempsGele && e.getX()  >= 0 && e.getX() < getHeight() && e.getY() >= 0 && e.getY() < getHeight()) {
-			ArrayList<Point> l = new ArrayList<Point>();
-			l.add(new Point(0,0));
-			tg.deplacer(new Point(coord.x, coord.y), new Point(coord.x+1, coord.y+1), l);
 		}
 	}
 }
