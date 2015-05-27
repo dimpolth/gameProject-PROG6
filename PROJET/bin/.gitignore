@@ -1,4 +1,7 @@
 Main.java
+/TerrainGraphique.class
+/Dimensions.class
+/Pion.class
 /BandeauInfos.class
 /Bouton.class
 /Case$Etat.class
@@ -16,7 +19,6 @@ Main.java
 /Joueur$typeJoueur.class
 /Joueur.class
 /Moteur.class
-/Pion.class
 /PopupBloquant$1.class
 /PopupBloquant.class
 /PopupMenu.class
@@ -26,6 +28,14 @@ Main.java
 /Terrain$ChoixPrise.class
 /Terrain$Direction.class
 /Terrain.class
-/TerrainGraphique.class
 /Theme$Type.class
 /Theme.class
+/Moteur$EtatTour.class
+/Moteur$Joueur.class
+/Main.class
+/Communication.class
+/Animation.class
+/AnimDeplacement.class
+/Anim$Dimensions.class
+/Anim.class
+/AnimDisparition.class

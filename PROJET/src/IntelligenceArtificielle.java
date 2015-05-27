@@ -14,6 +14,8 @@ public class IntelligenceArtificielle {
 	private difficulteIA niveauDifficulte;
 	private Joueur joueurIA;
 	private Moteur moteur;
+	private static final int MAX = 1000;
+	private static final int MIN = -1000;
 	
 	public IntelligenceArtificielle(difficulteIA niveauDifficulte, Joueur joueurIA, Moteur m){
 		this.setNiveauDifficulte(niveauDifficulte);
@@ -66,9 +68,8 @@ public class IntelligenceArtificielle {
 		
 		//*****   Sélection du point de départ et d'arrivée ****************//
 		
-		if(pDep == null){ // DEBUT DE TOUR - Ce cas est présent lors du début de tour d'une IA aucun point de départ imposé
+		if(pDep == null){ // DEBUT DE TOUR - Ce cas est présent lors du début de tour d'une IA et qu'aucun point de départ n'est imposé
 			listePionsJouables = this.moteur.listePionsJouables(this.joueurIA.getJoueurID());
-			
 			do{
 				pDepart = listePionsJouables.get(rand.nextInt(listePionsJouables.size()));
 				listeSolution = this.moteur.deplacementPossible(pDepart, listePredecesseurs);
@@ -87,6 +88,7 @@ public class IntelligenceArtificielle {
 					listeSolution.add(pArriveeTemp);
 			}
 		}
+		
 		
 		// Dans le cas ci-dessous on a aucune coup jouable on renvoie donc en pArrivee (-1;-1)
 		if(listeSolution.size() == 0) // Ce cas peut se présenter dans une continuité de tour
@@ -115,10 +117,50 @@ public class IntelligenceArtificielle {
 	 * Applique l'algorithme permettant à l'ordinateur de jouer un coup en difficulté "normal"
 	 */
 	private Coup coupNormal(ArrayList<Point> listePredecesseurs, Point pDep){
-		Coup pSolution = null;
+		Coup coupSolution = null;
+		Point pDepart = null, pArrivee, pArriveeTemp;
+		ArrayList<Point> listePionsJouables, listeSuccesseursPionsJouables, listeSolution = new ArrayList<Point>();
+		Random rand = new Random();
+		Iterator<Point> it;
+		int alpha = MIN, beta = MAX;
+
+		if(pDep != null)
+			pDepart = pDep;
 		
-		return pSolution;
+		//*****   Sélection du point de départ et d'arrivée ****************//
+		// ALPHA BETA
+		coupSolution = alphaBeta(5,alpha,beta);
+		
+		return coupSolution;
 	}
+	
+	/*
+	 * Application de l'algorithme alpha beta
+	 */
+	private Coup alphaBeta(int profondeur, int alpha, int beta){
+		Coup coupSolution = null;
+		
+		
+		
+		return null;
+	}
+	
+	/*
+	 * Alpha :
+	 */
+	private int alpha(int profondeur, int alpha, int beta){
+		
+		return beta;
+	}
+	
+	/*
+	 * Beta :
+	 */
+	private int beta(int profondeur, int alpha, int beta){
+		
+		return beta;
+	}
+	
 	
 	/*
 	 * Applique l'algorithme permettant à l'ordinateur de jouer un coup en difficulté "difficile"

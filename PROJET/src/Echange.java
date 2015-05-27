@@ -1,4 +1,3 @@
-
 import java.util.HashMap;
 //import java.util.Iterator;
 
@@ -59,6 +58,10 @@ public class Echange {
 		return (Terrain)infos.get("terrain");
 	}
 	
+	public  void addChoix() {
+		
+	}
+	
 	// IHM -> MOTEUR
 	
 	public void setAnnuler(){
@@ -80,7 +83,6 @@ public class Echange {
 		    // ...
 		}
 	}
-	
 	
 	
 	

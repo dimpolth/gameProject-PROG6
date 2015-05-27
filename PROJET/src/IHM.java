@@ -9,6 +9,7 @@ import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.Point;
 import java.awt.event.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.swing.*;
@@ -98,7 +99,7 @@ public class IHM extends JFrame implements ComponentListener {
 		*/
 		
 		// ZONE CENTRE
-		tg = new TerrainGraphique();
+		tg = new TerrainGraphique(this);
 		coucheJeu.add(tg, BorderLayout.CENTER);
 		
 		// ZONE SUD
@@ -139,12 +140,13 @@ public class IHM extends JFrame implements ComponentListener {
 		
 		theme.setTheme(Theme.Type.BOIS);
 
+		setMinimumSize(new Dimension(640, 480));
 		setSize(1000, 750);
 		setVisible(true);
 	}
 	
-	public void deplacer(Point o, Point a) {
-		tg.deplacer(o,a);
+	public void deplacer(Point o, Point a, ArrayList<Point> l) {
+		tg.deplacer(o,a,l);
 	}
 	
 	public void action(Ecouteur.Bouton id) {
