@@ -60,6 +60,18 @@ public class Terrain {
 				this.tableau[2][3].setOccupation(Case.Etat.joueur2);
 				// Joueur 2 DOIT gagner
 			break;
+			
+			case 3 :  // Test IA Moyenne
+				this.tableau[0][2].setOccupation(Case.Etat.joueur2);
+				this.tableau[0][5].setOccupation(Case.Etat.joueur2);
+				this.tableau[0][6].setOccupation(Case.Etat.joueur1);
+				this.tableau[1][2].setOccupation(Case.Etat.joueur2);
+				this.tableau[3][1].setOccupation(Case.Etat.joueur1);
+				this.tableau[3][2].setOccupation(Case.Etat.joueur1);
+				this.tableau[3][4].setOccupation(Case.Etat.joueur2);
+				this.tableau[4][0].setOccupation(Case.Etat.joueur1);
+				this.tableau[4][3].setOccupation(Case.Etat.joueur2);
+			break;
 		}
 	}
 	
