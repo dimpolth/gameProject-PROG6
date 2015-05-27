@@ -4,6 +4,7 @@ import java.util.Iterator;
 
 public class Moteur {
 
+
 	public enum EtatTour {
 		selectionPion, selectionDestination, choixPrise;
 	}
@@ -11,6 +12,8 @@ public class Moteur {
 	public enum Joueur {
 		humain, IA;
 	}
+
+	public Communication com;
 
 	Terrain t;
 	Historique h;
@@ -38,10 +41,10 @@ public class Moteur {
 	}
 
 	ArrayList<Point> deplacementPossible(Point p, ArrayList<Point> listePredecesseurs) {
-		ArrayList<Point> l = t.tableau[p.x][p.y].getSucc();
+		ArrayList<Point> listeSuc = t.tableau[p.x][p.y].getSucc();
 		ArrayList<Point> listeSucPossibles = new ArrayList<Point>();
 
-		Iterator<Point> it = l.iterator();
+		Iterator<Point> it = listeSuc.iterator();
 
 		Point pointPrec = new Point();
 
@@ -51,10 +54,11 @@ public class Moteur {
 				if (listePredecesseurs.size() == 0)
 					listeSucPossibles.add(temp);
 				else {
-					pointPrec = listePredecesseurs.get(listePredecesseurs.size());
-					Terrain.Direction d1 = t.recupereDirection(pointPrec, p);
-					Terrain.Direction d2 = t.recupereDirection(p, temp);
-					if (d1 != d2) {
+
+					pointPrec = listePredecesseurs.get(listePredecesseurs.size()-1);
+					Terrain.Direction dirPrec = t.recupereDirection(pointPrec,p);
+					Terrain.Direction dirSuiv = t.recupereDirection(p,temp);
+					if (dirPrec != dirSuiv) {
 						listeSucPossibles.add(temp);
 					}
 				}
@@ -194,4 +198,15 @@ public class Moteur {
 		e = EtatTour.selectionPion;
 	}
 	
+
+	void action(Echange e){
+		
+		if(e.getAnnuler()){
+			//this.annuler();
+		}
+			
+		
+	}
+		
+
 }

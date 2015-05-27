@@ -1,8 +1,13 @@
 Main.java
+/TerrainGraphique.class
+/Dimensions.class
+/Pion.class
+/BandeauInfos.class
 /Bouton.class
 /Case$Etat.class
 /Case.class
 /Coup.class
+/Dimensions.class
 /Echange.class
 /Ecouteur$Bouton.class
 /Ecouteur.class
@@ -13,7 +18,6 @@ Main.java
 /Joueur$typeJoueur.class
 /Joueur.class
 /Moteur.class
-/Pion.class
 /PopupBloquant$1.class
 /PopupBloquant.class
 /PopupMenu.class
@@ -23,8 +27,12 @@ Main.java
 /Terrain$ChoixPrise.class
 /Terrain$Direction.class
 /Terrain.class
-/TerrainGraphique.class
 /Theme$Type.class
 /Theme.class
+<<<<<<< HEAD
 /Moteur$EtatTour.class
 /Moteur$Joueur.class
+=======
+/Main.class
+/Communication.class
+>>>>>>> branch 'master' of https://github.com/dimpolth/gameProject-PROG6.git
