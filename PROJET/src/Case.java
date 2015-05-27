@@ -53,11 +53,11 @@ public class Case {
 		 */
 		if(this.pos.x - 1 >= 0) // successeur haut
 			this.succ.add(new Point(this.pos.x - 1,this.pos.y));
-		if(this.pos.x + 1  < 5) // successeur bas
+		if(this.pos.x + 1  < Terrain.LIGNES) // successeur bas
 			this.succ.add(new Point(this.pos.x + 1,this.pos.y));
 		if(this.pos.y - 1 >= 0) // successeur gauche
 			this.succ.add(new Point(this.pos.x,this.pos.y - 1));
-		if(this.pos.y + 1 < 9) // successeur droite
+		if(this.pos.y + 1 < Terrain.COLONNES) // successeur droite
 			this.succ.add(new Point(this.pos.x,this.pos.y + 1));
 		
 		if((this.pos.x % 2) == 0){ // on est sur une ligne impaire (en admettant que la ligne 0 est en fait la première ligne)
@@ -72,11 +72,11 @@ public class Case {
 		if(diagonales){ // on doit ajouter SI POSSIBLE les 4 successeurs présents en diagonale
 			if( (this.pos.x - 1 >= 0) && (this.pos.y - 1 >= 0) ) // successeur diagonale haut/gauche
 				this.succ.add(new Point(this.pos.x - 1,this.pos.y - 1));
-			if( (this.pos.x - 1 >= 0) && (this.pos.y + 1 < 9) ) // successeur diagonale haut/droite
+			if( (this.pos.x - 1 >= 0) && (this.pos.y + 1 < Terrain.COLONNES) ) // successeur diagonale haut/droite
 				this.succ.add(new Point(this.pos.x - 1,this.pos.y + 1));
-			if( (this.pos.x + 1 < 5) && (this.pos.y - 1 >= 0) ) // successeur diagonale bas/gauche
+			if( (this.pos.x + 1 < Terrain.LIGNES) && (this.pos.y - 1 >= 0) ) // successeur diagonale bas/gauche
 				this.succ.add(new Point(this.pos.x + 1,this.pos.y - 1));
-			if( (this.pos.x + 1 < 5) && (this.pos.y + 1 < 9) ) // successeur diagonale bas/droite
+			if( (this.pos.x + 1 < Terrain.LIGNES) && (this.pos.y + 1 < Terrain.COLONNES) ) // successeur diagonale bas/droite
 				this.succ.add(new Point(this.pos.x + 1,this.pos.y + 1));
 		}
 		
