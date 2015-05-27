@@ -128,7 +128,7 @@ public class Terrain {
 	}
 
 
-	public int deplacement(Point depart, Point arrive, Joueur joueurCourant, ArrayList<Point> listePredecesseurs) {
+	public int deplacement(Point depart, Point arrive, Case.Etat joueurCourant, ArrayList<Point> listePredecesseurs) {
 
 		Iterator<Point> iterator = listePredecesseurs.iterator();
 
@@ -140,7 +140,7 @@ public class Terrain {
 			}
 
 
-		if (tableau[depart.x][depart.y].getOccupation() != joueurCourant.getJoueurID()) {
+		if (tableau[depart.x][depart.y].getOccupation() != joueurCourant) {
 			return 3;
 		} else {
 			if (tableau[arrive.x][arrive.y].getOccupation() != Case.Etat.vide) {
@@ -186,67 +186,36 @@ public class Terrain {
 		return dir;
 	}
 
-	public ArrayList<Point> manger(Joueur joueurCourant, Direction dir, Point pDepart, Point pArrivee) {
 
-		Case.Etat joueurOppose = null;
-		Point offsetPercu, offsetAspi;
-		Point pTestOffset = new Point(0, 0);
-		boolean priseParPercussion = false, priseParAspiration = false;
-		ArrayList<Point> listePionsManges = new ArrayList<Point>();
+	public int manger(Case.Etat joueurCourant, Direction dir, Point pDepart, Point pArrivee, ArrayList<Point> listePionsManges, ChoixPrise c) {
+
+
+		Case.Etat joueurOppose;
+		int nbPionsManges = 0;
+
 
 		// On indique dans une variable qui est l'adversaire pour reconnaître ses pions
 		
-		if (joueurCourant.getJoueurID() == Case.Etat.joueur1)
+		if (joueurCourant == Case.Etat.joueur1)
 			joueurOppose = Case.Etat.joueur2;
-		else if(joueurCourant.getJoueurID() == Case.Etat.joueur2)
+
+		else if (joueurCourant                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   == Case.Etat.joueur2)
+
 			joueurOppose = Case.Etat.joueur1;
 
+		else
+			return -1;
+		
+		if (c == ChoixPrise.parPercussion)  							// Sinon on applique la prise selon le								
 
-		// Gestion de l'offset pour une éventuelle prise par percussion
-		offsetPercu = this.offsetPercussion(dir, pArrivee);
-		// Gestion de l'offset pour une éventuelle prise par aspiration
-		offsetAspi = this.offsetAspiration(dir, pDepart);
-
-		if (!offsetPercu.equals(pTestOffset)) {
-			// Ici si la case suivante à la position d'arrivée est à
-			// l'adversaire on a une percussion
-			if (this.tableau[pArrivee.x + offsetPercu.x][pArrivee.y + offsetPercu.y].getCase().getOccupation() == joueurOppose)
-				priseParPercussion = true;
-		}
-
-		if (!offsetAspi.equals(pTestOffset)) {
-			// Ici si la case précédente à la position de départ est à
-			// l'adversaire on a une aspiration
-			if (this.tableau[pDepart.x + offsetAspi.x][pDepart.y + offsetAspi.y].getCase().getOccupation() == joueurOppose)
-				priseParAspiration = true;
-		}
-
-		/*
-		 * C'est ici que la mise à jour de la case mangée s'effectue et qu'on
-		 * effectue un appel récursif à manger
-		 */
-		if (priseParAspiration && priseParPercussion) { // Si on a deux types de
-														// prise un choix													
-			ChoixPrise choix;							// s'impose
-			
-			if(joueurCourant.isJoueurHumain())
-				choix = this.choixPriseHumain();
-			else
-				choix = IntelligenceArtificielle.choixPriseIAFacile();
-			
-			if (choix == ChoixPrise.parPercussion) {
-				this.prisePercussion(pArrivee, dir, joueurOppose, listePionsManges);
-			} else {
-				this.priseAspiration(pDepart, dir, joueurOppose, listePionsManges);
-			}
-		} 	
-		else if (priseParPercussion)  							// Sinon on applique la prise selon le								
 			this.prisePercussion(pArrivee, dir, joueurOppose, listePionsManges); // seul choix possible
 			
-		else if (priseParAspiration) 
+		else if (c == ChoixPrise.parAspiration) 
 			this.priseAspiration(pDepart, dir, joueurOppose, listePionsManges);
 		
-		return listePionsManges;
+		nbPionsManges = listePionsManges.size();
+		return nbPionsManges;
+
 	}
 
 	/*
@@ -403,7 +372,7 @@ public class Terrain {
 	 * Cette méthode intervient lorsque le joueur peut lors d'un déplacement effectuer soit une prise par 
 	 * percussion soit par aspiration, il doit donc choisir entre une des deux solutions
 	 */
-	ChoixPrise choixPriseHumain(){
+	/*ChoixPrise choixPriseHumain(){
 
 		this.sc = new Scanner(System.in);
 		char choixPrise = 'Y';
@@ -417,7 +386,7 @@ public class Terrain {
 			return ChoixPrise.parPercussion;
 		else
 			return ChoixPrise.parAspiration;
-	}
+	}*/
 
 	boolean estUnePrisePercussion(Point depart, Direction d) {
 		Point cible = new Point();
@@ -510,7 +479,7 @@ public class Terrain {
 
 
 
-	ArrayList<Point> couplibre(Joueur joueurCourant) {
+	ArrayList<Point> couplibre(Case.Etat joueurCourant) {
 		ArrayList<Point> reponse = new ArrayList<Point>();
 	
 		for (int x = 0; x < LIGNES; x++) {
@@ -524,7 +493,7 @@ public class Terrain {
 	
 					Point pointSucc = c.getSucc().get(z);
 					Direction d = recupereDirection(c.getPos(), pointSucc);
-					if (c.getOccupation() == joueurCourant.getJoueurID()) {
+					if (c.getOccupation() == joueurCourant) {
 						if ((estUnePriseAspiration(c.getPos(), d) || estUnePrisePercussion(c.getPos(), d)) && (tableau[pointSucc.x][pointSucc.y].getOccupation() == Case.Etat.vide)) {
 							reponse.add(c.getPos());
 							drap = false;

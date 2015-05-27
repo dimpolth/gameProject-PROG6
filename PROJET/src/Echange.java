@@ -1,3 +1,4 @@
+import java.awt.Point;
 import java.util.HashMap;
 //import java.util.Iterator;
 
@@ -32,6 +33,10 @@ public class Echange {
 		return (Terrain)infos.get("terrain");
 	}
 	
+	public  void addChoix() {
+		
+	}
+	
 	// IHM -> MOTEUR
 	
 	public void addAnnuler(){
@@ -40,6 +45,12 @@ public class Echange {
 	public boolean getAnnuler(){
 		return (boolean)infos.get("annuler");
 	}
+	public void addCaseCliquee(Point pt){
+		infos.put("caseCliquee", pt);
+	}
+	
+
+	
 	
 	
 	/*public Iterator getInfos(){

@@ -44,6 +44,10 @@ public class Historique {
 		}
 	}
 	
+	void effacerHistoTour() {
+		histoTour = new ArrayList<Point>();
+	}
+	
 	void afficher() {
 		System.out.println("----------------");
 		//for(int it = 0; it < histoPrincipal.size(); it++) {
