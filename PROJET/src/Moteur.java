@@ -180,7 +180,7 @@ public class Moteur {
 		if (t.estUnePriseAspiration(pDepart, d) && t.estUnePrisePercussion(pDepart, d)) {
 			Terrain.ChoixPrise choix;
 			if ((joueurCourant.getJoueurID() == Case.Etat.joueur1 && j1.isJoueurHumain()) || (joueurCourant.getJoueurID() == Case.Etat.joueur2 && j2.isJoueurHumain())) {
-				System.out.println("Choix");
+				//System.out.println("Choix");
 				Point offA = t.offsetAspiration(d, pDepart);
 				aspi = new Point(offA.x + pDepart.x, offA.y + pDepart.y);
 				Point offP = t.offsetPercussion(d, pArrive);
@@ -201,7 +201,7 @@ public class Moteur {
 			
 			}
 		} else if (t.estUnePriseAspiration(pDepart, d) && !t.estUnePrisePercussion(pDepart, d)) {
-			System.out.println("aspi");
+			//System.out.println("aspi");
 			t.manger(joueurCourant, d, pDepart, pArrive, l, Terrain.ChoixPrise.parAspiration);
 			Joueur[] tabJoueur = {j1, j2};
 			ech.ajouter("pionsManges", l);
@@ -209,7 +209,7 @@ public class Moteur {
 			com.envoyer(ech);
 			
 		} else if (!t.estUnePriseAspiration(pDepart, d) && t.estUnePrisePercussion(pDepart, d)) {
-			System.out.println("percu");
+			//System.out.println("percu");
 			t.manger(joueurCourant, d, pDepart, pArrive, l, Terrain.ChoixPrise.parPercussion);
 			Joueur[] tabJoueur = {j1, j2};
 			ech.ajouter("pionsManges", l);
@@ -231,7 +231,7 @@ public class Moteur {
 
 	void action(Echange ech) {
 
-		System.out.println(e);
+		//System.out.println(e);
 		for (String dataType : ech.getAll()) {
 			Object dataValue = ech.get(dataType);
 			
@@ -241,8 +241,8 @@ public class Moteur {
 					if (e == EtatTour.selectionPion ){selectionPion((Point)dataValue);}
 					if (e == EtatTour.selectionDestination){selectionDestination((Point)dataValue);}
 					if (e == EtatTour.attenteChoix){
-						System.out.println((Point)dataValue);
-						System.out.println("perc : "+perc);
+						//System.out.println((Point)dataValue);
+						//System.out.println("perc : "+perc);
 						Terrain.Direction d = t.recupereDirection(pDepart, pArrive);
 						ArrayList<Point> l = new ArrayList<Point>();
 						int nbPionsManges = 0;

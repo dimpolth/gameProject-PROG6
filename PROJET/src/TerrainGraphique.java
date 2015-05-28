@@ -1,5 +1,7 @@
+import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
@@ -18,9 +20,9 @@ import javax.swing.Timer;
 @SuppressWarnings("serial")
 public class TerrainGraphique extends JPanel implements ComponentListener{
 	private Image imgPlateau;
-	private Image imgPion1;
-	private Image imgPion2;
-	public Image imgCroix;
+	protected Image imgPion1;
+	protected Image imgPion2;
+	protected Image imgCroix;
 	public IHM ihm;
 	
 	protected long tempsGele;
@@ -31,10 +33,10 @@ public class TerrainGraphique extends JPanel implements ComponentListener{
 	
 	public TerrainGraphique(IHM i) {
 		super(null);
-		imgPlateau = new ImageIcon("images/plateau.png").getImage();
-		imgPion1 = new ImageIcon("images/pionBlanc.png").getImage();
-		imgPion2 = new ImageIcon("images/pionNoir.png").getImage();
-		imgCroix = new ImageIcon("images/croix.png").getImage();
+		imgPlateau = new ImageIcon("images/themes/bois/plateau.png").getImage();
+		imgPion1 = new ImageIcon("images/themes/bois/pion1.png").getImage();
+		imgPion2 = new ImageIcon("images/themes/bois/pion2.png").getImage();
+		imgCroix = new ImageIcon("images/themes/bois/croix.png").getImage();
 		ihm = i;
 		tempsGele = 0;
 		dim = new Dimensions();
@@ -42,7 +44,6 @@ public class TerrainGraphique extends JPanel implements ComponentListener{
 		for(int j = 0 ; j<5 ; j++) {
 			for(int k = 0 ; k<9 ; k++) {
 				pions[j][k] = new Pion(new Point(j,k), this, dim);
-				pions[j][k].setImg(imgPion1);
 				add(pions[j][k]);
 			}
 		}
@@ -51,12 +52,7 @@ public class TerrainGraphique extends JPanel implements ComponentListener{
 	public void dessinerTerrain( Case[][] c ){
 		for(int i=0 ; i<5 ; i++) {
 			for(int j=0 ; j<9 ; j++) {
-				if(c[i][j].getOccupation() == Case.Etat.joueur1)
-					pions[i][j].setImg(imgPion1);
-				else if(c[i][j].getOccupation() == Case.Etat.joueur2)
-					pions[i][j].setImg(imgPion2);
-				else
-					pions[i][j].setImg(null);
+				pions[i][j].setCouleur(c[i][j].getOccupation());
 				pions[i][j].repaint();
 			}
 		}
@@ -72,23 +68,18 @@ public class TerrainGraphique extends JPanel implements ComponentListener{
 	}
 	public void afficherPrisesPossibles(Point p) {
 		prisesPossibles.add(p);
-		pions[p.x][p.y].setImgCroix(imgCroix);
+		pions[p.x][p.y].setPrisePossible(true);
 	}
 	public void cacherPrisesPossibles(){
 		for(int i=0; i<prisesPossibles.size(); i++){
-			System.out.println("SUPPR");
-			pions[prisesPossibles.get(i).x][prisesPossibles.get(i).y].setImgCroix(null);
+			pions[prisesPossibles.get(i).x][prisesPossibles.get(i).y].setPrisePossible(false);
 		}
 		prisesPossibles.clear();
 	}
 	
-	public void cacherPions(ArrayList<Point> pts){
-		java.util.Iterator<Point> it = pts.iterator();
-		while(it.hasNext()){
-			Point pt = (Point)it.next();
-			pions[pt.x][pt.y].cacher();
-		}
-		
+	public void manger(ArrayList<Point> pts){
+		for(int i=0 ; i<pts.size() ; i++)
+			new AnimDisparition(pions[pts.get(i).x][pts.get(i).y]);
 	}
 	
 	public void clicCase(Point pt){
@@ -148,43 +139,51 @@ public class TerrainGraphique extends JPanel implements ComponentListener{
 class Pion extends JComponent implements MouseListener, ComponentListener {
 	protected Point coord;
 	protected TerrainGraphique tg;
+	private Case.Etat etat;
+	private boolean croix;
+	private float alpha;
 	protected Dimensions dim;
-	private Image img;
-	private Image imgCroix;
-	private boolean choixPrise = false;
 	public Pion(Point p, TerrainGraphique t, Dimensions d) {
 		super();
 		coord = p;
 		tg = t;
+		etat = Case.Etat.vide;
+		croix = false;
+		alpha = 1.0f;
 		dim = d;
-		img = null;
-		imgCroix = null;
 		addComponentListener(this);
 		addMouseListener(this);
 	}
-	public void setImg(Image i) {
-		img = i;
+	public void setCouleur(Case.Etat t) {
+		etat = t;
 	}
-	public void setImgCroix(Image i) {
-		imgCroix = i;
-		repaint();
+	public void setAlpha(float f) {
+		alpha = f;
 	}
 	public void setPrisePossible(boolean b){		
-		choixPrise = b;
+		croix = b;
 		repaint();
 	}
 	public void deplacer(Point o, Point d, ArrayList<Point> l) {
 		new AnimDeplacement(this, o, d, l);
 	}
 	public void cacher(){
-		img = null;
+		etat = Case.Etat.vide;
 		repaint();
 	}
 	
 	public void paintComponent(Graphics g) {
-		g.drawImage(img, 0, 0, getWidth(), getHeight(), null);
-		g.drawImage(imgCroix, 0, 0, getWidth(), getHeight(), null);
-		
+		Graphics2D g2 = (Graphics2D)g;
+		AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha);
+		g2.setComposite(ac);
+		if(etat == Case.Etat.joueur1) {
+			g2.drawImage(tg.imgPion1, 0, 0, getWidth(), getHeight(), null);
+		} else if(etat == Case.Etat.joueur2) {
+			g2.drawImage(tg.imgPion2, 0, 0, getWidth(), getHeight(), null);
+		}
+		if(croix) {
+			g2.drawImage(tg.imgCroix, 0, 0, getWidth(), getHeight(), null);
+		}
 	}
 	@Override
 	public void componentHidden(ComponentEvent e) {
@@ -213,6 +212,7 @@ class Pion extends JComponent implements MouseListener, ComponentListener {
 	}
 	@Override
 	public void mouseReleased(MouseEvent e) {
+		System.out.println("FREEZE");
 		if(System.currentTimeMillis() > tg.tempsGele && e.getX()  >= 0 && e.getX() < getHeight() && e.getY() >= 0 && e.getY() < getHeight()) {
 			tg.clicCase(coord);
 		}
@@ -228,7 +228,7 @@ class AnimDeplacement implements ActionListener {
 	private Timer horloge;
 	public AnimDeplacement(Pion p, Point o, Point d, ArrayList<Point> l) {
 		pion = p;
-		pion.tg.tempsGele = System.currentTimeMillis();
+		pion.tg.tempsGele = System.currentTimeMillis()+1500;
 		tempsDepart = System.currentTimeMillis();
 		origine = o;
 		destination = d;
@@ -262,6 +262,7 @@ class AnimDisparition implements ActionListener {
 	private Timer horloge;
 	public AnimDisparition(Pion p) {
 		pion = p;
+		pion.tg.tempsGele = System.currentTimeMillis()+500;
 		tempsDepart = System.currentTimeMillis();
 		horloge = new Timer(10,this);
 		horloge.start();
@@ -271,10 +272,10 @@ class AnimDisparition implements ActionListener {
 		long actuel = System.currentTimeMillis();
 		if(actuel - tempsDepart > 500) {
 			horloge.stop();
-			pion.setImg(null);
+			pion.setCouleur(Case.Etat.vide);
 			pion.repaint();
 		} else {
-			pion.setImg(null);
+			pion.setAlpha(1f-(float)((double)(actuel - tempsDepart)/500.0));
 			pion.repaint();
 		}
 	}

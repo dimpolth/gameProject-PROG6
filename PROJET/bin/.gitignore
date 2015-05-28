@@ -1,4 +1,5 @@
 Main.java
+/Pion$Type.class
 /AnimDeplacement.class
 /AnimDisparition.class
 /BandeauInfos.class
@@ -18,7 +19,6 @@ Main.java
 /Joueur$typeJoueur.class
 /Joueur.class
 /Moteur$EtatTour.class
-/Moteur$Joueur.class
 /Moteur.class
 /Pion.class
 /PopupBloquant$1.class

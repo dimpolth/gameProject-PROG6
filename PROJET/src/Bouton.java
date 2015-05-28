@@ -33,8 +33,8 @@ public class Bouton extends JButton implements MouseListener{
 		this.setBorderPainted(false);
 		Bouton.boutons.add( this );
 		this.addMouseListener(this);
-		this.setPreferredSize(new Dimension(110,25));
-		
+		this.setPreferredSize(new Dimension(110,45));
+		this.setOpaque(false);
 		
 	} 
 	

@@ -257,9 +257,9 @@ public class IHM extends JFrame implements ComponentListener {
 		    switch(dataType){
 		    	case "terrain" : tg.dessinerTerrain( (Case[][])dataValue ); break;
 		    	case "deplacement" :  Point[] pts = (Point[])dataValue; tg.deplacer(  pts[0], pts[1], (ArrayList<Point>)e.get("pionsManges")  ); e.retirer("pionsManges"); break; //Envoyer les deux points ET la liste de points à supprimer (pour la synchroniser au niveau des animations)
-		    	case "aspiration" : System.out.println("aspiration");tg.afficherPrisesPossibles( (Point)dataValue ); break;
+		    	case "aspiration" : tg.afficherPrisesPossibles( (Point)dataValue ); break;
 		    	case "percussion" : tg.afficherPrisesPossibles( (Point)dataValue ); break;
-		    	case "pionsManges": tg.cacherPions( (ArrayList<Point>) dataValue ); break;
+		    	case "pionsManges": tg.manger( (ArrayList<Point>) dataValue ); break;
 		    	case "joueurs" : 
 		    		Joueur[] joueurs = (Joueur[])dataValue;
 		    		for(int j=1; j<= 2; j++){
@@ -390,8 +390,8 @@ class PopupMenu extends JPanel {
 	    contraintes.gridwidth = GridBagConstraints.REMAINDER;	
 	    contraintes.fill = GridBagConstraints.BOTH;	  
 	    contraintes.insets =  new Insets(2,2,2,2);
-	    contraintes.ipady = 35;
-	    contraintes.ipadx = 80;
+	    contraintes.ipady = 50;
+	    contraintes.ipadx = 180;
 	    
 	    GridBagConstraints contraintesCategorie = (GridBagConstraints) contraintes.clone();
 	    contraintesCategorie.insets = new Insets(2,2,25,2);
