@@ -38,6 +38,7 @@ public class IHM extends JFrame implements ComponentListener {
 	PopupOptions popupO;
 	PopupRegles popupR;
 	TerrainGraphique tg;
+	BandeauInfos bandeauInfos;
 
 	public IHM() {
 		
@@ -71,8 +72,8 @@ public class IHM extends JFrame implements ComponentListener {
 		panneauMenu.add(boutonParam);
 		
 		// Infos partie en cours
-		
-		voletNord.add( new BandeauInfos() );
+		bandeauInfos = new BandeauInfos();
+		voletNord.add( bandeauInfos  );
 		
 		/*JPanel panneauScore = new JPanel( new GridBagLayout() );
 		
@@ -145,11 +146,8 @@ public class IHM extends JFrame implements ComponentListener {
 		setVisible(true);
 	}
 	
-	public void deplacer(Point o, Point a, ArrayList<Point> l) {
-		tg.deplacer(o,a,l);
-	}
-	
 	public void action(Ecouteur.Bouton id) {
+		
 		switch(id) {
 		case REPRENDRE:
 			popupB.setVisible(false);
@@ -157,13 +155,13 @@ public class IHM extends JFrame implements ComponentListener {
 			break;
 		case SAUVEGARDER:
 			JFileChooser fcSauver = new JFileChooser();
-			if(fcSauver.showOpenDialog(null) == JFileChooser.APPROVE_OPTION){
+			if(fcSauver.showSaveDialog(null) == JFileChooser.APPROVE_OPTION){
 				System.out.println("Action : sauvegarder");
 			}		
 			break;
 		case CHARGER:
 			JFileChooser fcCharger = new JFileChooser();
-			if(fcCharger.showSaveDialog(null) == JFileChooser.APPROVE_OPTION){
+			if(fcCharger.showOpenDialog(null) == JFileChooser.APPROVE_OPTION){
 				System.out.println("Action : charger");
 			}
 			break;
@@ -191,11 +189,14 @@ public class IHM extends JFrame implements ComponentListener {
 			popupO.setVisible(true);
 			break;
 		case ANNULER:
-			Echange e = new Echange();
-			//e.setAnnuler();
-			com.envoyer(e);
+			Echange e1 = new Echange();
+			e1.ajouter("annuler",true);
+			com.envoyer(e1);
 			break;
 		case REFAIRE:
+			Echange e2 = new Echange();
+			e2.ajouter("refaire",true);
+			com.envoyer(e2);
 			break;
 		case OPTION_ANNULER:
 			popupO.setVisible(false);
@@ -212,6 +213,8 @@ public class IHM extends JFrame implements ComponentListener {
 			break;
 		}
 	}
+	
+	
 
 	@Override
 	public void componentHidden(ComponentEvent e) {
@@ -236,13 +239,27 @@ public class IHM extends JFrame implements ComponentListener {
 	
 	public void notifier(Echange e){
 		
-		/*if(e.getTerrain() != null){
-			//tg.dessinerTerrain(e.getTerrain());
+		for (String dataType : e.getAll()) {		   
+		    Object dataValue = e.get(dataType);
+		    
+		    switch(dataType){
+		    	case "terrain" : tg.dessinerTerrain( (Case[][])dataValue ); break;
+		    	case "deplacement" :  Point[] pts = (Point[])dataValue; tg.deplacer(  pts[0], pts[1], (ArrayList<Point>)e.get("pionsManges")  ); e.retirer("pionsManges"); break; //Envoyer les deux points ET la liste de points à supprimer (pour la synchroniser au niveau des animations)
+		    	case "aspiration" : tg.afficherPrisesPossibles( (Point)dataValue ); break;
+		    	case "percussion" : tg.afficherPrisesPossibles( (Point)dataValue ); break;
+		    	case "pionsManges": tg.cacherPions( (ArrayList<Point>) dataValue ); break;
+		    	case "joueurs" : 
+		    		Joueur[] joueurs = (Joueur[])dataValue;
+		    		for(int j=1; j<= 2; j++){
+		    			bandeauInfos.setIdentifiant(j,dataValue.getNom());
+		    			bandeauInfos.setScore(j,dataValue.getScore());
+		    		}
+		    	break;
+		    	
+		    	
+		    }
+		    // ...
 		}
-		
-		if(e.getIndication() != null){
-			
-		}*/
 		
 	}
 }
@@ -252,8 +269,10 @@ class BandeauInfos extends JPanel{
 	
 	JLabel j1_identifiant, 
 	j1_score,
+	j1_pion,
 	j2_identifiant,
 	j2_score,
+	j2_pion,
 	texte;
 	
 	
@@ -274,10 +293,13 @@ class BandeauInfos extends JPanel{
 		
 		add(j1_identifiant,contraintes);
 		
+		
 		j1_score = formater ( new JLabel("Pions : 10") );		
 		contraintes.gridx = 0;
 		contraintes.gridy = 1;
 		add(j1_score,contraintes);	
+		
+		
 		
 		  
 		texte = formater( new JLabel("Au tour de Joueur 2") );
@@ -315,6 +337,15 @@ class BandeauInfos extends JPanel{
 		return lab;
 	}
 	
+	void setIdentifiant(int j, String nom){
+		if(j==1) j1_identifiant.setText(nom); else j2_identifiant.setText(nom);
+	}
+	void setScore(int j, String val){		
+		if(j==1) j1_score.setText(val); else j2_identifiant.setText(val);
+	}
+	void setTexte(String txt){		
+		texte.setText(txt);
+	}
 	
 	
 	
@@ -472,9 +503,10 @@ class PopupRegles extends JPanel {
 	    contraintes.insets =  new Insets(50,50,50,50);	   	    
 		
 	    JEditorPane regles = new JEditorPane();
+	    regles.setAutoscrolls(true);
 	    regles.setContentType("text/html");
 	    regles.setEditable(false);	    		
-	    regles.setText("<html><h1>Les règles du Fanorona</h1><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis rhoncus ut est nec posuere. In molestie est augue, sed fermentum felis accumsan quis. Suspendisse potenti. Morbi pharetra purus vitae blandit vehicula. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin elit dui, consequat tristique dictum ac, vulputate congue felis. Cras consequat augue nec suscipit maximus. Etiam fringilla erat lacinia sem tincidunt gravida. Vestibulum porttitor orci ut ante eleifend, tincidunt molestie elit ornare. Suspendisse placerat neque odio, a posuere quam congue non. Nulla diam orci, lobortis ut orci et, interdum malesuada arcu. Vestibulum porttitor vehicula urna, et ornare mi eleifend eget. In consequat congue eros eget volutpat. Proin quis rhoncus velit.</p></html>"); 
+	    regles.setText("<html><h1>Les règles du Fanorona</h1><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis rhoncus ut est nec posuere. In molestie est augue, sed fermentum Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis rhoncus ut est nec posuere. In molestie est augue, sed fermentum Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis rhoncus ut est nec posuere. In molestie est augue, sed fermentum Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis rhoncus ut est nec posuere. In molestie est augue, sed fermentum Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis rhoncus ut est nec posuere. In molestie est augue, sed fermentum Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis rhoncus ut est nec posuere. In molestie est augue, sed fermentum Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis rhoncus ut est nec posuere. In molestie est augue, sed fermentum Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis rhoncus ut est nec posuere. In molestie est augue, sed fermentum Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis rhoncus ut est nec posuere. In molestie est augue, sed fermentum Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis rhoncus ut est nec posuere. In molestie est augue, sed fermentum Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis rhoncus ut est nec posuere. In molestie est augue, sed fermentum Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis rhoncus ut est nec posuere. In molestie est augue, sed fermentum Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis rhoncus ut est nec posuere. In molestie est augue, sed fermentum Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis rhoncus ut est nec posuere. In molestie est augue, sed fermentum Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis rhoncus ut est nec posuere. In molestie est augue, sed fermentum Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis rhoncus ut est nec posuere. In molestie est augue, sed fermentum Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis rhoncus ut est nec posuere. In molestie est augue, sed fermentum Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis rhoncus ut est nec posuere. In molestie est augue, sed fermentum Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis rhoncus ut est nec posuere. In molestie est augue, sed fermentum felis accumsan quis. Suspendisse potenti. Morbi pharetra purus vitae blandit vehicula. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin elit dui, consequat tristique dictum ac, vulputate congue felis. Cras consequat augue nec suscipit maximus.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis rhoncus ut est nec posuere. In molestie est augue, sed fermentum felis accumsan quis. Suspendisse potenti. Morbi pharetra purus vitae blandit vehicula. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin elit dui, consequat tristique dictum ac, vulputate congue felis. Cras consequat augue nec suscipit maxim Etiam fringilla erat lacinia sem tincidunt gravida. Vestibulum porttitor orci ut ante eleifend, tincidunt molestie elit ornare. Suspendisse placerat neque odio, a posuere quam congue non. Nulla diam orci, lobortis ut orci et, interdum malesuada arcu. Vestibulum porttitor vehicula urna, et ornare mi eleifend eget. In consequat congue eros eget volutpat. Proin quis rhoncus velit.</p></html>"); 
 		add(regles,contraintes);
 		contraintes.fill = GridBagConstraints.NONE;
 		contraintes.ipadx = 100;

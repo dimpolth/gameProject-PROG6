@@ -1,6 +1,4 @@
-import java.util.HashMap;
-//import java.util.Iterator;
-
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 
@@ -13,7 +11,7 @@ import java.util.Map;
 
 public class Echange {
 	
-	Map<String,Object> infos = new HashMap<String,Object>();
+	Map<String,Object> infos = new LinkedHashMap<String,Object>();
 	
 	public void vider(){
 		infos.clear();
@@ -29,6 +27,10 @@ public class Echange {
 	
 	public Object get(String cle){
 		return infos.get(cle);
+	}
+	
+	public void retirer(String cle){
+		infos.remove(cle);
 	}
 	
 	/*
