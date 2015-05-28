@@ -4,13 +4,7 @@ import java.util.Iterator;
 
 public class Moteur {
 
-	public enum EtatTour {
-		selectionPion, selectionDestination, choixPrise;
-	}
-
-	public enum Joueur {
-		humain, IA;
-	}
+	public enum EtatTour {selectionPion, selectionDestination, attenteChoix;}
 
 	public Communication com;
 
@@ -18,20 +12,19 @@ public class Moteur {
 	Historique h;
 	EtatTour e;
 	Point pDepart, pArrive;
-	Case.Etat joueur;
+	Joueur joueurCourant;
 	Joueur j1, j2;
-	int scoreJ1, scoreJ2;
 	Echange ech;
+	Point aspi, perc;
 
 	Moteur() {
 		t = new Terrain();
 		h = new Historique();
 		e = EtatTour.selectionPion;
-		j1 = Joueur.humain;
-		j2 = Joueur.IA;
-		scoreJ1 = 0;
-		scoreJ2 = 0;
-		joueur = Case.Etat.joueur1;
+		j1 = new Joueur(Case.Etat.joueur1, Joueur.typeJoueur.humain, "joueur 1");
+		j2 = new Joueur(Case.Etat.joueur2, Joueur.typeJoueur.ordinateur, "ordinateur");
+		joueurCourant = j1;
+		ech = new Echange();
 	}
 
 	Moteur(Terrain t) {
@@ -61,12 +54,32 @@ public class Moteur {
 						listeSolution.add(temp);
 					}
 				}
-
 			}
 		}
 
 		return listeSolution;
 	}
+	
+	//revoit une liste de poitn d'arrive permetant une  prise 
+	ArrayList<Point> prisePossible(Point p, ArrayList<Point> listePredecesseurs){ 
+		ArrayList<Point> listePrise = new ArrayList<Point>();
+		
+		ArrayList<Point> listeSuc = t.tableau[p.x][p.y].getSucc();
+		ArrayList<Point> listeMouvement = deplacementPossible(p, listeSuc);
+		Iterator<Point> it = listeMouvement.iterator();
+		
+		while (it.hasNext()) {
+			Point temp = (Point) it.next().clone();
+			Terrain.Direction d= t.recupereDirection(p,temp);
+			if (t.estUnePriseAspiration(p, d)||t.estUnePrisePercussion(p, d) )
+				listePrise.add(temp);	
+		}
+		
+		return listePrise;
+	}
+	
+	
+	
 
 	boolean memeDirection(Point p1, Point p2, Point p3) {
 		Terrain.Direction d1 = t.recupereDirection(p1, p2);
@@ -110,14 +123,14 @@ public class Moteur {
 
 	}
 
-	ArrayList<Point> listePionsJouables(Case.Etat joueur) {
+	ArrayList<Point> listePionsJouables(Joueur j) {
 		// ArrayList<Point> listePions = new ArrayList<Point>();
-		ArrayList<Point> listePions = t.couplibre(joueur);
+		ArrayList<Point> listePions = t.couplibre(j.getJoueurID());
 		if (listePions.isEmpty()) {
 
 			for (int ligne = 0; ligne < Terrain.LIGNES; ligne++)
 				for (int colonne = 0; colonne < Terrain.COLONNES; colonne++)
-					if (this.t.tableau[ligne][colonne].getOccupation() == joueur)
+					if (this.t.tableau[ligne][colonne].getOccupation() == j.getJoueurID())
 						if (this.deplacementPossible((Point) new Point(ligne, colonne).clone(), new ArrayList<Point>()).size() > 0)
 							listePions.add((Point) new Point(ligne, colonne).clone());
 		}
@@ -125,17 +138,17 @@ public class Moteur {
 	}
 
 	boolean partieTerminee() {
-		if (scoreJ1 == 22 || scoreJ2 == 22)
+		if (j1.scoreNul() || j2.scoreNul())
 			return true;
 		else
 			return false;
 	}
 
 	boolean selectionPion(Point p) {
-		if ((t.getCase(p.x, p.y).getOccupation() != joueur) || (e != EtatTour.selectionPion))
+		if ((t.getCase(p.x, p.y).getOccupation() != joueurCourant.getJoueurID()) || (e != EtatTour.selectionPion))
 			return false;
 		else {
-			ArrayList<Point> l = listePionsJouables(joueur);
+			ArrayList<Point> l = listePionsJouables(joueurCourant);
 			if (l.contains(p)) {
 				pDepart = p;
 				e = EtatTour.selectionDestination;
@@ -149,7 +162,10 @@ public class Moteur {
 		ArrayList<Point> l = deplacementPossible(pDepart, h.histoTour);
 		if (l.contains(p)) {
 			pArrive = p;
-			if (t.deplacement(pDepart, pArrive, joueur, l) == 0) {
+			if (t.deplacement(pDepart, pArrive, joueurCourant, l) == 0) {
+				Point[] tabPts = {pDepart, pArrive};
+				ech.vider();
+				ech.ajouter("deplacement", tabPts);
 				prise();
 				return true;
 			} else
@@ -162,44 +178,88 @@ public class Moteur {
 		Terrain.Direction d = t.recupereDirection(pDepart, pArrive);
 		ArrayList<Point> l = new ArrayList<Point>();
 		if (t.estUnePriseAspiration(pDepart, d) && t.estUnePrisePercussion(pDepart, d)) {
-			e = EtatTour.choixPrise;
 			Terrain.ChoixPrise choix;
-			if ((joueur == Case.Etat.joueur1 && j1 == Joueur.humain) || (joueur == Case.Etat.joueur2 && j2 == Joueur.humain)) {
-				// choix = ech.getChoix();
+			if ((joueurCourant.getJoueurID() == Case.Etat.joueur1 && j1.isJoueurHumain()) || (joueurCourant.getJoueurID() == Case.Etat.joueur2 && j2.isJoueurHumain())) {
+				Point offA = t.offsetAspiration(d, pDepart);
+				aspi = new Point(offA.x + pDepart.x, offA.y + pDepart.y);
+				Point offP = t.offsetPercussion(d, pArrive);
+				perc = new Point(offP.x + pArrive.x, offP.y + pArrive.y);
+				ech.ajouter("aspiration", aspi);
+				ech.ajouter("percussion", perc);
+				com.envoyer(ech);
+				e = EtatTour.attenteChoix;
 			} else {
 				choix = IntelligenceArtificielle.choixPriseIAFacile();
+				t.manger(joueurCourant, d, pDepart, pArrive, l, choix);
+				Joueur[] tabJoueur = {j1, j2};
+				ech.ajouter("pionsManges", l);
+				ech.ajouter("joueurs", tabJoueur);
+				com.envoyer(ech);
+			//if (prisePossible(p, h.histoTour))
+					
+			
 			}
-			//t.manger(joueur, d, pDepart, pArrive, l, choix);
 		} else if (t.estUnePriseAspiration(pDepart, d) && !t.estUnePrisePercussion(pDepart, d)) {
-			t.manger(joueur, d, pDepart, pArrive, l, Terrain.ChoixPrise.parAspiration);
+			t.manger(joueurCourant, d, pDepart, pArrive, l, Terrain.ChoixPrise.parAspiration);
+			Joueur[] tabJoueur = {j1, j2};
+			ech.ajouter("pionsManges", l);
+			ech.ajouter("joueurs", tabJoueur);
+			com.envoyer(ech);
+			
 		} else if (!t.estUnePriseAspiration(pDepart, d) && t.estUnePrisePercussion(pDepart, d)) {
-			t.manger(joueur, d, pDepart, pArrive, l, Terrain.ChoixPrise.parPercussion);
+			t.manger(joueurCourant, d, pDepart, pArrive, l, Terrain.ChoixPrise.parPercussion);
+			Joueur[] tabJoueur = {j1, j2};
+			ech.ajouter("pionsManges", l);
+			ech.ajouter("joueurs", tabJoueur);
+			com.envoyer(ech);
 		}
-		
-	}
 
-	void calculerScore() {
-		for (int ligne = 0; ligne < 5; ligne++)
-			for (int colonne = 0; colonne < 9; colonne++) {
-
-				if (this.t.tableau[ligne][colonne].getOccupation() == Case.Etat.joueur1)
-					scoreJ1++;
-				else if (this.t.tableau[ligne][colonne].getOccupation() == Case.Etat.joueur2)
-					scoreJ2++;
-			}
-	}
+	}	
 
 	void finTour() {
-		if (joueur == Case.Etat.joueur1)
-			joueur = Case.Etat.joueur2;
+		if (joueurCourant.getJoueurID() == Case.Etat.joueur1)
+			joueurCourant = j2;
 		else
-			joueur = Case.Etat.joueur1;
+			joueurCourant = j1;
 		h.effacerHistoTour();
 		h.ajouterTour(t);
 		e = EtatTour.selectionPion;
 	}
 
-	void action(Echange e) {			
-		
+	void action(Echange ech) {
+
+		for (String dataType : ech.getAll()) {
+			Object dataValue = ech.get(dataType);
+			
+			switch(dataType){
+				case "point" : 
+					if (e == EtatTour.selectionPion ){selectionPion((Point)dataValue);}
+					if (e == EtatTour.selectionDestination){selectionDestination((Point)dataValue);}
+					if (e == EtatTour.attenteChoix){
+						Terrain.Direction d = t.recupereDirection(pDepart, pArrive);
+						ArrayList<Point> l = new ArrayList<Point>();
+						int nbPionsManges;
+						if(perc.equals((Point)dataValue))
+							nbPionsManges = t.manger(joueurCourant, d, pDepart, pArrive, l, Terrain.ChoixPrise.parPercussion);
+						else
+							nbPionsManges = t.manger(joueurCourant, d, pDepart, pArrive, l, Terrain.ChoixPrise.parAspiration);
+						joueurCourant.setScore(nbPionsManges);
+						Joueur[] tabJoueur = {j1, j2};
+						ech.vider();
+						ech.ajouter("pionsManges",l);
+						ech.ajouter("joueurs", tabJoueur);
+					com.envoyer(ech);
+					}
+					break;
+				case "terrain":
+					ech.vider();
+					ech.ajouter("terrain", t.getTableau());
+					com.envoyer(ech);
+					break;
+					
+				case "annuler" :
+					break;
+			}
+		}
 	}
 }

@@ -128,7 +128,7 @@ public class Terrain {
 	}
 
 
-	public int deplacement(Point depart, Point arrive, Case.Etat joueurCourant, ArrayList<Point> listePredecesseurs) {
+	public int deplacement(Point depart, Point arrive, Joueur joueurCourant, ArrayList<Point> listePredecesseurs) {
 
 		Iterator<Point> iterator = listePredecesseurs.iterator();
 
@@ -140,7 +140,7 @@ public class Terrain {
 			}
 
 
-		if (tableau[depart.x][depart.y].getOccupation() != joueurCourant) {
+		if (tableau[depart.x][depart.y].getOccupation() != joueurCourant.getJoueurID()) {
 			return 3;
 		} else {
 			if (tableau[arrive.x][arrive.y].getOccupation() != Case.Etat.vide) {
@@ -187,7 +187,7 @@ public class Terrain {
 	}
 
 
-	public int manger(Case.Etat joueurCourant, Direction dir, Point pDepart, Point pArrivee, ArrayList<Point> listePionsManges, ChoixPrise c) {
+	public int manger(Joueur joueurCourant, Direction dir, Point pDepart, Point pArrivee, ArrayList<Point> listePionsManges, ChoixPrise c) {
 
 
 		Case.Etat joueurOppose;
@@ -196,9 +196,9 @@ public class Terrain {
 
 		// On indique dans une variable qui est l'adversaire pour reconnaître ses pions
 		
-		if (joueurCourant == Case.Etat.joueur1)
+		if (joueurCourant.getJoueurID() == Case.Etat.joueur1)
 			joueurOppose = Case.Etat.joueur2;
-		else if (joueurCourant == Case.Etat.joueur2)
+		else if (joueurCourant.getJoueurID() == Case.Etat.joueur2)
 			joueurOppose = Case.Etat.joueur1;
 		else
 			return -1;
