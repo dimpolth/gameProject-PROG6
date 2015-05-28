@@ -20,8 +20,7 @@ public class TerrainGraphique extends JPanel implements ComponentListener{
 	private Image imgPlateau;
 	private Image imgPion1;
 	private Image imgPion2;
-	public Image imgCroix1;
-	private Image imgCroix2;
+	public Image imgCroix;
 	public IHM ihm;
 	
 	protected long tempsGele;
@@ -35,8 +34,7 @@ public class TerrainGraphique extends JPanel implements ComponentListener{
 		imgPlateau = new ImageIcon("images/plateau.png").getImage();
 		imgPion1 = new ImageIcon("images/pionBlanc.png").getImage();
 		imgPion2 = new ImageIcon("images/pionNoir.png").getImage();
-		imgCroix1 = new ImageIcon("images/imgCroixBlanc.png").getImage();
-		imgCroix2 = new ImageIcon("images/imgCroixNoir.png").getImage();
+		imgCroix = new ImageIcon("images/croix.png").getImage();
 		ihm = i;
 		tempsGele = 0;
 		dim = new Dimensions();
@@ -74,13 +72,14 @@ public class TerrainGraphique extends JPanel implements ComponentListener{
 	}
 	public void afficherPrisesPossibles(Point p) {
 		prisesPossibles.add(p);
-		pions[p.x][p.y].setPrisePossible(true);		
+		pions[p.x][p.y].setImgCroix(imgCroix);
 	}
 	public void cacherPrisesPossibles(){
-		for(int i=0; i<=prisesPossibles.size(); i++){
-			pions[prisesPossibles.get(i).x][prisesPossibles.get(i).y].setPrisePossible(false);		
-			prisesPossibles.remove(i);
+		for(int i=0; i<prisesPossibles.size(); i++){
+			System.out.println("SUPPR");
+			pions[prisesPossibles.get(i).x][prisesPossibles.get(i).y].setImgCroix(null);
 		}
+		prisesPossibles.clear();
 	}
 	
 	public void cacherPions(ArrayList<Point> pts){
@@ -95,7 +94,7 @@ public class TerrainGraphique extends JPanel implements ComponentListener{
 	public void clicCase(Point pt){
 		
 		if(prisesPossibles.contains(pt)){
-			cacherPions(prisesPossibles);
+			cacherPrisesPossibles();
 		}
 		
 		Echange e = new Echange();
@@ -151,6 +150,7 @@ class Pion extends JComponent implements MouseListener, ComponentListener {
 	protected TerrainGraphique tg;
 	protected Dimensions dim;
 	private Image img;
+	private Image imgCroix;
 	private boolean choixPrise = false;
 	public Pion(Point p, TerrainGraphique t, Dimensions d) {
 		super();
@@ -158,13 +158,18 @@ class Pion extends JComponent implements MouseListener, ComponentListener {
 		tg = t;
 		dim = d;
 		img = null;
+		imgCroix = null;
 		addComponentListener(this);
 		addMouseListener(this);
 	}
 	public void setImg(Image i) {
 		img = i;
 	}
-	public void setPrisePossible(boolean b){
+	public void setImgCroix(Image i) {
+		imgCroix = i;
+		repaint();
+	}
+	public void setPrisePossible(boolean b){		
 		choixPrise = b;
 		repaint();
 	}
@@ -178,9 +183,7 @@ class Pion extends JComponent implements MouseListener, ComponentListener {
 	
 	public void paintComponent(Graphics g) {
 		g.drawImage(img, 0, 0, getWidth(), getHeight(), null);
-		
-		if(choixPrise)
-			g.drawImage(tg.imgCroix1, 0, 0, getWidth(), getHeight(), null);
+		g.drawImage(imgCroix, 0, 0, getWidth(), getHeight(), null);
 		
 	}
 	@Override
@@ -239,9 +242,9 @@ class AnimDeplacement implements ActionListener {
 		if(actuel - tempsDepart > 1500) {
 			horloge.stop();
 			pion.setBounds((int) ((destination.y + 0.5) * pion.dim.echelle + pion.dim.origX), (int) ((destination.x + 0.5) * pion.dim.echelle + pion.dim.origY), (int) (pion.dim.echelle / 2), (int) (pion.dim.echelle / 2));
-			for(int i=0 ; i<aSupprimer.size() ; i++) {
-				new AnimDisparition(pion.tg.pions[aSupprimer.get(i).x][aSupprimer.get(i).y]);
-			}
+			if(aSupprimer != null)
+				for(int i=0 ; i<aSupprimer.size() ; i++)
+					new AnimDisparition(pion.tg.pions[aSupprimer.get(i).x][aSupprimer.get(i).y]);
 		} else {
 			double xo = ((origine.y + 0.5) * pion.dim.echelle + pion.dim.origX);
 			double xa = ((destination.y + 0.5) * pion.dim.echelle + pion.dim.origX);

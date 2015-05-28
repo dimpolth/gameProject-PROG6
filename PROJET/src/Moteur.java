@@ -162,7 +162,7 @@ public class Moteur {
 		ArrayList<Point> l = deplacementPossible(pDepart, h.histoTour);
 		if (l.contains(p)) {
 			pArrive = p;
-			if (t.deplacement(pDepart, pArrive, joueurCourant, l) == 0) {
+			if (t.deplacement(pDepart, pArrive, joueurCourant, h.histoTour) == 0) {
 				Point[] tabPts = {pDepart, pArrive};
 				ech.vider();
 				ech.ajouter("deplacement", tabPts);
@@ -180,6 +180,7 @@ public class Moteur {
 		if (t.estUnePriseAspiration(pDepart, d) && t.estUnePrisePercussion(pDepart, d)) {
 			Terrain.ChoixPrise choix;
 			if ((joueurCourant.getJoueurID() == Case.Etat.joueur1 && j1.isJoueurHumain()) || (joueurCourant.getJoueurID() == Case.Etat.joueur2 && j2.isJoueurHumain())) {
+				System.out.println("Choix");
 				Point offA = t.offsetAspiration(d, pDepart);
 				aspi = new Point(offA.x + pDepart.x, offA.y + pDepart.y);
 				Point offP = t.offsetPercussion(d, pArrive);
@@ -200,6 +201,7 @@ public class Moteur {
 			
 			}
 		} else if (t.estUnePriseAspiration(pDepart, d) && !t.estUnePrisePercussion(pDepart, d)) {
+			System.out.println("aspi");
 			t.manger(joueurCourant, d, pDepart, pArrive, l, Terrain.ChoixPrise.parAspiration);
 			Joueur[] tabJoueur = {j1, j2};
 			ech.ajouter("pionsManges", l);
@@ -207,6 +209,7 @@ public class Moteur {
 			com.envoyer(ech);
 			
 		} else if (!t.estUnePriseAspiration(pDepart, d) && t.estUnePrisePercussion(pDepart, d)) {
+			System.out.println("percu");
 			t.manger(joueurCourant, d, pDepart, pArrive, l, Terrain.ChoixPrise.parPercussion);
 			Joueur[] tabJoueur = {j1, j2};
 			ech.ajouter("pionsManges", l);
@@ -228,20 +231,24 @@ public class Moteur {
 
 	void action(Echange ech) {
 
+		System.out.println(e);
 		for (String dataType : ech.getAll()) {
 			Object dataValue = ech.get(dataType);
+			
 			
 			switch(dataType){
 				case "point" : 
 					if (e == EtatTour.selectionPion ){selectionPion((Point)dataValue);}
 					if (e == EtatTour.selectionDestination){selectionDestination((Point)dataValue);}
 					if (e == EtatTour.attenteChoix){
+						System.out.println((Point)dataValue);
+						System.out.println("perc : "+perc);
 						Terrain.Direction d = t.recupereDirection(pDepart, pArrive);
 						ArrayList<Point> l = new ArrayList<Point>();
-						int nbPionsManges;
+						int nbPionsManges = 0;
 						if(perc.equals((Point)dataValue))
 							nbPionsManges = t.manger(joueurCourant, d, pDepart, pArrive, l, Terrain.ChoixPrise.parPercussion);
-						else
+						else if(aspi.equals((Point)dataValue))
 							nbPionsManges = t.manger(joueurCourant, d, pDepart, pArrive, l, Terrain.ChoixPrise.parAspiration);
 						joueurCourant.setScore(nbPionsManges);
 						Joueur[] tabJoueur = {j1, j2};

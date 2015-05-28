@@ -85,8 +85,7 @@ public class Bouton extends JButton implements MouseListener{
 	}
 
 	@Override
-	public void mouseEntered(MouseEvent arg0) {
-		System.out.println("mouseentered");
+	public void mouseEntered(MouseEvent arg0) {		
 		fond = fondSurvol;		
 	}
 
@@ -102,7 +101,7 @@ public class Bouton extends JButton implements MouseListener{
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		System.out.println("RELACHE BOUTON");
+	
 		if(e.getY() > 0 && e.getY() < this.getHeight() && (e.getX() > 0 && e.getX() < this.getWidth())){
 			fond = fondSurvol;			
 		}

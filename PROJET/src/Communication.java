@@ -27,6 +27,7 @@ public class Communication {
 	
 	void envoyer(Echange e){
 		
+		System.out.println(""+loc+" : envoyer");
 				
 		if(loc == Communication.IHM && !reseau){
 			Communication.canaux[ Communication.MOTEUR ].recevoir(e);			
@@ -44,10 +45,9 @@ public class Communication {
 	void recevoir(Echange e){
 		
 		if(loc == Communication.IHM){
-			//ihm.notifier(e);			
+			ihm.notifier(e);			
 		}
-		else if(loc == Communication.MOTEUR){
-			System.out.println("Reception");
+		else if(loc == Communication.MOTEUR){			
 			moteur.action(e);
 		}
 	}

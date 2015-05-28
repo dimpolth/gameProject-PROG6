@@ -130,14 +130,14 @@ public class Terrain {
 
 	public int deplacement(Point depart, Point arrive, Joueur joueurCourant, ArrayList<Point> listePredecesseurs) {
 
-		Iterator<Point> iterator = listePredecesseurs.iterator();
-
-		if(listePredecesseurs != null)
+		if(!listePredecesseurs.isEmpty()) {
+			Iterator<Point> iterator = listePredecesseurs.iterator();
 			while (iterator.hasNext()) {
 				Point pNext = iterator.next();
 				if (arrive.equals(pNext))
 					return 4;
 			}
+		}
 
 
 		if (tableau[depart.x][depart.y].getOccupation() != joueurCourant.getJoueurID()) {

@@ -27,6 +27,8 @@ public class IHM extends JFrame implements ComponentListener {
 		i.com = new Communication(i,m,Communication.IHM);
 		m.com = new Communication(i,m,Communication.MOTEUR);
 		
+		i.lancer();
+		
 	}
 	
 	public Communication com;
@@ -144,6 +146,14 @@ public class IHM extends JFrame implements ComponentListener {
 		setMinimumSize(new Dimension(640, 480));
 		setSize(1000, 750);
 		setVisible(true);
+		
+	
+	}
+	
+	public void lancer(){
+		Echange e2 = new Echange();
+		e2.ajouter("terrain",true);
+		com.envoyer(e2);
 	}
 	
 	public void action(Ecouteur.Bouton id) {
@@ -239,20 +249,22 @@ public class IHM extends JFrame implements ComponentListener {
 	
 	public void notifier(Echange e){
 		
+		
+		
 		for (String dataType : e.getAll()) {		   
 		    Object dataValue = e.get(dataType);
 		    
 		    switch(dataType){
 		    	case "terrain" : tg.dessinerTerrain( (Case[][])dataValue ); break;
 		    	case "deplacement" :  Point[] pts = (Point[])dataValue; tg.deplacer(  pts[0], pts[1], (ArrayList<Point>)e.get("pionsManges")  ); e.retirer("pionsManges"); break; //Envoyer les deux points ET la liste de points à supprimer (pour la synchroniser au niveau des animations)
-		    	case "aspiration" : tg.afficherPrisesPossibles( (Point)dataValue ); break;
+		    	case "aspiration" : System.out.println("aspiration");tg.afficherPrisesPossibles( (Point)dataValue ); break;
 		    	case "percussion" : tg.afficherPrisesPossibles( (Point)dataValue ); break;
 		    	case "pionsManges": tg.cacherPions( (ArrayList<Point>) dataValue ); break;
 		    	case "joueurs" : 
 		    		Joueur[] joueurs = (Joueur[])dataValue;
 		    		for(int j=1; j<= 2; j++){
-		    			bandeauInfos.setIdentifiant(j,dataValue.getNom());
-		    			bandeauInfos.setScore(j,dataValue.getScore());
+		    			//bandeauInfos.setIdentifiant(j,joueurs[j].getNom());
+		    			//bandeauInfos.setScore(j,joueurs[j].getScore());
 		    		}
 		    	break;
 		    	
@@ -340,8 +352,8 @@ class BandeauInfos extends JPanel{
 	void setIdentifiant(int j, String nom){
 		if(j==1) j1_identifiant.setText(nom); else j2_identifiant.setText(nom);
 	}
-	void setScore(int j, String val){		
-		if(j==1) j1_score.setText(val); else j2_identifiant.setText(val);
+	void setScore(int j, int val){		
+		if(j==1) j1_score.setText(Integer.toString(val)); else j2_identifiant.setText(Integer.toString(val));
 	}
 	void setTexte(String txt){		
 		texte.setText(txt);
