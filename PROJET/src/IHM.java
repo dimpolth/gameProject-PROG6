@@ -41,7 +41,7 @@ public class IHM extends JFrame implements ComponentListener {
 	PopupOptions popupO;
 	PopupRegles popupR;
 	TerrainGraphique tg;
-	BandeauInfos bandeauInfos;
+	public BandeauInfos bandeauInfos;
 
 	public IHM() {
 
@@ -266,6 +266,11 @@ public class IHM extends JFrame implements ComponentListener {
 		if ((dataValue = e.get("joueurs")) != null) {
 			new ExecuterDans(this, "joueurs", dataValue, tpsAnimation);
 		}
+		
+		if ((dataValue = e.get("bandeauSup")) != null) {
+			bandeauInfos.setTexteSup( (String)dataValue   );
+		}
+		
 	}
 }
 
@@ -295,8 +300,8 @@ class ExecuterDans implements ActionListener {
 		case "joueurs":
 			Joueur[] joueurs = (Joueur[]) dataValue;
 			for (int j = 1; j <= 2; j++) {
-				// bandeauInfos.setIdentifiant(j,joueurs[j].getNom());
-				// bandeauInfos.setScore(j,joueurs[j].getScore());
+				ihm.bandeauInfos.setIdentifiant(j,joueurs[j-1].getNom());
+				ihm.bandeauInfos.setScore(j,joueurs[j-1].getScore());
 			}
 			break;
 		}
@@ -308,7 +313,7 @@ class ExecuterDans implements ActionListener {
 class BandeauInfos extends JPanel {
 
 	JLabel j1_identifiant, j1_score, j1_pion, j2_identifiant, j2_score,
-			j2_pion, texte;
+			j2_pion, texteSup, texteInf;
 
 	BandeauInfos() {
 		super(new GridBagLayout());
@@ -332,14 +337,14 @@ class BandeauInfos extends JPanel {
 		contraintes.gridy = 1;
 		add(j1_score, contraintes);
 
-		texte = formater(new JLabel("Au tour de Joueur 2"));
+		texteSup = formater(new JLabel("Au tour de Joueur 2"));
 		contraintes.fill = GridBagConstraints.BOTH;
 		contraintes.gridwidth = 10;
 		contraintes.gridheight = 2;
 		contraintes.gridx = 7;
 		contraintes.gridy = 0;
 
-		add(texte, contraintes);
+		add(texteSup, contraintes);
 
 		j2_identifiant = formater(new JLabel("Joueur 2"));
 		contraintes.gridx = 17;
@@ -375,13 +380,16 @@ class BandeauInfos extends JPanel {
 
 	void setScore(int j, int val) {
 		if (j == 1)
-			j1_score.setText(Integer.toString(val));
+			j1_score.setText("Score: "+Integer.toString(val));
 		else
-			j2_identifiant.setText(Integer.toString(val));
+			j2_score.setText("Score: "+Integer.toString(val));
 	}
 
-	void setTexte(String txt) {
-		texte.setText(txt);
+	void setTexteSup(String txt) {
+		texteSup.setText(txt);
+	}
+	void setTexteInf(String txt) {
+		//texte.setText(txt);
 	}
 
 }
