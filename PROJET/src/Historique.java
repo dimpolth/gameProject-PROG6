@@ -17,14 +17,20 @@ public class Historique {
 	
 	void ajouterTour(Terrain t) {
 		if(itPrincipal < histoPrincipal.size()-1) {
-			for(int i = itPrincipal; i < histoPrincipal.size(); i++) { 
+			for(int i = histoPrincipal.size()-1; i > itPrincipal; i--) { 
 				histoPrincipal.remove(i);
 			}
 		}
 		Terrain c = t.copie();
 		histoPrincipal.add(c);
 		itPrincipal = histoPrincipal.size()-1;
-		System.out.println("itprincipal"+itPrincipal);
+		//System.out.println("itprincipal"+itPrincipal);
+		
+	}
+	
+	void ajouterCoup(Point p) {
+		histoTour.add((Point)p.clone());
+		itTour++;
 		
 	}
 	

@@ -467,8 +467,8 @@ public class Terrain {
 		}
 		if (!(cible.x > INDICE_MAX_LIGNES || cible.x < 0 || cible.y > INDICE_MAX_COLONNES || cible.y < 0)) {
 			b = ((tableau[cible.x][cible.y].getOccupation() != tableau[depart.x][depart.y].getOccupation()) && (tableau[cible.x][cible.y].getOccupation() != Case.Etat.vide));
-			System.out.println("Cible : "+tableau[cible.x][cible.y].getOccupation());
-			System.out.println("Depart : "+tableau[depart.x][depart.y].getOccupation());
+			//System.out.println("Cible : "+tableau[cible.x][cible.y].getOccupation());
+			//System.out.println("Depart : "+tableau[depart.x][depart.y].getOccupation());
 		}
 		return b;
 	}
