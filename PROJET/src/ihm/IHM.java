@@ -24,7 +24,7 @@ public class IHM extends JFrame implements ComponentListener {
 	PopupOptions popupO;
 	PopupRegles popupR;
 	TerrainGraphique tg;
-	public BandeauInfos bandeauInfos;
+	BandeauInfos bandeauInfos;
 
 	public IHM() {
 
@@ -60,27 +60,7 @@ public class IHM extends JFrame implements ComponentListener {
 		bandeauInfos = new BandeauInfos();
 		voletNord.add(bandeauInfos);
 
-		/*
-		 * JPanel panneauScore = new JPanel( new GridBagLayout() );
-		 * 
-		 * GridBagConstraints contraintes = new GridBagConstraints();
-		 * contraintes.gridwidth = 1; contraintes.fill =
-		 * GridBagConstraints.BOTH; contraintes.weightx = 1; contraintes.weighty
-		 * = 1; //contraintes.anchor = GridBagConstraints.CENTER;
-		 * 
-		 * voletNord.add(panneauScore); JLabel nomJoueur1 = new
-		 * JLabel("Joueur 1",JLabel.CENTER);
-		 * panneauScore.add(nomJoueur1,contraintes); JLabel scoreJoueur1 = new
-		 * JLabel("10",JLabel.CENTER);
-		 * panneauScore.add(scoreJoueur1,contraintes); JLabel tour = new
-		 * JLabel("Au tour de Joueur 2",JLabel.CENTER); contraintes.weightx = 3;
-		 * panneauScore.add(tour,contraintes); contraintes.weightx = 1; JLabel
-		 * scoreJoueur2 = new JLabel("3",JLabel.CENTER);
-		 * panneauScore.add(scoreJoueur2,contraintes); JLabel nomJoueur2 = new
-		 * JLabel("Joueur 2",JLabel.CENTER);
-		 * panneauScore.add(nomJoueur2,contraintes);
-		 */
-
+	
 		// ZONE CENTRE
 		tg = new TerrainGraphique(this);
 		coucheJeu.add(tg, BorderLayout.CENTER);
@@ -130,11 +110,22 @@ public class IHM extends JFrame implements ComponentListener {
 		setVisible(true);
 
 	}
+	
+	public Joueur[] getParamsJoueurs(){
+		Joueur[] j = new Joueur[2];
+		j[0] = new Joueur();
+		j[1] = new Joueur();
+		j[0].setNom(popupO.identifiantJoueur1.getText());		
+		j[1].setNom(popupO.identifiantJoueur2.getText());
+		return j;
+		
+	}
 
 	public void lancer() {
-		Echange e2 = new Echange();
-		e2.ajouter("terrain", true);
-		com.envoyer(e2);
+		Echange e = new Echange();
+		e.ajouter("terrain", true);
+		e.ajouter("joueurs", getParamsJoueurs());
+		com.envoyer(e);
 	}
 
 	public void action(Ecouteur.Bouton id) {
@@ -196,7 +187,9 @@ public class IHM extends JFrame implements ComponentListener {
 			popupB.setVisible(false);
 			break;
 		case OPTION_VALIDER:
-			// TODO Modifications
+			Echange e = new Echange();			
+			e.ajouter("joueurs", getParamsJoueurs());
+			com.envoyer(e);
 			popupO.setVisible(false);
 			popupB.setVisible(false);
 			break;
