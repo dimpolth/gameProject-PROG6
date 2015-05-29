@@ -1,3 +1,4 @@
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -11,7 +12,7 @@ import java.util.Map;
 
 public class Echange {
 	
-	Map<String,Object> infos = new LinkedHashMap<String,Object>();
+	public Map<String,Object> infos = new HashMap<String,Object>();
 	
 	public void vider(){
 		infos.clear();
