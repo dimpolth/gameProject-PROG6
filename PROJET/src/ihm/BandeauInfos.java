@@ -42,11 +42,17 @@ class BandeauInfos extends JPanel {
 		texteSup = formater(new JLabel("Au tour de Joueur 2"));
 		contraintes.fill = GridBagConstraints.BOTH;
 		contraintes.gridwidth = 10;
-		contraintes.gridheight = 2;
+		contraintes.gridheight = 1;
 		contraintes.gridx = 7;
 		contraintes.gridy = 0;
 
 		add(texteSup, contraintes);
+		
+		texteInf = formater(new JLabel("..."));
+		contraintes.fill = GridBagConstraints.BOTH;		
+		contraintes.gridy = 1;
+
+		add(texteInf, contraintes);
 
 		j2_identifiant = formater(new JLabel("Joueur 2"));
 		contraintes.gridx = 17;
@@ -91,7 +97,7 @@ class BandeauInfos extends JPanel {
 		texteSup.setText(txt);
 	}
 	void setTexteInf(String txt) {
-		//texte.setText(txt);
+		texteInf.setText(txt);
 	}
 
 }
