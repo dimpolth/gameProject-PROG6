@@ -22,7 +22,7 @@ public class Moteur {
 		h = new Historique();
 		e = EtatTour.selectionPion;
 		j1 = new Joueur(Case.Etat.joueur1, Joueur.typeJoueur.humain, "joueur 1");
-		j2 = new Joueur(Case.Etat.joueur2, Joueur.typeJoueur.ordinateur, "ordinateur");
+		j2 = new Joueur(Case.Etat.joueur2, Joueur.typeJoueur.humain, "joueur 2");
 		joueurCourant = j1;
 		ech = new Echange();
 	}
@@ -162,11 +162,16 @@ public class Moteur {
 		ArrayList<Point> l = deplacementPossible(pDepart, h.histoTour);
 		if (l.contains(p)) {
 			pArrive = p;
+			Terrain.Direction d = t.recupereDirection(pDepart, pArrive);
+			boolean priseAspi = t.estUnePriseAspiration(pDepart, d);
+			boolean prisePercu = t.estUnePrisePercussion(pDepart, d);
+			System.out.println("aspi "+t.estUnePriseAspiration(pDepart, d));
+			System.out.println("percu "+t.estUnePrisePercussion(pDepart, d));
 			if (t.deplacement(pDepart, pArrive, joueurCourant, h.histoTour) == 0) {
 				Point[] tabPts = {pDepart, pArrive};
 				ech.vider();
 				ech.ajouter("deplacement", tabPts);
-				prise();
+				prise(priseAspi,prisePercu);
 				return true;
 			} else
 				return false;
@@ -174,10 +179,10 @@ public class Moteur {
 			return false;
 	}
 
-	void prise() {
+	void prise(boolean priseAspi, boolean prisePercu) {
 		Terrain.Direction d = t.recupereDirection(pDepart, pArrive);
 		ArrayList<Point> l = new ArrayList<Point>();
-		if (t.estUnePriseAspiration(pDepart, d) && t.estUnePrisePercussion(pDepart, d)) {
+		if (priseAspi && prisePercu) {
 			Terrain.ChoixPrise choix;
 			if ((joueurCourant.getJoueurID() == Case.Etat.joueur1 && j1.isJoueurHumain()) || (joueurCourant.getJoueurID() == Case.Etat.joueur2 && j2.isJoueurHumain())) {
 				//System.out.println("Choix");
@@ -200,7 +205,7 @@ public class Moteur {
 					
 			
 			}
-		} else if (t.estUnePriseAspiration(pDepart, d) && !t.estUnePrisePercussion(pDepart, d)) {
+		} else if (priseAspi && !prisePercu) {
 			//System.out.println("aspi");
 			t.manger(joueurCourant, d, pDepart, pArrive, l, Terrain.ChoixPrise.parAspiration);
 			Joueur[] tabJoueur = {j1, j2};
@@ -208,7 +213,7 @@ public class Moteur {
 			ech.ajouter("joueurs", tabJoueur);
 			com.envoyer(ech);
 			
-		} else if (!t.estUnePriseAspiration(pDepart, d) && t.estUnePrisePercussion(pDepart, d)) {
+		} else if (!priseAspi && prisePercu) {
 			//System.out.println("percu");
 			t.manger(joueurCourant, d, pDepart, pArrive, l, Terrain.ChoixPrise.parPercussion);
 			Joueur[] tabJoueur = {j1, j2};
@@ -229,6 +234,10 @@ public class Moteur {
 		e = EtatTour.selectionPion;
 	}
 
+	void testFinTour() {
+		
+	}
+	
 	void action(Echange ech) {
 
 		//System.out.println(e);
@@ -255,7 +264,8 @@ public class Moteur {
 						ech.vider();
 						ech.ajouter("pionsManges",l);
 						ech.ajouter("joueurs", tabJoueur);
-					com.envoyer(ech);
+						com.envoyer(ech);
+						
 					}
 					break;
 				case "terrain":
