@@ -25,6 +25,7 @@ public class Moteur {
 		j2 = new Joueur(Case.Etat.joueur2, Joueur.typeJoueur.humain, "joueur 2");
 		joueurCourant = j1;
 		ech = new Echange();
+		message("bandeauSup", joueurCourant.getNom());
 	}
 
 	Moteur(Terrain t) {
@@ -78,9 +79,6 @@ public class Moteur {
 		return listePrise;
 	}
 	
-	
-	
-
 	boolean memeDirection(Point p1, Point p2, Point p3) {
 		Terrain.Direction d1 = t.recupereDirection(p1, p2);
 		Terrain.Direction d2 = t.recupereDirection(p2, p3);
@@ -246,8 +244,8 @@ public class Moteur {
 		joueurCourant.recupereJoueurOpposant(joueurCourant, j1, j2, false).setScore(nbPionsManges);
 	}
 	
-	void message(String message) {
-		ech.ajouter("bandeauInf", message);
+	void message(String destination, String message) {
+		ech.ajouter(destination, message);
 		com.envoyer(ech);
 	}
 	
@@ -279,7 +277,6 @@ public class Moteur {
 						majScore(nbPionsManges);
 						Joueur[] tabJoueur = {j1, j2};
 						ech.vider();
-						
 						ech.ajouter("pionsManges",l);
 						ech.ajouter("joueurs", tabJoueur);
 						com.envoyer(ech);
