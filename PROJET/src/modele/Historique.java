@@ -35,15 +35,19 @@ public class Historique {
 		
 	}
 	
-	Terrain annuler() {
+	public Terrain annuler() {
+		System.out.println(itPrincipal);
 		if(histoPrincipal.isEmpty())
 			return null;
 		else {
-			return histoPrincipal.get(itPrincipal--);
+			
+			Terrain temp =histoPrincipal.get(itPrincipal--);
+			temp.dessineTableauAvecIntersections();
+			return temp;
 		}
 	}
 	
-	Terrain refaire() {
+	public Terrain refaire() {
 		if(itPrincipal == histoPrincipal.size()-1)
 			return null;
 		else {

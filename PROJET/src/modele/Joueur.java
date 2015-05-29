@@ -68,6 +68,10 @@ public class Joueur {
 		score -= nbPionsManges;
 	}
 	
+	public void chargerScore(int score) {
+		this.score = score;
+	}
+	
 	public int getScore() {
 		return score;
 	}

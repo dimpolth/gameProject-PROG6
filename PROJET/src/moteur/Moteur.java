@@ -248,18 +248,14 @@ public class Moteur {
 		h.effacerHistoTour();
 		h.ajouterTour(t);
 		e = EtatTour.selectionPion;
+		message("bandeauSup", joueurCourant.getNom());
 	}
 
 	void testFinTour() {
 		pDepart = pArrive;
-
-		ArrayList<Point> toto = prisePossible(pDepart, h.histoTour);
-		System.out.println(toto);
-		if (toto.isEmpty()) {
-			System.out.println("PLUS DE PRISE");
+		if (prisePossible(pDepart, h.histoTour).isEmpty()) {
 			finTour();
 		} else {
-			System.out.println("PRISES POSSIBLES");
 			e = EtatTour.selectionDestination;
 		}
 	}
@@ -273,11 +269,26 @@ public class Moteur {
 		ech.ajouter(destination, message);
 		com.envoyer(ech);
 	}
+	
+	void calculerScore() {
+		int scoreJ1 = 0;
+		int scoreJ2 = 0;
+		for(int i = 0; i < t.LIGNES; i++) {
+			for(int j = 0; j < t.COLONNES; j++) {
+				if(t.tableau[i][j].getOccupation() == Case.Etat.joueur1)
+					scoreJ1++;
+				if(t.tableau[i][j].getOccupation() == Case.Etat.joueur2)
+					scoreJ2++;
+			}
+		}
+		j1.chargerScore(scoreJ1);
+		j2.chargerScore(scoreJ2);
+	}
 
-	public void action(Echange ech) {
+	public void action(Echange echange) {
 
-		for (String dataType : ech.getAll()) {
-			Object dataValue = ech.get(dataType);
+		for (String dataType : echange.getAll()) {
+			Object dataValue = echange.get(dataType);
 
 			switch (dataType) {
 			case "point":
@@ -312,15 +323,20 @@ public class Moteur {
 				break;
 
 			case "annuler":
+				ech.vider();
+				Case[][] annulation = h.annuler().getTableau();
+				if(annulation != null) {
+					ech.ajouter("terrain", annulation);
+					com.envoyer(ech);
+				}
 				break;
 
-			case "joueur":
+			case "joueurs":
 				Joueur[] tabJoueurIntit = (Joueur[]) dataValue;
 				// recuperer les noms et les type des joueurs.
 				j1.setNom(tabJoueurIntit[0].getNom());
 				j2.setNom(tabJoueurIntit[1].getNom());
 				ech.vider();
-				ech.ajouter("terrain", t.getTableau());
 				Joueur[] tabJoueur = { j1, j2 };
 				ech.ajouter("joueurs", tabJoueur);
 				com.envoyer(ech);
