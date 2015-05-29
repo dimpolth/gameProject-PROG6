@@ -253,9 +253,11 @@ public class Moteur {
 						joueurCourant.setScore(nbPionsManges);
 						Joueur[] tabJoueur = {j1, j2};
 						ech.vider();
+						
 						ech.ajouter("pionsManges",l);
 						ech.ajouter("joueurs", tabJoueur);
-					com.envoyer(ech);
+						com.envoyer(ech);
+					//e=EtatTour.selectionDestination;
 					}
 					break;
 				case "terrain":

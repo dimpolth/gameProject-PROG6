@@ -19,6 +19,8 @@ import javax.swing.Timer;
 
 @SuppressWarnings("serial")
 public class TerrainGraphique extends JPanel implements ComponentListener{
+	public static final int ANIM_DEPL = 1500;
+	
 	private Image imgPlateau;
 	protected Image imgPion1;
 	protected Image imgPion2;
@@ -57,8 +59,8 @@ public class TerrainGraphique extends JPanel implements ComponentListener{
 			}
 		}
 	}
-	public void deplacer(Point o, Point a, ArrayList<Point> l) {
-		pions[o.x][o.y].deplacer((Point)o.clone(), (Point)a.clone(), l);
+	public void deplacer(Point o, Point a) {
+		pions[o.x][o.y].deplacer((Point)o.clone(), (Point)a.clone());
 		Point tmp = pions[o.x][o.y].coord;
 		pions[o.x][o.y].coord = pions[a.x][a.y].coord;
 		pions[a.x][a.y].coord = tmp;
@@ -164,8 +166,8 @@ class Pion extends JComponent implements MouseListener, ComponentListener {
 		croix = b;
 		repaint();
 	}
-	public void deplacer(Point o, Point d, ArrayList<Point> l) {
-		new AnimDeplacement(this, o, d, l);
+	public void deplacer(Point o, Point d) {
+		new AnimDeplacement(this, o, d);
 	}
 	public void cacher(){
 		etat = Case.Etat.vide;
@@ -212,7 +214,6 @@ class Pion extends JComponent implements MouseListener, ComponentListener {
 	}
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		System.out.println("FREEZE");
 		if(System.currentTimeMillis() > tg.tempsGele && e.getX()  >= 0 && e.getX() < getHeight() && e.getY() >= 0 && e.getY() < getHeight()) {
 			tg.clicCase(coord);
 		}
@@ -224,33 +225,28 @@ class AnimDeplacement implements ActionListener {
 	private long tempsDepart;
 	private Point origine;
 	private Point destination;
-	private ArrayList<Point> aSupprimer;
 	private Timer horloge;
-	public AnimDeplacement(Pion p, Point o, Point d, ArrayList<Point> l) {
+	public AnimDeplacement(Pion p, Point o, Point d) {
 		pion = p;
-		pion.tg.tempsGele = System.currentTimeMillis()+1500;
+		pion.tg.tempsGele = System.currentTimeMillis()+TerrainGraphique.ANIM_DEPL;
 		tempsDepart = System.currentTimeMillis();
 		origine = o;
 		destination = d;
-		aSupprimer = l;
 		horloge = new Timer(10,this);
 		horloge.start();
 	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		long actuel = System.currentTimeMillis();
-		if(actuel - tempsDepart > 1500) {
+		if(actuel - tempsDepart > TerrainGraphique.ANIM_DEPL) {
 			horloge.stop();
 			pion.setBounds((int) ((destination.y + 0.5) * pion.dim.echelle + pion.dim.origX), (int) ((destination.x + 0.5) * pion.dim.echelle + pion.dim.origY), (int) (pion.dim.echelle / 2), (int) (pion.dim.echelle / 2));
-			if(aSupprimer != null)
-				for(int i=0 ; i<aSupprimer.size() ; i++)
-					new AnimDisparition(pion.tg.pions[aSupprimer.get(i).x][aSupprimer.get(i).y]);
 		} else {
 			double xo = ((origine.y + 0.5) * pion.dim.echelle + pion.dim.origX);
 			double xa = ((destination.y + 0.5) * pion.dim.echelle + pion.dim.origX);
 			double yo =((origine.x + 0.5) * pion.dim.echelle + pion.dim.origY);
 			double ya = ((destination.x + 0.5) * pion.dim.echelle + pion.dim.origY);
-			double x = (double)(actuel - tempsDepart)/1500*12;
+			double x = (double)(actuel - tempsDepart)/TerrainGraphique.ANIM_DEPL*12;
 			double facteur = (1/(1+Math.exp(-x+6)));
 			pion.setBounds((int)((xa-xo)*facteur+xo),(int)((ya-yo)*facteur+yo), (int) (pion.dim.echelle / 2), (int) (pion.dim.echelle / 2));
 		}

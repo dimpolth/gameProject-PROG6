@@ -11,29 +11,30 @@ import java.awt.Point;
 import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.TimerTask;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 
 @SuppressWarnings("serial")
 public class IHM extends JFrame implements ComponentListener {
-	
+
 	public static void main(String[] args) {
-		
-		Moteur m = new Moteur();		
+
+		Moteur m = new Moteur();
 		IHM i = new IHM();
 		i.setVisible(true);
-		
-		i.com = new Communication(i,m,Communication.IHM);
-		m.com = new Communication(i,m,Communication.MOTEUR);
-		
+
+		i.com = new Communication(i, m, Communication.IHM);
+		m.com = new Communication(i, m, Communication.MOTEUR);
+
 		i.lancer();
-		
+
 	}
-	
+
 	public Communication com;
 	Theme theme;
-	
+
 	JPanel coucheJeu;
 	PopupBloquant popupB;
 	PopupMenu popupM;
@@ -43,88 +44,86 @@ public class IHM extends JFrame implements ComponentListener {
 	BandeauInfos bandeauInfos;
 
 	public IHM() {
-		
-		
-		
+
 		// Initialisation de la fenÃªtre
 		super("Fanorona");
-		
+
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		addComponentListener(this);
-		
-		theme = new Theme( this );
+
+		theme = new Theme(this);
 
 		coucheJeu = new JPanel(new BorderLayout());
 		coucheJeu.setBounds(0, 0, getSize().width, getSize().height);
 		add(coucheJeu);
-		
+
 		// ZONE NORD
-		JPanel voletNord = new JPanel(new BorderLayout());		
+		JPanel voletNord = new JPanel(new BorderLayout());
 		coucheJeu.add(voletNord, BorderLayout.NORTH);
-		
+
 		// Boutons
 		JPanel panneauMenu = new JPanel();
 		voletNord.add(panneauMenu, BorderLayout.NORTH);
-		
+
 		Bouton boutonMenu = new Bouton("Menu");
 		boutonMenu.addActionListener(new Ecouteur(Ecouteur.Bouton.MENU, this));
 		panneauMenu.add(boutonMenu);
-		Bouton boutonParam= new Bouton("Paramètres");
-		boutonParam.addActionListener(new Ecouteur(Ecouteur.Bouton.PARAMETRES, this));
+		Bouton boutonParam = new Bouton("Paramètres");
+		boutonParam.addActionListener(new Ecouteur(Ecouteur.Bouton.PARAMETRES,
+				this));
 		panneauMenu.add(boutonParam);
-		
+
 		// Infos partie en cours
 		bandeauInfos = new BandeauInfos();
-		voletNord.add( bandeauInfos  );
-		
-		/*JPanel panneauScore = new JPanel( new GridBagLayout() );
-		
-		GridBagConstraints contraintes = new GridBagConstraints();		
-	    contraintes.gridwidth = 1;	    
-	    contraintes.fill = GridBagConstraints.BOTH;
-	    contraintes.weightx = 1;
-	    contraintes.weighty = 1;
-	    //contraintes.anchor = GridBagConstraints.CENTER;
-		
-		voletNord.add(panneauScore);
-		JLabel nomJoueur1 = new JLabel("Joueur 1",JLabel.CENTER);
-		panneauScore.add(nomJoueur1,contraintes);
-		JLabel scoreJoueur1 = new JLabel("10",JLabel.CENTER);
-		panneauScore.add(scoreJoueur1,contraintes);
-		JLabel tour = new JLabel("Au tour de Joueur 2",JLabel.CENTER);
-		contraintes.weightx = 3;
-		panneauScore.add(tour,contraintes);
-		contraintes.weightx = 1;
-		JLabel scoreJoueur2 = new JLabel("3",JLabel.CENTER);
-		panneauScore.add(scoreJoueur2,contraintes);
-		JLabel nomJoueur2 = new JLabel("Joueur 2",JLabel.CENTER);		
-		panneauScore.add(nomJoueur2,contraintes);
-		*/
-		
+		voletNord.add(bandeauInfos);
+
+		/*
+		 * JPanel panneauScore = new JPanel( new GridBagLayout() );
+		 * 
+		 * GridBagConstraints contraintes = new GridBagConstraints();
+		 * contraintes.gridwidth = 1; contraintes.fill =
+		 * GridBagConstraints.BOTH; contraintes.weightx = 1; contraintes.weighty
+		 * = 1; //contraintes.anchor = GridBagConstraints.CENTER;
+		 * 
+		 * voletNord.add(panneauScore); JLabel nomJoueur1 = new
+		 * JLabel("Joueur 1",JLabel.CENTER);
+		 * panneauScore.add(nomJoueur1,contraintes); JLabel scoreJoueur1 = new
+		 * JLabel("10",JLabel.CENTER);
+		 * panneauScore.add(scoreJoueur1,contraintes); JLabel tour = new
+		 * JLabel("Au tour de Joueur 2",JLabel.CENTER); contraintes.weightx = 3;
+		 * panneauScore.add(tour,contraintes); contraintes.weightx = 1; JLabel
+		 * scoreJoueur2 = new JLabel("3",JLabel.CENTER);
+		 * panneauScore.add(scoreJoueur2,contraintes); JLabel nomJoueur2 = new
+		 * JLabel("Joueur 2",JLabel.CENTER);
+		 * panneauScore.add(nomJoueur2,contraintes);
+		 */
+
 		// ZONE CENTRE
 		tg = new TerrainGraphique(this);
 		coucheJeu.add(tg, BorderLayout.CENTER);
-		
+
 		// ZONE SUD
-		JPanel voletSud = new JPanel( new GridBagLayout() );
+		JPanel voletSud = new JPanel(new GridBagLayout());
 		coucheJeu.add(voletSud, BorderLayout.SOUTH);
-		
-		GridBagConstraints contraintes = new GridBagConstraints();	  
-	    contraintes.fill = GridBagConstraints.BOTH;	  
-	    contraintes.insets =  new Insets(2,2,5,2);
-	  
-		
-	    Bouton boutonValidation = new Bouton("Valider mon tour");
-	    boutonValidation.addActionListener(new Ecouteur(Ecouteur.Bouton.ANNULER, this));
+
+		GridBagConstraints contraintes = new GridBagConstraints();
+		contraintes.fill = GridBagConstraints.BOTH;
+		contraintes.insets = new Insets(2, 2, 5, 2);
+
+		Bouton boutonValidation = new Bouton("Valider mon tour");
+		boutonValidation.addActionListener(new Ecouteur(
+				Ecouteur.Bouton.ANNULER, this));
 		contraintes.gridwidth = GridBagConstraints.REMAINDER;
-		voletSud.add(boutonValidation,contraintes);
+		voletSud.add(boutonValidation, contraintes);
 		Bouton boutonAnnuler = new Bouton("Annuler");
-		boutonAnnuler.addActionListener(new Ecouteur(Ecouteur.Bouton.ANNULER, this));
+		boutonAnnuler.addActionListener(new Ecouteur(Ecouteur.Bouton.ANNULER,
+				this));
 		contraintes.gridwidth = 1;
-		voletSud.add(boutonAnnuler,contraintes);
+		voletSud.add(boutonAnnuler, contraintes);
 		Bouton boutonRefaire = new Bouton("Refaire");
-		boutonRefaire.addActionListener(new Ecouteur(Ecouteur.Bouton.REFAIRE, this));
-		voletSud.add(boutonRefaire,contraintes);
+		boutonRefaire.addActionListener(new Ecouteur(Ecouteur.Bouton.REFAIRE,
+				this));
+		voletSud.add(boutonRefaire, contraintes);
 
 		JLayeredPane gestionCouche = getLayeredPane();
 		popupB = new PopupBloquant();
@@ -137,41 +136,40 @@ public class IHM extends JFrame implements ComponentListener {
 		gestionCouche.add(popupO, new Integer(3));
 		popupO.setVisible(false);
 		popupR = new PopupRegles(this);
-		gestionCouche.add(popupR, new Integer(3));	
-		
+		gestionCouche.add(popupR, new Integer(3));
+
 		popupR.setVisible(false);
-		
+
 		theme.setTheme(Theme.Type.BOIS);
 
 		setMinimumSize(new Dimension(640, 480));
 		setSize(1000, 750);
 		setVisible(true);
-		
-	
+
 	}
-	
-	public void lancer(){
+
+	public void lancer() {
 		Echange e2 = new Echange();
-		e2.ajouter("terrain",true);
+		e2.ajouter("terrain", true);
 		com.envoyer(e2);
 	}
-	
+
 	public void action(Ecouteur.Bouton id) {
-		
-		switch(id) {
+
+		switch (id) {
 		case REPRENDRE:
 			popupB.setVisible(false);
 			popupM.setVisible(false);
 			break;
 		case SAUVEGARDER:
 			JFileChooser fcSauver = new JFileChooser();
-			if(fcSauver.showSaveDialog(null) == JFileChooser.APPROVE_OPTION){
+			if (fcSauver.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
 				System.out.println("Action : sauvegarder");
-			}		
+			}
 			break;
 		case CHARGER:
 			JFileChooser fcCharger = new JFileChooser();
-			if(fcCharger.showOpenDialog(null) == JFileChooser.APPROVE_OPTION){
+			if (fcCharger.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
 				System.out.println("Action : charger");
 			}
 			break;
@@ -183,9 +181,11 @@ public class IHM extends JFrame implements ComponentListener {
 			break;
 		case QUITTER:
 			// Confirmation avant de quitter
-			String choix[] = {"Oui","Non"};
-			int retour = JOptionPane.showOptionDialog(this, "Voulez-vous sauvegarder la partie avant de quitter ?", "Attention", 1, 1, null, choix, choix[1]);
-			if(retour == 1)
+			String choix[] = { "Oui", "Non" };
+			int retour = JOptionPane.showOptionDialog(this,
+					"Voulez-vous sauvegarder la partie avant de quitter ?",
+					"Attention", 1, 1, null, choix, choix[1]);
+			if (retour == 1)
 				System.exit(0);
 			else
 				action(Ecouteur.Bouton.SAUVEGARDER);
@@ -200,12 +200,12 @@ public class IHM extends JFrame implements ComponentListener {
 			break;
 		case ANNULER:
 			Echange e1 = new Echange();
-			e1.ajouter("annuler",true);
+			e1.ajouter("annuler", true);
 			com.envoyer(e1);
 			break;
 		case REFAIRE:
 			Echange e2 = new Echange();
-			e2.ajouter("refaire",true);
+			e2.ajouter("refaire", true);
 			com.envoyer(e2);
 			break;
 		case OPTION_ANNULER:
@@ -213,7 +213,7 @@ public class IHM extends JFrame implements ComponentListener {
 			popupB.setVisible(false);
 			break;
 		case OPTION_VALIDER:
-			//TODO Modifications
+			// TODO Modifications
 			popupO.setVisible(false);
 			popupB.setVisible(false);
 			break;
@@ -223,8 +223,6 @@ public class IHM extends JFrame implements ComponentListener {
 			break;
 		}
 	}
-	
-	
 
 	@Override
 	public void componentHidden(ComponentEvent e) {
@@ -246,121 +244,136 @@ public class IHM extends JFrame implements ComponentListener {
 	@Override
 	public void componentShown(ComponentEvent e) {
 	}
-	
-	public void notifier(Echange e){
+
+	public void notifier(Echange e) {
 		
-		
-		
-		for (String dataType : e.getAll()) {		   
-		    Object dataValue = e.get(dataType);
-		    
-		    switch(dataType){
-		    	case "terrain" : tg.dessinerTerrain( (Case[][])dataValue ); break;
-		    	case "deplacement" :  Point[] pts = (Point[])dataValue; tg.deplacer(  pts[0], pts[1], (ArrayList<Point>)e.get("pionsManges")  ); e.retirer("pionsManges"); break; //Envoyer les deux points ET la liste de points à supprimer (pour la synchroniser au niveau des animations)
-		    	case "aspiration" : tg.afficherPrisesPossibles( (Point)dataValue ); break;
-		    	case "percussion" : tg.afficherPrisesPossibles( (Point)dataValue ); break;
-		    	case "pionsManges": tg.manger( (ArrayList<Point>) dataValue ); break;
-		    	case "joueurs" : 
-		    		Joueur[] joueurs = (Joueur[])dataValue;
-		    		for(int j=1; j<= 2; j++){
-		    			//bandeauInfos.setIdentifiant(j,joueurs[j].getNom());
-		    			//bandeauInfos.setScore(j,joueurs[j].getScore());
-		    		}
-		    	break;
-		    	
-		    	
-		    }
-		    // ...
+		int tpsAnimation = 0;
+
+		Object dataValue;
+		if ((dataValue = e.get("terrain")) != null) {
+			tg.dessinerTerrain((Case[][]) dataValue);
 		}
-		
+		if ((dataValue = e.get("deplacement")) != null) {
+			Point[] pts = (Point[]) dataValue;
+			tg.deplacer(pts[0], pts[1]);
+			tpsAnimation += TerrainGraphique.ANIM_DEPL;
+		}
+		if ((dataValue = e.get("pionsManges")) != null) {
+			new ExecuterDans(this, "pionsManges", dataValue, tpsAnimation);
+		}
+		if ((dataValue = e.get("choixPrise")) != null) {
+			new ExecuterDans(this, "choixPrise", dataValue, tpsAnimation);
+		}
+		if ((dataValue = e.get("joueurs")) != null) {
+			Joueur[] joueurs = (Joueur[]) dataValue;
+			for (int j = 1; j <= 2; j++) {
+				// bandeauInfos.setIdentifiant(j,joueurs[j].getNom());
+				// bandeauInfos.setScore(j,joueurs[j].getScore());
+			}
+		}
+	}
+}
+
+class ExecuterDans implements ActionListener {
+	IHM ihm;
+	String id;
+	Object dataValue;
+	Timer t;
+
+	public ExecuterDans(IHM pI, String pId, Object pO, int pT) {
+		ihm = pI;
+		id = pId;
+		dataValue = pO;
+		t = new Timer(pT, this);
+		t.start();
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		t.stop();
 	}
 }
 
 @SuppressWarnings("serial")
-class BandeauInfos extends JPanel{
-	
-	JLabel j1_identifiant, 
-	j1_score,
-	j1_pion,
-	j2_identifiant,
-	j2_score,
-	j2_pion,
-	texte;
-	
-	
-	BandeauInfos(){
-		super( new GridBagLayout() );	
-		
-		GridBagConstraints contraintes = new GridBagConstraints();		
-	    contraintes.gridwidth = 1;	    
-	    contraintes.weightx = 1;
-	    //contraintes.insets = new Insets(5,5,5,5);
-		
-	    contraintes.fill = GridBagConstraints.HORIZONTAL;
-		j1_identifiant = formater( new JLabel("Joueur 1") );
+class BandeauInfos extends JPanel {
+
+	JLabel j1_identifiant, j1_score, j1_pion, j2_identifiant, j2_score,
+			j2_pion, texte;
+
+	BandeauInfos() {
+		super(new GridBagLayout());
+
+		GridBagConstraints contraintes = new GridBagConstraints();
+		contraintes.gridwidth = 1;
+		contraintes.weightx = 1;
+		// contraintes.insets = new Insets(5,5,5,5);
+
+		contraintes.fill = GridBagConstraints.HORIZONTAL;
+		j1_identifiant = formater(new JLabel("Joueur 1"));
 		contraintes.gridwidth = 5;
 		contraintes.gridheight = 1;
 		contraintes.gridx = 0;
 		contraintes.gridy = 0;
-		
-		add(j1_identifiant,contraintes);
-		
-		
-		j1_score = formater ( new JLabel("Pions : 10") );		
+
+		add(j1_identifiant, contraintes);
+
+		j1_score = formater(new JLabel("Pions : 10"));
 		contraintes.gridx = 0;
 		contraintes.gridy = 1;
-		add(j1_score,contraintes);	
-		
-		
-		
-		  
-		texte = formater( new JLabel("Au tour de Joueur 2") );
+		add(j1_score, contraintes);
+
+		texte = formater(new JLabel("Au tour de Joueur 2"));
 		contraintes.fill = GridBagConstraints.BOTH;
 		contraintes.gridwidth = 10;
 		contraintes.gridheight = 2;
 		contraintes.gridx = 7;
 		contraintes.gridy = 0;
-		
-		add(texte,contraintes);	  
-		
-		j2_identifiant = formater( new JLabel("Joueur 2") );
+
+		add(texte, contraintes);
+
+		j2_identifiant = formater(new JLabel("Joueur 2"));
 		contraintes.gridx = 17;
-		contraintes.gridy = 0;	
+		contraintes.gridy = 0;
 		contraintes.gridwidth = 5;
 		contraintes.gridheight = 1;
-		//contraintes.fill = GridBagConstraints.HORIZONTAL;
-		add(j2_identifiant,contraintes);
-		
-		j2_score = formater( new JLabel("Pions: 3") );		
-		
-		contraintes.gridy = 1;	
-		add(j2_score,contraintes);
-		
-		
+		// contraintes.fill = GridBagConstraints.HORIZONTAL;
+		add(j2_identifiant, contraintes);
+
+		j2_score = formater(new JLabel("Pions: 3"));
+
+		contraintes.gridy = 1;
+		add(j2_score, contraintes);
+
 	}
-	
-	JLabel formater(JLabel lab){
+
+	JLabel formater(JLabel lab) {
 		lab.setBorder(BorderFactory.createLineBorder(Color.black));
 		lab.setOpaque(true);
 		lab.setBackground(Color.LIGHT_GRAY);
 		lab.setForeground(Color.BLACK);
 		lab.setHorizontalAlignment(JLabel.CENTER);
-		lab.setFont( new Font(getToolTipText(), Font.BOLD, 18) );
+		lab.setFont(new Font(getToolTipText(), Font.BOLD, 18));
 		return lab;
 	}
-	
-	void setIdentifiant(int j, String nom){
-		if(j==1) j1_identifiant.setText(nom); else j2_identifiant.setText(nom);
+
+	void setIdentifiant(int j, String nom) {
+		if (j == 1)
+			j1_identifiant.setText(nom);
+		else
+			j2_identifiant.setText(nom);
 	}
-	void setScore(int j, int val){		
-		if(j==1) j1_score.setText(Integer.toString(val)); else j2_identifiant.setText(Integer.toString(val));
+
+	void setScore(int j, int val) {
+		if (j == 1)
+			j1_score.setText(Integer.toString(val));
+		else
+			j2_identifiant.setText(Integer.toString(val));
 	}
-	void setTexte(String txt){		
+
+	void setTexte(String txt) {
 		texte.setText(txt);
 	}
-	
-	
-	
+
 }
 
 @SuppressWarnings("serial")
@@ -380,42 +393,48 @@ class PopupBloquant extends JPanel {
 	}
 }
 
-
 @SuppressWarnings("serial")
 class PopupMenu extends JPanel {
 	public PopupMenu(IHM i) {
-		super( new GridBagLayout() );
-		//this.setBorder(BorderFactory.createLineBorder(Color.black));
-		GridBagConstraints contraintes = new GridBagConstraints();		
-	    contraintes.gridwidth = GridBagConstraints.REMAINDER;	
-	    contraintes.fill = GridBagConstraints.BOTH;	  
-	    contraintes.insets =  new Insets(2,2,2,2);
-	    contraintes.ipady = 50;
-	    contraintes.ipadx = 180;
-	    
-	    GridBagConstraints contraintesCategorie = (GridBagConstraints) contraintes.clone();
-	    contraintesCategorie.insets = new Insets(2,2,25,2);
-		
+		super(new GridBagLayout());
+		// this.setBorder(BorderFactory.createLineBorder(Color.black));
+		GridBagConstraints contraintes = new GridBagConstraints();
+		contraintes.gridwidth = GridBagConstraints.REMAINDER;
+		contraintes.fill = GridBagConstraints.BOTH;
+		contraintes.insets = new Insets(2, 2, 2, 2);
+		contraintes.ipady = 50;
+		contraintes.ipadx = 180;
+
+		GridBagConstraints contraintesCategorie = (GridBagConstraints) contraintes
+				.clone();
+		contraintesCategorie.insets = new Insets(2, 2, 25, 2);
+
 		Bouton boutonMenuReprendre = new Bouton("Reprendre la partie");
-		boutonMenuReprendre.addActionListener(new Ecouteur(Ecouteur.Bouton.REPRENDRE, i));		
-		add(boutonMenuReprendre,contraintesCategorie);
-		
+		boutonMenuReprendre.addActionListener(new Ecouteur(
+				Ecouteur.Bouton.REPRENDRE, i));
+		add(boutonMenuReprendre, contraintesCategorie);
+
 		Bouton boutonMenuSauvegarder = new Bouton("Sauvegarder la partie");
-		boutonMenuSauvegarder.addActionListener(new Ecouteur(Ecouteur.Bouton.SAUVEGARDER, i));
-		add(boutonMenuSauvegarder,contraintes);
+		boutonMenuSauvegarder.addActionListener(new Ecouteur(
+				Ecouteur.Bouton.SAUVEGARDER, i));
+		add(boutonMenuSauvegarder, contraintes);
 		Bouton boutonMenuCharger = new Bouton("Charger une partie");
-		boutonMenuCharger.addActionListener(new Ecouteur(Ecouteur.Bouton.CHARGER, i));
-		add(boutonMenuCharger,contraintes);
+		boutonMenuCharger.addActionListener(new Ecouteur(
+				Ecouteur.Bouton.CHARGER, i));
+		add(boutonMenuCharger, contraintes);
 		Bouton boutonMenuRegles = new Bouton("Regles du jeu");
-		boutonMenuRegles.addActionListener(new Ecouteur(Ecouteur.Bouton.REGLES, i));
-		add(boutonMenuRegles,contraintesCategorie);
-		
+		boutonMenuRegles.addActionListener(new Ecouteur(Ecouteur.Bouton.REGLES,
+				i));
+		add(boutonMenuRegles, contraintesCategorie);
+
 		Bouton buttonRecommencer = new Bouton("Nouvelle partie");
-		buttonRecommencer.addActionListener(new Ecouteur(Ecouteur.Bouton.RECOMMENCER, i));
-		add(buttonRecommencer,contraintes);
+		buttonRecommencer.addActionListener(new Ecouteur(
+				Ecouteur.Bouton.RECOMMENCER, i));
+		add(buttonRecommencer, contraintes);
 		Bouton boutonMenuQuitter = new Bouton("Quitter le jeu");
-		boutonMenuQuitter.addActionListener(new Ecouteur(Ecouteur.Bouton.QUITTER, i));
-		add(boutonMenuQuitter,contraintes);
+		boutonMenuQuitter.addActionListener(new Ecouteur(
+				Ecouteur.Bouton.QUITTER, i));
+		add(boutonMenuQuitter, contraintes);
 	}
 
 	public void paintComponent(Graphics g) {
@@ -429,67 +448,75 @@ class PopupMenu extends JPanel {
 @SuppressWarnings("serial")
 class PopupOptions extends JPanel {
 	public PopupOptions(IHM i) {
-		super( new GridBagLayout() );
-		
-		GridBagConstraints contraintes = new GridBagConstraints();		
-	    contraintes.gridwidth = GridBagConstraints.REMAINDER;	
-	    contraintes.fill = GridBagConstraints.BOTH;	  
-	    contraintes.insets =  new Insets(5,5,5,5);
-	    contraintes.ipady = 15;
-	    contraintes.ipadx = 15;
-	    
-	    GridBagConstraints contraintes_groupe = (GridBagConstraints) contraintes.clone();
-	    contraintes_groupe.gridwidth = 1;
-	    GridBagConstraints contraintes_groupe_fin = (GridBagConstraints) contraintes.clone();
-	    contraintes_groupe_fin.gridwidth = GridBagConstraints.REMAINDER;
-		
+		super(new GridBagLayout());
+
+		GridBagConstraints contraintes = new GridBagConstraints();
+		contraintes.gridwidth = GridBagConstraints.REMAINDER;
+		contraintes.fill = GridBagConstraints.BOTH;
+		contraintes.insets = new Insets(5, 5, 5, 5);
+		contraintes.ipady = 15;
+		contraintes.ipadx = 15;
+
+		GridBagConstraints contraintes_groupe = (GridBagConstraints) contraintes
+				.clone();
+		contraintes_groupe.gridwidth = 1;
+		GridBagConstraints contraintes_groupe_fin = (GridBagConstraints) contraintes
+				.clone();
+		contraintes_groupe_fin.gridwidth = GridBagConstraints.REMAINDER;
+
 		JLabel selectJoueur1Etiq = new JLabel("1er joueur : ");
 		contraintes.gridwidth = GridBagConstraints.REMAINDER;
 		add(selectJoueur1Etiq, contraintes);
-		
-		JTextField identifiantJoueur1 = new JTextField("Joueur 1");		
+
+		JTextField identifiantJoueur1 = new JTextField("Joueur 1");
 		contraintes.gridwidth = 1;
 		add(identifiantJoueur1, contraintes);
-		JComboBox<String> selectJoueur1 = new JComboBox<>(new String[] {"Humain", "Facile", "Normal", "Difficile"});	
-		contraintes.gridwidth = GridBagConstraints.REMAINDER;;
-		add(selectJoueur1,contraintes);
-		
+		JComboBox<String> selectJoueur1 = new JComboBox<>(new String[] {
+				"Humain", "Facile", "Normal", "Difficile" });
+		contraintes.gridwidth = GridBagConstraints.REMAINDER;
+		;
+		add(selectJoueur1, contraintes);
+
 		JLabel selectJoueur2Etiq = new JLabel("2ème joueur : ");
-		contraintes.gridwidth = GridBagConstraints.REMAINDER;;
-		add(selectJoueur2Etiq,contraintes);
+		contraintes.gridwidth = GridBagConstraints.REMAINDER;
+		;
+		add(selectJoueur2Etiq, contraintes);
 		JTextField identifiantJoueur2 = new JTextField("Joueur 2");
 		contraintes.gridwidth = 1;
 		add(identifiantJoueur2, contraintes);
-		JComboBox<String> selectJoueur2 = new JComboBox<>(new String[] {"Humain", "Facile", "Normal", "Difficile"});
-		contraintes.gridwidth = GridBagConstraints.REMAINDER;;
-		add(selectJoueur2,contraintes);
-		
+		JComboBox<String> selectJoueur2 = new JComboBox<>(new String[] {
+				"Humain", "Facile", "Normal", "Difficile" });
+		contraintes.gridwidth = GridBagConstraints.REMAINDER;
+		;
+		add(selectJoueur2, contraintes);
+
 		JLabel themeEtiq = new JLabel("Thème graphique : ");
-		contraintes.gridwidth = GridBagConstraints.REMAINDER;;
-		add(themeEtiq,contraintes);
-		JComboBox<String> theme = new JComboBox<>(new String[] {"Boisé"});
-		contraintes.gridwidth = GridBagConstraints.REMAINDER;;
-		add(theme,contraintes);
-		
+		contraintes.gridwidth = GridBagConstraints.REMAINDER;
+		;
+		add(themeEtiq, contraintes);
+		JComboBox<String> theme = new JComboBox<>(new String[] { "Boisé" });
+		contraintes.gridwidth = GridBagConstraints.REMAINDER;
+		;
+		add(theme, contraintes);
+
 		/*
-		JLabel tourEtiq = new JLabel("Premier joueur alÃ©atoire : ");
-		contraintes.gridwidth = 1;
-		add(tourEtiq,contraintes);
-		JCheckBox tour = new JCheckBox();
-		contraintes.gridwidth = GridBagConstraints.REMAINDER;;
-		add(tour,contraintes);
-		*/
+		 * JLabel tourEtiq = new JLabel("Premier joueur alÃ©atoire : ");
+		 * contraintes.gridwidth = 1; add(tourEtiq,contraintes); JCheckBox tour
+		 * = new JCheckBox(); contraintes.gridwidth =
+		 * GridBagConstraints.REMAINDER;; add(tour,contraintes);
+		 */
 		Bouton annuler = new Bouton("Annuler");
-		annuler.addActionListener(new Ecouteur(Ecouteur.Bouton.OPTION_ANNULER, i));
+		annuler.addActionListener(new Ecouteur(Ecouteur.Bouton.OPTION_ANNULER,
+				i));
 		contraintes.gridwidth = 1;
-		add(annuler,contraintes);
+		add(annuler, contraintes);
 		Bouton valider = new Bouton("Valider");
-		valider.addActionListener(new Ecouteur(Ecouteur.Bouton.OPTION_VALIDER, i));
-		contraintes.gridwidth = GridBagConstraints.REMAINDER;;
-		add(valider,contraintes);
-		
-		
-		
+		valider.addActionListener(new Ecouteur(Ecouteur.Bouton.OPTION_VALIDER,
+				i));
+		contraintes.gridwidth = GridBagConstraints.REMAINDER;
+		;
+		add(valider, contraintes);
+
 	}
 
 	public void paintComponent(Graphics g) {
@@ -503,33 +530,33 @@ class PopupOptions extends JPanel {
 @SuppressWarnings("serial")
 class PopupRegles extends JPanel {
 	public PopupRegles(IHM i) {
-		super( new GridBagLayout() );
-		
-		GridBagConstraints contraintes = new GridBagConstraints();	
+		super(new GridBagLayout());
+
+		GridBagConstraints contraintes = new GridBagConstraints();
 		contraintes.gridx = 0;
-		
-	    contraintes.weightx = 2;
-	    contraintes.weighty = 1;
-	    contraintes.fill = GridBagConstraints.BOTH;
-	    contraintes.anchor = GridBagConstraints.CENTER;	  	  
-	    contraintes.insets =  new Insets(50,50,50,50);	   	    
-		
-	    JEditorPane regles = new JEditorPane();
-	    regles.setAutoscrolls(true);
-	    regles.setContentType("text/html");
-	    regles.setEditable(false);	    		
-	    regles.setText("<html><h1>Les règles du Fanorona</h1><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis rhoncus ut est nec posuere. In molestie est augue, sed fermentum Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis rhoncus ut est nec posuere. In molestie est augue, sed fermentum Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis rhoncus ut est nec posuere. In molestie est augue, sed fermentum Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis rhoncus ut est nec posuere. In molestie est augue, sed fermentum Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis rhoncus ut est nec posuere. In molestie est augue, sed fermentum Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis rhoncus ut est nec posuere. In molestie est augue, sed fermentum Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis rhoncus ut est nec posuere. In molestie est augue, sed fermentum Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis rhoncus ut est nec posuere. In molestie est augue, sed fermentum Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis rhoncus ut est nec posuere. In molestie est augue, sed fermentum Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis rhoncus ut est nec posuere. In molestie est augue, sed fermentum Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis rhoncus ut est nec posuere. In molestie est augue, sed fermentum Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis rhoncus ut est nec posuere. In molestie est augue, sed fermentum Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis rhoncus ut est nec posuere. In molestie est augue, sed fermentum Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis rhoncus ut est nec posuere. In molestie est augue, sed fermentum Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis rhoncus ut est nec posuere. In molestie est augue, sed fermentum Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis rhoncus ut est nec posuere. In molestie est augue, sed fermentum Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis rhoncus ut est nec posuere. In molestie est augue, sed fermentum Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis rhoncus ut est nec posuere. In molestie est augue, sed fermentum Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis rhoncus ut est nec posuere. In molestie est augue, sed fermentum felis accumsan quis. Suspendisse potenti. Morbi pharetra purus vitae blandit vehicula. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin elit dui, consequat tristique dictum ac, vulputate congue felis. Cras consequat augue nec suscipit maximus.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis rhoncus ut est nec posuere. In molestie est augue, sed fermentum felis accumsan quis. Suspendisse potenti. Morbi pharetra purus vitae blandit vehicula. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin elit dui, consequat tristique dictum ac, vulputate congue felis. Cras consequat augue nec suscipit maxim Etiam fringilla erat lacinia sem tincidunt gravida. Vestibulum porttitor orci ut ante eleifend, tincidunt molestie elit ornare. Suspendisse placerat neque odio, a posuere quam congue non. Nulla diam orci, lobortis ut orci et, interdum malesuada arcu. Vestibulum porttitor vehicula urna, et ornare mi eleifend eget. In consequat congue eros eget volutpat. Proin quis rhoncus velit.</p></html>"); 
-		add(regles,contraintes);
+
+		contraintes.weightx = 2;
+		contraintes.weighty = 1;
+		contraintes.fill = GridBagConstraints.BOTH;
+		contraintes.anchor = GridBagConstraints.CENTER;
+		contraintes.insets = new Insets(50, 50, 50, 50);
+
+		JEditorPane regles = new JEditorPane();
+		regles.setAutoscrolls(true);
+		regles.setContentType("text/html");
+		regles.setEditable(false);
+		regles.setText("<html><h1>Les règles du Fanorona</h1><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis rhoncus ut est nec posuere. In molestie est augue, sed fermentum Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis rhoncus ut est nec posuere. In molestie est augue, sed fermentum Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis rhoncus ut est nec posuere. In molestie est augue, sed fermentum Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis rhoncus ut est nec posuere. In molestie est augue, sed fermentum Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis rhoncus ut est nec posuere. In molestie est augue, sed fermentum Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis rhoncus ut est nec posuere. In molestie est augue, sed fermentum Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis rhoncus ut est nec posuere. In molestie est augue, sed fermentum Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis rhoncus ut est nec posuere. In molestie est augue, sed fermentum Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis rhoncus ut est nec posuere. In molestie est augue, sed fermentum Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis rhoncus ut est nec posuere. In molestie est augue, sed fermentum Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis rhoncus ut est nec posuere. In molestie est augue, sed fermentum Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis rhoncus ut est nec posuere. In molestie est augue, sed fermentum Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis rhoncus ut est nec posuere. In molestie est augue, sed fermentum Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis rhoncus ut est nec posuere. In molestie est augue, sed fermentum Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis rhoncus ut est nec posuere. In molestie est augue, sed fermentum Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis rhoncus ut est nec posuere. In molestie est augue, sed fermentum Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis rhoncus ut est nec posuere. In molestie est augue, sed fermentum Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis rhoncus ut est nec posuere. In molestie est augue, sed fermentum Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis rhoncus ut est nec posuere. In molestie est augue, sed fermentum felis accumsan quis. Suspendisse potenti. Morbi pharetra purus vitae blandit vehicula. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin elit dui, consequat tristique dictum ac, vulputate congue felis. Cras consequat augue nec suscipit maximus.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis rhoncus ut est nec posuere. In molestie est augue, sed fermentum felis accumsan quis. Suspendisse potenti. Morbi pharetra purus vitae blandit vehicula. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin elit dui, consequat tristique dictum ac, vulputate congue felis. Cras consequat augue nec suscipit maxim Etiam fringilla erat lacinia sem tincidunt gravida. Vestibulum porttitor orci ut ante eleifend, tincidunt molestie elit ornare. Suspendisse placerat neque odio, a posuere quam congue non. Nulla diam orci, lobortis ut orci et, interdum malesuada arcu. Vestibulum porttitor vehicula urna, et ornare mi eleifend eget. In consequat congue eros eget volutpat. Proin quis rhoncus velit.</p></html>");
+		add(regles, contraintes);
 		contraintes.fill = GridBagConstraints.NONE;
 		contraintes.ipadx = 100;
 		contraintes.ipady = 40;
-		
+
 		Bouton retour = new Bouton("Retour au menu");
 		retour.addActionListener(new Ecouteur(Ecouteur.Bouton.REGLES_RETOUR, i));
-		add(retour,contraintes);
-		
+		add(retour, contraintes);
+
 	}
-	
+
 	public void paintComponent(Graphics g) {
 		g.setColor(Color.GRAY);
 		g.fillRect(0, 0, getWidth(), getHeight());
@@ -539,9 +566,13 @@ class PopupRegles extends JPanel {
 }
 
 class Ecouteur implements ActionListener {
-	public enum Bouton {REPRENDRE, SAUVEGARDER, CHARGER, REGLES, RECOMMENCER, QUITTER, MENU, PARAMETRES, ANNULER, REFAIRE, OPTION_ANNULER, OPTION_VALIDER, REGLES_RETOUR}
+	public enum Bouton {
+		REPRENDRE, SAUVEGARDER, CHARGER, REGLES, RECOMMENCER, QUITTER, MENU, PARAMETRES, ANNULER, REFAIRE, OPTION_ANNULER, OPTION_VALIDER, REGLES_RETOUR
+	}
+
 	Bouton id;
 	IHM i;
+
 	public Ecouteur(Bouton id, IHM i) {
 		this.id = id;
 		this.i = i;
