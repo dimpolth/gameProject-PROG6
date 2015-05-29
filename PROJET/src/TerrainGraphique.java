@@ -68,9 +68,11 @@ public class TerrainGraphique extends JPanel implements ComponentListener{
 		pions[o.x][o.y] = pions[a.x][a.y];
 		pions[a.x][a.y] = tmpP;
 	}
-	public void afficherPrisesPossibles(Point p) {
-		prisesPossibles.add(p);
-		pions[p.x][p.y].setPrisePossible(true);
+	public void afficherPrisesPossibles(Point[] p) {
+		prisesPossibles.add(p[0]);
+		prisesPossibles.add(p[1]);
+		pions[p[0].x][p[0].y].setPrisePossible(true);
+		pions[p[1].x][p[1].y].setPrisePossible(true);
 	}
 	public void cacherPrisesPossibles(){
 		for(int i=0; i<prisesPossibles.size(); i++){

@@ -246,7 +246,6 @@ public class IHM extends JFrame implements ComponentListener {
 	}
 
 	public void notifier(Echange e) {
-		
 		int tpsAnimation = 0;
 
 		Object dataValue;
@@ -265,11 +264,7 @@ public class IHM extends JFrame implements ComponentListener {
 			new ExecuterDans(this, "choixPrise", dataValue, tpsAnimation);
 		}
 		if ((dataValue = e.get("joueurs")) != null) {
-			Joueur[] joueurs = (Joueur[]) dataValue;
-			for (int j = 1; j <= 2; j++) {
-				// bandeauInfos.setIdentifiant(j,joueurs[j].getNom());
-				// bandeauInfos.setScore(j,joueurs[j].getScore());
-			}
+			new ExecuterDans(this, "joueurs", dataValue, tpsAnimation);
 		}
 	}
 }
@@ -290,6 +285,21 @@ class ExecuterDans implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		switch(id) {
+		case "pionsManges":
+			ihm.tg.manger((ArrayList<Point>)dataValue);
+			break;
+		case "choixPrise":
+			ihm.tg.afficherPrisesPossibles((Point[])dataValue);
+			break;
+		case "joueurs":
+			Joueur[] joueurs = (Joueur[]) dataValue;
+			for (int j = 1; j <= 2; j++) {
+				// bandeauInfos.setIdentifiant(j,joueurs[j].getNom());
+				// bandeauInfos.setScore(j,joueurs[j].getScore());
+			}
+			break;
+		}
 		t.stop();
 	}
 }

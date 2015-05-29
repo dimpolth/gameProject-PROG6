@@ -28,6 +28,9 @@ public class Communication {
 	void envoyer(Echange e){
 		
 		//System.out.println(""+loc+" : envoyer");
+		
+		if(e.infos.size() == 0)
+			return;
 				
 		if(loc == Communication.IHM && !reseau){
 			Communication.canaux[ Communication.MOTEUR ].recevoir(e);			
