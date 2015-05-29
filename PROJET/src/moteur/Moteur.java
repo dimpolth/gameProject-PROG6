@@ -47,6 +47,7 @@ public class Moteur {
 		j2 = new Joueur(Case.Etat.joueur2, Joueur.typeJoueur.humain, "joueur 2");
 		joueurCourant = j1;
 		ech = new Echange();
+		h.ajouterTour(t);
 	}
 
 	Moteur(Terrain t) {

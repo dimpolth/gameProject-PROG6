@@ -36,7 +36,7 @@ public class Historique {
 	}
 	
 	public Terrain annuler() {
-		System.out.println(itPrincipal);
+		System.out.println("Dessin moteur");
 		if(histoPrincipal.isEmpty())
 			return null;
 		else {
