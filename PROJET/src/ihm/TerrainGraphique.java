@@ -1,23 +1,14 @@
 package ihm;
-import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
-import javax.swing.JComponent;
 import javax.swing.JPanel;
-import javax.swing.Timer;
-
 import reseau.Echange;
 import modele.Case;
 
@@ -143,145 +134,9 @@ public class TerrainGraphique extends JPanel implements ComponentListener{
 	}
 }
 
-@SuppressWarnings("serial")
-class Pion extends JComponent implements MouseListener, ComponentListener {
-	protected Point coord;
-	protected TerrainGraphique tg;
-	private Case.Etat etat;
-	private boolean croix;
-	private float alpha;
-	protected Dimensions dim;
-	public Pion(Point p, TerrainGraphique t, Dimensions d) {
-		super();
-		coord = p;
-		tg = t;
-		etat = Case.Etat.vide;
-		croix = false;
-		alpha = 1.0f;
-		dim = d;
-		addComponentListener(this);
-		addMouseListener(this);
-	}
-	public void setCouleur(Case.Etat t) {
-		etat = t;
-	}
-	public void setAlpha(float f) {
-		alpha = f;
-	}
-	public void setPrisePossible(boolean b){		
-		croix = b;
-		repaint();
-	}
-	public void deplacer(Point o, Point d) {
-		new AnimDeplacement(this, o, d);
-	}
-	public void cacher(){
-		etat = Case.Etat.vide;
-		repaint();
-	}
-	
-	public void paintComponent(Graphics g) {
-		Graphics2D g2 = (Graphics2D)g;
-		AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha);
-		g2.setComposite(ac);
-		if(etat == Case.Etat.joueur1) {
-			g2.drawImage(tg.imgPion1, 0, 0, getWidth(), getHeight(), null);
-		} else if(etat == Case.Etat.joueur2) {
-			g2.drawImage(tg.imgPion2, 0, 0, getWidth(), getHeight(), null);
-		}
-		if(croix) {
-			g2.drawImage(tg.imgCroix, 0, 0, getWidth(), getHeight(), null);
-		}
-	}
-	@Override
-	public void componentHidden(ComponentEvent e) {
-	}
-	@Override
-	public void componentMoved(ComponentEvent e) {
-	}
-	@Override
-	public void componentResized(ComponentEvent e) {
-		setBounds((int) ((coord.y + 0.5) * dim.echelle + dim.origX), (int) ((coord.x + 0.5) * dim.echelle + dim.origY), (int) (dim.echelle / 2), (int) (dim.echelle / 2));
-	}
-	@Override
-	public void componentShown(ComponentEvent e) {
-	}
-	@Override
-	public void mouseClicked(MouseEvent e) {
-	}
-	@Override
-	public void mouseEntered(MouseEvent e) {
-	}
-	@Override
-	public void mouseExited(MouseEvent e) {
-	}
-	@Override
-	public void mousePressed(MouseEvent e) {
-	}
-	@Override
-	public void mouseReleased(MouseEvent e) {
-		if(System.currentTimeMillis() > tg.tempsGele && e.getX()  >= 0 && e.getX() < getHeight() && e.getY() >= 0 && e.getY() < getHeight()) {
-			tg.clicCase(coord);
-		}
-	}
-}
 
-class AnimDeplacement implements ActionListener {
-	private Pion pion;
-	private long tempsDepart;
-	private Point origine;
-	private Point destination;
-	private Timer horloge;
-	public AnimDeplacement(Pion p, Point o, Point d) {
-		pion = p;
-		pion.tg.tempsGele = System.currentTimeMillis()+TerrainGraphique.ANIM_DEPL;
-		tempsDepart = System.currentTimeMillis();
-		origine = o;
-		destination = d;
-		horloge = new Timer(10,this);
-		horloge.start();
-	}
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		long actuel = System.currentTimeMillis();
-		if(actuel - tempsDepart > TerrainGraphique.ANIM_DEPL) {
-			horloge.stop();
-			pion.setBounds((int) ((destination.y + 0.5) * pion.dim.echelle + pion.dim.origX), (int) ((destination.x + 0.5) * pion.dim.echelle + pion.dim.origY), (int) (pion.dim.echelle / 2), (int) (pion.dim.echelle / 2));
-		} else {
-			double xo = ((origine.y + 0.5) * pion.dim.echelle + pion.dim.origX);
-			double xa = ((destination.y + 0.5) * pion.dim.echelle + pion.dim.origX);
-			double yo =((origine.x + 0.5) * pion.dim.echelle + pion.dim.origY);
-			double ya = ((destination.x + 0.5) * pion.dim.echelle + pion.dim.origY);
-			double x = (double)(actuel - tempsDepart)/TerrainGraphique.ANIM_DEPL*12;
-			double facteur = (1/(1+Math.exp(-x+6)));
-			pion.setBounds((int)((xa-xo)*facteur+xo),(int)((ya-yo)*facteur+yo), (int) (pion.dim.echelle / 2), (int) (pion.dim.echelle / 2));
-		}
-	}
-}
-class AnimDisparition implements ActionListener {
-	private Pion pion;
-	private long tempsDepart;
-	private Timer horloge;
-	public AnimDisparition(Pion p) {
-		pion = p;
-		pion.tg.tempsGele = System.currentTimeMillis()+500;
-		tempsDepart = System.currentTimeMillis();
-		horloge = new Timer(10,this);
-		horloge.start();
-	}
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		long actuel = System.currentTimeMillis();
-		if(actuel - tempsDepart > 500) {
-			horloge.stop();
-			pion.setCouleur(Case.Etat.vide);
-			pion.repaint();
-		} else {
-			pion.setAlpha(1f-(float)((double)(actuel - tempsDepart)/500.0));
-			pion.repaint();
-		}
-	}
-}
+
+
 
 class Dimensions {
 	public int origX;
