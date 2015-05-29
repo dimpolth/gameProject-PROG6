@@ -1,7 +1,5 @@
-import java.awt.Point;
-import java.util.ArrayList;
-import java.util.Random;
-import java.util.Iterator;
+package ia;
+import modele.Terrain;
 
 public class IntelligenceArtificielle {
 

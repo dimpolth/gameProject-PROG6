@@ -1,8 +1,27 @@
+package moteur;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import ia.*;
+import ihm.*;
+import modele.*;
+import reseau.*;
+
 public class Moteur {
+
+	public static void main(String[] args) {
+
+		Moteur m = new Moteur();
+		IHM i = new IHM();
+		i.setVisible(true);
+
+		i.com = new Communication(i, m, Communication.IHM);
+		m.com = new Communication(i, m, Communication.MOTEUR);
+
+		i.lancer();
+
+	}
 
 	public enum EtatTour {selectionPion, selectionDestination, attenteChoix;}
 
@@ -17,7 +36,7 @@ public class Moteur {
 	Echange ech;
 	Point aspi, perc;
 
-	Moteur() {
+	public Moteur() {
 		t = new Terrain();
 		h = new Historique();
 		e = EtatTour.selectionPion;
@@ -240,7 +259,7 @@ public class Moteur {
 	}
 	
 	void majScore(int nbPionsManges) {
-		joueurCourant.recupereJoueurOpposant(joueurCourant, j1, j2, false).setScore(nbPionsManges);
+		Joueur.recupereJoueurOpposant(joueurCourant, j1, j2, false).setScore(nbPionsManges);
 	}
 	
 	void message(String destination, String message) {
@@ -249,7 +268,7 @@ public class Moteur {
 		com.envoyer(ech);
 	}
 	
-	void action(Echange ech) {
+	public void action(Echange ech) {
 
 		//System.out.println(e);
 		for (String dataType : ech.getAll()) {

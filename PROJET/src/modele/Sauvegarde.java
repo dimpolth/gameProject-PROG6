@@ -1,6 +1,8 @@
+package modele;
 import java.io.Serializable;
 
 
+@SuppressWarnings("serial")
 public class Sauvegarde implements Serializable {
 	public Terrain plateau;
 	public Boolean joueur;

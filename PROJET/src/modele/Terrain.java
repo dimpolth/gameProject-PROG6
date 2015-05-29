@@ -1,7 +1,7 @@
+package modele;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Scanner;
 
 
 public class Terrain {
@@ -18,7 +18,7 @@ public class Terrain {
 	public final static int INDICE_MAX_LIGNES = LIGNES - 1;
 	public final static int INDICE_MAX_COLONNES = COLONNES - 1;
 	public Case tableau[][] = new Case[LIGNES][COLONNES];
-	private Scanner sc;
+	//private Scanner sc;
 
 	public Terrain() {
 		for (int ligne = 0; ligne < Terrain.LIGNES; ligne++)
@@ -383,7 +383,7 @@ public class Terrain {
 			return ChoixPrise.parAspiration;
 	}*/
 
-	boolean estUnePrisePercussion(Point depart, Direction d) {
+	public boolean estUnePrisePercussion(Point depart, Direction d) {
 		Point cible = new Point();
 		boolean b = false;
 
@@ -427,7 +427,7 @@ public class Terrain {
 		return b;
 	}
 
-	boolean estUnePriseAspiration(Point depart, Direction d) {
+	public boolean estUnePriseAspiration(Point depart, Direction d) {
 		Point cible = new Point();
 		boolean b = false;
 
@@ -475,7 +475,7 @@ public class Terrain {
 
 
 
-	ArrayList<Point> couplibre(Case.Etat joueurCourant) {
+	public ArrayList<Point> couplibre(Case.Etat joueurCourant) {
 		ArrayList<Point> reponse = new ArrayList<Point>();
 	
 		for (int x = 0; x < LIGNES; x++) {

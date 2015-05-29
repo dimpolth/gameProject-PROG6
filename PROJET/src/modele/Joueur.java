@@ -1,4 +1,4 @@
-
+package modele;
 public class Joueur {
 	
 	public enum typeJoueur{

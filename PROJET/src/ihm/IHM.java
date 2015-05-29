@@ -1,3 +1,4 @@
+package ihm;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -5,32 +6,19 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.Point;
 import java.awt.event.*;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.TimerTask;
 
 import javax.swing.*;
-import javax.swing.border.Border;
+
+import modele.*;
+import reseau.*;
+
 
 @SuppressWarnings("serial")
 public class IHM extends JFrame implements ComponentListener {
-
-	public static void main(String[] args) {
-
-		Moteur m = new Moteur();
-		IHM i = new IHM();
-		i.setVisible(true);
-
-		i.com = new Communication(i, m, Communication.IHM);
-		m.com = new Communication(i, m, Communication.MOTEUR);
-
-		i.lancer();
-
-	}
 
 	public Communication com;
 	Theme theme;
@@ -288,6 +276,7 @@ class ExecuterDans implements ActionListener {
 		t.start();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		switch(id) {

@@ -1,3 +1,4 @@
+package modele;
 import java.awt.*;
 import java.util.*;
 
@@ -24,7 +25,7 @@ public class Case {
 		return new Case(pos,occupation); 
 	}
 	
-	Etat getOccupation() {
+	public Etat getOccupation() {
 		return occupation;
 	}
 	
@@ -40,7 +41,7 @@ public class Case {
 		return this;
 	}
 	
-	ArrayList<Point> getSucc() {
+	public ArrayList<Point> getSucc() {
 		return succ;
 	}
 	

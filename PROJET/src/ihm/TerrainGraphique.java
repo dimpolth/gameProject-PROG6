@@ -1,3 +1,4 @@
+package ihm;
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -16,6 +17,9 @@ import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.Timer;
+
+import reseau.Echange;
+import modele.Case;
 
 @SuppressWarnings("serial")
 public class TerrainGraphique extends JPanel implements ComponentListener{

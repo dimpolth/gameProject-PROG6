@@ -1,3 +1,4 @@
+package modele;
 import java.awt.Point;
 import java.util.ArrayList;
 
@@ -5,17 +6,17 @@ import java.util.ArrayList;
 public class Historique {
 
 	ArrayList<Terrain> histoPrincipal;
-	ArrayList<Point> histoTour;
+	public ArrayList<Point> histoTour;
 	int itPrincipal, itTour;
 	boolean joueur; //true = j1, false = j2
 	
-	Historique() {
+	public Historique() {
 		histoPrincipal = new ArrayList<Terrain>();
 		histoTour = new ArrayList<Point>();
 		itPrincipal = 0;
 	}
 	
-	void ajouterTour(Terrain t) {
+	public void ajouterTour(Terrain t) {
 		if(itPrincipal < histoPrincipal.size()-1) {
 			for(int i = histoPrincipal.size()-1; i > itPrincipal; i--) { 
 				histoPrincipal.remove(i);
@@ -28,7 +29,7 @@ public class Historique {
 		
 	}
 	
-	void ajouterCoup(Point p) {
+	public void ajouterCoup(Point p) {
 		histoTour.add((Point)p.clone());
 		itTour++;
 		
@@ -50,7 +51,7 @@ public class Historique {
 		}
 	}
 	
-	void effacerHistoTour() {
+	public void effacerHistoTour() {
 		histoTour = new ArrayList<Point>();
 	}
 	

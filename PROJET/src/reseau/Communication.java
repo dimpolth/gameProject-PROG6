@@ -1,10 +1,14 @@
+package reseau;
+
+import ihm.*;
+import moteur.*;
 
 public class Communication {
 	
 	static Communication canaux[]= new Communication[2];
 	
-	static final int IHM = 0;
-	static final int MOTEUR= 1;
+	public static final int IHM = 0;
+	public static final int MOTEUR= 1;
 	
 	boolean reseau = false;
 	
@@ -14,7 +18,7 @@ public class Communication {
 	
 	
 	// Constructeur Global
-	Communication(IHM i, Moteur m, int l){
+	public Communication(IHM i, Moteur m, int l){
 		ihm = i;
 		moteur = m;
 		loc = l;
@@ -25,7 +29,7 @@ public class Communication {
 		reseau = b;
 	}
 	
-	void envoyer(Echange e){
+	public void envoyer(Echange e){
 		
 		//System.out.println(""+loc+" : envoyer");
 		
