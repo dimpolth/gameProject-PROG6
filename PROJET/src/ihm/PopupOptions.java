@@ -14,6 +14,10 @@ import javax.swing.JTextField;
 
 @SuppressWarnings("serial")
 class PopupOptions extends JPanel {
+	
+	JTextField identifiantJoueur1,identifiantJoueur2;
+	JComboBox<String> selectJoueur1,selectJoueur2;
+	
 	public PopupOptions(IHM i) {
 		super(new GridBagLayout());
 
@@ -35,10 +39,10 @@ class PopupOptions extends JPanel {
 		contraintes.gridwidth = GridBagConstraints.REMAINDER;
 		add(selectJoueur1Etiq, contraintes);
 
-		JTextField identifiantJoueur1 = new JTextField("Joueur 1");
+		identifiantJoueur1 = new JTextField("Joueur 1");
 		contraintes.gridwidth = 1;
 		add(identifiantJoueur1, contraintes);
-		JComboBox<String> selectJoueur1 = new JComboBox<>(new String[] {
+		selectJoueur1 = new JComboBox<>(new String[] {
 				"Humain", "Facile", "Normal", "Difficile" });
 		contraintes.gridwidth = GridBagConstraints.REMAINDER;
 		;
@@ -48,10 +52,10 @@ class PopupOptions extends JPanel {
 		contraintes.gridwidth = GridBagConstraints.REMAINDER;
 		;
 		add(selectJoueur2Etiq, contraintes);
-		JTextField identifiantJoueur2 = new JTextField("Joueur 2");
+		identifiantJoueur2 = new JTextField("Joueur 2");
 		contraintes.gridwidth = 1;
 		add(identifiantJoueur2, contraintes);
-		JComboBox<String> selectJoueur2 = new JComboBox<>(new String[] {
+		selectJoueur2 = new JComboBox<>(new String[] {
 				"Humain", "Facile", "Normal", "Difficile" });
 		contraintes.gridwidth = GridBagConstraints.REMAINDER;
 		;

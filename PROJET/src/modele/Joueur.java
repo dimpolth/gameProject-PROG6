@@ -20,6 +20,10 @@ public class Joueur {
 		else 
 			this.setJoueurHumain(false);
 	}
+	
+	public Joueur(){
+		
+	}
 
 	public Case.Etat getJoueurID() {
 		return joueurID;
