@@ -25,7 +25,6 @@ public class Moteur {
 		j2 = new Joueur(Case.Etat.joueur2, Joueur.typeJoueur.humain, "joueur 2");
 		joueurCourant = j1;
 		ech = new Echange();
-		message("bandeauSup", joueurCourant.getNom());
 	}
 
 	Moteur(Terrain t) {
@@ -57,14 +56,12 @@ public class Moteur {
 				}
 			}
 		}
-
 		return listeSolution;
 	}
 	
 	//Renvoie une liste de points d'arrive permettant une prise 
 	ArrayList<Point> prisePossible(Point p, ArrayList<Point> listePredecesseurs){ 
 		ArrayList<Point> listePrise = new ArrayList<Point>();
-		
 		ArrayList<Point> listeSuc = t.tableau[p.x][p.y].getSucc();
 		ArrayList<Point> listeMouvement = deplacementPossible(p, listeSuc);
 		Iterator<Point> it = listeMouvement.iterator();
@@ -75,7 +72,6 @@ public class Moteur {
 			if (t.estUnePriseAspiration(p, d)||t.estUnePrisePercussion(p, d) )
 				listePrise.add(temp);	
 		}
-		
 		return listePrise;
 	}
 	
@@ -149,6 +145,7 @@ public class Moteur {
 			ArrayList<Point> l = listePionsJouables(joueurCourant);
 			if (l.contains(p)) {
 				pDepart = p;
+				message("bandeauInf", "Choisir la destination");
 				e = EtatTour.selectionDestination;
 				return true;
 			} else
@@ -198,9 +195,6 @@ public class Moteur {
 				ech.ajouter("pionsManges", l);
 				ech.ajouter("joueurs", tabJoueur);
 				com.envoyer(ech);
-			//if (prisePossible(p, h.histoTour))
-					
-			
 			}
 		} else if (priseAspi && !prisePercu) {
 			//System.out.println("aspi");
@@ -209,6 +203,7 @@ public class Moteur {
 			ech.ajouter("pionsManges", l);
 			ech.ajouter("joueurs", tabJoueur);
 			com.envoyer(ech);
+			testFinTour();
 			
 		} else if (!priseAspi && prisePercu) {
 			//System.out.println("percu");
@@ -217,6 +212,7 @@ public class Moteur {
 			ech.ajouter("pionsManges", l);
 			ech.ajouter("joueurs", tabJoueur);
 			com.envoyer(ech);
+			testFinTour();
 		}
 
 	}	
@@ -233,9 +229,12 @@ public class Moteur {
 
 	void testFinTour() {
 		pDepart = pArrive;
-		if(prisePossible(pDepart, h.histoTour).isEmpty())
+		if(prisePossible(pDepart, h.histoTour).isEmpty()) {
+			//System.out.println("PLUS DE PRISE");
 			finTour();
+		}
 		else {
+			//System.out.println("PRISES POSSIBLES");
 			e = EtatTour.selectionDestination;
 		}
 	}
@@ -245,6 +244,7 @@ public class Moteur {
 	}
 	
 	void message(String destination, String message) {
+		ech.vider();
 		ech.ajouter(destination, message);
 		com.envoyer(ech);
 	}
@@ -280,7 +280,7 @@ public class Moteur {
 						ech.ajouter("pionsManges",l);
 						ech.ajouter("joueurs", tabJoueur);
 						com.envoyer(ech);
-					//e=EtatTour.selectionDestination;
+						testFinTour();
 					}
 					break;
 				case "terrain":
