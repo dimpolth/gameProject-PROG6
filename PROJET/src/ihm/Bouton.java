@@ -8,12 +8,16 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.IOException;
 import java.util.ArrayList;
 //import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
 
+
+
+import javax.imageio.ImageIO;
 //import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -57,15 +61,19 @@ public class Bouton extends JButton implements MouseListener{
 		
 		g.drawString(texte,this.getWidth()/2-fm.stringWidth(texte)/2,this.getHeight()/2+fm.getHeight()/4);
 		
+	
  	   
 	 }
 	 
 	 public void setTheme(Theme.Type pTheme){
-		 fondNormal = new ImageIcon("images/themes/"+pTheme.getId()+"/bouton_normal.png").getImage();
-		 fondSurvol = new ImageIcon("images/themes/"+pTheme.getId()+"/bouton_survol.png").getImage();
-		 fondClique = new ImageIcon("images/themes/"+pTheme.getId()+"/bouton_clique.png").getImage();
-		 fond = fondNormal;
-		
+		 try {
+			fondNormal = ImageIO.read(getClass().getResource("/images/themes/"+pTheme.getId()+"/bouton_normal.png"));		
+			fondSurvol = ImageIO.read(getClass().getResource("/images/themes/"+pTheme.getId()+"/bouton_survol.png"));
+			fondClique = ImageIO.read(getClass().getResource("/images/themes/"+pTheme.getId()+"/bouton_clique.png"));
+			fond = fondNormal;
+		 } catch (IOException e) {				
+				e.printStackTrace();
+		}
 	 }
 	 
 	 public static void setThemeTous(Theme.Type pTheme){

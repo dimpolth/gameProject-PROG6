@@ -7,6 +7,7 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.util.ArrayList;
 
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
@@ -16,7 +17,7 @@ import modele.Terrain;
 
 @SuppressWarnings("serial")
 public class TerrainGraphique extends JPanel implements ComponentListener{
-	public static final int ANIM_DEPL = 1500;
+	public static final int ANIM_DEPL = 1000;
 	
 	private Image imgPlateau;
 	protected Image imgPion1;
@@ -32,10 +33,21 @@ public class TerrainGraphique extends JPanel implements ComponentListener{
 	
 	public TerrainGraphique(IHM i) {
 		super(null);
-		imgPlateau = new ImageIcon("images/themes/bois/plateau.png").getImage();
-		imgPion1 = new ImageIcon("images/themes/bois/pion1.png").getImage();
-		imgPion2 = new ImageIcon("images/themes/bois/pion2.png").getImage();
-		imgCroix = new ImageIcon("images/themes/bois/croix.png").getImage();
+		/*imgPlateau = new ImageIcon(getClass().getResource("images/themes/bois/plateau.png")).getImage();
+		imgPion1 = new ImageIcon(getClass().getResource("images/themes/bois/pion1.png")).getImage();
+		imgPion2 = new ImageIcon(getClass().getResource("images/themes/bois/pion2.png")).getImage();
+		imgCroix = new ImageIcon(getClass().getResource("images/themes/bois/croix.png")).getImage();
+		*/
+		try{
+			imgPlateau = ImageIO.read(getClass().getResource("/images/themes/bois/plateau.png"));
+			imgPion1 = ImageIO.read(getClass().getResource("/images/themes/bois/pion1.png"));
+			imgPion2 = ImageIO.read(getClass().getResource("/images/themes/bois/pion2.png"));		
+			imgCroix = ImageIO.read(getClass().getResource("/images/themes/bois/croix.png"));
+		}
+		catch(Exception e){
+			
+		}
+		 
 		ihm = i;
 		tempsGele = 0;
 		dim = new Dimensions();
@@ -82,7 +94,7 @@ public class TerrainGraphique extends JPanel implements ComponentListener{
 		}
 	}
 	public void deplacer(Point o, Point a) {
-		// Pour repositionner l'autre pion ( sinon pas cliquable /\Temporaire/\ )
+		// Pour repositionner l'autre pion ( sinon pas cliquable )
 		pions[a.x][a.y].deplacer((Point)a.clone(), (Point)o.clone());
 		
 		
