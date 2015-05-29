@@ -1,6 +1,7 @@
 package ihm;
 
 import java.awt.AlphaComposite;
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -31,6 +32,8 @@ class Pion extends JComponent implements MouseListener, ComponentListener {
 		dim = d;
 		addComponentListener(this);
 		addMouseListener(this);
+		
+		
 	}
 	public void setCouleur(Case.Etat t) {
 		etat = t;
@@ -44,6 +47,7 @@ class Pion extends JComponent implements MouseListener, ComponentListener {
 	}
 	public void deplacer(Point o, Point d) {
 		new AnimDeplacement(this, o, d);
+		
 	}
 	public void cacher(){
 		etat = Case.Etat.vide;
@@ -62,6 +66,10 @@ class Pion extends JComponent implements MouseListener, ComponentListener {
 		if(croix) {
 			g2.drawImage(tg.imgCroix, 0, 0, getWidth(), getHeight(), null);
 		}
+		
+		
+		
+		
 	}
 	@Override
 	public void componentHidden(ComponentEvent e) {

@@ -28,7 +28,7 @@ public class IHM extends JFrame implements ComponentListener {
 
 	public IHM() {
 
-		// Initialisation de la fenÃªtre
+		// Initialisation de la fenêtre
 		super("Fanorona");
 
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -123,7 +123,7 @@ public class IHM extends JFrame implements ComponentListener {
 
 	public void lancer() {
 		Echange e = new Echange();
-		e.ajouter("terrain", true);
+		e.ajouter("terrain", true);		
 		e.ajouter("joueurs", getParamsJoueurs());
 		com.envoyer(e);
 	}
@@ -245,6 +245,10 @@ public class IHM extends JFrame implements ComponentListener {
 		
 		if ((dataValue = e.get("bandeauSup")) != null) {
 			bandeauInfos.setTexteSup( (String)dataValue   );
+		}
+		
+		if ((dataValue = e.get("bandeauInf")) != null) {
+			bandeauInfos.setTexteInf( (String)dataValue   );
 		}
 		
 	}
