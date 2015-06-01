@@ -76,9 +76,10 @@ public class IntelligenceArtificielle {
 		*/
 		
 		ArrayList<Coup> listeCoupsDuTour = this.getTourDeJeuCourant().getListeCoups();
-		coupTemp = listeCoupsDuTour.get(0).clone();
+		coupTemp = listeCoupsDuTour.get(0);
 		coupSolution = coupTemp.clone();
 		listeCoupsDuTour.remove(coupTemp);
+		this.getTourDeJeuCourant().setListeCoups(listeCoupsDuTour);
 			
 		if(listeCoupsDuTour.isEmpty()) // Si la liste est vide on a terminé le tour
 			tourEnCours = false;
