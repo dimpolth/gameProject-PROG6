@@ -1,4 +1,5 @@
 package modele;
+
 import java.awt.Point;
 
 /*
@@ -8,10 +9,12 @@ public class Coup {
 	
 	private Point pDepart;
 	private Point pArrivee;
+	private Terrain.ChoixPrise choixPrise;
 	
 	public Coup(Point pDepart, Point pArrivee) {
 		this.setpDepart(pDepart);
 		this.setpArrivee(pArrivee);
+		this.setChoixPrise(Terrain.ChoixPrise.parPercussion); // par défaut prise par percussion
 	}
 
 	public Point getpDepart() {
@@ -28,5 +31,18 @@ public class Coup {
 
 	public void setpArrivee(Point pArrivee) {
 		this.pArrivee = pArrivee;
+	}
+	
+	public Coup clone(){
+		Coup copie = new Coup((Point) this.pDepart.clone(), (Point) this.pArrivee.clone());
+		return copie;
+	}
+
+	public Terrain.ChoixPrise getChoixPrise() {
+		return choixPrise;
+	}
+
+	public void setChoixPrise(Terrain.ChoixPrise choixPrise) {
+		this.choixPrise = choixPrise;
 	}
 }
