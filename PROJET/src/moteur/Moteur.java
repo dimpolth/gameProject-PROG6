@@ -281,7 +281,14 @@ public class Moteur {
 			joueurCourant = j1;
 		h.effacerHistoTour();
 		h.ajouterTour(t);
-		e = EtatTour.selectionPion;
+		System.out.println("FIN DE TOUR ");
+		if (joueurCourant.isJoueurHumain())
+			e = EtatTour.selectionPion;
+		else {
+			e = EtatTour.jeuxIa;
+			jouerIa();
+		}
+			
 		message("bandeauSup", joueurCourant.getNom());
 		message("bandeauInf", "Selection du pion");
 	}
@@ -321,7 +328,9 @@ public class Moteur {
 	}
 	
 	void jouerIa(){
+		System.out.println("DEBUT TOUR IA");
 		do{
+			System.out.println("boucle IA");
 			jeuIa= joueurCourant.jouer();
 			selectionPion(jeuIa.getpDepart());
 			selectionDestination(jeuIa.getpArrivee());		

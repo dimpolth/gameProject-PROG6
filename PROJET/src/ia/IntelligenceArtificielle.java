@@ -63,8 +63,8 @@ public class IntelligenceArtificielle {
 			break;
 		}
 		
-		Iterator<Coup> it = this.getTourDeJeuCourant().getListeCoups().iterator();
-		System.out.println("\n\n ****\t Résultat \t**** \n\n");
+	//	Iterator<Coup> it = this.getTourDeJeuCourant().getListeCoups().iterator();
+		/*System.out.println("\n\n ****\t Résultat \t**** \n\n");
 		this.moteur.t.dessineTableauAvecIntersections();
 		while(it.hasNext()){
 			Coup coupT = it.next();
@@ -73,7 +73,7 @@ public class IntelligenceArtificielle {
 			this.moteur.t.manger(this.joueurIA, this.moteur.t.recupereDirection(pDep, pArr), pDep, pArr, coupT.getChoixPrise());
 			this.moteur.t.dessineTableauAvecIntersections();
 		}
-		
+		*/
 		
 		ArrayList<Coup> listeCoupsDuTour = this.getTourDeJeuCourant().getListeCoups();
 		coupTemp = listeCoupsDuTour.get(0).clone();
