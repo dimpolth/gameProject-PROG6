@@ -6,12 +6,9 @@ import java.awt.event.ActionListener;
 
 import javax.swing.Timer;
 
-class AnimDeplacement implements ActionListener {
-	private Pion pion;
-	private long tempsDepart;
+class AnimDeplacement extends Animation {
 	private Point origine;
 	private Point destination;
-	private Timer horloge;
 	public AnimDeplacement(Pion p, Point o, Point d) {
 		pion = p;
 		pion.tg.tempsGele = System.currentTimeMillis()+TerrainGraphique.ANIM_DEPL;

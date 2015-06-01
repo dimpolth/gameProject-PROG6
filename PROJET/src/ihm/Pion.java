@@ -37,10 +37,7 @@ class Pion extends JComponent implements MouseListener, ComponentListener {
 	}
 	public void setCouleur(Case.Etat t) {
 		etat = t;
-		if(t == Case.Etat.vide)
-			alpha = 0.0f;
-		else
-			alpha = 1.0f;
+		setAlpha( (t == Case.Etat.vide) ? 0.0f : 1.0f );			
 	}
 	public void setAlpha(float f) {
 		alpha = f;

@@ -1,4 +1,8 @@
 package modele;
+import ia.*;
+import moteur.*;
+import java.awt.Point;
+import java.util.ArrayList;
 public class Joueur {
 	
 	public enum typeJoueur{
@@ -10,18 +14,27 @@ public class Joueur {
 	private boolean joueurHumain;
 	private int score;
 	private String nom;
+	private IntelligenceArtificielle ia;
 	
+	//Constructeur pour joueur humain
 	public Joueur(Case.Etat joueurID, typeJoueur joueur, String nom){
 		this.setJoueurID(joueurID);
 		score = 22;
 		this.nom = nom;
-		if(joueur == typeJoueur.humain)
-			this.setJoueurHumain(true);
-		else 
-			this.setJoueurHumain(false);
+		this.setJoueurHumain(true);
+		ia = null;
 	}
 	
-	public Joueur(){
+	//Constructeur pour joueur ordinateur
+	public Joueur(Case.Etat joueurID, typeJoueur joueur, IntelligenceArtificielle.difficulteIA niveau, Joueur adversaire, Moteur m){
+		this.setJoueurID(joueurID);
+		score = 22;
+		this.nom = "Ordinateur";
+		this.setJoueurHumain(false);
+		ia = new IntelligenceArtificielle(niveau, this, adversaire, m);
+	}
+	
+	public Joueur() {
 		
 	}
 
@@ -47,7 +60,6 @@ public class Joueur {
 		else
 			return Case.Etat.joueur1;
 	}
-	
 	
 	public static Joueur recupereJoueurOpposant(Joueur joueurCourant, Joueur J1, Joueur J2, boolean traceChangeJoueur){
 		if(joueurCourant.getJoueurID() == J1.getJoueurID()){
@@ -86,5 +98,9 @@ public class Joueur {
 	
 	public void setNom(String nom) {
 		this.nom = nom;
+	}
+	
+	public Coup jouer() {
+		return ia.jouerIA();
 	}
 }
