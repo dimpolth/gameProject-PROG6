@@ -165,7 +165,7 @@ public class Terrain {
 
 	public Direction recupereDirection(Point depart, Point arrive) {
 		Direction dir = null;
-
+		
 		if ((arrive.x == depart.x - 1) && (arrive.y == depart.y - 1))
 			dir = Direction.hautGauche;
 		if ((arrive.x == depart.x - 1) && (arrive.y == depart.y))
@@ -187,29 +187,24 @@ public class Terrain {
 	}
 
 
-	public int manger(Joueur joueurCourant, Direction dir, Point pDepart, Point pArrivee, ArrayList<Point> listePionsManges, ChoixPrise c) {
+	public ArrayList<Point> manger(Joueur joueurCourant, Direction dir, Point pDepart, Point pArrivee, ChoixPrise c) {
 
-
+		ArrayList<Point> listePionsManges = new ArrayList<Point>();
 		Case.Etat joueurOppose;
-		int nbPionsManges = 0;
-
 
 		// On indique dans une variable qui est l'adversaire pour reconnaître ses pions
 		
 		if (joueurCourant.getJoueurID() == Case.Etat.joueur1)
 			joueurOppose = Case.Etat.joueur2;
-		else if (joueurCourant.getJoueurID() == Case.Etat.joueur2)
+		else 
 			joueurOppose = Case.Etat.joueur1;
-		else
-			return -1;
 		
 		if (c == ChoixPrise.parPercussion)  							// Sinon on applique la prise selon le								
 			this.prisePercussion(pArrivee, dir, joueurOppose, listePionsManges); // seul choix possible
 		else if (c == ChoixPrise.parAspiration) 
 			this.priseAspiration(pDepart, dir, joueurOppose, listePionsManges);
-		
-		nbPionsManges = listePionsManges.size();
-		return nbPionsManges;
+
+		return listePionsManges;
 
 	}
 

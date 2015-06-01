@@ -29,7 +29,7 @@ public class Moteur {
 
 	public Communication com;
 
-	Terrain t;
+	public Terrain t;
 	Historique h;
 	EtatTour e;
 	Point pDepart, pArrive;
@@ -59,7 +59,7 @@ public class Moteur {
 		h.ajouterTour(t);
 	}
 
-	ArrayList<Point> deplacementPossible(Point p, ArrayList<Point> listePredecesseurs) {
+	public ArrayList<Point> deplacementPossible(Point p, ArrayList<Point> listePredecesseurs, Terrain copieTerrainEventuelle) {
 		ArrayList<Point> listeSuc = t.tableau[p.x][p.y].getSucc();
 		ArrayList<Point> listeSolution = new ArrayList<Point>();
 
@@ -67,10 +67,15 @@ public class Moteur {
 
 		Point pointPrec = new Point();
 
+		Terrain terr = t;
+		
+		if(copieTerrainEventuelle != null)
+			terr = copieTerrainEventuelle;
+		
 		while (it.hasNext()) {
 			Point temp = (Point) it.next().clone();
 
-			if (t.tableau[temp.x][temp.y].getOccupation() == Case.Etat.vide && (!listePredecesseurs.contains(temp))) {
+			if (terr.tableau[temp.x][temp.y].getOccupation() == Case.Etat.vide && (!listePredecesseurs.contains(temp))) {
 				if (listePredecesseurs.size() == 0)
 					listeSolution.add(temp);
 				else {
@@ -90,7 +95,9 @@ public class Moteur {
 	// Renvoie une liste de points d'arrive permettant une prise
 	ArrayList<Point> prisePossible(Point p, ArrayList<Point> listePredecesseurs) {
 		ArrayList<Point> listePrise = new ArrayList<Point>();
-		ArrayList<Point> listeMouvement = deplacementPossible(p, listePredecesseurs);
+
+		ArrayList<Point> listeMouvement = deplacementPossible(p, listePredecesseurs, null);
+
 		Iterator<Point> it = listeMouvement.iterator();
 
 		while (it.hasNext()) {
@@ -144,15 +151,21 @@ public class Moteur {
 
 	}
 
-	ArrayList<Point> listePionsJouables(Joueur j) {
+	public ArrayList<Point> listePionsJouables(Joueur j, Terrain copieTerrainEventuelle) {
+		
+		Terrain terr = t;
+		
+		if(copieTerrainEventuelle != null) // Utile à l'IA pour travailler sur une copie de terrain modifiée
+			terr = copieTerrainEventuelle;
+		
 		// ArrayList<Point> listePions = new ArrayList<Point>();
 		ArrayList<Point> listePions = t.couplibre(j.getJoueurID());
 		if (listePions.isEmpty()) {
 
 			for (int ligne = 0; ligne < Terrain.LIGNES; ligne++)
 				for (int colonne = 0; colonne < Terrain.COLONNES; colonne++)
-					if (this.t.tableau[ligne][colonne].getOccupation() == j.getJoueurID())
-						if (this.deplacementPossible((Point) new Point(ligne, colonne).clone(), new ArrayList<Point>()).size() > 0)
+					if (terr.tableau[ligne][colonne].getOccupation() == j.getJoueurID())
+						if (this.deplacementPossible((Point) new Point(ligne, colonne).clone(), new ArrayList<Point>(),null).size() > 0)
 							listePions.add((Point) new Point(ligne, colonne).clone());
 		}
 		return listePions;
@@ -177,7 +190,7 @@ public class Moteur {
 		if ((t.getCase(p.x, p.y).getOccupation() != joueurCourant.getJoueurID()) || (e != EtatTour.selectionPion))
 			return false;
 		else {
-			ArrayList<Point> l = listePionsJouables(joueurCourant);
+			ArrayList<Point> l = listePionsJouables(joueurCourant, null);
 			if (l.contains(p)) {
 				pDepart = p;
 				message("bandeauInf", "Choisir la destination");
@@ -189,7 +202,7 @@ public class Moteur {
 	}
 
 	boolean selectionDestination(Point p) {
-		ArrayList<Point> l = deplacementPossible(pDepart, h.histoTour);
+		ArrayList<Point> l = deplacementPossible(pDepart, h.histoTour, null);
 		if (l.contains(p)) {
 			pArrive = p;
 			Terrain.Direction d = t.recupereDirection(pDepart, pArrive);
@@ -225,7 +238,7 @@ public class Moteur {
 				e = EtatTour.attenteChoix;
 			} else {
 				choix = IntelligenceArtificielle.choixPriseIAFacile();
-				majScore(t.manger(joueurCourant, d, pDepart, pArrive, l, choix));
+				majScore(t.manger(joueurCourant, d, pDepart, pArrive, choix).size());
 				Joueur[] tabJoueur = { j1, j2 };
 				ech.ajouter("pionsManges", l);
 				ech.ajouter("joueurs", tabJoueur);
@@ -233,7 +246,7 @@ public class Moteur {
 			}
 		} else if (priseAspi && !prisePercu) {
 			// System.out.println("aspi");
-			majScore(t.manger(joueurCourant, d, pDepart, pArrive, l, Terrain.ChoixPrise.parAspiration));
+			majScore(t.manger(joueurCourant, d, pDepart, pArrive, Terrain.ChoixPrise.parAspiration).size());
 			Joueur[] tabJoueur = { j1, j2 };
 			ech.ajouter("pionsManges", l);
 			ech.ajouter("joueurs", tabJoueur);
@@ -242,7 +255,7 @@ public class Moteur {
 
 		} else if (!priseAspi && prisePercu) {
 			// System.out.println("percu");
-			majScore(t.manger(joueurCourant, d, pDepart, pArrive, l, Terrain.ChoixPrise.parPercussion));
+			majScore(t.manger(joueurCourant, d, pDepart, pArrive, Terrain.ChoixPrise.parPercussion).size());
 			Joueur[] tabJoueur = { j1, j2 };
 			ech.ajouter("pionsManges", l);
 			ech.ajouter("joueurs", tabJoueur);
@@ -316,9 +329,9 @@ public class Moteur {
 					ArrayList<Point> l = new ArrayList<Point>();
 					int nbPionsManges = 0;
 					if (perc.equals((Point) dataValue))
-						nbPionsManges = t.manger(joueurCourant, d, pDepart, pArrive, l, Terrain.ChoixPrise.parPercussion);
+						nbPionsManges = t.manger(joueurCourant, d, pDepart, pArrive, Terrain.ChoixPrise.parPercussion).size();
 					else if (aspi.equals((Point) dataValue))
-						nbPionsManges = t.manger(joueurCourant, d, pDepart, pArrive, l, Terrain.ChoixPrise.parAspiration);
+						nbPionsManges = t.manger(joueurCourant, d, pDepart, pArrive,  Terrain.ChoixPrise.parAspiration).size();
 					majScore(nbPionsManges);
 					Joueur[] tabJoueur = { j1, j2 };
 					ech.vider();
