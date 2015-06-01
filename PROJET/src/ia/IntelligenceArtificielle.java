@@ -31,7 +31,7 @@ public class IntelligenceArtificielle {
 	}														   // liste de points
 
 
-	public Coup jouerIA(ArrayList<Point> listePredecesseurs, Point pDepart){
+	public Coup jouerIA(){
 		
 		Coup coupSolution = new Coup(new Point(-1,-1), new Point(-1,-1));
 		Coup coupTemp;
