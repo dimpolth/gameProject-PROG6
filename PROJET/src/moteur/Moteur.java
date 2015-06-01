@@ -56,6 +56,7 @@ public class Moteur {
 		j2 = new Joueur(Case.Etat.joueur2, Joueur.typeJoueur.humain, "Joueur 2");
 		joueurCourant = j1;
 		message("bandeauSup", joueurCourant.getNom());
+		message("bandeauInf", "Selection du pion");
 		h.ajouterTour(t);
 	}
 
@@ -238,7 +239,8 @@ public class Moteur {
 				e = EtatTour.attenteChoix;
 			} else {
 				choix = IntelligenceArtificielle.choixPriseIAFacile();
-				majScore(t.manger(joueurCourant, d, pDepart, pArrive, choix).size());
+				l = t.manger(joueurCourant, d, pDepart, pArrive,choix);
+				majScore(l.size());
 				Joueur[] tabJoueur = { j1, j2 };
 				ech.ajouter("pionsManges", l);
 				ech.ajouter("joueurs", tabJoueur);
@@ -246,7 +248,8 @@ public class Moteur {
 			}
 		} else if (priseAspi && !prisePercu) {
 			// System.out.println("aspi");
-			majScore(t.manger(joueurCourant, d, pDepart, pArrive, Terrain.ChoixPrise.parAspiration).size());
+			l = t.manger(joueurCourant, d, pDepart, pArrive, Terrain.ChoixPrise.parAspiration);
+			majScore(l.size());
 			Joueur[] tabJoueur = { j1, j2 };
 			ech.ajouter("pionsManges", l);
 			ech.ajouter("joueurs", tabJoueur);
@@ -255,7 +258,8 @@ public class Moteur {
 
 		} else if (!priseAspi && prisePercu) {
 			// System.out.println("percu");
-			majScore(t.manger(joueurCourant, d, pDepart, pArrive, Terrain.ChoixPrise.parPercussion).size());
+			l = t.manger(joueurCourant, d, pDepart, pArrive, Terrain.ChoixPrise.parPercussion);
+			majScore(l.size());
 			Joueur[] tabJoueur = { j1, j2 };
 			ech.ajouter("pionsManges", l);
 			ech.ajouter("joueurs", tabJoueur);
@@ -274,6 +278,7 @@ public class Moteur {
 		h.ajouterTour(t);
 		e = EtatTour.selectionPion;
 		message("bandeauSup", joueurCourant.getNom());
+		message("bandeauInf", "Selection du pion");
 	}
 
 	void testFinTour() {
@@ -327,12 +332,11 @@ public class Moteur {
 					System.out.println("e : " + e);
 					Terrain.Direction d = t.recupereDirection(pDepart, pArrive);
 					ArrayList<Point> l = new ArrayList<Point>();
-					int nbPionsManges = 0;
 					if (perc.equals((Point) dataValue))
-						nbPionsManges = t.manger(joueurCourant, d, pDepart, pArrive, Terrain.ChoixPrise.parPercussion).size();
+						l = t.manger(joueurCourant, d, pDepart, pArrive, Terrain.ChoixPrise.parPercussion);
 					else if (aspi.equals((Point) dataValue))
-						nbPionsManges = t.manger(joueurCourant, d, pDepart, pArrive,  Terrain.ChoixPrise.parAspiration).size();
-					majScore(nbPionsManges);
+						l = t.manger(joueurCourant, d, pDepart, pArrive,  Terrain.ChoixPrise.parAspiration);
+					majScore(l.size());
 					Joueur[] tabJoueur = { j1, j2 };
 					ech.vider();
 					ech.ajouter("pionsManges", l);
