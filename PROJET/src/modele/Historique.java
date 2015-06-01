@@ -16,6 +16,14 @@ public class Historique {
 		itPrincipal = 0;
 	}
 	
+	public Historique(Historique h) {
+		histoPrincipal = h.histoPrincipal;
+		histoTour = h.histoTour;
+		itPrincipal = h.itPrincipal;
+		itTour = h.itTour;
+		joueur = h.joueur;
+	}
+	
 	public void ajouterTour(Terrain t) {
 		if(itPrincipal < histoPrincipal.size()-1) {
 			for(int i = histoPrincipal.size()-1; i > itPrincipal; i--) { 
@@ -37,8 +45,9 @@ public class Historique {
 	
 	public Terrain annuler() {
 		System.out.println("Dessin moteur");
-		if(histoPrincipal.isEmpty())
-			return null;
+		if(itPrincipal<=1){
+			System.out.println("PAS de ANNULER POSSIBLE");
+			return null;}
 		else {
 			
 			Terrain temp =histoPrincipal.get(--itPrincipal);

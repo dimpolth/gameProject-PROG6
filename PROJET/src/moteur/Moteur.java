@@ -7,6 +7,7 @@ import java.util.Iterator;
 import ia.*;
 import ihm.*;
 import modele.*;
+import modele.Joueur.typeJoueur;
 import reseau.*;
 
 public class Moteur {
@@ -24,7 +25,7 @@ public class Moteur {
 	}
 
 	public enum EtatTour {
-		selectionPion, selectionDestination, attenteChoix;
+		selectionPion, selectionDestination, attenteChoix, jeuxIa;
 	}
 
 	public Communication com;
@@ -37,6 +38,8 @@ public class Moteur {
 	Joueur j1, j2;
 	Echange ech;
 	Point aspi, perc;
+	
+	Coup jeuIa;
 
 	public Moteur() {
 		
@@ -53,7 +56,8 @@ public class Moteur {
 		ech = new Echange();
 		e = EtatTour.selectionPion;
 		j1 = new Joueur(Case.Etat.joueur1, Joueur.typeJoueur.humain, "Joueur 1");
-		j2 = new Joueur(Case.Etat.joueur2, Joueur.typeJoueur.humain, "Joueur 2");
+		//j2 = new Joueur(Case.Etat.joueur2, Joueur.typeJoueur.humain, "Joueur 2");
+		j2 = new Joueur(Case.Etat.joueur2,Joueur.typeJoueur.ordinateur,IntelligenceArtificielle.difficulteIA.facile ,j1,this);
 		joueurCourant = j1;
 		message("bandeauSup", joueurCourant.getNom());
 		message("bandeauInf", "Selection du pion");
@@ -238,7 +242,8 @@ public class Moteur {
 				com.envoyer(ech);
 				e = EtatTour.attenteChoix;
 			} else {
-				choix = IntelligenceArtificielle.choixPriseIAFacile();
+				//choix = IntelligenceArtificielle.choixPriseIAFacile();
+				choix = jeuIa.getChoixPrise();
 				l = t.manger(joueurCourant, d, pDepart, pArrive,choix);
 				majScore(l.size());
 				Joueur[] tabJoueur = { j1, j2 };
@@ -303,8 +308,8 @@ public class Moteur {
 	void calculerScore() {
 		int scoreJ1 = 0;
 		int scoreJ2 = 0;
-		for(int i = 0; i < t.LIGNES; i++) {
-			for(int j = 0; j < t.COLONNES; j++) {
+		for(int i = 0; i < Terrain.LIGNES; i++) {
+			for(int j = 0; j < Terrain.COLONNES; j++) {
 				if(t.tableau[i][j].getOccupation() == Case.Etat.joueur1)
 					scoreJ1++;
 				if(t.tableau[i][j].getOccupation() == Case.Etat.joueur2)
@@ -314,12 +319,26 @@ public class Moteur {
 		j1.chargerScore(scoreJ1);
 		j2.chargerScore(scoreJ2);
 	}
+	
+	void jouerIa(){
+		do{
+			jeuIa= joueurCourant.jouer();
+			selectionPion(jeuIa.getpDepart());
+			selectionDestination(jeuIa.getpArrivee());		
+		}
+		while(joueurCourant.IaContinue());
+		finTour();
+	}
+	
+	
+	
+	
 
 	public void action(Echange echange) {
 
 		for (String dataType : echange.getAll()) {
 			Object dataValue = echange.get(dataType);
-
+			System.out.println(dataType);
 			switch (dataType) {
 			case "point":
 				if (e == EtatTour.selectionPion) {
@@ -353,9 +372,12 @@ public class Moteur {
 
 			case "annuler":
 				ech.vider();
-				Case[][] annulation = h.annuler().getTableau();
-				if(annulation != null) {
-					ech.ajouter("terrain", annulation);
+				Terrain annulation = h.annuler();
+				
+				if(annulation != null){
+					
+					t.setTableau(annulation.getTableau());
+					ech.ajouter("terrain", annulation.getTableau());
 					com.envoyer(ech);
 				}
 				break;
@@ -387,6 +409,13 @@ public class Moteur {
 			case "nouvellePartie":
 				init();
 				break;
+				
+			case "sauvegarder":
+				break;
+			
+			case "charger":
+				break;
+				
 			}
 		}
 	}

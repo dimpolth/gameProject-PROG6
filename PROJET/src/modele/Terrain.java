@@ -37,6 +37,10 @@ public class Terrain {
 				}
 			}
 	}
+	
+	public Terrain(Terrain t) {
+		tableau = t.getTableau();
+	}
 
 	public void TerrainTest(int numTest){
 		for (int ligne = 0; ligne < Terrain.LIGNES; ligne++)
