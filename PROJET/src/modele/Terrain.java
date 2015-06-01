@@ -76,6 +76,14 @@ public class Terrain {
 				this.tableau[4][0].setOccupation(Case.Etat.joueur1);
 				this.tableau[4][3].setOccupation(Case.Etat.joueur2);
 			break;
+			
+			case 4 : // test aspiration percussion IA moyenne
+				this.tableau[0][0].setOccupation(Case.Etat.joueur2);
+				this.tableau[0][1].setOccupation(Case.Etat.joueur2);
+				this.tableau[0][2].setOccupation(Case.Etat.joueur2);
+				this.tableau[0][3].setOccupation(Case.Etat.joueur1);
+				this.tableau[0][5].setOccupation(Case.Etat.joueur2);
+			break;
 		}
 	}
 	

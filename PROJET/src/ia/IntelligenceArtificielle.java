@@ -295,8 +295,10 @@ public class IntelligenceArtificielle {
 				while(itPointsArrivee.hasNext()){
 					pArriveeCourante = (Point) itPointsArrivee.next().clone();
 					Terrain.Direction dir = cloneTerrain.recupereDirection(pDepartCourant, pArriveeCourante);
-					if(cloneTerrain.estUnePriseAspiration(pDepartCourant, dir) || cloneTerrain.estUnePrisePercussion(pDepartCourant, dir))
-						getListeToursPourCoupDepart(listeToursTemp, new TourDeJeu(), new Coup(pDepartCourant, pArriveeCourante), cloneTerrain, new ArrayList<Point>(), 0, joueurCourant);
+					if(cloneTerrain.estUnePriseAspiration(pDepartCourant, dir))
+						getListeToursPourCoupDepart(listeToursTemp, new TourDeJeu(), new Coup(pDepartCourant, pArriveeCourante, Terrain.ChoixPrise.parAspiration), cloneTerrain, new ArrayList<Point>(), 0, joueurCourant);
+					if(cloneTerrain.estUnePrisePercussion(pDepartCourant, dir))
+						getListeToursPourCoupDepart(listeToursTemp, new TourDeJeu(), new Coup(pDepartCourant, pArriveeCourante, Terrain.ChoixPrise.parPercussion), cloneTerrain, new ArrayList<Point>(), 0, joueurCourant);
 				}
 			}
 			else{	// Les tours ne sont ici constitués que d'un seul coup de gain 0
@@ -335,6 +337,7 @@ public class IntelligenceArtificielle {
 		terrainCopie = cloneTerrain.copie();
 		
 		terrainCopie.deplacement(pDep, pArr, joueurCourant, listePredecesseurs);
+
 		nbPionsManges += terrainCopie.manger(joueurCourant, terrainCopie.recupereDirection(pDep, pArr), pDep, pArr,coupDeDepart.getChoixPrise()).size();
 		listePredecesseurs.add(pDep);
 		
@@ -353,8 +356,10 @@ public class IntelligenceArtificielle {
 		while(itPointsArriveeSuivants.hasNext()){
 			pArrTemp = (Point) itPointsArriveeSuivants.next().clone();
 			Terrain.Direction dir = terrainCopie.recupereDirection(pDep, pArrTemp);
-			if(terrainCopie.estUnePriseAspiration(pDep, dir) || terrainCopie.estUnePrisePercussion(pDep, dir))
-				getListeToursPourCoupDepart(listeToursComplets, tourTemp.clone(), new Coup(pDep, pArrTemp), terrainCopie, listePredecesseurs, nbPionsManges, joueurCourant);
+			if(terrainCopie.estUnePriseAspiration(pDep, dir))
+				getListeToursPourCoupDepart(listeToursComplets, tourTemp.clone(), new Coup(pDep, pArrTemp, Terrain.ChoixPrise.parAspiration), terrainCopie, listePredecesseurs, nbPionsManges, joueurCourant);
+			if(terrainCopie.estUnePrisePercussion(pDep, dir))
+				getListeToursPourCoupDepart(listeToursComplets, tourTemp.clone(), new Coup(pDep, pArrTemp, Terrain.ChoixPrise.parPercussion), terrainCopie, listePredecesseurs, nbPionsManges, joueurCourant);
 		}
 	}
 	

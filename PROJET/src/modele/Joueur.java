@@ -1,8 +1,6 @@
 package modele;
 import ia.*;
 import moteur.*;
-import java.awt.Point;
-import java.util.ArrayList;
 public class Joueur {
 	
 	public enum typeJoueur{

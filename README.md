@@ -7,9 +7,9 @@ Fanoroma
 #L'équipe
 L'équipe est composée de 6 étudiants, et est supervisée par un enseignant tuteur :
 * Tuteur : Gwenael Delaval
-* Mathieu Courbis
-* Maxime Duplan
-* Maxence Ginet
-* Trung Nguyen
 * Adrien Peyre
 * Laurent Postic
+* Mathieu Courbis
+* Maxence Ginet
+* Maxime Duplan
+* Trung Nguyen

@@ -14,7 +14,7 @@ public class Coup {
 	public Coup(Point pDepart, Point pArrivee) {
 		this.setpDepart(pDepart);
 		this.setpArrivee(pArrivee);
-		this.setChoixPrise(Terrain.ChoixPrise.parPercussion); // par défaut prise par percussion
+		this.setChoixPrise(null); // par défaut prise par percussion
 	}
 	
 	public Coup(Point pDepart, Point pArrivee, Terrain.ChoixPrise choixPrise) {
