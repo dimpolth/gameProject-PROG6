@@ -8,10 +8,7 @@ import javax.swing.Timer;
 import modele.Case;
 
 
-class AnimDisparition implements ActionListener {
-	private Pion pion;
-	private long tempsDepart;
-	private Timer horloge;
+class AnimDisparition extends Animation {
 	public AnimDisparition(Pion p) {
 		pion = p;
 		pion.tg.tempsGele = System.currentTimeMillis()+500;
