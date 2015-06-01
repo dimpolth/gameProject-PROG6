@@ -38,23 +38,26 @@ public class IntelligenceArtificielle {
 		
 		switch(this.getNiveauDifficulte()){
 			case facile :
-				coupSolution = this.coupFacile(listePredecesseurs,pDepart);
+				if(!this.tourEnCours){
+					this.setTourDeJeuCourant(this.coupFacile());
+					this.setTourEnCours(true);
+				}
 			break;
 			
 			case normal :
 				if(!this.tourEnCours){
-					this.setTourDeJeuCourant(this.coupNormal(listePredecesseurs));
+					this.setTourDeJeuCourant(this.coupNormal());
 					this.setTourEnCours(true);
 				}	
 			break;
 			
 			case difficile :
-				coupSolution = this.coupDifficile(listePredecesseurs);
+				coupSolution = this.coupDifficile();
 			break;
 			
 			default : // difficulté normale
 				if(!this.tourEnCours){
-					this.setTourDeJeuCourant(this.coupNormal(listePredecesseurs));
+					this.setTourDeJeuCourant(this.coupNormal());
 					this.setTourEnCours(true);
 				}	
 			break;
@@ -71,15 +74,15 @@ public class IntelligenceArtificielle {
 			this.moteur.t.dessineTableauAvecIntersections();
 		}
 		
-		if(this.getNiveauDifficulte() != difficulteIA.facile){
-			ArrayList<Coup> listeCoupsDuTour = this.getTourDeJeuCourant().getListeCoups();
-			coupTemp = listeCoupsDuTour.get(0).clone();
-			coupSolution = coupTemp.clone();
-			listeCoupsDuTour.remove(coupTemp);
+		
+		ArrayList<Coup> listeCoupsDuTour = this.getTourDeJeuCourant().getListeCoups();
+		coupTemp = listeCoupsDuTour.get(0).clone();
+		coupSolution = coupTemp.clone();
+		listeCoupsDuTour.remove(coupTemp);
 			
-			if(listeCoupsDuTour.isEmpty()) // Si la liste est vide on a terminé le tour
-				tourEnCours = false;
-		}
+		if(listeCoupsDuTour.isEmpty()) // Si la liste est vide on a terminé le tour
+			tourEnCours = false;
+		
 		
 		return coupSolution;
 	}
@@ -91,70 +94,28 @@ public class IntelligenceArtificielle {
 	 * 					pDep 			   -> dans le cadre d'un tour qui se prolonge (prises multiples) on indique le 
 	 * 					point de départ qui est le point d'arrivée du coup précédent
 	 */
-	private Coup coupFacile(ArrayList<Point> listePredecesseurs, Point pDep){
+	private TourDeJeu coupFacile(){
+		ArrayList<TourDeJeu> listeToursJouables = new ArrayList<TourDeJeu>();
+		Iterator<TourDeJeu> it;
+		TourDeJeu tourSolution, tourTemp;
+		int max = 0;
 		
-		Coup coupSolution;
-		Point pDepart = null, pArrivee, pArriveeTemp;
-		ArrayList<Point> listePionsJouables, listeCoupsObligatoires, listeSuccesseursPionsJouables = new ArrayList<Point>(), listeSolution = new ArrayList<Point>();
-		Random rand = new Random();
-		boolean triSuccesseurs = false;
-		Iterator<Point> it;
-		Terrain.ChoixPrise choixPriseEventuel = null;
-		
-		if(pDep != null) 
-			pDepart = pDep; 
-		
-		//*****   Sélection du point de départ et d'arrivée ****************//
-		if(pDep == null){ // DEBUT DE TOUR
-			listeCoupsObligatoires = this.moteur.t.couplibre(this.joueurIA.getJoueurID()); // On regarde si on a des coups obligatoires
-			
-			if(listeCoupsObligatoires.isEmpty()){ // DEBUT DE TOUR - Sans coup obligatoire (mouvement libre n'amenant aucune prise)
-				listePionsJouables = this.moteur.listePionsJouables(this.joueurIA, null);
-				pDepart = listePionsJouables.get(rand.nextInt(listePionsJouables.size()));
-				
-				listeSolution = this.moteur.deplacementPossible(pDepart, listePredecesseurs,null);
-			}
-			
-			else{ // DEBUT DE TOUR - Avec coup/prise obligatoire
-				listePionsJouables = listeCoupsObligatoires;
-				pDepart = listePionsJouables.get(rand.nextInt(listePionsJouables.size()));
-				listeSuccesseursPionsJouables = this.moteur.deplacementPossible(pDepart, listePredecesseurs,null);
-				triSuccesseurs = true;
-			}
-		}	
-		else { // MILIEU/FIN DE TOUR - Ce cas est donc lors d'un xième coup d'un tour (x > 1) on a un point de départ 
-			listeSuccesseursPionsJouables = this.moteur.deplacementPossible(pDepart, listePredecesseurs,null);
-			triSuccesseurs = true;
-		}
-		
-		if(triSuccesseurs){ // Si ce booléen vaut vrai il faut trier les successeurs pour n'avoir que des coups/prises
-			it = listeSuccesseursPionsJouables.iterator();
-			
-			while(it.hasNext()){
-				pArriveeTemp = (Point) it.next().clone();
-				Terrain.Direction dir = this.moteur.t.recupereDirection(pDepart, pArriveeTemp);
-				if(this.moteur.t.estUnePriseAspiration(pDepart, dir) || this.moteur.t.estUnePrisePercussion(pDepart, dir))
-					listeSolution.add(pArriveeTemp);
-				if(this.moteur.t.estUnePriseAspiration(pDepart, dir) && this.moteur.t.estUnePrisePercussion(pDepart, dir))
-					choixPriseEventuel = choixPriseIAFacile();
-			}
-		}
-		
-		// Dans le cas ci-dessous on a aucune coup jouable on renvoie donc en pArrivee (-1;-1)
-		if(listeSolution.size() == 0) // Ce cas peut se présenter dans une continuité de tour lorsque plus aucune prise n'est possible
-			pArrivee = new Point(-1,-1);
-		else
-			pArrivee = listeSolution.get(rand.nextInt(listeSolution.size()));
-		
-		//******************************************************************//
-		if(choixPriseEventuel != null)
-			coupSolution = new Coup(pDepart,pArrivee,choixPriseEventuel);
-		else
-			coupSolution = new Coup(pDepart,pArrivee);
-		
-		//System.out.println("IA joue : Depart("+ pDepart.x +";"+ pDepart.y +") -> Arrivee("+ pArrivee.x +";"+ pArrivee.y +")");
+		// Récupération de tous les tours jouables pour le terrain et le joueur courant
+		listeToursJouables = getToursJouables(this.moteur.t,this.getJoueurIA());
 
-		return coupSolution;
+		tourSolution = listeToursJouables.get(0);
+		
+		it = listeToursJouables.iterator();
+		
+		while(it.hasNext()){
+			tourTemp = it.next().clone();
+			
+			if(tourTemp.getValeurResultat() > max){
+				max = tourTemp.getValeurResultat();
+				tourSolution = tourTemp;
+			}
+		}
+		return tourSolution;
 	}
 	
 	public static Terrain.ChoixPrise choixPriseIAFacile(){
@@ -168,7 +129,7 @@ public class IntelligenceArtificielle {
 	/*
 	 * Applique l'algorithme permettant à l'ordinateur de jouer un coup en difficulté "normal"
 	 */
-	private TourDeJeu coupNormal(ArrayList<Point> listePredecesseurs){
+	private TourDeJeu coupNormal(){
 		TourDeJeu tourSolution;
 		int profondeur = 8;
 		
@@ -400,7 +361,7 @@ public class IntelligenceArtificielle {
 	/*
 	 * Applique l'algorithme permettant à l'ordinateur de jouer un coup en difficulté "difficile"
 	 */
-	private Coup coupDifficile(ArrayList<Point> listePredecesseurs){
+	private Coup coupDifficile(){
 		Coup pSolution = null;
 		
 		return pSolution;
