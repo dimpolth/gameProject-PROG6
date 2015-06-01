@@ -325,9 +325,12 @@ public class Moteur {
 
 			case "annuler":
 				ech.vider();
-				Case[][] annulation = h.annuler().getTableau();
-				if(annulation != null) {
-					ech.ajouter("terrain", annulation);
+				Terrain annulation = h.annuler();
+				
+				if(annulation != null){
+					
+					t.setTableau(annulation.getTableau());
+					ech.ajouter("terrain", annulation.getTableau());
 					com.envoyer(ech);
 				}
 				break;
