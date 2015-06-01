@@ -16,6 +16,12 @@ public class Coup {
 		this.setpArrivee(pArrivee);
 		this.setChoixPrise(Terrain.ChoixPrise.parPercussion); // par défaut prise par percussion
 	}
+	
+	public Coup(Point pDepart, Point pArrivee, Terrain.ChoixPrise choixPrise) {
+		this.setpDepart(pDepart);
+		this.setpArrivee(pArrivee);
+		this.setChoixPrise(choixPrise); // par défaut prise par percussion
+	}
 
 	public Point getpDepart() {
 		return pDepart;

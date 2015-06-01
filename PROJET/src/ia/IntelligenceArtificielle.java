@@ -43,18 +43,18 @@ public class IntelligenceArtificielle {
 			
 			case normal :
 				if(!this.tourEnCours){
-					this.setTourDeJeuCourant(this.coupNormal(listePredecesseurs,pDepart));
+					this.setTourDeJeuCourant(this.coupNormal(listePredecesseurs));
 					this.setTourEnCours(true);
 				}	
 			break;
 			
 			case difficile :
-				coupSolution = this.coupDifficile(listePredecesseurs,pDepart);
+				coupSolution = this.coupDifficile(listePredecesseurs);
 			break;
 			
 			default : // difficulté normale
 				if(!this.tourEnCours){
-					this.setTourDeJeuCourant(this.coupNormal(listePredecesseurs,pDepart));
+					this.setTourDeJeuCourant(this.coupNormal(listePredecesseurs));
 					this.setTourEnCours(true);
 				}	
 			break;
@@ -99,13 +99,12 @@ public class IntelligenceArtificielle {
 		Random rand = new Random();
 		boolean triSuccesseurs = false;
 		Iterator<Point> it;
-
+		Terrain.ChoixPrise choixPriseEventuel = null;
+		
 		if(pDep != null) 
 			pDepart = pDep; 
 		
 		//*****   Sélection du point de départ et d'arrivée ****************//
-	
-		
 		if(pDep == null){ // DEBUT DE TOUR
 			listeCoupsObligatoires = this.moteur.t.couplibre(this.joueurIA.getJoueurID()); // On regarde si on a des coups obligatoires
 			
@@ -136,6 +135,8 @@ public class IntelligenceArtificielle {
 				Terrain.Direction dir = this.moteur.t.recupereDirection(pDepart, pArriveeTemp);
 				if(this.moteur.t.estUnePriseAspiration(pDepart, dir) || this.moteur.t.estUnePrisePercussion(pDepart, dir))
 					listeSolution.add(pArriveeTemp);
+				if(this.moteur.t.estUnePriseAspiration(pDepart, dir) && this.moteur.t.estUnePrisePercussion(pDepart, dir))
+					choixPriseEventuel = choixPriseIAFacile();
 			}
 		}
 		
@@ -146,10 +147,12 @@ public class IntelligenceArtificielle {
 			pArrivee = listeSolution.get(rand.nextInt(listeSolution.size()));
 		
 		//******************************************************************//
+		if(choixPriseEventuel != null)
+			coupSolution = new Coup(pDepart,pArrivee,choixPriseEventuel);
+		else
+			coupSolution = new Coup(pDepart,pArrivee);
 		
-		coupSolution = new Coup(pDepart,pArrivee);
-		
-		System.out.println("IA joue : Depart("+ pDepart.x +";"+ pDepart.y +") -> Arrivee("+ pArrivee.x +";"+ pArrivee.y +")");
+		//System.out.println("IA joue : Depart("+ pDepart.x +";"+ pDepart.y +") -> Arrivee("+ pArrivee.x +";"+ pArrivee.y +")");
 
 		return coupSolution;
 	}
@@ -165,7 +168,7 @@ public class IntelligenceArtificielle {
 	/*
 	 * Applique l'algorithme permettant à l'ordinateur de jouer un coup en difficulté "normal"
 	 */
-	private TourDeJeu coupNormal(ArrayList<Point> listePredecesseurs, Point pDep){
+	private TourDeJeu coupNormal(ArrayList<Point> listePredecesseurs){
 		TourDeJeu tourSolution;
 		int profondeur = 8;
 		
@@ -397,7 +400,7 @@ public class IntelligenceArtificielle {
 	/*
 	 * Applique l'algorithme permettant à l'ordinateur de jouer un coup en difficulté "difficile"
 	 */
-	private Coup coupDifficile(ArrayList<Point> listePredecesseurs, Point pDep){
+	private Coup coupDifficile(ArrayList<Point> listePredecesseurs){
 		Coup pSolution = null;
 		
 		return pSolution;

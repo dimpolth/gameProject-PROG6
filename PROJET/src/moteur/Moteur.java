@@ -242,7 +242,8 @@ public class Moteur {
 
 		} else if (!priseAspi && prisePercu) {
 			// System.out.println("percu");
-			majScore(t.manger(joueurCourant, d, pDepart, pArrive, Terrain.ChoixPrise.parPercussion).size());
+			l = t.manger(joueurCourant, d, pDepart, pArrive, Terrain.ChoixPrise.parPercussion);
+			majScore(l.size());
 			Joueur[] tabJoueur = { j1, j2 };
 			ech.ajouter("pionsManges", l);
 			ech.ajouter("joueurs", tabJoueur);
