@@ -55,14 +55,16 @@ public class IHM extends JFrame implements ComponentListener {
 		boutonParam.addActionListener(new Ecouteur(Ecouteur.Bouton.PARAMETRES,
 				this));
 		panneauMenu.add(boutonParam);
-
+		
+		tg = new TerrainGraphique(this);
+		
 		// Infos partie en cours
-		bandeauInfos = new BandeauInfos();
+		bandeauInfos = new BandeauInfos(tg);
 		voletNord.add(bandeauInfos);
 
 	
 		// ZONE CENTRE
-		tg = new TerrainGraphique(this);
+		
 		coucheJeu.add(tg, BorderLayout.CENTER);
 
 		// ZONE SUD
@@ -73,9 +75,14 @@ public class IHM extends JFrame implements ComponentListener {
 		contraintes.fill = GridBagConstraints.BOTH;
 		contraintes.insets = new Insets(2, 2, 5, 2);
 
-		Bouton boutonValidation = new Bouton("Valider mon tour");
-		boutonValidation.addActionListener(new Ecouteur(
-				Ecouteur.Bouton.ANNULER, this));
+		Bouton boutonValidation = new Bouton("Terminer mon tour");
+		boutonValidation.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent pEv){
+				Echange e = new Echange();
+				e.ajouter("finTour", true);
+				com.envoyer(e);
+			}
+		});
 		contraintes.gridwidth = GridBagConstraints.REMAINDER;
 		voletSud.add(boutonValidation, contraintes);
 		Bouton boutonAnnuler = new Bouton("Annuler");
