@@ -100,7 +100,7 @@ public class Joueur {
 		this.nom = nom;
 	}
 	
-	public Coup jouer(ArrayList<Point> listePredecesseurs, Point pDepart) {
-		return ia.jouerIA(listePredecesseurs, pDepart);
+	public Coup jouer() {
+		return ia.jouerIA();
 	}
 }
