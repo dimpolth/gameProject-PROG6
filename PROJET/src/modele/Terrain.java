@@ -80,6 +80,37 @@ public class Terrain {
 				this.tableau[0][3].setOccupation(Case.Etat.joueur1);
 				this.tableau[0][5].setOccupation(Case.Etat.joueur2);
 			break;
+			
+			case 5 :  // Test IA Moyenne
+				this.tableau[0][2].setOccupation(Case.Etat.joueur2);
+				this.tableau[0][5].setOccupation(Case.Etat.joueur2);
+				this.tableau[0][6].setOccupation(Case.Etat.joueur1);
+				this.tableau[1][2].setOccupation(Case.Etat.joueur2);
+				this.tableau[1][4].setOccupation(Case.Etat.joueur2);
+				this.tableau[1][5].setOccupation(Case.Etat.joueur2);
+				this.tableau[1][6].setOccupation(Case.Etat.joueur2);
+				this.tableau[2][0].setOccupation(Case.Etat.joueur1);
+				this.tableau[3][1].setOccupation(Case.Etat.joueur1);
+				this.tableau[3][2].setOccupation(Case.Etat.joueur1);
+				this.tableau[3][4].setOccupation(Case.Etat.joueur2);
+				this.tableau[4][0].setOccupation(Case.Etat.joueur1);
+				this.tableau[4][4].setOccupation(Case.Etat.joueur2);
+			break;
+			
+			case 6 : // Test IA Moyenne 
+				this.tableau[0][2].setOccupation(Case.Etat.joueur1);
+				this.tableau[1][1].setOccupation(Case.Etat.joueur1);
+				this.tableau[1][3].setOccupation(Case.Etat.joueur2);
+				this.tableau[1][4].setOccupation(Case.Etat.joueur2);
+				this.tableau[2][2].setOccupation(Case.Etat.joueur1);
+				this.tableau[3][2].setOccupation(Case.Etat.joueur2);
+				this.tableau[4][1].setOccupation(Case.Etat.joueur1);
+				this.tableau[4][3].setOccupation(Case.Etat.joueur2);
+				this.tableau[4][4].setOccupation(Case.Etat.joueur2);
+				this.tableau[4][5].setOccupation(Case.Etat.joueur2);
+				this.tableau[4][6].setOccupation(Case.Etat.joueur2);
+			break;
+			
 		}
 	}
 	
