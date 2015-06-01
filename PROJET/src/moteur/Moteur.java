@@ -19,9 +19,8 @@ public class Moteur {
 
 		i.com = new Communication(i, m, Communication.IHM);
 		m.com = new Communication(i, m, Communication.MOTEUR);
-
+		m.init();
 		i.lancer();
-
 	}
 
 	public enum EtatTour {
@@ -40,19 +39,24 @@ public class Moteur {
 	Point aspi, perc;
 
 	public Moteur() {
-		t = new Terrain();
-		h = new Historique();
-		e = EtatTour.selectionPion;
-		j1 = new Joueur(Case.Etat.joueur1, Joueur.typeJoueur.humain, "joueur 1");
-		j2 = new Joueur(Case.Etat.joueur2, Joueur.typeJoueur.humain, "joueur 2");
-		joueurCourant = j1;
-		ech = new Echange();
-		h.ajouterTour(t);
+		
 	}
 
 	Moteur(Terrain t) {
 		this.t = t;
 		h = new Historique();
+	}
+	
+	public void init() {
+		t = new Terrain();
+		h = new Historique();
+		ech = new Echange();
+		e = EtatTour.selectionPion;
+		j1 = new Joueur(Case.Etat.joueur1, Joueur.typeJoueur.humain, "Joueur 1");
+		j2 = new Joueur(Case.Etat.joueur2, Joueur.typeJoueur.humain, "Joueur 2");
+		joueurCourant = j1;
+		message("bandeauSup", joueurCourant.getNom());
+		h.ajouterTour(t);
 	}
 
 	ArrayList<Point> deplacementPossible(Point p, ArrayList<Point> listePredecesseurs) {
@@ -86,7 +90,6 @@ public class Moteur {
 	// Renvoie une liste de points d'arrive permettant une prise
 	ArrayList<Point> prisePossible(Point p, ArrayList<Point> listePredecesseurs) {
 		ArrayList<Point> listePrise = new ArrayList<Point>();
-		ArrayList<Point> listeSuc = t.tableau[p.x][p.y].getSucc();
 		ArrayList<Point> listeMouvement = deplacementPossible(p, listePredecesseurs);
 		Iterator<Point> it = listeMouvement.iterator();
 
@@ -156,9 +159,17 @@ public class Moteur {
 	}
 
 	boolean partieTerminee() {
-		if (j1.scoreNul() || j2.scoreNul())
+		if (j1.scoreNul()) {
+			ech.vider();
+			ech.ajouter("bandeauSup", "<html><font color=FF0000>"+j2.getNom()+"</font></html>");
+			ech.ajouter("bandeauInf", "à remporté la partie</font>");
 			return true;
-		else
+		} else if(j2.scoreNul()) {
+			ech.vider();
+			ech.ajouter("bandeauSup", "<html><font color=FF0000>"+j1.getNom()+"</font></html>");
+			ech.ajouter("bandeauInf", "<html><font color=FF0000>à remporté la partie</font></html>");
+			return true;
+		} else
 			return false;
 	}
 
@@ -341,6 +352,23 @@ public class Moteur {
 				Joueur[] tabJoueur = { j1, j2 };
 				ech.ajouter("joueurs", tabJoueur);
 				com.envoyer(ech);
+				break;
+				
+			case "refaire":
+				ech.vider();
+				Case[][] refaire = h.refaire().getTableau();
+				if(refaire != null) {
+					ech.ajouter("terrain", refaire);
+					com.envoyer(ech);
+				}
+				break;
+			
+			case "finTour":
+				finTour();
+				break;
+			
+			case "nouvellePartie":
+				init();
 				break;
 			}
 		}

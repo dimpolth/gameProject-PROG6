@@ -41,8 +41,8 @@ public class Historique {
 			return null;
 		else {
 			
-			Terrain temp =histoPrincipal.get(itPrincipal--);
-			temp.dessineTableauAvecIntersections();
+			Terrain temp =histoPrincipal.get(--itPrincipal);
+			//temp.dessineTableauAvecIntersections();
 			return temp;
 		}
 	}
@@ -51,7 +51,7 @@ public class Historique {
 		if(itPrincipal == histoPrincipal.size()-1)
 			return null;
 		else {
-			return histoPrincipal.get(itPrincipal++);
+			return histoPrincipal.get(++itPrincipal);
 		}
 	}
 	
