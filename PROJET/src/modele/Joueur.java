@@ -37,6 +37,14 @@ public class Joueur {
 	public Joueur() {
 		
 	}
+	
+	public Joueur(Joueur j) {
+		setJoueurID(j.getJoueurID());
+		score = j.getScore();
+		joueurHumain = j.isJoueurHumain();
+		nom = j.getNom();
+		ia = j.ia;;
+	}
 
 	public Case.Etat getJoueurID() {
 		return joueurID;
@@ -102,5 +110,9 @@ public class Joueur {
 	
 	public Coup jouer() {
 		return ia.jouerIA();
+	}
+	
+	public boolean IaContinue(){
+		return ia.isTourEnCours();
 	}
 }
