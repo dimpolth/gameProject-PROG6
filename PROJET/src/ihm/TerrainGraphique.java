@@ -24,6 +24,7 @@ public class TerrainGraphique extends JPanel implements ComponentListener{
 	protected Image imgPion2;
 	protected Image imgCroix;
 	public IHM ihm;
+	private AnimSelect select;
 	
 	protected long tempsGele;
 	private Dimensions dim;
@@ -49,6 +50,7 @@ public class TerrainGraphique extends JPanel implements ComponentListener{
 		}
 		 
 		ihm = i;
+		select = null;
 		tempsGele = 0;
 		dim = new Dimensions();
 		pions = new Pion[5][9];
@@ -92,6 +94,13 @@ public class TerrainGraphique extends JPanel implements ComponentListener{
 				pions[i][j].repaint();
 			}
 		}
+	}
+	public void selectionner(Point p) {
+		select = new AnimSelect(pions[p.x][p.y]);
+	}
+	public void deselectionner() {
+		select.stop();
+		select = null;
 	}
 	public void deplacer(Point o, Point a) {
 		// Pour repositionner l'autre pion ( sinon pas cliquable )

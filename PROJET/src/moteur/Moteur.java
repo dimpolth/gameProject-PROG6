@@ -19,9 +19,8 @@ public class Moteur {
 
 		i.com = new Communication(i, m, Communication.IHM);
 		m.com = new Communication(i, m, Communication.MOTEUR);
-
+		m.init();
 		i.lancer();
-
 	}
 
 	public enum EtatTour {
@@ -40,19 +39,25 @@ public class Moteur {
 	Point aspi, perc;
 
 	public Moteur() {
-		t = new Terrain();
-		h = new Historique();
-		e = EtatTour.selectionPion;
-		j1 = new Joueur(Case.Etat.joueur1, Joueur.typeJoueur.humain, "joueur 1");
-		j2 = new Joueur(Case.Etat.joueur2, Joueur.typeJoueur.humain, "joueur 2");
-		joueurCourant = j1;
-		ech = new Echange();
-		h.ajouterTour(t);
+		
 	}
 
 	Moteur(Terrain t) {
 		this.t = t;
 		h = new Historique();
+	}
+	
+	public void init() {
+		t = new Terrain();
+		h = new Historique();
+		ech = new Echange();
+		e = EtatTour.selectionPion;
+		j1 = new Joueur(Case.Etat.joueur1, Joueur.typeJoueur.humain, "Joueur 1");
+		j2 = new Joueur(Case.Etat.joueur2, Joueur.typeJoueur.humain, "Joueur 2");
+		joueurCourant = j1;
+		message("bandeauSup", joueurCourant.getNom());
+		message("bandeauInf", "Selection du pion");
+		h.ajouterTour(t);
 	}
 
 	public ArrayList<Point> deplacementPossible(Point p, ArrayList<Point> listePredecesseurs, Terrain copieTerrainEventuelle) {
@@ -91,8 +96,9 @@ public class Moteur {
 	// Renvoie une liste de points d'arrive permettant une prise
 	ArrayList<Point> prisePossible(Point p, ArrayList<Point> listePredecesseurs) {
 		ArrayList<Point> listePrise = new ArrayList<Point>();
-		ArrayList<Point> listeSuc = t.tableau[p.x][p.y].getSucc();
+
 		ArrayList<Point> listeMouvement = deplacementPossible(p, listePredecesseurs, null);
+
 		Iterator<Point> it = listeMouvement.iterator();
 
 		while (it.hasNext()) {
@@ -167,9 +173,17 @@ public class Moteur {
 	}
 
 	boolean partieTerminee() {
-		if (j1.scoreNul() || j2.scoreNul())
+		if (j1.scoreNul()) {
+			ech.vider();
+			ech.ajouter("bandeauSup", "<html><font color=FF0000>"+j2.getNom()+"</font></html>");
+			ech.ajouter("bandeauInf", "à remporté la partie</font>");
 			return true;
-		else
+		} else if(j2.scoreNul()) {
+			ech.vider();
+			ech.ajouter("bandeauSup", "<html><font color=FF0000>"+j1.getNom()+"</font></html>");
+			ech.ajouter("bandeauInf", "<html><font color=FF0000>à remporté la partie</font></html>");
+			return true;
+		} else
 			return false;
 	}
 
@@ -225,7 +239,8 @@ public class Moteur {
 				e = EtatTour.attenteChoix;
 			} else {
 				choix = IntelligenceArtificielle.choixPriseIAFacile();
-				majScore(t.manger(joueurCourant, d, pDepart, pArrive, choix).size());
+				l = t.manger(joueurCourant, d, pDepart, pArrive,choix);
+				majScore(l.size());
 				Joueur[] tabJoueur = { j1, j2 };
 				ech.ajouter("pionsManges", l);
 				ech.ajouter("joueurs", tabJoueur);
@@ -233,7 +248,8 @@ public class Moteur {
 			}
 		} else if (priseAspi && !prisePercu) {
 			// System.out.println("aspi");
-			majScore(t.manger(joueurCourant, d, pDepart, pArrive, Terrain.ChoixPrise.parAspiration).size());
+			l = t.manger(joueurCourant, d, pDepart, pArrive, Terrain.ChoixPrise.parAspiration);
+			majScore(l.size());
 			Joueur[] tabJoueur = { j1, j2 };
 			ech.ajouter("pionsManges", l);
 			ech.ajouter("joueurs", tabJoueur);
@@ -262,6 +278,7 @@ public class Moteur {
 		h.ajouterTour(t);
 		e = EtatTour.selectionPion;
 		message("bandeauSup", joueurCourant.getNom());
+		message("bandeauInf", "Selection du pion");
 	}
 
 	void testFinTour() {
@@ -315,12 +332,11 @@ public class Moteur {
 					System.out.println("e : " + e);
 					Terrain.Direction d = t.recupereDirection(pDepart, pArrive);
 					ArrayList<Point> l = new ArrayList<Point>();
-					int nbPionsManges = 0;
 					if (perc.equals((Point) dataValue))
-						nbPionsManges = t.manger(joueurCourant, d, pDepart, pArrive, Terrain.ChoixPrise.parPercussion).size();
+						l = t.manger(joueurCourant, d, pDepart, pArrive, Terrain.ChoixPrise.parPercussion);
 					else if (aspi.equals((Point) dataValue))
-						nbPionsManges = t.manger(joueurCourant, d, pDepart, pArrive,  Terrain.ChoixPrise.parAspiration).size();
-					majScore(nbPionsManges);
+						l = t.manger(joueurCourant, d, pDepart, pArrive,  Terrain.ChoixPrise.parAspiration);
+					majScore(l.size());
 					Joueur[] tabJoueur = { j1, j2 };
 					ech.vider();
 					ech.ajouter("pionsManges", l);
@@ -353,6 +369,23 @@ public class Moteur {
 				Joueur[] tabJoueur = { j1, j2 };
 				ech.ajouter("joueurs", tabJoueur);
 				com.envoyer(ech);
+				break;
+				
+			case "refaire":
+				ech.vider();
+				Case[][] refaire = h.refaire().getTableau();
+				if(refaire != null) {
+					ech.ajouter("terrain", refaire);
+					com.envoyer(ech);
+				}
+				break;
+			
+			case "finTour":
+				finTour();
+				break;
+			
+			case "nouvellePartie":
+				init();
 				break;
 			}
 		}
