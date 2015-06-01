@@ -104,7 +104,7 @@ public class IHM extends JFrame implements ComponentListener {
 		popupR.setVisible(false);
 
 		theme.setTheme(Theme.Type.BOIS);
-
+		
 		setMinimumSize(new Dimension(640, 480));
 		setSize(1000, 750);
 		setVisible(true);
