@@ -1,5 +1,6 @@
 package reseau;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 
@@ -12,7 +13,7 @@ import java.util.Map;
 
 public class Echange {
 	
-	public Map<String,Object> infos = new HashMap<String,Object>();
+	public Map<String,Object> infos = new LinkedHashMap<String,Object>();
 	
 	public void vider(){
 		infos.clear();
