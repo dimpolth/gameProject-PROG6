@@ -21,7 +21,7 @@ public class Moteur {
 
 		i.com = new Communication(i, m, Communication.IHM);
 		m.com = new Communication(i, m, Communication.MOTEUR);
-		m.init();
+		// m.init();
 		i.lancer();
 	}
 
@@ -65,12 +65,12 @@ public class Moteur {
 		joueurCourant = j1;
 		if (joueurCourant.isJoueurHumain()) {
 			e = EtatTour.selectionPion;
-		} else{
-			e= EtatTour.jeuxIa;
+		} else {
+			e = EtatTour.jeuxIa;
 			jouerIa();
 		}
 
-			message("bandeauSup", joueurCourant.getNom());
+		message("bandeauSup", joueurCourant.getNom());
 		message("bandeauInf", "Selection du pion");
 		h.ajouterTour(t);
 	}
@@ -251,7 +251,7 @@ public class Moteur {
 		h.ajouterCoup(pDepart);
 		if (priseAspi && prisePercu) {
 			Terrain.ChoixPrise choix;
-			if ((joueurCourant.getJoueurID() == Case.Etat.joueur1 && j1.isJoueurHumain()) || (joueurCourant.getJoueurID() == Case.Etat.joueur2 && j2.isJoueurHumain())) {
+			if (joueurCourant.isJoueurHumain()) {
 				System.out.println("Choix");
 				Point offA = t.offsetAspiration(d, pDepart);
 				aspi = new Point(offA.x + pDepart.x, offA.y + pDepart.y);
@@ -265,7 +265,7 @@ public class Moteur {
 				// choix = IntelligenceArtificielle.choixPriseIAFacile();
 
 				choix = jeuIa.getChoixPrise();
-				System.out.println("passage choix de prise IA");
+				// System.out.println("passage choix de prise IA");
 				l = t.manger(joueurCourant, d, pDepart, pArrive, choix);
 				majScore(l.size());
 				int[] score = { j1.getScore(), j2.getScore() };
