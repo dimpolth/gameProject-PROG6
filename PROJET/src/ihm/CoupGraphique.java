@@ -52,8 +52,11 @@ public class CoupGraphique implements Runnable {
 			e.printStackTrace();
 		}
 		
-		tg.ihm.bandeauInfos.setScore(1,score[0]);
-		tg.ihm.bandeauInfos.setScore(2,score[1]);
+		if(score != null){
+			tg.ihm.bandeauInfos.setScore(1,score[0]);
+			tg.ihm.bandeauInfos.setScore(2,score[1]);
+		}
+		
 		
 		//tg.ihm.bandeauInfos.setTexteSup(bandeauSup);
 		//tg.ihm.bandeauInfos.setTexteInf(bandeauInf);
