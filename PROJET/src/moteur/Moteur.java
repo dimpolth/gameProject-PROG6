@@ -86,7 +86,6 @@ public class Moteur {
 				if (listePredecesseurs.size() == 0)
 					listeSolution.add(temp);
 				else {
-
 					pointPrec = listePredecesseurs.get(listePredecesseurs.size() - 1);
 					Terrain.Direction dirPrec = t.recupereDirection(pointPrec, p);
 					Terrain.Direction dirSuiv = t.recupereDirection(p, temp);

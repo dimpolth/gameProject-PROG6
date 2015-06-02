@@ -68,10 +68,7 @@ public class TerrainGraphique extends JPanel implements ComponentListener{
 		addComponentListener(this);
 	}
 	public void dessinerTerrain( Case[][] c ){
-		
-		
-		
-				
+
 		for(int i=0 ; i<5 ; i++) {
 			for(int j=0 ; j<9 ; j++) {
 				pions[i][j].setCouleur(c[i][j].getOccupation());
@@ -120,10 +117,6 @@ public class TerrainGraphique extends JPanel implements ComponentListener{
 	}
 	
 	public void clicCase(Point pt){
-		/*if(select != null)
-			deselectionner();
-		selectionner(pt);*/
-		
 		if(prisesPossibles.contains(pt)){
 			cacherPrisesPossibles();
 		}
