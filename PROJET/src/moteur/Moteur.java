@@ -193,13 +193,16 @@ public class Moteur {
 	}
 
 	boolean selectionPion(Point p) {
-		if ((t.getCase(p.x, p.y).getOccupation() != joueurCourant.getJoueurID()) /* || (e != EtatTour.selectionPion)*/)
-			{System.out.println("Erreur selection PION 1");
-			return false;}
-		else {
+		if (t.getCase(p.x, p.y).getOccupation() != joueurCourant.getJoueurID()) {
+			System.out.println("Erreur selection PION 1");
+			return false;
+			} else {
 			ArrayList<Point> l = listePionsJouables(joueurCourant, null);
 			if (l.contains(p)) {
 				pDepart = p;
+				ech.vider();
+				ech.ajouter("pionSelectionne", pDepart);
+				com.envoyer(ech);
 				message("bandeauInf", "Choisir la destination");
 				e = EtatTour.selectionDestination;
 				return true;
@@ -241,8 +244,8 @@ public class Moteur {
 				Point offP = t.offsetPercussion(d, pArrive);
 				perc = new Point(offP.x + pArrive.x, offP.y + pArrive.y);
 				Point[] tabPts = { aspi, perc };
-				ech.ajouter("choixPrise", tabPts);
-				com.envoyer(ech);
+				int[] score = {j1.getScore(), j2.getScore()};
+				gestionCoupGraphique(null, tabPts, null, score);
 				e = EtatTour.attenteChoix;
 			} else {
 				//choix = IntelligenceArtificielle.choixPriseIAFacile();
@@ -250,19 +253,15 @@ public class Moteur {
 				System.out.println("passage choix de prise IA");
 				l = t.manger(joueurCourant, d, pDepart, pArrive,choix);
 				majScore(l.size());
-				Joueur[] tabJoueur = { j1, j2 };
-				ech.ajouter("pionsManges", l);
-				ech.ajouter("joueurs", tabJoueur);
-				com.envoyer(ech);
+				
 			}
 		} else if (priseAspi && !prisePercu) {
 			// System.out.println("aspi");
 			l = t.manger(joueurCourant, d, pDepart, pArrive, Terrain.ChoixPrise.parAspiration);
 			majScore(l.size());
-			Joueur[] tabJoueur = { j1, j2 };
-			ech.ajouter("pionsManges", l);
-			ech.ajouter("joueurs", tabJoueur);
-			com.envoyer(ech);
+			Point[] deplacement = {pDepart, pArrive};
+			int[] score = {j1.getScore(), j2.getScore()};
+			gestionCoupGraphique(deplacement, null, l, score);
 			if (joueurCourant.isJoueurHumain())
 				testFinTour();
 
@@ -270,10 +269,9 @@ public class Moteur {
 			// System.out.println("percu");
 			l = t.manger(joueurCourant, d, pDepart, pArrive, Terrain.ChoixPrise.parPercussion);
 			majScore(l.size());
-			Joueur[] tabJoueur = { j1, j2 };
-			ech.ajouter("pionsManges", l);
-			ech.ajouter("joueurs", tabJoueur);
-			com.envoyer(ech);
+			Point[] deplacement = {pDepart, pArrive};
+			int[] score = {j1.getScore(), j2.getScore()};
+			gestionCoupGraphique(deplacement, null, l, score);
 			if (joueurCourant.isJoueurHumain())
 				testFinTour();
 		}
@@ -315,6 +313,12 @@ public class Moteur {
 	void message(String destination, String message) {
 		ech.vider();
 		ech.ajouter(destination, message);
+		com.envoyer(ech);
+	}
+	
+	void gestionCoupGraphique(Point[] deplacement, Point[] choixPrise, ArrayList<Point> pionsManges, int[] score ){
+		CoupGraphique cg = new CoupGraphique(deplacement, choixPrise, pionsManges, score);
+		ech.ajouter("coup", cg);
 		com.envoyer(ech);
 	}
 	
@@ -373,11 +377,9 @@ public class Moteur {
 					else if (aspi.equals((Point) dataValue))
 						l = t.manger(joueurCourant, d, pDepart, pArrive,  Terrain.ChoixPrise.parAspiration);
 					majScore(l.size());
-					Joueur[] tabJoueur = { j1, j2 };
-					ech.vider();
-					ech.ajouter("pionsManges", l);
-					ech.ajouter("joueurs", tabJoueur);
-					com.envoyer(ech);
+					Point[] deplacement = {pDepart, pArrive};
+					int[] score = {j1.getScore(), j2.getScore()};
+					gestionCoupGraphique(deplacement, null, l, score);
 					testFinTour();
 				}
 				break;
