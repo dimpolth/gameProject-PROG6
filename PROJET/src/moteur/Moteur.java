@@ -233,7 +233,15 @@ public class Moteur {
 
 	void selectionDestination(Point p) {
 		ArrayList<Point> l = deplacementPossible(pDepart, h.histoTour, null);
-		if (l.contains(p)) {
+		if (listePointDebut.contains(p) && !tourEnCours) {
+			pDepart = p;
+			if (joueurCourant.isJoueurHumain()) {
+				ech.vider();
+				ech.ajouter("pionDeselectionne", true);
+				ech.ajouter("pionSelectionne", pDepart);
+				com.envoyer(ech);
+			}
+		} else if (l.contains(p)) {
 			pArrive = p;
 			Terrain.Direction d = t.recupereDirection(pDepart, pArrive);
 			boolean priseAspi = t.estUnePriseAspiration(pDepart, d);
@@ -244,13 +252,6 @@ public class Moteur {
 				gestionCoupGraphique(tabPts, null, null, null, "selectionpoint");
 				prise(priseAspi, prisePercu);
 				tourEnCours = true;
-			} else if (listePointDebut.contains(p) && !tourEnCours) {
-				pDepart=p;
-				if (joueurCourant.isJoueurHumain()) {
-					ech.vider();
-					ech.ajouter("pionSelectionne", pDepart);
-					com.envoyer(ech);
-				}
 			}
 		}
 	}
@@ -400,6 +401,7 @@ public class Moteur {
 		for (String dataType : echange.getAll()) {
 			Object dataValue = echange.get(dataType);
 			// System.out.println(dataType);
+			// System.out.println("e : " + e);
 			switch (dataType) {
 			case "nouvellePartie":
 				init();
@@ -407,13 +409,13 @@ public class Moteur {
 
 			case "point":
 				if (e == EtatTour.selectionPion) {
-					// System.out.println("e : " + e);
+					//System.out.println("e : " + e);
 					selectionPion((Point) dataValue);
 				} else if (e == EtatTour.selectionDestination) {
-					// System.out.println("e : " + e);
+					//System.out.println("e : " + e);
 					selectionDestination((Point) dataValue);
 				} else if (e == EtatTour.attenteChoix) {
-					// System.out.println("e : " + e);
+					//System.out.println("e : " + e);
 					Terrain.Direction d = t.recupereDirection(pDepart, pArrive);
 					ArrayList<Point> l = new ArrayList<Point>();
 					if (perc.equals((Point) dataValue))
