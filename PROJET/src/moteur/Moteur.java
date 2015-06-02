@@ -355,11 +355,20 @@ public class Moteur {
 		ech.ajouter(destination, message);
 		com.envoyer(ech);
 	}
-
-	void gestionCoupGraphique(Point[] deplacement, Point[] choixPrise, ArrayList<Point> pionsManges, int[] score, String s) {
+	
+	
+	void gestionCoupGraphique(Point[] deplacement, Point[] choixPrise, ArrayList<Point> pionsManges, int[] score,String s) {
 		// ech.vider();
-		// System.out.println(s);
 		CoupGraphique cg = new CoupGraphique(deplacement, choixPrise, pionsManges, score);
+		ech.ajouter("coup", cg);
+		com.envoyer(ech);
+	}
+	
+	//surchage de gestionGraphique pour le cas ou in coup inclue in changement de bandeau
+
+	void gestionCoupGraphique(Point[] deplacement, Point[] choixPrise, ArrayList<Point> pionsManges, int[] score,String chaine1,String chaine2) {
+		// ech.vider();
+		CoupGraphique cg = new CoupGraphique(deplacement, choixPrise, pionsManges, score, chaine1, chaine2);
 		ech.ajouter("coup", cg);
 		com.envoyer(ech);
 	}
@@ -409,25 +418,33 @@ public class Moteur {
 
 			case "point":
 				if (e == EtatTour.selectionPion) {
-					//System.out.println("e : " + e);
+					// System.out.println("e : " + e);
 					selectionPion((Point) dataValue);
 				} else if (e == EtatTour.selectionDestination) {
-					//System.out.println("e : " + e);
+					// System.out.println("e : " + e);
 					selectionDestination((Point) dataValue);
 				} else if (e == EtatTour.attenteChoix) {
-					//System.out.println("e : " + e);
+					// System.out.println("e : " + e);
 					Terrain.Direction d = t.recupereDirection(pDepart, pArrive);
 					ArrayList<Point> l = new ArrayList<Point>();
-					if (perc.equals((Point) dataValue))
-						l = t.manger(joueurCourant, d, pDepart, pArrive, Terrain.ChoixPrise.parPercussion);
-					else if (aspi.equals((Point) dataValue))
-						l = t.manger(joueurCourant, d, pDepart, pArrive, Terrain.ChoixPrise.parAspiration);
-					majScore(l.size());
-					// Point[] deplacement = { pDepart, pArrive };
-					int[] score = { j1.getScore(), j2.getScore() };
-					gestionCoupGraphique(null, null, l, score, "PriseselonchoixJoueur");
-					t.dessineTableauAvecIntersections();
-					testFinTour();
+					boolean tperc = perc.equals((Point) dataValue);
+					boolean taspi = aspi.equals((Point) dataValue);
+					System.out.println("perc " + tperc + " aspi " + taspi);
+					if (tperc || taspi) {
+						if (tperc) {
+							System.out.println("choix percu");
+							l = t.manger(joueurCourant, d, pDepart, pArrive, Terrain.ChoixPrise.parPercussion);
+						} else if (tperc) {
+							System.out.println("choix aspi");
+							l = t.manger(joueurCourant, d, pDepart, pArrive, Terrain.ChoixPrise.parAspiration);
+						}
+						majScore(l.size());
+						// Point[] deplacement = { pDepart, pArrive };
+						int[] score = { j1.getScore(), j2.getScore() };
+						gestionCoupGraphique(null, null, l, score, "PriseselonchoixJoueur");
+						t.dessineTableauAvecIntersections();
+						testFinTour();
+					}
 				}
 				break;
 			case "terrain":
