@@ -21,7 +21,7 @@ public class Moteur {
 
 		i.com = new Communication(i, m, Communication.IHM);
 		m.com = new Communication(i, m, Communication.MOTEUR);
-		// m.init();
+		m.init();
 		i.lancer();
 	}
 
