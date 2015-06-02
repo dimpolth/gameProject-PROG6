@@ -19,9 +19,9 @@ import modele.Terrain;
 
 @SuppressWarnings("serial")
 public class TerrainGraphique extends JPanel implements ComponentListener{
-	public static final int ANIM_DEPL = 1000;
+	public static final int ANIM_DEPL = 10000;
 	public static final int ANIM_DISP = 500;
-	public static final int ANIM_SELECT = 500;
+	public static final int ANIM_SELECT = 400;
 	
 	private Image imgPlateau;
 	protected Image imgPion1;
@@ -29,7 +29,7 @@ public class TerrainGraphique extends JPanel implements ComponentListener{
 	protected Image imgCroix;
 	public IHM ihm;
 	private AnimSelect select;
-	protected LinkedList<CoupGraphique> lCoups;
+	protected LinkedList<CoupGraphique> lCoups = new LinkedList<CoupGraphique>();
 	
 	protected long tempsGele;
 	private Dimensions dim;
@@ -116,10 +116,6 @@ public class TerrainGraphique extends JPanel implements ComponentListener{
 	}
 	
 	public void clicCase(Point pt){
-		/*if(select != null)
-			deselectionner();
-		selectionner(pt);*/
-		
 		if(prisesPossibles.contains(pt)){
 			cacherPrisesPossibles();
 		}

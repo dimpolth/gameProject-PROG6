@@ -38,22 +38,13 @@ public class AnimSelect extends Animation {
 				}
 			}
 		}
-		double f;
+		float f;
 		if(grandir) {
-			f = 1+(double)(actuel - tempsDepart)/TerrainGraphique.ANIM_SELECT;
+			f = 1+((float)(actuel - tempsDepart)/TerrainGraphique.ANIM_SELECT)/5;
 		} else {
-			f = 1+2*TerrainGraphique.ANIM_SELECT/1000-(double)(actuel - tempsDepart)/TerrainGraphique.ANIM_SELECT;
+			f = 1.2f-((float)(actuel - tempsDepart)/TerrainGraphique.ANIM_SELECT)/5;
 		}
-		//pion.setBounds(200,200,44,44);
-		System.out.println("MAJ");
-		int w = (int) (f*pion.dim.echelle / 2);
-		int h = (int) (f*pion.dim.echelle / 2);
-		int ec = (w - (int) (pion.dim.echelle / 2))/2;
-		int x = (int) ((pion.coord.y + 0.5) * pion.dim.echelle + pion.dim.origX) - ec;
-		int y = (int) ((pion.coord.x + 0.5) * pion.dim.echelle + pion.dim.origY) - ec;
-		pion.setPreferredSize(new Dimension(w, h));
-		pion.invalidate();
-		pion.repaint();
-		pion.setBounds(x,y,w,h);
+		pion.facteurTaille = f;
+		pion.componentResized(null);
 	}
 }

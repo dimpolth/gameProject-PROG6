@@ -27,17 +27,11 @@ class AnimDeplacement extends Animation {
 			horloge.stop();
 			pion.setBounds((int) ((destination.y + 0.5) * pion.dim.echelle + pion.dim.origX), (int) ((destination.x + 0.5) * pion.dim.echelle + pion.dim.origY), (int) (pion.dim.echelle / 2), (int) (pion.dim.echelle / 2));
 		} else {
-			double xo = ((origine.y + 0.5) * pion.dim.echelle + pion.dim.origX);
-			double xa = ((destination.y + 0.5) * pion.dim.echelle + pion.dim.origX);
-			double yo = ((origine.x + 0.5) * pion.dim.echelle + pion.dim.origY);
-			double ya = ((destination.x + 0.5) * pion.dim.echelle + pion.dim.origY);
 			double x = (double) (actuel - tempsDepart) / TerrainGraphique.ANIM_DEPL * 12;
 			double facteur = (1 / (1 + Math.exp(-x + 6)));
-			pion.facteurPos.x = (int) ((xa - xo) * facteur + xo);
-			pion.facteurPos.y = (int) ((ya - yo) * facteur + yo);
+			pion.facteurPos.x = (float) (((destination.x - origine.x) * facteur) + origine.x);
+			pion.facteurPos.y = (float) (((destination.y - origine.y) * facteur) + origine.y);
 			pion.componentResized(null);
-			pion.repaint();
-			System.out.println("coucou");
 		}
 	}
 }

@@ -7,10 +7,11 @@ public class CoupGraphique implements Runnable {
 	private Point[] deplacement;
 	private Point[] choixPrise;
 	private ArrayList<Point> pionsManges;
-	private int score;
-	private TerrainGraphique tg;
-	public CoupGraphique(TerrainGraphique t, Point[] d, Point[] c, ArrayList<Point> p, int s) {
-		tg = t;
+	private int[] score;
+	private static TerrainGraphique tg;
+	private static boolean animationEnCours = false;
+	
+	public CoupGraphique(Point[] d, Point[] c, ArrayList<Point> p, int[] s) {
 		deplacement = d;
 		choixPrise = c;
 		pionsManges = p;
@@ -22,15 +23,24 @@ public class CoupGraphique implements Runnable {
 		t.start();
 	}
 	public void run() {
-		tg.deplacer(deplacement[0], deplacement[1]);
+		CoupGraphique.animationEnCours = true;	
+		
+		
+		
+		
+		if(deplacement != null){
+			tg.deplacer(deplacement[0], deplacement[1]);
+			//System.out.println("DEPLACEMENT : "+deplacement[0]+" > "+deplacement[1]);
+		}
+		
 		try {
-			Thread.sleep(TerrainGraphique.ANIM_DEPL);
+			Thread.sleep(TerrainGraphique.ANIM_DEPL/4);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		if(choixPrise == null) {
+		if(pionsManges != null) {
 			tg.manger(pionsManges);
-		} else {
+		} else if(choixPrise != null){
 			tg.afficherPrisesPossibles(choixPrise);
 		}
 		//TODO maj du score
@@ -39,9 +49,20 @@ public class CoupGraphique implements Runnable {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+		
+		CoupGraphique.animationEnCours = false;
+		
 		if(tg.lCoups.size() != 0) {
+			tg.lCoups.pollFirst().lancer();			
+		}
+		
+		
+	}
+	
+	public static void afficherCoups(TerrainGraphique tg){
+		CoupGraphique.tg = tg;
+		if(!CoupGraphique.animationEnCours){			
 			tg.lCoups.pollFirst().lancer();
-			
 		}
 	}
 }

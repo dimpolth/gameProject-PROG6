@@ -6,6 +6,8 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.Point;
 import java.awt.event.*;
+import java.util.LinkedList;
+
 import javax.swing.*;
 
 import modele.*;
@@ -229,14 +231,28 @@ public class IHM extends JFrame implements ComponentListener {
 	}
 
 	public void notifier(Echange e) {
-		int tpsAnimation = 0;
+		int tpsAnimation = 0;		
 		
-		
-
 		Object dataValue;
+		
 		if ((dataValue = e.get("terrain")) != null) {
 			tg.dessinerTerrain((Case[][]) dataValue);
 		}
+		if((dataValue = e.get("coup")) != null){			
+			tg.lCoups.addLast( (CoupGraphique) dataValue );			
+			CoupGraphique.afficherCoups(tg);
+		}
+		/*if((dataValue = e.get("coups")) != null){
+			LinkedList<CoupGraphique> cg = (LinkedList<CoupGraphique>)dataValue;
+			java.util.Iterator<CoupGraphique> it = cg.iterator();
+			while(it.hasNext()){
+				tg.lCoups.addLast(it.next());
+			}
+			
+			CoupGraphique.afficherCoups(tg);
+		}*/
+		
+		/*
 		if ((dataValue = e.get("deplacement")) != null) {
 			Point[] pts = (Point[]) dataValue;
 			tg.deplacer(pts[0], pts[1]);
@@ -251,6 +267,8 @@ public class IHM extends JFrame implements ComponentListener {
 		if ((dataValue = e.get("joueurs")) != null) {
 			new ExecuterDans(this, "joueurs", dataValue, tpsAnimation);
 		}
+		
+		*/
 		
 		if ((dataValue = e.get("bandeauSup")) != null) {
 			bandeauInfos.setTexteSup( (String)dataValue   );

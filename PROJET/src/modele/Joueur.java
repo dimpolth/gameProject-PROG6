@@ -41,7 +41,7 @@ public class Joueur {
 		score = j.getScore();
 		joueurHumain = j.isJoueurHumain();
 		nom = j.getNom();
-		ia = j.ia;;
+		ia = j.ia;
 	}
 
 	public Case.Etat getJoueurID() {
