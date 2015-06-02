@@ -5,15 +5,36 @@ import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.EnumSet;
 
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.text.html.HTMLDocument.Iterator;
 
 
 @SuppressWarnings("serial")
-class PopupOptions extends JPanel {
+public class PopupOptions extends JPanel {
+	
+	public enum TypeJoueur {  
+		  
+	    HUMAIN("Humain"), IA1("IA Facile"), IA2("IA moyenne"), IA3("IA difficile") ; 
+	      
+	     private String texte ;  	      
+	     private TypeJoueur(String texte) {  
+	         this.texte = texte ;  
+	    }	      
+	     public String getTexte() {  
+	         return  this.texte ;  
+	    }
+	     
+	    public TypeJoueur getEnum(){
+	    	return this;
+	    }
+	}
 	
 	JTextField identifiantJoueur1,identifiantJoueur2;
 	JComboBox<String> selectJoueur1,selectJoueur2;
@@ -42,8 +63,15 @@ class PopupOptions extends JPanel {
 		identifiantJoueur1 = new JTextField("Joueur 1");
 		contraintes.gridwidth = 1;
 		add(identifiantJoueur1, contraintes);
-		selectJoueur1 = new JComboBox<>(new String[] {
-				"Humain", "Facile", "Normal", "Difficile" });
+		
+		String[] typeJoueurChoix = new String[4];
+		EnumSet<TypeJoueur> enumSet = EnumSet.allOf(TypeJoueur.class) ;
+		int indice =0;
+		for(TypeJoueur type : enumSet) {
+		    typeJoueurChoix[indice] = type.getTexte();
+		    indice++;
+		}
+		selectJoueur1 = new JComboBox<>(typeJoueurChoix);
 		contraintes.gridwidth = GridBagConstraints.REMAINDER;
 		;
 		add(selectJoueur1, contraintes);
@@ -55,8 +83,7 @@ class PopupOptions extends JPanel {
 		identifiantJoueur2 = new JTextField("Joueur 2");
 		contraintes.gridwidth = 1;
 		add(identifiantJoueur2, contraintes);
-		selectJoueur2 = new JComboBox<>(new String[] {
-				"Humain", "Facile", "Normal", "Difficile" });
+		selectJoueur2 = new JComboBox<>(typeJoueurChoix);
 		contraintes.gridwidth = GridBagConstraints.REMAINDER;
 		;
 		add(selectJoueur2, contraintes);
@@ -87,6 +114,8 @@ class PopupOptions extends JPanel {
 		contraintes.gridwidth = GridBagConstraints.REMAINDER;
 		;
 		add(valider, contraintes);
+		
+		
 
 	}
 

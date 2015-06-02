@@ -8,6 +8,7 @@ public class CoupGraphique implements Runnable {
 	private Point[] choixPrise;
 	private ArrayList<Point> pionsManges;
 	private int[] score;
+	private String bandeauSup, beandeauInf;
 	private static TerrainGraphique tg;
 	private static boolean animationEnCours = false;
 	
@@ -43,12 +44,22 @@ public class CoupGraphique implements Runnable {
 		} else if(choixPrise != null){
 			tg.afficherPrisesPossibles(choixPrise);
 		}
-		//TODO maj du score
+		
+		
 		try {
 			Thread.sleep(TerrainGraphique.ANIM_DISP);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+		
+		if(score != null){
+			tg.ihm.bandeauInfos.setScore(1,score[0]);
+			tg.ihm.bandeauInfos.setScore(2,score[1]);
+		}
+		
+		
+		//tg.ihm.bandeauInfos.setTexteSup(bandeauSup);
+		//tg.ihm.bandeauInfos.setTexteInf(bandeauInf);
 		
 		CoupGraphique.animationEnCours = false;
 		
