@@ -30,9 +30,9 @@ public class CoupGraphique implements Runnable {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		if(choixPrise == null) {
+		if(pionsManges != null) {
 			tg.manger(pionsManges);
-		} else {
+		} else if(choixPrise != null){
 			tg.afficherPrisesPossibles(choixPrise);
 		}
 		//TODO maj du score
