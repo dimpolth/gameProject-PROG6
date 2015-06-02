@@ -268,7 +268,10 @@ public class Moteur {
 				l = t.manger(joueurCourant, d, pDepart, pArrive, choix);
 				majScore(l.size());
 				int[] score = { j1.getScore(), j2.getScore() };
+
 				gestionCoupGraphique(null, null, l, score, "PrisechoixIA");
+				t.dessineTableauAvecIntersections();
+
 
 			}
 		} else if (priseAspi && !prisePercu) {
@@ -278,6 +281,7 @@ public class Moteur {
 			Point[] deplacement = { pDepart, pArrive };
 			int[] score = { j1.getScore(), j2.getScore() };
 			gestionCoupGraphique(null, null, l, score, "priseAspi");
+			t.dessineTableauAvecIntersections();
 			if (joueurCourant.isJoueurHumain())
 				testFinTour();
 
@@ -287,7 +291,8 @@ public class Moteur {
 			majScore(l.size());
 			Point[] deplacement = { pDepart, pArrive };
 			int[] score = { j1.getScore(), j2.getScore() };
-			gestionCoupGraphique(null, null, l, score, "prisePercu");
+			gestionCoupGraphique(null, null, l, score,"prisePercu");
+			t.dessineTableauAvecIntersections();
 			if (joueurCourant.isJoueurHumain())
 				testFinTour();
 		}
@@ -396,7 +401,8 @@ public class Moteur {
 					majScore(l.size());
 					Point[] deplacement = { pDepart, pArrive };
 					int[] score = { j1.getScore(), j2.getScore() };
-					gestionCoupGraphique(null, null, l, score, "PriseselonchoixJoueur");
+					gestionCoupGraphique(null, null, l, score,"PriseselonchoixJoueur");
+					t.dessineTableauAvecIntersections();
 					testFinTour();
 				}
 				break;
