@@ -192,8 +192,9 @@ public class Moteur {
 	}
 
 	boolean selectionPion(Point p) {
-		if ((t.getCase(p.x, p.y).getOccupation() != joueurCourant.getJoueurID()) || (e != EtatTour.selectionPion))
-			return false;
+		if ((t.getCase(p.x, p.y).getOccupation() != joueurCourant.getJoueurID()) /* || (e != EtatTour.selectionPion)*/)
+			{System.out.println("Erreur selection PION 1");
+			return false;}
 		else {
 			ArrayList<Point> l = listePionsJouables(joueurCourant, null);
 			if (l.contains(p)) {
@@ -201,8 +202,9 @@ public class Moteur {
 				message("bandeauInf", "Choisir la destination");
 				e = EtatTour.selectionDestination;
 				return true;
-			} else
-				return false;
+			} else{
+				System.out.println("Erreur selection PION 2");
+				return false;}
 		}
 	}
 
@@ -330,10 +332,20 @@ public class Moteur {
 	void jouerIa(){
 		System.out.println("DEBUT TOUR IA");
 		do{
+			System.out.println(joueurCourant.getNom());
 			System.out.println("boucle IA");
 			jeuIa= joueurCourant.jouer();
+			System.out.println("depart "+jeuIa.getpDepart()+" arrivé "+jeuIa.getpArrivee());
 			selectionPion(jeuIa.getpDepart());
-			selectionDestination(jeuIa.getpArrivee());		
+			System.out.println("point depart moteur :"+pDepart);
+			selectionDestination(jeuIa.getpArrivee());
+			t.dessineTableauAvecIntersections();
+			try {
+				Thread.sleep(TerrainGraphique.ANIM_DEPL);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		while(joueurCourant.IaContinue());
 		finTour();
