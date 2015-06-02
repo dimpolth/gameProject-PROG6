@@ -7,11 +7,11 @@ public class CoupGraphique implements Runnable {
 	private Point[] deplacement;
 	private Point[] choixPrise;
 	private ArrayList<Point> pionsManges;
-	private int score;
+	private int[] score;
 	private static TerrainGraphique tg;
 	private static boolean animationEnCours = false;
-	public CoupGraphique(Point[] d, Point[] c, ArrayList<Point> p, int s) {
-		
+	
+	public CoupGraphique(Point[] d, Point[] c, ArrayList<Point> p, int[] s) {
 		deplacement = d;
 		choixPrise = c;
 		pionsManges = p;

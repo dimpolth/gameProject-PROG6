@@ -8,7 +8,7 @@ public class Sauvegarde implements Serializable {
 	public Joueur joueur1,joueur2,joueurCourant;
 	public Historique histo;
 	
-	Sauvegarde(Terrain t, Historique h,Joueur j1,Joueur j2 ,Joueur joueurCourant){
+	public Sauvegarde(Terrain t, Historique h,Joueur j1,Joueur j2 ,Joueur joueurCourant){
 		this.plateau = t.copie();
 		this.joueur1 = j1; 
 		this.joueur2 = j2;
