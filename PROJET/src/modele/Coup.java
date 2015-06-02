@@ -51,4 +51,18 @@ public class Coup {
 	public void setChoixPrise(Terrain.ChoixPrise choixPrise) {
 		this.choixPrise = choixPrise;
 	}
+	
+	public boolean equals(Coup c){
+		
+		if(!this.pDepart.equals(c.pDepart))
+			return false;
+		if(!this.pArrivee.equals(c.pArrivee))
+			return false;
+		
+		if(this.getChoixPrise() != null && c.getChoixPrise() != null)
+			if(!this.getChoixPrise().equals(c.getChoixPrise()))
+				return false;
+		
+		return true;
+	}
 }

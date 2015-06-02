@@ -13,6 +13,10 @@ public class IntelligenceArtificielle {
 		difficile
 	}
 	
+	public double tempsExe = 0; // Temporaire pour tests
+	public double tempsMax = 0;
+	public int nbExe = 0; 		// Temporaire pour tests
+	
 	private difficulteIA niveauDifficulte;
 	private Joueur joueurIA, joueurAdversaire;
 	private Moteur moteur;
@@ -35,6 +39,7 @@ public class IntelligenceArtificielle {
 		
 		Coup coupSolution = new Coup(new Point(-1,-1), new Point(-1,-1));
 		Coup coupTemp;
+		ArrayList<Coup> listeCoupsDuTour;
 		
 		switch(this.getNiveauDifficulte()){
 			case facile :
@@ -75,14 +80,17 @@ public class IntelligenceArtificielle {
 		}
 		*/
 		
-		ArrayList<Coup> listeCoupsDuTour = this.getTourDeJeuCourant().getListeCoups();
-		coupTemp = listeCoupsDuTour.get(0);
-		coupSolution = coupTemp.clone();
-		listeCoupsDuTour.remove(coupTemp);
-		this.getTourDeJeuCourant().setListeCoups(listeCoupsDuTour);
-			
+		listeCoupsDuTour = this.getTourDeJeuCourant().getListeCoups();
+		
+		if(!listeCoupsDuTour.isEmpty()){
+			coupTemp = listeCoupsDuTour.get(0);
+			coupSolution = coupTemp.clone();
+			listeCoupsDuTour.remove(coupTemp);
+			this.getTourDeJeuCourant().setListeCoups(listeCoupsDuTour);
+		}
+
 		if(listeCoupsDuTour.isEmpty()) // Si la liste est vide on a terminé le tour
-			tourEnCours = false;
+			this.setTourEnCours(false);
 		
 		
 		return coupSolution;
@@ -98,16 +106,18 @@ public class IntelligenceArtificielle {
 	private TourDeJeu coupFacile(){
 		ArrayList<TourDeJeu> listeToursJouables = new ArrayList<TourDeJeu>();
 		Iterator<TourDeJeu> it;
-		TourDeJeu tourSolution, tourTemp;
+		TourDeJeu tourSolution = new TourDeJeu(), tourTemp;
 		int max = 0;
 		Random rand = new Random();
 		
 		// Récupération de tous les tours jouables pour le terrain et le joueur courant
-		listeToursJouables = getToursJouables(this.moteur.t,this.getJoueurIA());
+		listeToursJouables = getToursJouables(this.moteur.t.copie(),this.getJoueurIA());
+	
 
-		tourSolution = listeToursJouables.get(rand.nextInt(listeToursJouables.size()));
-		
-		
+		if(listeToursJouables.size() > 0)
+			tourSolution = listeToursJouables.get(rand.nextInt(listeToursJouables.size()));
+		else
+			System.out.println("Aucun tour facile jouable (J2)");
 		/*
 		it = listeToursJouables.iterator();
 		
@@ -135,30 +145,33 @@ public class IntelligenceArtificielle {
 	 * Applique l'algorithme permettant à l'ordinateur de jouer un coup en difficulté "normal"
 	 */
 	private TourDeJeu coupNormal(){
-		TourDeJeu tourSolution;
+		TourDeJeu tourSolution = new TourDeJeu();
 		int profondeur = 8;
 		
 		// ALPHA BETA
-		tourSolution = alphaBeta(profondeur, this.moteur.t); // simule x-profondeur tours
-															 // exemple : profondeur = 3
-															 // on va simuler un tour jCourant puis un tour jAdv puis 
-		return tourSolution;								 // de nouveau un tour jCourant	
+		tourSolution = alphaBeta(profondeur); // simule x-profondeur tours
+											  // exemple : profondeur = 3
+											  // on va simuler un tour jCourant puis un tour jAdv puis 
+		return tourSolution;				  // de nouveau un tour jCourant	
 	}
 	
 	/*
 	 * Application de l'algorithme alpha beta
 	 */
-	private TourDeJeu alphaBeta(int profondeur, Terrain terrainCourant){
+	private TourDeJeu alphaBeta(int profondeur){
 		ArrayList<TourDeJeu> listeToursJouables = new ArrayList<TourDeJeu>();
 		Iterator<TourDeJeu> it;
-		TourDeJeu tourCourant, tourSolution = null;
+		TourDeJeu tourCourant, tourSolution = new TourDeJeu();
 		Random rand = new Random();
 		int valMax = MIN, valTemp, nbPionsManges;
 		Integer alpha = new Integer(MIN), beta = new Integer(MAX);
-			
+		
+		double tempsDepart = (double) System.currentTimeMillis(), temp; // pour tests
+		
 		// Récupération de tous les tours jouables pour le terrain et le joueur courant
-		listeToursJouables = getToursJouables(terrainCourant,this.getJoueurIA());
-
+		listeToursJouables = getToursJouables(this.moteur.t,this.getJoueurIA());
+		
+		
 		// Adaptation dynamique de la profondeur explorée
 		if(listeToursJouables.size() >= 10 && profondeur > 1)
 			profondeur--;
@@ -171,9 +184,14 @@ public class IntelligenceArtificielle {
 		else if(listeToursJouables.size() == 1)
 			profondeur += 2;
 			
+		if(listeToursJouables.size() > 0)
+			tourSolution = listeToursJouables.get(0);
+		
 		it = listeToursJouables.iterator();
 		
+		
 		while(it.hasNext()){
+		
 			tourCourant = (TourDeJeu) it.next().clone();
 			
 			nbPionsManges = tourCourant.getValeurResultat();
@@ -185,12 +203,20 @@ public class IntelligenceArtificielle {
 				tourSolution = (TourDeJeu) tourCourant.clone();
 			}
 			else if(valTemp == valMax){ // Choix randomisé si des solutions ont un résultat similaire
-				if(rand.nextInt(2) == 1)
+				if(rand.nextInt(2) == 1){
 					tourSolution = (TourDeJeu) tourCourant.clone();
+				}
 			}
 			
 		}
-
+		
+		this.nbExe++;
+		
+		temp = (double) (System.currentTimeMillis() - tempsDepart);
+		this.tempsExe += temp;
+		
+		tempsMax = (long) Math.max(temp, this.tempsMax);
+		
 		return tourSolution;
 	}
 	
@@ -293,15 +319,17 @@ public class IntelligenceArtificielle {
 	 * paramètres : - ArrayList<Point> listePointsDeDepart
 	 * 				- boolean priseObligatoire : permet un le traitement nécessaire pour les prises obligatoires
 	 */
-	private ArrayList<TourDeJeu> getToursJouables(Terrain cloneTerrain, Joueur joueurCourant){
+	private ArrayList<TourDeJeu> getToursJouables(Terrain terrainCourant, Joueur joueurCourant){
 		Point pDepartCourant, pArriveeCourante;
-		ArrayList<Point> listePointsDeDepart, listeCoupsObligatoires;
-		ArrayList<TourDeJeu> listeToursJouables = new ArrayList<TourDeJeu>(), listeToursTemp;
+		ArrayList<Point> listePointsDeDepart, listeCoupsObligatoires, listeVide = new ArrayList<Point>();
+		ArrayList<TourDeJeu> listeToursJouables = new ArrayList<TourDeJeu>(), listeToursTemp, listeToursVide = new ArrayList<TourDeJeu>();
 		TourDeJeu tourTemp;
 		boolean priseObligatoire = false;
 		
 		Iterator<Point> itPointsDepart, itPointsArrivee;
 		Iterator<TourDeJeu> itToursTemp;
+		
+		Terrain cloneTerrain = terrainCourant.copie();
 		
 		// Récupération de la liste des points de Départ possibles
 		listeCoupsObligatoires = cloneTerrain.couplibre(joueurCourant.getJoueurID()); // On regarde si on a des coups obligatoires
@@ -317,10 +345,10 @@ public class IntelligenceArtificielle {
 		
 		// Pour tous les points de départ possibles
 		while(itPointsDepart.hasNext()){
-			listeToursTemp = new ArrayList<TourDeJeu>(); // On initialise une nouvelle liste de tours de jeu
+			listeToursTemp = listeToursVide; // On initialise une nouvelle liste de tours de jeu
 			pDepartCourant = (Point) itPointsDepart.next().clone();
 			
-			itPointsArrivee = this.moteur.deplacementPossible(pDepartCourant, new ArrayList<Point>(), cloneTerrain).iterator();
+			itPointsArrivee = this.moteur.deplacementPossible(pDepartCourant, listeVide, cloneTerrain).iterator();
 				
 			if(priseObligatoire){ // Si on a des prises obligatoires il faut trier les solutions disponibles
 				// pour tous les successeurs du point de départ courant
@@ -328,18 +356,20 @@ public class IntelligenceArtificielle {
 					pArriveeCourante = (Point) itPointsArrivee.next().clone();
 					Terrain.Direction dir = cloneTerrain.recupereDirection(pDepartCourant, pArriveeCourante);
 					if(cloneTerrain.estUnePriseAspiration(pDepartCourant, dir))
-						getListeToursPourCoupDepart(listeToursTemp, new TourDeJeu(), new Coup(pDepartCourant, pArriveeCourante, Terrain.ChoixPrise.parAspiration), cloneTerrain, new ArrayList<Point>(), 0, joueurCourant);
+						getListeToursPourCoupDepart(listeToursTemp, new TourDeJeu(), new Coup(pDepartCourant, pArriveeCourante, Terrain.ChoixPrise.parAspiration), cloneTerrain, listeVide, 0, joueurCourant);
 					if(cloneTerrain.estUnePrisePercussion(pDepartCourant, dir))
-						getListeToursPourCoupDepart(listeToursTemp, new TourDeJeu(), new Coup(pDepartCourant, pArriveeCourante, Terrain.ChoixPrise.parPercussion), cloneTerrain, new ArrayList<Point>(), 0, joueurCourant);
+						getListeToursPourCoupDepart(listeToursTemp, new TourDeJeu(), new Coup(pDepartCourant, pArriveeCourante, Terrain.ChoixPrise.parPercussion), cloneTerrain, listeVide, 0, joueurCourant);
 				}
 			}
 			else{	// Les tours ne sont ici constitués que d'un seul coup de gain 0
 				while(itPointsArrivee.hasNext()){
 					pArriveeCourante = (Point) itPointsArrivee.next().clone();
-					cloneTerrain.deplacement(pDepartCourant, pArriveeCourante, joueurCourant, new ArrayList<Point>());
-					tourTemp = new TourDeJeu(new Coup(pDepartCourant,pArriveeCourante));
-					tourTemp.setTerrainFinal(cloneTerrain);
-					listeToursTemp.add(tourTemp);
+					if(cloneTerrain.deplacement(pDepartCourant, pArriveeCourante, joueurCourant, listeVide) == 0){
+						tourTemp = new TourDeJeu(new Coup(pDepartCourant,pArriveeCourante));
+						tourTemp.setTerrainFinal(cloneTerrain);
+						listeToursTemp.add(tourTemp);
+						cloneTerrain.deplacement(pArriveeCourante, pDepartCourant, joueurCourant, listeVide);
+					}
 				}
 			}
 			
@@ -350,6 +380,7 @@ public class IntelligenceArtificielle {
 				listeToursJouables.add(tourTemp.clone());
 			}
 		}
+		
 		return listeToursJouables;
 	}
 	
@@ -383,7 +414,7 @@ public class IntelligenceArtificielle {
 		pDep = pArr;
 		
 		// On récupère les successeurs possibles à la position d'arrivée du coup joué
-		itPointsArriveeSuivants = this.moteur.deplacementPossible(pDep, listePredecesseurs, cloneTerrain).iterator();
+		itPointsArriveeSuivants = this.moteur.deplacementPossible(pDep, listePredecesseurs, terrainCopie).iterator();
 
 		while(itPointsArriveeSuivants.hasNext()){
 			pArrTemp = (Point) itPointsArriveeSuivants.next().clone();

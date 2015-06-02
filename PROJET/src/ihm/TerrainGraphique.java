@@ -21,7 +21,7 @@ import modele.Terrain;
 public class TerrainGraphique extends JPanel implements ComponentListener{
 	public static final int ANIM_DEPL = 1000;
 	public static final int ANIM_DISP = 500;
-	public static final int ANIM_SELECT = 500;
+	public static final int ANIM_SELECT = 400;
 	
 	private Image imgPlateau;
 	protected Image imgPion1;
@@ -68,8 +68,6 @@ public class TerrainGraphique extends JPanel implements ComponentListener{
 		addComponentListener(this);
 	}
 	public void dessinerTerrain( Case[][] c ){
-		
-				
 		for(int i=0 ; i<5 ; i++) {
 			for(int j=0 ; j<9 ; j++) {
 				pions[i][j].setCouleur(c[i][j].getOccupation());
@@ -118,10 +116,6 @@ public class TerrainGraphique extends JPanel implements ComponentListener{
 	}
 	
 	public void clicCase(Point pt){
-		/*if(select != null)
-			deselectionner();
-		selectionner(pt);*/
-		
 		if(prisesPossibles.contains(pt)){
 			cacherPrisesPossibles();
 		}
