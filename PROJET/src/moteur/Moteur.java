@@ -65,7 +65,7 @@ public class Moteur {
 		j1 = new Joueur(Case.Etat.joueur1, Joueur.typeJoueur.humain, "humain");
 		j2 = new Joueur(Case.Etat.joueur2, Joueur.typeJoueur.ordinateur, IntelligenceArtificielle.difficulteIA.normal, j1, this);
 
-		joueurCourant = j2;
+		joueurCourant = j1;
 		if (joueurCourant.isJoueurHumain()) {
 			e = EtatTour.selectionPion;
 		} else {
