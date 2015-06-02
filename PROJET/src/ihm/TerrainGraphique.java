@@ -19,7 +19,7 @@ import modele.Terrain;
 
 @SuppressWarnings("serial")
 public class TerrainGraphique extends JPanel implements ComponentListener{
-	public static final int ANIM_DEPL = 10000;
+	public static final int ANIM_DEPL = 1000;
 	public static final int ANIM_DISP = 500;
 	public static final int ANIM_SELECT = 400;
 	
