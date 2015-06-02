@@ -132,6 +132,7 @@ public class IHM extends JFrame implements ComponentListener {
 
 	public void lancer() {
 		Echange e = new Echange();
+		e.ajouter("nouvellePartie",true);
 		e.ajouter("terrain", true);		
 		e.ajouter("joueurs", getParamsJoueurs());
 		com.envoyer(e);
@@ -161,6 +162,7 @@ public class IHM extends JFrame implements ComponentListener {
 			popupR.setVisible(true);
 			break;
 		case RECOMMENCER:
+			lancer();
 			break;
 		case QUITTER:
 			// Confirmation avant de quitter
