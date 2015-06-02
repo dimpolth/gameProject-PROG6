@@ -69,6 +69,8 @@ public class TerrainGraphique extends JPanel implements ComponentListener{
 	}
 	public void dessinerTerrain( Case[][] c ){
 		
+		
+		
 				
 		for(int i=0 ; i<5 ; i++) {
 			for(int j=0 ; j<9 ; j++) {

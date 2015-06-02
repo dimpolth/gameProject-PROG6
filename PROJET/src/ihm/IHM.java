@@ -238,6 +238,7 @@ public class IHM extends JFrame implements ComponentListener {
 		Object dataValue;
 		
 		if ((dataValue = e.get("terrain")) != null) {
+			
 			tg.dessinerTerrain((Case[][]) dataValue);
 		}
 		if((dataValue = e.get("coup")) != null){			
