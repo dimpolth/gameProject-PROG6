@@ -49,6 +49,7 @@ public class Moteur {
 	Moteur(Terrain t) {
 		this.t = t;
 		h = new Historique();
+		ech = new Echange();
 	}
 
 	public void init() {
@@ -306,6 +307,9 @@ public class Moteur {
 			joueurCourant = j1;
 		h.effacerHistoTour();
 		h.ajouterTour(t);
+		ech.vider();
+		ech.ajouter("pionDeselectionne", true);
+		com.envoyer(ech);
 		// System.out.println("FIN DE TOUR ");
 		if (joueurCourant.isJoueurHumain()) {
 			e = EtatTour.selectionPion;
