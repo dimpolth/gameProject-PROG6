@@ -61,13 +61,11 @@ public class Moteur {
 		// "Joueur 1");
 		// j2 = new Joueur(Case.Etat.joueur2, Joueur.typeJoueur.humain,
 		// "Joueur 2");
-<<<<<<< HEAD
+
+		j1 = new Joueur(Case.Etat.joueur1, Joueur.typeJoueur.humain, "humain");
 		j2 = new Joueur(Case.Etat.joueur2, Joueur.typeJoueur.ordinateur, IntelligenceArtificielle.difficulteIA.normal, j1, this);
-=======
-		j1 = new Joueur(Case.Etat.joueur1, Joueur.typeJoueur.ordinateur, IntelligenceArtificielle.difficulteIA.facile, j2, this);
-		j2 = new Joueur(Case.Etat.joueur2, Joueur.typeJoueur.ordinateur, IntelligenceArtificielle.difficulteIA.facile, j1, this);
->>>>>>> branch 'master' of https://github.com/dimpolth/gameProject-PROG6.git
-		joueurCourant = j1;
+
+		joueurCourant = j2;
 		if (joueurCourant.isJoueurHumain()) {
 			e = EtatTour.selectionPion;
 		} else {
