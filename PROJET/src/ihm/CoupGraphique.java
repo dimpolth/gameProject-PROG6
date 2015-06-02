@@ -8,9 +8,9 @@ public class CoupGraphique implements Runnable {
 	private Point[] choixPrise;
 	private ArrayList<Point> pionsManges;
 	private int score;
-	private TerrainGraphique tg;
-	public CoupGraphique(TerrainGraphique t, Point[] d, Point[] c, ArrayList<Point> p, int s) {
-		tg = t;
+	private static TerrainGraphique tg;
+	public CoupGraphique(Point[] d, Point[] c, ArrayList<Point> p, int s) {
+		
 		deplacement = d;
 		choixPrise = c;
 		pionsManges = p;
@@ -43,5 +43,9 @@ public class CoupGraphique implements Runnable {
 			tg.lCoups.pollFirst().lancer();
 			
 		}
+	}
+	
+	public static void afficherCoups(TerrainGraphique tg){
+		tg.lCoups.pollFirst().lancer();
 	}
 }
