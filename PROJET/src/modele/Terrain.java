@@ -182,7 +182,6 @@ public class Terrain {
 			}
 		}
 
-
 		if (tableau[depart.x][depart.y].getOccupation() != joueurCourant.getJoueurID()) {
 			return 3;
 		} else {
