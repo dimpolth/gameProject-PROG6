@@ -245,6 +245,16 @@ public class IHM extends JFrame implements ComponentListener {
 			tg.lCoups.addLast( (CoupGraphique) dataValue );			
 			CoupGraphique.afficherCoups(tg);
 		}
+		
+		
+		/* Gardez cet ordre */
+		if((dataValue = e.get("pionDeselectionne")) != null){
+			tg.deselectionner();
+		}
+		
+		if((dataValue = e.get("pionSelectionne")) != null){
+			tg.selectionner( (Point)dataValue );
+		}
 		/*if((dataValue = e.get("coups")) != null){
 			LinkedList<CoupGraphique> cg = (LinkedList<CoupGraphique>)dataValue;
 			java.util.Iterator<CoupGraphique> it = cg.iterator();
