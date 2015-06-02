@@ -6,6 +6,8 @@ import java.awt.Point;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -18,6 +20,8 @@ import modele.Terrain;
 @SuppressWarnings("serial")
 public class TerrainGraphique extends JPanel implements ComponentListener{
 	public static final int ANIM_DEPL = 1000;
+	public static final int ANIM_DISP = 500;
+	public static final int ANIM_SELECT = 400;
 	
 	private Image imgPlateau;
 	protected Image imgPion1;
@@ -25,6 +29,7 @@ public class TerrainGraphique extends JPanel implements ComponentListener{
 	protected Image imgCroix;
 	public IHM ihm;
 	private AnimSelect select;
+	protected LinkedList<CoupGraphique> lCoups = new LinkedList<CoupGraphique>();
 	
 	protected long tempsGele;
 	private Dimensions dim;
@@ -63,31 +68,6 @@ public class TerrainGraphique extends JPanel implements ComponentListener{
 		addComponentListener(this);
 	}
 	public void dessinerTerrain( Case[][] c ){
-		
-		for (int ligne = 0; ligne < Terrain.LIGNES; ligne++) {
-			for (int colonne = 0; colonne < Terrain.COLONNES; colonne++) {
-				if (c[ligne][colonne].getOccupation() == Case.Etat.joueur1)
-					System.out.print("X");
-				else if (c[ligne][colonne].getOccupation() == Case.Etat.joueur2)
-					System.out.print("O");
-				else
-					System.out.print(" ");
-
-				if (colonne < Terrain.INDICE_MAX_COLONNES)
-					System.out.print("-");
-			}
-			System.out.println();
-
-			if (ligne < Terrain.INDICE_MAX_LIGNES)
-				if (ligne % 2 == 0)
-					System.out.println("|\\|/|\\|/|\\|/|\\|/|");
-
-				else
-					System.out.println("|/|\\|/|\\|/|\\|/|\\|");
-		}
-
-		
-		
 		for(int i=0 ; i<5 ; i++) {
 			for(int j=0 ; j<9 ; j++) {
 				pions[i][j].setCouleur(c[i][j].getOccupation());
@@ -136,7 +116,6 @@ public class TerrainGraphique extends JPanel implements ComponentListener{
 	}
 	
 	public void clicCase(Point pt){
-		
 		if(prisesPossibles.contains(pt)){
 			cacherPrisesPossibles();
 		}
