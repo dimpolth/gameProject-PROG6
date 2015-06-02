@@ -21,6 +21,7 @@ import modele.Terrain;
 public class TerrainGraphique extends JPanel implements ComponentListener{
 	public static final int ANIM_DEPL = 1000;
 	public static final int ANIM_DISP = 500;
+	public static final int ANIM_SELECT = 500;
 	
 	private Image imgPlateau;
 	protected Image imgPion1;
@@ -140,6 +141,9 @@ public class TerrainGraphique extends JPanel implements ComponentListener{
 	}
 	
 	public void clicCase(Point pt){
+		/*if(select != null)
+			deselectionner();
+		selectionner(pt);*/
 		
 		if(prisesPossibles.contains(pt)){
 			cacherPrisesPossibles();
