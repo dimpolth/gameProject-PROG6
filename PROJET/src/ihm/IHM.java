@@ -238,8 +238,11 @@ public class IHM extends JFrame implements ComponentListener {
 		if ((dataValue = e.get("terrain")) != null) {
 			tg.dessinerTerrain((Case[][]) dataValue);
 		}
-		
 		if((dataValue = e.get("coups")) != null){
+			tg.lCoups.addLast( (CoupGraphique) dataValue );
+			CoupGraphique.afficherCoups(tg);
+		}
+		/*if((dataValue = e.get("coups")) != null){
 			LinkedList<CoupGraphique> cg = (LinkedList<CoupGraphique>)dataValue;
 			java.util.Iterator<CoupGraphique> it = cg.iterator();
 			while(it.hasNext()){
@@ -247,7 +250,7 @@ public class IHM extends JFrame implements ComponentListener {
 			}
 			
 			CoupGraphique.afficherCoups(tg);
-		}
+		}*/
 		
 		/*
 		if ((dataValue = e.get("deplacement")) != null) {

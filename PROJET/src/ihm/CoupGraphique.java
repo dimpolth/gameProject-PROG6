@@ -9,6 +9,7 @@ public class CoupGraphique implements Runnable {
 	private ArrayList<Point> pionsManges;
 	private int score;
 	private static TerrainGraphique tg;
+	private static boolean animationEnCours = false;
 	public CoupGraphique(Point[] d, Point[] c, ArrayList<Point> p, int s) {
 		
 		deplacement = d;
@@ -22,6 +23,7 @@ public class CoupGraphique implements Runnable {
 		t.start();
 	}
 	public void run() {
+		CoupGraphique.animationEnCours = true;
 		tg.deplacer(deplacement[0], deplacement[1]);
 		try {
 			Thread.sleep(TerrainGraphique.ANIM_DEPL);
@@ -39,13 +41,18 @@ public class CoupGraphique implements Runnable {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+		
+		CoupGraphique.animationEnCours = false;
+		
 		if(tg.lCoups.size() != 0) {
-			tg.lCoups.pollFirst().lancer();
-			
+			tg.lCoups.pollFirst().lancer();			
 		}
+		
+		
 	}
 	
 	public static void afficherCoups(TerrainGraphique tg){
-		tg.lCoups.pollFirst().lancer();
+		if(!CoupGraphique.animationEnCours)
+			tg.lCoups.pollFirst().lancer();
 	}
 }
