@@ -116,8 +116,7 @@ public class IntelligenceArtificielle {
 
 		if(listeToursJouables.size() > 0)
 			tourSolution = listeToursJouables.get(rand.nextInt(listeToursJouables.size()));
-		else
-			System.out.println("Aucun tour facile jouable (J2)");
+
 		/*
 		it = listeToursJouables.iterator();
 		
