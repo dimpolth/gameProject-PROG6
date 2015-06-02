@@ -230,6 +230,8 @@ public class IHM extends JFrame implements ComponentListener {
 
 	public void notifier(Echange e) {
 		int tpsAnimation = 0;
+		
+		
 
 		Object dataValue;
 		if ((dataValue = e.get("terrain")) != null) {

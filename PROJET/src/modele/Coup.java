@@ -40,7 +40,7 @@ public class Coup {
 	}
 	
 	public Coup clone(){
-		Coup copie = new Coup((Point) this.pDepart.clone(), (Point) this.pArrivee.clone());
+		Coup copie = new Coup((Point) this.pDepart.clone(), (Point) this.pArrivee.clone(), this.getChoixPrise());
 		return copie;
 	}
 
