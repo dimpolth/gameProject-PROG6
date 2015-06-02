@@ -23,10 +23,18 @@ public class CoupGraphique implements Runnable {
 		t.start();
 	}
 	public void run() {
-		CoupGraphique.animationEnCours = true;
-		tg.deplacer(deplacement[0], deplacement[1]);
+		CoupGraphique.animationEnCours = true;	
+		
+		
+		
+		
+		if(deplacement != null){
+			tg.deplacer(deplacement[0], deplacement[1]);
+			//System.out.println("DEPLACEMENT : "+deplacement[0]+" > "+deplacement[1]);
+		}
+		
 		try {
-			Thread.sleep(TerrainGraphique.ANIM_DEPL);
+			Thread.sleep(TerrainGraphique.ANIM_DEPL/4);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -52,7 +60,9 @@ public class CoupGraphique implements Runnable {
 	}
 	
 	public static void afficherCoups(TerrainGraphique tg){
-		if(!CoupGraphique.animationEnCours)
+		CoupGraphique.tg = tg;
+		if(!CoupGraphique.animationEnCours){			
 			tg.lCoups.pollFirst().lancer();
+		}
 	}
 }
