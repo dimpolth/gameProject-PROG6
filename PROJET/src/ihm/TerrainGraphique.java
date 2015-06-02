@@ -68,31 +68,6 @@ public class TerrainGraphique extends JPanel implements ComponentListener{
 		addComponentListener(this);
 	}
 	public void dessinerTerrain( Case[][] c ){
-		
-		for (int ligne = 0; ligne < Terrain.LIGNES; ligne++) {
-			for (int colonne = 0; colonne < Terrain.COLONNES; colonne++) {
-				if (c[ligne][colonne].getOccupation() == Case.Etat.joueur1)
-					System.out.print("X");
-				else if (c[ligne][colonne].getOccupation() == Case.Etat.joueur2)
-					System.out.print("O");
-				else
-					System.out.print(" ");
-
-				if (colonne < Terrain.INDICE_MAX_COLONNES)
-					System.out.print("-");
-			}
-			System.out.println();
-
-			if (ligne < Terrain.INDICE_MAX_LIGNES)
-				if (ligne % 2 == 0)
-					System.out.println("|\\|/|\\|/|\\|/|\\|/|");
-
-				else
-					System.out.println("|/|\\|/|\\|/|\\|/|\\|");
-		}
-
-		
-		
 		for(int i=0 ; i<5 ; i++) {
 			for(int j=0 ; j<9 ; j++) {
 				pions[i][j].setCouleur(c[i][j].getOccupation());
