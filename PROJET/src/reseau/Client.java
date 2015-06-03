@@ -3,26 +3,95 @@ package reseau;
 import java.net.*;
 import java.io.*;
 
-class Client {
-    public static void main(String args[]) {
-        if (args.length < 2) {
-            System.err.println("Il me faut une IP et un numéro de port !");
-            System.exit(1);
-        }
+class Client implements Runnable{
+    
+	private Communication com;
+	
+	private Socket socket;
+	private ObjectOutputStream oos;
+	private ObjectInputStream ois;
+	
+	private String host;
+	
+	
+	// CONSTRUCTEUR (param = GUI)
+	public Client(Communication c) {		
+		com = c;
+	}
+	
+	// CONNEXION AU SEVEUR
+	public boolean connexion(String pHost) throws UnknownHostException, IOException {
+		
+		host = pHost;
+		// On récupère le nom de la machine
+		try {
+			final InetAddress addr = InetAddress.getLocalHost();			
+		}
+		catch (final Exception e) {
+			return false;
+		}
+		
+		String[] hostInfos = host.split(":");
+		if(hostInfos[1] == null)
+			System.out.println("Pas de port");
+		
+		int port = Integer.valueOf(hostInfos[1]);
+		// Nouveau socket pour la connexion
+		socket = new Socket(hostInfos[0], port);
+		oos = new ObjectOutputStream(socket.getOutputStream());
+		ois = new ObjectInputStream(socket.getInputStream());		
+		
+		// Démarrage de threads pour le dialogue Client/Serveur (envoi/reception)
+		Thread thEnvoi = new Thread(this, "envoi");
+		thEnvoi.start();
 
-        try {
-            InetAddress addr = InetAddress.getByName(args[0]);
-            int port = Integer.valueOf(args[1]);
-            Socket sock = new Socket(addr, port);
-            PrintStream print = new PrintStream(sock.getOutputStream());
+		Thread thReception = new Thread(this, "recep");
+		thReception.start();	
+		
+		return true;
 
-            print.println("Salut, je viens de me connecter");
-            print.println("Bye bye");
-            print.close();
-        } catch (Exception e) {
-            System.err.println(e);
-        }
-    }
+	}
+	
+	// DECONNEXION DU SERVEUR
+	public void deconnexion() throws IOException {
+		
+		// On envoie "déconnexion" au serveur pour signaler la déconnexion
+		
+		System.err.println("Deconnexion");
+
+		// Fermeture de la connexion
+		socket.close();
+		
+	}
+	
+	// ENVOYER UNE INFORMATION VERS LE SERVEUR
+	public void envoyer(Echange e) {
+		try {
+			this.oos.writeObject(e);
+		}
+		catch (Exception ex) {
+		}
+	}
+
+	@Override
+	public void run() {
+		Thread currentTh = Thread.currentThread();
+		Echange e = new Echange();
+		if (currentTh.getName().equals("recep")) {
+			e.vider();
+			while (true) {
+				// System.out.println("boucle");
+				try {
+					e = (Echange)this.ois.readObject();
+					com.recevoir(e);
+				}
+				catch (Exception ex) {
+				}
+			}
+
+		}
+		
+	}
     
     
 }
