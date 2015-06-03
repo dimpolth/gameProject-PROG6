@@ -436,7 +436,7 @@ public class Moteur {
 						if (tperc) {
 							System.out.println("choix percu");
 							l = t.manger(joueurCourant, d, pDepart, pArrive, Terrain.ChoixPrise.parPercussion);
-						} else if (tperc) {
+						} else if (taspi) {
 							System.out.println("choix aspi");
 							l = t.manger(joueurCourant, d, pDepart, pArrive, Terrain.ChoixPrise.parAspiration);
 						}
