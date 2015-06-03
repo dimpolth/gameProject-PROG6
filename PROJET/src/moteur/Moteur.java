@@ -26,7 +26,7 @@ public class Moteur {
 	}
 
 	public enum EtatTour {
-		selectionPion, selectionDestination, attenteChoix, jeuxIa;
+		selectionPion, selectionDestination, attenteChoix, jeuxIa, partieFinie;
 	}
 
 	public Communication com;
@@ -39,11 +39,12 @@ public class Moteur {
 	Joueur j1, j2;
 	Echange ech;
 	Point aspi, perc;
+	Boolean tourEnCours;
+	ArrayList<Point> listePointDebut;
 
 	Coup jeuIa;
 
 	public Moteur() {
-
 	}
 
 	Moteur(Terrain t) {
@@ -56,16 +57,15 @@ public class Moteur {
 		t = new Terrain();
 		h = new Historique();
 		ech = new Echange();
+		listePointDebut = new ArrayList<Point>();
 
-		// j1 = new Joueur(Case.Etat.joueur1, Joueur.typeJoueur.humain,
-		// "Joueur 1");
+		j1 = new Joueur(Case.Etat.joueur1, Joueur.typeJoueur.humain, "Joueur 1");
 		// j2 = new Joueur(Case.Etat.joueur2, Joueur.typeJoueur.humain,
 		// "Joueur 2");
-
-		j1 = new Joueur(Case.Etat.joueur1, Joueur.typeJoueur.humain, "humain");
-		j2 = new Joueur(Case.Etat.joueur2, Joueur.typeJoueur.ordinateur, IntelligenceArtificielle.difficulteIA.normal, j1, this);
-
-		joueurCourant = j2;
+		// j1 = new Joueur(Case.Etat.joueur1, Joueur.typeJoueur.ordinateur,
+		// IntelligenceArtificielle.difficulteIA.facile, j2, this);
+		j2 = new Joueur(Case.Etat.joueur2, Joueur.typeJoueur.ordinateur, IntelligenceArtificielle.difficulteIA.facile, j1, this);
+		joueurCourant = j1;
 		if (joueurCourant.isJoueurHumain()) {
 			e = EtatTour.selectionPion;
 		} else {
@@ -193,25 +193,28 @@ public class Moteur {
 	boolean partieTerminee() {
 		if (j1.scoreNul()) {
 			ech.vider();
-			ech.ajouter("bandeauSup", "<html><font color=FF0000>" + j2.getNom() + "</font></html>");
-			ech.ajouter("bandeauInf", "à remporté la partie</font>");
+			ech.ajouter("bandeauSup", "<html><font color=#FF0000>" + j2.getNom() + "</font></html>");
+			ech.ajouter("bandeauInf", "<html><font color=#FF0000>à remporté la partie</font></html>");
+			com.envoyer(ech);
 			return true;
 		} else if (j2.scoreNul()) {
 			ech.vider();
-			ech.ajouter("bandeauSup", "<html><font color=FF0000>" + j1.getNom() + "</font></html>");
-			ech.ajouter("bandeauInf", "<html><font color=FF0000>à remporté la partie</font></html>");
+			ech.ajouter("bandeauSup", "<html><font color=#FF0000>" + j1.getNom() + "</font></html>");
+			ech.ajouter("bandeauInf", "<html><font color=#FF0000>à remporté la partie</font></html>");
+			com.envoyer(ech);
 			return true;
 		} else
 			return false;
 	}
 
 	boolean selectionPion(Point p) {
+		tourEnCours = false;
 		if (t.getCase(p.x, p.y).getOccupation() != joueurCourant.getJoueurID()) {
 			// System.out.println("Erreur selection PION 1");
 			return false;
 		} else {
-			ArrayList<Point> l = listePionsJouables(joueurCourant, null);
-			if (l.contains(p)) {
+			listePointDebut = listePionsJouables(joueurCourant, null);
+			if (listePointDebut.contains(p)) {
 				pDepart = p;
 				if (joueurCourant.isJoueurHumain()) {
 					ech.vider();
@@ -228,7 +231,7 @@ public class Moteur {
 		}
 	}
 
-	boolean selectionDestination(Point p) {
+	void selectionDestination(Point p) {
 		ArrayList<Point> l = deplacementPossible(pDepart, h.histoTour, null);
 		if (l.contains(p)) {
 			pArrive = p;
@@ -240,11 +243,16 @@ public class Moteur {
 				ech.vider();
 				gestionCoupGraphique(tabPts, null, null, null, "selectionpoint");
 				prise(priseAspi, prisePercu);
-				return true;
-			} else
-				return false;
-		} else
-			return false;
+				tourEnCours = true;
+			} else if (listePointDebut.contains(p) && !tourEnCours) {
+				pDepart=p;
+				if (joueurCourant.isJoueurHumain()) {
+					ech.vider();
+					ech.ajouter("pionSelectionne", pDepart);
+					com.envoyer(ech);
+				}
+			}
+		}
 	}
 
 	void prise(boolean priseAspi, boolean prisePercu) {
@@ -260,8 +268,8 @@ public class Moteur {
 				Point offP = t.offsetPercussion(d, pArrive);
 				perc = new Point(offP.x + pArrive.x, offP.y + pArrive.y);
 				Point[] tabPts = { aspi, perc };
-				int[] score = { j1.getScore(), j2.getScore() };
-				gestionCoupGraphique(null, tabPts, null, score, "choixJoueur");
+				// int[] score = { j1.getScore(), j2.getScore() };
+				gestionCoupGraphique(null, tabPts, null, null, "choixJoueur");
 				e = EtatTour.attenteChoix;
 			} else {
 				// choix = IntelligenceArtificielle.choixPriseIAFacile();
@@ -271,17 +279,16 @@ public class Moteur {
 				l = t.manger(joueurCourant, d, pDepart, pArrive, choix);
 				majScore(l.size());
 				int[] score = { j1.getScore(), j2.getScore() };
-
+				System.out.println("Score");
 				gestionCoupGraphique(null, null, l, score, "PrisechoixIA");
 				t.dessineTableauAvecIntersections();
-
 
 			}
 		} else if (priseAspi && !prisePercu) {
 			// System.out.println("aspi");
 			l = t.manger(joueurCourant, d, pDepart, pArrive, Terrain.ChoixPrise.parAspiration);
 			majScore(l.size());
-			Point[] deplacement = { pDepart, pArrive };
+			// Point[] deplacement = { pDepart, pArrive };
 			int[] score = { j1.getScore(), j2.getScore() };
 			gestionCoupGraphique(null, null, l, score, "priseAspi");
 			t.dessineTableauAvecIntersections();
@@ -292,9 +299,9 @@ public class Moteur {
 			// System.out.println("percu");
 			l = t.manger(joueurCourant, d, pDepart, pArrive, Terrain.ChoixPrise.parPercussion);
 			majScore(l.size());
-			Point[] deplacement = { pDepart, pArrive };
 			int[] score = { j1.getScore(), j2.getScore() };
-			gestionCoupGraphique(null, null, l, score,"prisePercu");
+			// Point[] deplacement = { pDepart, pArrive };
+			gestionCoupGraphique(null, null, l, score, "prisePercu");
 			t.dessineTableauAvecIntersections();
 			if (joueurCourant.isJoueurHumain())
 				testFinTour();
@@ -312,12 +319,17 @@ public class Moteur {
 		ech.vider();
 		ech.ajouter("pionDeselectionne", true);
 		com.envoyer(ech);
-		// System.out.println("FIN DE TOUR ");
-		if (joueurCourant.isJoueurHumain()) {
-			e = EtatTour.selectionPion;
+		if (partieTerminee()) {
+			e = EtatTour.partieFinie;
+			System.out.println("FINI");
 		} else {
-			e = EtatTour.jeuxIa;
-			jouerIa();
+			// System.out.println("FIN DE TOUR ");
+			if (joueurCourant.isJoueurHumain()) {
+				e = EtatTour.selectionPion;
+			} else {
+				e = EtatTour.jeuxIa;
+				jouerIa();
+			}
 		}
 
 		message("bandeauSup", joueurCourant.getNom());
@@ -389,6 +401,10 @@ public class Moteur {
 			Object dataValue = echange.get(dataType);
 			// System.out.println(dataType);
 			switch (dataType) {
+			case "nouvellePartie":
+				init();
+				break;
+
 			case "point":
 				if (e == EtatTour.selectionPion) {
 					// System.out.println("e : " + e);
@@ -405,9 +421,9 @@ public class Moteur {
 					else if (aspi.equals((Point) dataValue))
 						l = t.manger(joueurCourant, d, pDepart, pArrive, Terrain.ChoixPrise.parAspiration);
 					majScore(l.size());
-					Point[] deplacement = { pDepart, pArrive };
+					// Point[] deplacement = { pDepart, pArrive };
 					int[] score = { j1.getScore(), j2.getScore() };
-					gestionCoupGraphique(null, null, l, score,"PriseselonchoixJoueur");
+					gestionCoupGraphique(null, null, l, score, "PriseselonchoixJoueur");
 					t.dessineTableauAvecIntersections();
 					testFinTour();
 				}
@@ -419,14 +435,16 @@ public class Moteur {
 				break;
 
 			case "annuler":
-				ech.vider();
-				Terrain annulation = h.annuler();
+				if (e != EtatTour.partieFinie) {
+					ech.vider();
+					Terrain annulation = h.annuler();
 
-				if (annulation != null) {
+					if (annulation != null) {
 
-					t.setTableau(annulation.getTableau());
-					ech.ajouter("terrain", annulation.getTableau());
-					com.envoyer(ech);
+						t.setTableau(annulation.getTableau());
+						ech.ajouter("terrain", annulation.getTableau());
+						com.envoyer(ech);
+					}
 				}
 				break;
 
@@ -442,20 +460,18 @@ public class Moteur {
 				break;
 
 			case "refaire":
-				ech.vider();
-				Case[][] refaire = h.refaire().getTableau();
-				if (refaire != null) {
-					ech.ajouter("terrain", refaire);
-					com.envoyer(ech);
+				if (e != EtatTour.partieFinie) {
+					ech.vider();
+					Case[][] refaire = h.refaire().getTableau();
+					if (refaire != null) {
+						ech.ajouter("terrain", refaire);
+						com.envoyer(ech);
+					}
 				}
 				break;
 
 			case "finTour":
 				finTour();
-				break;
-
-			case "nouvellePartie":
-				init();
 				break;
 
 			case "sauvegarder":
