@@ -41,7 +41,7 @@ class BandeauInfos extends JPanel {
 		sPanJ1.setOpaque(false);
 		j1_identifiant = formater(new JLabel("Joueur 1"));		
 		sPanJ1.add(j1_identifiant);
-		j1_score = formater(new JLabel("Score : 2"));		
+		j1_score = formater(new JLabel("Score : 22"));		
 		sPanJ1.add(j1_score);
 		
 		panJ1.add(sPanJ1,BorderLayout.CENTER);
@@ -85,7 +85,7 @@ class BandeauInfos extends JPanel {
 		sPanJ2.setOpaque(false);
 		j2_identifiant = formater(new JLabel("Joueur 2"));		
 		sPanJ2.add(j2_identifiant);
-		j2_score = formater(new JLabel("Score : 2"));		
+		j2_score = formater(new JLabel("Score : 22"));		
 		sPanJ2.add(j2_score);
 		
 		panJ2.setPreferredSize(new Dimension(200,0));
