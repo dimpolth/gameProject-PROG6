@@ -14,10 +14,14 @@ public class IntelligenceArtificielle implements Runnable {
 		difficile
 	}
 	
-	public double tempsExe = 0; // Temporaire pour tests
+	/* Variables temporaires pour tests */
+	public double tempsExe = 0; 
 	public double tempsMax = 0;
-	public int nbExe = 0; 		// Temporaire pour tests
-	public int profondeurExploree = 0;
+	public int nbExe = 0; 		
+	public double profondeurExploree = 0;
+	public double nbExplorations = 0;
+	public boolean victoire = false;
+	/* 									*/
 	
 	private difficulteIA niveauDifficulte;
 	private Joueur joueurIA, joueurAdversaire;
@@ -146,19 +150,20 @@ public class IntelligenceArtificielle implements Runnable {
 	 */
 	private TourDeJeu coupNormal(){
 		TourDeJeu tourSolution = new TourDeJeu();
-		int profondeur = 8;
+		int profondeur = 4;
+		int iterateurProf = 0;
 		
 		// ALPHA BETA
-		tourSolution = alphaBeta(profondeur); // simule x-profondeur tours
-											  // exemple : profondeur = 3
-											  // on va simuler un tour jCourant puis un tour jAdv puis 
-		return tourSolution;				  // de nouveau un tour jCourant	
+		tourSolution = alphaBeta(profondeur, iterateurProf); // simule x-profondeur tours
+											  				 // exemple : profondeur = 3
+											  				 // on va simuler un tour jCourant puis un tour jAdv puis 
+		return tourSolution;				 				 // de nouveau un tour jCourant	
 	}
 	
 	/*
 	 * Application de l'algorithme alpha beta
 	 */
-	private TourDeJeu alphaBeta(int profondeur){
+	private TourDeJeu alphaBeta(int profondeur, int iterateurProf){
 		ArrayList<TourDeJeu> listeToursJouables = new ArrayList<TourDeJeu>();
 		Iterator<TourDeJeu> it;
 		TourDeJeu tourCourant, tourSolution = new TourDeJeu();
@@ -170,9 +175,9 @@ public class IntelligenceArtificielle implements Runnable {
 		
 		// Récupération de tous les tours jouables pour le terrain et le joueur courant
 		listeToursJouables = getToursJouables(this.moteur.t,this.getJoueurIA());
-		this.profondeurExploree++;
 		
 		// Adaptation dynamique de la profondeur explorée
+		/*
 		if(listeToursJouables.size() >= 10 && profondeur > 1)
 			profondeur--;
 		else if(listeToursJouables.size() >= 20 && profondeur > 2)
@@ -180,10 +185,17 @@ public class IntelligenceArtificielle implements Runnable {
 		else if(listeToursJouables.size() >= 30 && profondeur > 3)
 			profondeur -= 3;
 		else if(listeToursJouables.size() < 5)
-			profondeur++;
+			profondeur += 3;
 		else if(listeToursJouables.size() == 1)
+			profondeur += 4;
+		*/
+		
+		if(listeToursJouables.size() == 1)
 			profondeur += 2;
-			
+		else if(listeToursJouables.size() < 5)
+			profondeur += 1;
+		
+		
 		if(listeToursJouables.size() > 0)
 			tourSolution = listeToursJouables.get(0);
 		
@@ -196,7 +208,7 @@ public class IntelligenceArtificielle implements Runnable {
 			
 			nbPionsManges = tourCourant.getValeurResultat();
 			
-			valTemp = nbPionsManges + min(profondeur-1, alpha, beta, tourCourant.getTerrainFinal());
+			valTemp = nbPionsManges + min(profondeur-1, alpha, beta, tourCourant.getTerrainFinal(), iterateurProf+1);
 			
 			if(valTemp > valMax){
 				valMax = valTemp;
@@ -223,42 +235,49 @@ public class IntelligenceArtificielle implements Runnable {
 	/*
 	 * Min :
 	 */
-	private int min(int profondeur, Integer alpha, Integer beta, Terrain terrainCourant){
+	private int min(int profondeur, Integer alpha, Integer beta, Terrain terrainCourant, int iterateurProf){
 		ArrayList<TourDeJeu> listeToursJouables = new ArrayList<TourDeJeu>();
 		Iterator<TourDeJeu> it;
 		TourDeJeu tourCourant;
 		int valTemp = MAX, valRes = MAX;
 		
-		if(profondeur == 0)
+		if(profondeur == 0){
+			this.nbExplorations++;
+			this.profondeurExploree += iterateurProf;
 			return 0;
+		}
 		
 		// Récupération de tous les tours jouables pour le terrain et le joueur courant
 		listeToursJouables = getToursJouables(terrainCourant, this.getJoueurAdv());
 		
 		if(listeToursJouables.isEmpty()) // Si il n'y a plus de tours possibles l'IA a perdu (ou plutôt on a gagné)
 			return MAX;
+
 		
 		// Réduction dynamique de la profondeur explorée
+		/*
 		if(listeToursJouables.size() >= 15 && profondeur > 1)
 			profondeur--;
 		else if(listeToursJouables.size() >= 25 && profondeur > 2)
 			profondeur -= 2;
 		else if(listeToursJouables.size() >= 30 && profondeur > 3)
 			profondeur -= 3;
+		*/
+		if(listeToursJouables.size() == 1)
+			profondeur += 1;
 		
 		it = listeToursJouables.iterator();
-		
-		this.profondeurExploree++;
 		
 		while(it.hasNext()){
 			tourCourant = (TourDeJeu) it.next().clone();
 
 			valTemp = -(tourCourant.getValeurResultat()); // nombre de pions perdus (mangés par l'adversaire) en négatif
 
-			valTemp += max(profondeur-1, alpha, beta, tourCourant.getTerrainFinal());
+			valTemp += max(profondeur-1, alpha, beta, tourCourant.getTerrainFinal(), iterateurProf+1);
 			
 			if(valTemp < valRes)
 				valRes = valTemp;
+			
 			
 			if(alpha >= valTemp) // élagage
 				return valTemp;
@@ -266,45 +285,51 @@ public class IntelligenceArtificielle implements Runnable {
 			
 			beta = Math.min(beta,valRes);	
 		}
-		
+
 		return valRes;
 	}
 	
 	/*
 	 * Max :
 	 */
-	private int max(int profondeur, Integer alpha, Integer beta,  Terrain terrainCourant){
+	private int max(int profondeur, Integer alpha, Integer beta,  Terrain terrainCourant, int iterateurProf){
 		ArrayList<TourDeJeu> listeToursJouables = new ArrayList<TourDeJeu>();
 		Iterator<TourDeJeu> it;
 		TourDeJeu tourCourant;
 		int valTemp = MIN, valRes = MIN;
 		
-		if(profondeur == 0)
+		if(profondeur == 0){
+			this.nbExplorations++;
+			this.profondeurExploree += iterateurProf;
 			return 0;
+		}
 		
 		// Récupération de tous les tours jouables pour le terrain et le joueur courant
-		listeToursJouables = getToursJouables(terrainCourant, this.getJoueurIA());
+		listeToursJouables = getToursJouables(terrainCourant, this.getJoueurIA());	
 		
 		if(listeToursJouables.isEmpty()) // Si il n'y a plus de tours possibles on a perdu
 			return MIN;
 		
+		if(listeToursJouables.size() == 1)
+			profondeur += 1;
+	
 		// Réduction dynamique de la profondeur explorée
+		/*
 		if(listeToursJouables.size() >= 10 && profondeur > 1)
 			profondeur--;
 		else if(listeToursJouables.size() >= 20 && profondeur > 2)
 			profondeur -= 2;
 		else if(listeToursJouables.size() >= 30 && profondeur > 3)
 			profondeur -= 3;
+		*/
 		
 		it = listeToursJouables.iterator();
-		
-		this.profondeurExploree++;
 		
 		while(it.hasNext()){
 			tourCourant = (TourDeJeu) it.next().clone();
 			
 			valTemp = tourCourant.getValeurResultat();
-			valTemp += min(profondeur-1, alpha, beta, tourCourant.getTerrainFinal());
+			valTemp += min(profondeur-1, alpha, beta, tourCourant.getTerrainFinal(), iterateurProf+1);
 			
 			if(valTemp > valRes)
 				valRes = valTemp;
@@ -314,7 +339,7 @@ public class IntelligenceArtificielle implements Runnable {
 			
 			alpha = Math.max(alpha,valRes);
 		}
-		
+
 		return valRes;
 	}
 	
@@ -387,7 +412,7 @@ public class IntelligenceArtificielle implements Runnable {
 		
 		return listeToursJouables;
 	}
-	
+
 	/*
 	 * getListeToursPourCoupDepart, renvoie tous les tours de jeu possible pour le coup de départ donné en paramètre
 	 *				   cette méthode n'est appelée que lors d'un tour avec plusieurs prises

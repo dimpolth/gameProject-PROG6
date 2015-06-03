@@ -65,7 +65,7 @@ public class Moteur {
 		j1 = new Joueur(Case.Etat.joueur1, Joueur.typeJoueur.humain, "humain");
 		j2 = new Joueur(Case.Etat.joueur2, Joueur.typeJoueur.ordinateur, IntelligenceArtificielle.difficulteIA.normal, j1, this);
 
-		joueurCourant = j2;
+		joueurCourant = j1;
 		if (joueurCourant.isJoueurHumain()) {
 			e = EtatTour.selectionPion;
 		} else {
@@ -368,19 +368,27 @@ public class Moteur {
 
 	void jouerIa() {
 		// System.out.println("DEBUT TOUR IA");
-		do {
-			// System.out.println(joueurCourant.getNom());
-			// System.out.println("boucle IA");
-			jeuIa = joueurCourant.jouer();
-			// System.out.println("depart "+jeuIa.getpDepart()+" arrivé "+jeuIa.getpArrivee());
-			selectionPion(jeuIa.getpDepart());
-			// System.out.println("point depart moteur :"+pDepart);
-			selectionDestination(jeuIa.getpArrivee());
-			// t.dessineTableauAvecIntersections();
-		} while (joueurCourant.IaContinue());
-		// System.out.println(" FIN DU JEU IA");
+		Thread th = new Thread(){
+			public void run(){
+				
+				do {
+					// System.out.println(joueurCourant.getNom());
+					// System.out.println("boucle IA");
+					jeuIa = joueurCourant.jouer();
+					// System.out.println("depart "+jeuIa.getpDepart()+" arrivé "+jeuIa.getpArrivee());
+					selectionPion(jeuIa.getpDepart());
+					// System.out.println("point depart moteur :"+pDepart);
+					selectionDestination(jeuIa.getpArrivee());
+					// t.dessineTableauAvecIntersections();
+				} while (joueurCourant.IaContinue());
+				// System.out.println(" FIN DU JEU IA");
 
-		finTour();
+				finTour();
+			}
+		};
+		
+		th.start();
+		
 	}
 
 	public void action(Echange echange) {
