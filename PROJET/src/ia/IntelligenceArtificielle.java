@@ -3,11 +3,10 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Iterator;
-
 import modele.*;
 import moteur.*;
 
-public class IntelligenceArtificielle implements Runnable {
+public class IntelligenceArtificielle {
 	public enum difficulteIA{
 		facile,
 		normal,
@@ -17,7 +16,6 @@ public class IntelligenceArtificielle implements Runnable {
 	public double tempsExe = 0; // Temporaire pour tests
 	public double tempsMax = 0;
 	public int nbExe = 0; 		// Temporaire pour tests
-	public int profondeurExploree = 0;
 	
 	private difficulteIA niveauDifficulte;
 	private Joueur joueurIA, joueurAdversaire;
@@ -38,10 +36,10 @@ public class IntelligenceArtificielle implements Runnable {
 
 
 	public Coup jouerIA(){
+		
 		Coup coupSolution = new Coup(new Point(-1,-1), new Point(-1,-1));
 		Coup coupTemp;
 		ArrayList<Coup> listeCoupsDuTour;
-		
 		
 		switch(this.getNiveauDifficulte()){
 			case facile :
@@ -59,7 +57,7 @@ public class IntelligenceArtificielle implements Runnable {
 			break;
 			
 			case difficile :
-				//coupSolution = this.coupDifficile();
+				coupSolution = this.coupDifficile();
 			break;
 			
 			default : // difficulté normale
@@ -69,6 +67,7 @@ public class IntelligenceArtificielle implements Runnable {
 				}	
 			break;
 		}
+		
 	//	Iterator<Coup> it = this.getTourDeJeuCourant().getListeCoups().iterator();
 		/*System.out.println("\n\n ****\t Résultat \t**** \n\n");
 		this.moteur.t.dessineTableauAvecIntersections();
@@ -170,7 +169,7 @@ public class IntelligenceArtificielle implements Runnable {
 		
 		// Récupération de tous les tours jouables pour le terrain et le joueur courant
 		listeToursJouables = getToursJouables(this.moteur.t,this.getJoueurIA());
-		this.profondeurExploree++;
+		
 		
 		// Adaptation dynamique de la profondeur explorée
 		if(listeToursJouables.size() >= 10 && profondeur > 1)
@@ -248,8 +247,6 @@ public class IntelligenceArtificielle implements Runnable {
 		
 		it = listeToursJouables.iterator();
 		
-		this.profondeurExploree++;
-		
 		while(it.hasNext()){
 			tourCourant = (TourDeJeu) it.next().clone();
 
@@ -297,8 +294,6 @@ public class IntelligenceArtificielle implements Runnable {
 			profondeur -= 3;
 		
 		it = listeToursJouables.iterator();
-		
-		this.profondeurExploree++;
 		
 		while(it.hasNext()){
 			tourCourant = (TourDeJeu) it.next().clone();
@@ -485,38 +480,5 @@ public class IntelligenceArtificielle implements Runnable {
 	
 	private TourDeJeu getTourDeJeuCourant(){
 		return this.tourDeJeuCourant;
-	}
-
-
-	@Override
-	public void run() {
-		// TODO Auto-generated method stub
-		
-		switch(this.getNiveauDifficulte()){
-			case facile :
-				if(!this.tourEnCours){
-					this.setTourDeJeuCourant(this.coupFacile());
-					this.setTourEnCours(true);
-				}
-			break;
-			
-			case normal :
-				if(!this.tourEnCours){
-					this.setTourDeJeuCourant(this.coupNormal());
-					this.setTourEnCours(true);
-				}	
-			break;
-			
-			case difficile :
-				//coupSolution = this.coupDifficile();
-			break;
-			
-			default : // difficulté normale
-				if(!this.tourEnCours){
-					this.setTourDeJeuCourant(this.coupNormal());
-					this.setTourEnCours(true);
-				}	
-			break;
-		}
 	}
 }
