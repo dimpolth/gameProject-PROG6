@@ -68,30 +68,32 @@ public class IHM extends JFrame implements ComponentListener {
 		coucheJeu.add(tg, BorderLayout.CENTER);
 
 		// ZONE SUD
-		JPanel voletSud = new JPanel(new GridBagLayout());
+		JPanel voletSud = new JPanel(new BorderLayout());
 		coucheJeu.add(voletSud, BorderLayout.SOUTH);
 
-		GridBagConstraints contraintes = new GridBagConstraints();
-		contraintes.fill = GridBagConstraints.BOTH;
-		contraintes.insets = new Insets(2, 2, 5, 2);
-
-		Bouton boutonValidation = new Bouton("Terminer mon tour");
-		boutonValidation.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent pEv) {
-				Echange e = new Echange();
-				e.ajouter("finTour", true);
-				com.envoyer(e);
-			}
-		});
-		contraintes.gridwidth = GridBagConstraints.REMAINDER;
-		voletSud.add(boutonValidation, contraintes);
+		
+		JPanel voletSudOuest = new JPanel();
+		voletSud.add(voletSudOuest, BorderLayout.WEST);
+		JPanel voletSudCentre = new JPanel();
+		voletSud.add(voletSudCentre, BorderLayout.CENTER);
+		JPanel voletSudEst = new JPanel();
+		voletSud.add(voletSudEst, BorderLayout.EAST);
+		
+		Bouton boutonAide = new Bouton("Aide");
+		boutonAide.addActionListener(new Ecouteur(Ecouteur.Bouton.AIDE, this));
+		voletSudOuest.add(boutonAide);
+		
 		Bouton boutonAnnuler = new Bouton("Annuler");
 		boutonAnnuler.addActionListener(new Ecouteur(Ecouteur.Bouton.ANNULER, this));
-		contraintes.gridwidth = 1;
-		voletSud.add(boutonAnnuler, contraintes);
+		voletSudCentre.add(boutonAnnuler);
+		
 		Bouton boutonRefaire = new Bouton("Refaire");
 		boutonRefaire.addActionListener(new Ecouteur(Ecouteur.Bouton.REFAIRE, this));
-		voletSud.add(boutonRefaire, contraintes);
+		voletSudCentre.add(boutonRefaire);
+		
+		Bouton boutonValidation = new Bouton("Terminer");
+		boutonValidation.addActionListener(new Ecouteur(Ecouteur.Bouton.TERMINER, this));
+		voletSudEst.add(boutonValidation);
 
 		JLayeredPane gestionCouche = getLayeredPane();
 		popupB = new PopupBloquant();
@@ -186,6 +188,16 @@ public class IHM extends JFrame implements ComponentListener {
 			Echange e2 = new Echange();
 			e2.ajouter("refaire", true);
 			com.envoyer(e2);
+			break;
+		case TERMINER:
+			Echange e3 = new Echange();
+			e3.ajouter("finTour", true);
+			com.envoyer(e3);
+			break;
+		case AIDE:
+			Echange e4 = new Echange();
+			e4.ajouter("aide", true);
+			com.envoyer(e4);
 			break;
 		case OPTION_ANNULER:
 			popupO.setVisible(false);
