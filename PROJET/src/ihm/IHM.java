@@ -197,7 +197,7 @@ public class IHM extends JFrame implements ComponentListener {
 			popupO.setVisible(false);
 			popupB.setVisible(false);
 			break;
-		case OPTION_VALIDER:
+		case OPTION_VALIDER:/*
 			modele.Parametres params = new modele.Parametres();
 			params.j1_identifiant = popupO.identifiantJoueur1.getText();
 			params.j2_identifiant = popupO.identifiantJoueur2.getText();			
@@ -208,7 +208,7 @@ public class IHM extends JFrame implements ComponentListener {
 			e.ajouter("parametres", params);
 			com.envoyer(e);
 			popupO.setVisible(false);
-			popupB.setVisible(false);
+			popupB.setVisible(false);*/
 			break;
 		case REGLES_RETOUR:
 			popupR.setVisible(false);
