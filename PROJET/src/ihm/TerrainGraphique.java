@@ -53,14 +53,10 @@ public class TerrainGraphique extends JPanel implements ComponentListener {
 		 * )).getImage();
 		 */
 		try {
-			imgPlateau = ImageIO.read(getClass().getResource(
-					"/images/themes/bois/plateau.png"));
-			imgPion1 = ImageIO.read(getClass().getResource(
-					"/images/themes/bois/pion1.png"));
-			imgPion2 = ImageIO.read(getClass().getResource(
-					"/images/themes/bois/pion2.png"));
-			imgCroix = ImageIO.read(getClass().getResource(
-					"/images/themes/bois/croix.png"));
+			imgPlateau = ImageIO.read(getClass().getResource("/images/themes/bois/plateau.png"));
+			imgPion1 = ImageIO.read(getClass().getResource("/images/themes/bois/pion1.png"));
+			imgPion2 = ImageIO.read(getClass().getResource("/images/themes/bois/pion2.png"));
+			imgCroix = ImageIO.read(getClass().getResource("/images/themes/bois/croix.png"));
 		} catch (Exception e) {
 
 		}
@@ -101,7 +97,7 @@ public class TerrainGraphique extends JPanel implements ComponentListener {
 
 	public void deplacer(Point o, Point a) {
 
-		//deselectionner();
+		// deselectionner();
 
 		// Pour repositionner l'autre pion ( sinon pas cliquable )
 		pions[a.x][a.y].deplacer((Point) a.clone(), (Point) o.clone());
@@ -125,8 +121,7 @@ public class TerrainGraphique extends JPanel implements ComponentListener {
 
 	public void cacherPrisesPossibles() {
 		for (int i = 0; i < prisesPossibles.size(); i++) {
-			pions[prisesPossibles.get(i).x][prisesPossibles.get(i).y]
-					.setPrisePossible(false);
+			pions[prisesPossibles.get(i).x][prisesPossibles.get(i).y].setPrisePossible(false);
 		}
 		prisesPossibles.clear();
 	}
@@ -157,8 +152,7 @@ public class TerrainGraphique extends JPanel implements ComponentListener {
 			origY = (int) ((hauteur - (largeur * 11.0 / 19.0)) / 2.0);
 			hauteur = largeur * 11 / 19;
 		}
-		g.drawImage(imgPlateau, (int) origX, (int) origY, (int) largeur,
-				(int) hauteur, null);
+		g.drawImage(imgPlateau, (int) origX, (int) origY, (int) largeur, (int) hauteur, null);
 	}
 
 	@Override
