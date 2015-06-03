@@ -57,12 +57,13 @@ public class CoupGraphique implements Runnable {
 		} else if(choixPrise != null){
 			tg.afficherPrisesPossibles(choixPrise);
 		}
-		
 		try {
 			Thread.sleep(TerrainGraphique.ANIM_DISP);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+		tg.trait = chemin;
+		tg.repaint();
 		
 		if(score != null){
 			tg.ihm.bandeauInfos.setScore(1,score[0]);
