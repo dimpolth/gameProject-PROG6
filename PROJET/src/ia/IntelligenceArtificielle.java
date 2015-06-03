@@ -3,11 +3,10 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Iterator;
-
 import modele.*;
 import moteur.*;
 
-public class IntelligenceArtificielle implements Runnable {
+public class IntelligenceArtificielle {
 	public enum difficulteIA{
 		facile,
 		normal,
@@ -17,11 +16,15 @@ public class IntelligenceArtificielle implements Runnable {
 	/* Variables temporaires pour tests */
 	public double tempsExe = 0; 
 	public double tempsMax = 0;
+<<<<<<< HEAD
 	public int nbExe = 0; 		
 	public double profondeurExploree = 0;
 	public double nbExplorations = 0;
 	public boolean victoire = false;
 	/* 									*/
+=======
+	public int nbExe = 0; 		// Temporaire pour tests
+>>>>>>> branch 'master' of https://github.com/dimpolth/gameProject-PROG6.git
 	
 	private difficulteIA niveauDifficulte;
 	private Joueur joueurIA, joueurAdversaire;
@@ -42,10 +45,10 @@ public class IntelligenceArtificielle implements Runnable {
 
 
 	public Coup jouerIA(){
+		
 		Coup coupSolution = new Coup(new Point(-1,-1), new Point(-1,-1));
 		Coup coupTemp;
 		ArrayList<Coup> listeCoupsDuTour;
-		
 		
 		switch(this.getNiveauDifficulte()){
 			case facile :
@@ -63,7 +66,7 @@ public class IntelligenceArtificielle implements Runnable {
 			break;
 			
 			case difficile :
-				//coupSolution = this.coupDifficile();
+				coupSolution = this.coupDifficile();
 			break;
 			
 			default : // difficulté normale
@@ -73,6 +76,7 @@ public class IntelligenceArtificielle implements Runnable {
 				}	
 			break;
 		}
+		
 	//	Iterator<Coup> it = this.getTourDeJeuCourant().getListeCoups().iterator();
 		/*System.out.println("\n\n ****\t Résultat \t**** \n\n");
 		this.moteur.t.dessineTableauAvecIntersections();
@@ -175,6 +179,10 @@ public class IntelligenceArtificielle implements Runnable {
 		
 		// Récupération de tous les tours jouables pour le terrain et le joueur courant
 		listeToursJouables = getToursJouables(this.moteur.t,this.getJoueurIA());
+<<<<<<< HEAD
+=======
+		
+>>>>>>> branch 'master' of https://github.com/dimpolth/gameProject-PROG6.git
 		
 		// Adaptation dynamique de la profondeur explorée
 		/*
@@ -497,38 +505,5 @@ public class IntelligenceArtificielle implements Runnable {
 	
 	private TourDeJeu getTourDeJeuCourant(){
 		return this.tourDeJeuCourant;
-	}
-
-
-	@Override
-	public void run() {
-		// TODO Auto-generated method stub
-		
-		switch(this.getNiveauDifficulte()){
-			case facile :
-				if(!this.tourEnCours){
-					this.setTourDeJeuCourant(this.coupFacile());
-					this.setTourEnCours(true);
-				}
-			break;
-			
-			case normal :
-				if(!this.tourEnCours){
-					this.setTourDeJeuCourant(this.coupNormal());
-					this.setTourEnCours(true);
-				}	
-			break;
-			
-			case difficile :
-				//coupSolution = this.coupDifficile();
-			break;
-			
-			default : // difficulté normale
-				if(!this.tourEnCours){
-					this.setTourDeJeuCourant(this.coupNormal());
-					this.setTourEnCours(true);
-				}	
-			break;
-		}
 	}
 }

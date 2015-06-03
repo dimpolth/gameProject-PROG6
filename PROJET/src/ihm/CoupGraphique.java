@@ -8,16 +8,27 @@ public class CoupGraphique implements Runnable {
 	private Point[] choixPrise;
 	private ArrayList<Point> pionsManges;
 	private int[] score;
-	private String bandeauSup, beandeauInf;
 	private static TerrainGraphique tg;
 	private static boolean animationEnCours = false;
+	private String bandeauSup,bandeauInf;
 	
+	public CoupGraphique(Point[] d, Point[] c, ArrayList<Point> p, int[] s,String bS,String bI) {
+		deplacement = d;
+		choixPrise = c;
+		pionsManges = p;
+		score = s;
+		bandeauSup = bS;
+		bandeauInf = bI;
+	}
 	public CoupGraphique(Point[] d, Point[] c, ArrayList<Point> p, int[] s) {
 		deplacement = d;
 		choixPrise = c;
 		pionsManges = p;
 		score = s;
+		bandeauSup = null;
+		bandeauInf = null;
 	}
+	
 	
 	public void lancer(){
 		Thread t = new Thread(this);
@@ -44,7 +55,6 @@ public class CoupGraphique implements Runnable {
 		} else if(choixPrise != null){
 			tg.afficherPrisesPossibles(choixPrise);
 		}
-		
 		
 		try {
 			Thread.sleep(TerrainGraphique.ANIM_DISP);
