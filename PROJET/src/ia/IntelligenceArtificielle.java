@@ -21,6 +21,7 @@ public class IntelligenceArtificielle {
 	public double nbExplorations = 0;
 	public boolean victoire = false;
 	/*									*/
+
 	
 	private difficulteIA niveauDifficulte;
 	private Joueur joueurIA, joueurAdversaire;
@@ -38,7 +39,6 @@ public class IntelligenceArtificielle {
 		this.setTourDeJeuCourant(new TourDeJeu()); // Ces deux variables servent pour la difficulté 
 		this.setTourEnCours(false); 						   // intermédiaire (normal) et difficile qui renvoyent une 
 	}														   // liste de points
-
 
 	public Coup jouerIA(){
 		
@@ -168,7 +168,7 @@ public class IntelligenceArtificielle {
 		Iterator<TourDeJeu> it;
 		TourDeJeu tourCourant, tourSolution = new TourDeJeu();
 		Random rand = new Random();
-		int valMax = MIN, valTemp, nbPionsManges;
+		int valMax = MIN, valTemp, nbPionsManges, nbPionsRestantsJCourant, nbPionsRestantsJAdv, nbPionsRestantsTot;
 		Integer alpha = new Integer(MIN), beta = new Integer(MAX);
 		
 		double tempsDepart = (double) System.currentTimeMillis(), temp; // pour tests
@@ -185,6 +185,17 @@ public class IntelligenceArtificielle {
 		else if(listeToursJouables.size() >= 30 && profondeur > 3)
 			profondeur -= 3;
 		 */
+		nbPionsRestantsJCourant = joueurIA.getScore();
+		nbPionsRestantsJAdv = joueurAdversaire.getScore();
+		nbPionsRestantsTot = nbPionsRestantsJCourant + nbPionsRestantsJAdv;
+		
+		//System.out.println(nbPionsRestants);
+		
+		if((nbPionsRestantsTot <= 10) && (nbPionsRestantsJCourant < nbPionsRestantsJAdv))
+			profondeur += 2;
+		else if(nbPionsRestantsTot <= 14 && (nbPionsRestantsJCourant < nbPionsRestantsJAdv))
+			profondeur += 1;
+
 		
 		
 		if(listeToursJouables.size() > 0)
@@ -244,17 +255,6 @@ public class IntelligenceArtificielle {
 		if(listeToursJouables.isEmpty()) // Si il n'y a plus de tours possibles l'IA a perdu (ou plutôt on a gagné)
 			return MAX;
 
-		
-		// Réduction dynamique de la profondeur explorée
-		/*
-		if(listeToursJouables.size() >= 15 && profondeur > 1)
-			profondeur--;
-		else if(listeToursJouables.size() >= 25 && profondeur > 2)
-			profondeur -= 2;
-		else if(listeToursJouables.size() >= 30 && profondeur > 3)
-			profondeur -= 3;
-		*/
-
 		it = listeToursJouables.iterator();
 		
 		while(it.hasNext()){
@@ -299,16 +299,6 @@ public class IntelligenceArtificielle {
 		if(listeToursJouables.isEmpty()) // Si il n'y a plus de tours possibles on a perdu
 			return MIN;
 		
-		// Réduction dynamique de la profondeur explorée
-		/*
-		if(listeToursJouables.size() >= 10 && profondeur > 1)
-			profondeur--;
-		else if(listeToursJouables.size() >= 20 && profondeur > 2)
-			profondeur -= 2;
-		else if(listeToursJouables.size() >= 30 && profondeur > 3)
-			profondeur -= 3;
-		*/
-		
 		it = listeToursJouables.iterator();
 		
 		while(it.hasNext()){
@@ -339,7 +329,7 @@ public class IntelligenceArtificielle {
 		Point pDepartCourant, pArriveeCourante;
 		ArrayList<Point> listePointsDeDepart, listeCoupsObligatoires, listeVide = new ArrayList<Point>();
 		ArrayList<TourDeJeu> listeToursJouables = new ArrayList<TourDeJeu>(), listeToursTemp, listeToursVide = new ArrayList<TourDeJeu>();
-		TourDeJeu tourTemp;
+		TourDeJeu tourTemp, tourVide = new TourDeJeu();
 		boolean priseObligatoire = false;
 		
 		Iterator<Point> itPointsDepart, itPointsArrivee;

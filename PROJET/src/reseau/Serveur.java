@@ -16,7 +16,7 @@ public class Serveur implements Runnable{
 	private int port = 0;
 
 	// Les différents joueurs connectés sont stockés dans un vecteur
-	public Vector<Connexion> connexions;
+	public Vector<Connexion> connexions = new Vector<Connexion>();
 	
 	Serveur(Communication c){		
 		com = c;		
@@ -37,7 +37,7 @@ public class Serveur implements Runnable{
 	
 	public void run(){
 		
-		try {
+		
 			
 			
 			// On garde le port pour pouvoir connecter d'autres clients sur ce même port
@@ -45,17 +45,26 @@ public class Serveur implements Runnable{
 
 			System.out.println("En ecoute sur : " + this.passiveSocket);
 			while (true) {
-				System.out.println("Attente des connexions");
-
-				Socket activeSocket = this.passiveSocket.accept();
 				
-				// Lorsqu'un utilisateur se connecte, on créé une nouvelle instance
-				// de "ConnexionJoueur".
-				Connexion connexion = new Connexion(this,activeSocket);
+				
+				try{
+					Socket activeSocket = this.passiveSocket.accept();
+					System.out.println("Nouvelle connexion");
+				
+					// Lorsqu'un utilisateur se connecte, on créé une nouvelle instance
+					Connexion connexion = new Connexion(this,activeSocket);
+					
+					// On sauvegarde la nouvelle connexion
+					nouvelleConnexion(connexion);
+				
+				}
+				catch(Exception ex){
+					System.out.println("Impossible de récupérer le nouveau joueur.");
+				}			
+				
+				
 			}
-		} catch (Exception e) {
-			System.out.println("Aucun port disponible");
-		}
+	
 	}
 	
 	public void envoyer(Echange e, Connexion con){
@@ -63,15 +72,16 @@ public class Serveur implements Runnable{
 			con.envoyer(e);
 		}
 		else{
+			
 			Iterator<Connexion> it = connexions.iterator();
-			while(it.hasNext()){
+			while(it.hasNext()){				
 				it.next().envoyer(e);
 			}
 		}
 	}
 	
-	public void nouvelleConnexion(Connexion c){
-		connexions.addElement(c);
+	public void nouvelleConnexion(Connexion c){		
+		connexions.addElement(c);		
 	}
 	
 	public void fermerConnexion(Connexion c){
