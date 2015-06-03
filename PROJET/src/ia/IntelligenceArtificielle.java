@@ -16,15 +16,11 @@ public class IntelligenceArtificielle {
 	/* Variables temporaires pour tests */
 	public double tempsExe = 0; 
 	public double tempsMax = 0;
-<<<<<<< HEAD
 	public int nbExe = 0; 		
 	public double profondeurExploree = 0;
 	public double nbExplorations = 0;
 	public boolean victoire = false;
-	/* 									*/
-=======
-	public int nbExe = 0; 		// Temporaire pour tests
->>>>>>> branch 'master' of https://github.com/dimpolth/gameProject-PROG6.git
+	/*									*/
 	
 	private difficulteIA niveauDifficulte;
 	private Joueur joueurIA, joueurAdversaire;
@@ -154,7 +150,7 @@ public class IntelligenceArtificielle {
 	 */
 	private TourDeJeu coupNormal(){
 		TourDeJeu tourSolution = new TourDeJeu();
-		int profondeur = 5;
+		int profondeur = 4;
 		int iterateurProf = 0;
 		
 		// ALPHA BETA
@@ -179,10 +175,6 @@ public class IntelligenceArtificielle {
 		
 		// Récupération de tous les tours jouables pour le terrain et le joueur courant
 		listeToursJouables = getToursJouables(this.moteur.t,this.getJoueurIA());
-<<<<<<< HEAD
-=======
-		
->>>>>>> branch 'master' of https://github.com/dimpolth/gameProject-PROG6.git
 		
 		// Adaptation dynamique de la profondeur explorée
 		/*
