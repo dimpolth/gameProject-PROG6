@@ -7,7 +7,6 @@ import java.util.Iterator;
 import ia.*;
 import ihm.*;
 import modele.*;
-import modele.Joueur.typeJoueur;
 import reseau.*;
 
 public class Moteur {
@@ -31,7 +30,7 @@ public class Moteur {
 	EtatTour e;
 	Point pDepart, pArrive;
 	Joueur joueurCourant;
-	Joueur j1, j2;
+	public Joueur j1, j2;
 	Echange ech;
 	Point aspi, perc;
 	Boolean tourEnCours;
@@ -49,6 +48,7 @@ public class Moteur {
 
 	public void init() {
 		t = new Terrain();
+		
 		h = new Historique();
 		ech = new Echange();
 		listePointDebut = new ArrayList<Point>();
@@ -58,7 +58,7 @@ public class Moteur {
 		// j1 = new Joueur(Case.Etat.joueur1, Joueur.typeJoueur.ordinateur,
 		// IntelligenceArtificielle.difficulteIA.facile, j2, this);
 		j2 = new Joueur(Case.Etat.joueur2, Joueur.typeJoueur.ordinateur,
-				IntelligenceArtificielle.difficulteIA.facile, j1, this);
+				IntelligenceArtificielle.difficulteIA.normal, j1, this);
 		joueurCourant = j1;
 		if (joueurCourant.isJoueurHumain()) {
 			e = EtatTour.selectionPion;
@@ -369,7 +369,7 @@ public class Moteur {
 		com.envoyer(ech);
 	}
 
-	void calculerScore() {
+	public void calculerScore() {
 		int scoreJ1 = 0;
 		int scoreJ2 = 0;
 		for (int i = 0; i < Terrain.LIGNES; i++) {
@@ -385,19 +385,28 @@ public class Moteur {
 	}
 
 	void jouerIa() {
+		System.out.println(e);
+		
 		// System.out.println("DEBUT TOUR IA");
-		do {
-			// System.out.println(joueurCourant.getNom());
-			// System.out.println("boucle IA");
-			jeuIa = joueurCourant.jouer();
-			// System.out.println("depart "+jeuIa.getpDepart()+" arrivé "+jeuIa.getpArrivee());
-			selectionPion(jeuIa.getpDepart());
-			// System.out.println("point depart moteur :"+pDepart);
-			selectionDestination(jeuIa.getpArrivee());
-			// t.dessineTableauAvecIntersections();
-		} while (joueurCourant.IaContinue());
-		// System.out.println(" FIN DU JEU IA");
-		finTour();
+		Thread th = new Thread(){
+			public void run(){
+				do {
+					// System.out.println(joueurCourant.getNom());
+					// System.out.println("boucle IA");
+					jeuIa = joueurCourant.jouer();
+					// System.out.println("depart "+jeuIa.getpDepart()+" arrivé "+jeuIa.getpArrivee());
+					selectionPion(jeuIa.getpDepart());
+					// System.out.println("point depart moteur :"+pDepart);
+					selectionDestination(jeuIa.getpArrivee());
+					// t.dessineTableauAvecIntersections();
+				} while (joueurCourant.IaContinue());
+					// System.out.println(" FIN DU JEU IA");
+		
+				finTour();
+			}
+		};
+		
+		th.start();
 	}
 
 	public void action(Echange echange) {

@@ -22,7 +22,7 @@ class AnimDeplacement extends Animation {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		System.out.println("JE RAGE !!");
+		//System.out.println("JE RAGE !!");
 		long actuel = System.currentTimeMillis();
 		if (actuel - tempsDepart > TerrainGraphique.ANIM_DEPL) {
 			horloge.stop();
