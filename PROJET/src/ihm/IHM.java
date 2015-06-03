@@ -27,9 +27,13 @@ public class IHM extends JFrame implements ComponentListener {
 	PopupMenu popupM;
 	PopupOptions popupO;
 	PopupRegles popupR;
+	PopupVictoire popupV;
 	TerrainGraphique tg;
 	BandeauInfos bandeauInfos;
 	Chargement chargement;
+	
+	Bouton boutonAnnuler;
+	Bouton boutonRefaire;
 
 	public IHM() {
 
@@ -88,11 +92,11 @@ public class IHM extends JFrame implements ComponentListener {
 		boutonAide.addActionListener(new Ecouteur(Ecouteur.Bouton.AIDE, this));
 		voletSudOuest.add(boutonAide);
 		
-		Bouton boutonAnnuler = new Bouton("Annuler");
+		boutonAnnuler = new Bouton("Annuler");
 		boutonAnnuler.addActionListener(new Ecouteur(Ecouteur.Bouton.ANNULER, this));
 		voletSudCentre.add(boutonAnnuler);
 		
-		Bouton boutonRefaire = new Bouton("Refaire");
+		boutonRefaire = new Bouton("Refaire");
 		boutonRefaire.addActionListener(new Ecouteur(Ecouteur.Bouton.REFAIRE, this));
 		voletSudCentre.add(boutonRefaire);
 		
@@ -112,8 +116,10 @@ public class IHM extends JFrame implements ComponentListener {
 		popupO.setVisible(false);
 		popupR = new PopupRegles(this);
 		gestionCouche.add(popupR, new Integer(3));
-
 		popupR.setVisible(false);
+		popupV = new PopupVictoire();
+		gestionCouche.add(popupV, new Integer(4));
+		popupV.setVisible(false);
 
 		theme.setTheme(Theme.Type.BOIS);
 
@@ -304,6 +310,12 @@ public class IHM extends JFrame implements ComponentListener {
 
 		if ((dataValue = e.get("bandeauInf")) != null) {
 			bandeauInfos.setTexteInf((String) dataValue);
+		}
+		if((dataValue = e.get("annuler")) != null) {
+			boutonAnnuler.setEnabled((boolean)dataValue);
+		}
+		if((dataValue = e.get("refaire")) != null) {
+			boutonRefaire.setEnabled((boolean)dataValue);
 		}
 
 	}
