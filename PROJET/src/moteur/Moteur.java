@@ -216,6 +216,8 @@ public class Moteur {
 			return false;
 		} else {
 			listePointDebut = listePionsJouables(joueurCourant, null);
+			if (listePointDebut.isEmpty())
+				partieTerminee();
 			if (listePointDebut.contains(p)) {
 				pDepart = p;
 				if (joueurCourant.isJoueurHumain()) {
@@ -308,6 +310,8 @@ public class Moteur {
 			t.dessineTableauAvecIntersections();
 			if (joueurCourant.isJoueurHumain())
 				testFinTour();
+		} else {
+			finTour();
 		}
 
 	}
