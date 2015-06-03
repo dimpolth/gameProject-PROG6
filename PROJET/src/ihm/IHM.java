@@ -117,6 +117,8 @@ public class IHM extends JFrame implements ComponentListener {
 		setMinimumSize(new Dimension(640, 480));
 		setSize(1000, 750);
 		setVisible(true);
+		
+		
 
 	}
 	
@@ -176,6 +178,8 @@ public class IHM extends JFrame implements ComponentListener {
 				action(Ecouteur.Bouton.SAUVEGARDER);
 			break;
 		case MENU:
+			//Communication.modeReseau("127.0.0.1:46654");
+			//Communication.modeReseau("");
 			popupB.setVisible(true);
 			popupM.setVisible(true);
 			break;
@@ -259,7 +263,7 @@ public class IHM extends JFrame implements ComponentListener {
 			tg.deselectionner();
 		}
 		
-		if((dataValue = e.get("pionSelectionne")) != null){
+		if((dataValue = e.get("pionSelectionne")) != null){			
 			tg.selectionner( (Point)dataValue );
 		}
 		/*if((dataValue = e.get("coups")) != null){

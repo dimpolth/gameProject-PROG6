@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.net.UnknownHostException;
 
 public class Connexion implements Runnable{
 	
@@ -18,35 +19,30 @@ public class Connexion implements Runnable{
 	// Flux d'entrée pour recevoir des données du joueur
 	private ObjectInputStream ois;
 	
-	Connexion(Serveur serveur, Socket socket){
+	Connexion(Serveur serveur, Socket socket) throws UnknownHostException, IOException {
 		
 		try {
-
+			this.serveur = serveur;
 			this.socket = socket;
-			this.ois = new ObjectInputStream(this.socket.getInputStream());
-			this.oos = new ObjectOutputStream(this.socket.getOutputStream());
-
-
-
-			// On sauvegarde la nouvelle connexion
-			serveur.nouvelleConnexion(this);
-
+			ois = new ObjectInputStream(socket.getInputStream());
+			oos = new ObjectOutputStream(socket.getOutputStream());
 			
-
 			Thread t1 = new Thread(this, "envoi");
 			t1.start();
 
 			Thread t2 = new Thread(this, "recep");
 			t2.start();
-
+			System.out.println("Une connexion chez le serveur");
 		} catch (Exception e) {
 		}
 		
 		
 	}
 	public void envoyer(Echange e){
-		try {
-			oos.writeObject(e);
+		try {			
+			System.out.println("SERVER ENVOYER : "+((Echange) e).toString() );
+			oos.writeObject(e);	
+			
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
 		}
@@ -77,12 +73,20 @@ public class Connexion implements Runnable{
 			
 			// Réception de données
 			else if (currentTh.getName().equals("recep")) {
-
-				try {
-					e = (Echange)ois.readObject();
-					serveur.com.recevoir(e);
+				
+				
+				try {					
+					Echange recu = (Echange)ois.readObject();
+					//String e2 = (String)ois.readObject();
+					//System.err.println("Reception d'une donnée cliente : "+e2);
+					//Object e3 = ois.readObject();
 					
-
+					//System.err.println("Reception d'une donnée cliente : "+((Echange)e3).infos.size());
+					//System.out.println("Reception d'une donnée cliente sur le serveur : "+recu.infos.size());					
+					serveur.com.recevoir(recu);
+					
+					//System.out.println("Reception d'une donnée cliente sur le serveur : TRAITE");
+					
 				} catch (Exception ex) {
 				}				
 

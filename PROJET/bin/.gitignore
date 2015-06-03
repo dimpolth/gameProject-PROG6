@@ -1,8 +1,7 @@
 Main.java
-/.gitignore
-/ia/
+/reseau/
 /ihm/
+/moteur/
+/ia/
 /images/
 /modele/
-/moteur/
-/reseau/
