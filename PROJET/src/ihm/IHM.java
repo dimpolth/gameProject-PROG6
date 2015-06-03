@@ -27,6 +27,7 @@ public class IHM extends JFrame implements ComponentListener {
 	PopupRegles popupR;
 	TerrainGraphique tg;
 	BandeauInfos bandeauInfos;
+	Chargement chargement;
 
 	public IHM() {
 
@@ -53,6 +54,8 @@ public class IHM extends JFrame implements ComponentListener {
 		Bouton boutonMenu = new Bouton("Menu");
 		boutonMenu.addActionListener(new Ecouteur(Ecouteur.Bouton.MENU, this));
 		panneauMenu.add(boutonMenu);
+		chargement = new Chargement();
+		panneauMenu.add(chargement);
 		Bouton boutonParam = new Bouton("Paramètres");
 		boutonParam.addActionListener(new Ecouteur(Ecouteur.Bouton.PARAMETRES, this));
 		panneauMenu.add(boutonParam);
