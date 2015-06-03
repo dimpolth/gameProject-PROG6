@@ -41,12 +41,22 @@ public class Moteur {
 	public Moteur() {
 	}
 
+	/**
+	 * Constructeur utilisé dans le cas d'un chargement de partie.
+	 * 
+	 * @param t
+	 * Le terrain à charger pour reprendre la partie. 
+	 */
 	Moteur(Terrain t) {
 		this.t = t;
 		h = new Historique();
 		ech = new Echange();
 	}
 
+	/**
+	 * Initialise le moteur.
+	 * Cette methode n'est pas dans le constructeur car si une nouvelle partie est lancée par l'utilisateur, le moteur ne peut pas se construir lui-même.
+	 */
 	public void init() {
 		t = new Terrain();
 		h = new Historique();
@@ -70,9 +80,18 @@ public class Moteur {
 		message("bandeauSup", joueurCourant.getNom());
 		message("bandeauInf", "Selection du pion");
 	}
-
-	public ArrayList<Point> deplacementPossible(Point p,
-			ArrayList<Point> listePredecesseurs, Terrain copieTerrainEventuelle) {
+	/**
+	 * Détermine quels sont les déplacements possibles
+	 * @param p
+	 * Point à partir du quel on veut déterminer les déplacements possibles.
+	 * @param listePredecesseurs
+	 * ArrayList de Points. Liste des points par lesquels est passé le pion durant le tour.
+	 * @param copieTerrainEventuelle
+	 * Terrain. Utilisé par l'IA pour simuler des coups.
+	 * @return
+	 * ArrayList de Points. Liste des emplacements vers lequel le pion courant peut se déplacer.
+	 */
+	public ArrayList<Point> deplacementPossible(Point p, ArrayList<Point> listePredecesseurs, Terrain copieTerrainEventuelle) {
 		ArrayList<Point> listeSuc = t.tableau[p.x][p.y].getSucc();
 		ArrayList<Point> listeSolution = new ArrayList<Point>();
 		Iterator<Point> it = listeSuc.iterator();
