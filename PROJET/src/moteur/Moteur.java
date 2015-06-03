@@ -212,7 +212,7 @@ public class Moteur {
 		} else {
 			listePointDebut = listePionsJouables(joueurCourant, null);
 			if (listePointDebut.isEmpty())
-				partieTerminee();
+				partieTerminee(true);
 			if (listePointDebut.contains(p)) {
 				pDepart = p;
 				if (joueurCourant.isJoueurHumain()) {
