@@ -203,6 +203,7 @@ public class IHM extends JFrame implements ComponentListener {
 			popupO.setVisible(false);
 			popupB.setVisible(false);
 			break;
+
 		case OPTION_VALIDER:
 			/*modele.Parametres params = new modele.Parametres();
 			params.j1_identifiant = popupO.identifiantJoueur1.getText();
