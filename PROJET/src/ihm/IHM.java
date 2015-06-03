@@ -7,8 +7,10 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.Point;
 import java.awt.event.*;
+import java.io.IOException;
 import java.util.LinkedList;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 
 import modele.*;
@@ -116,7 +118,12 @@ public class IHM extends JFrame implements ComponentListener {
 		theme.setTheme(Theme.Type.BOIS);
 
 		setMinimumSize(new Dimension(640, 480));
-		setSize(1000, 750);
+		setSize(Math.max(640,(int)(java.awt.Toolkit.getDefaultToolkit().getScreenSize().width*0.75)), Math.max(480,(int)(java.awt.Toolkit.getDefaultToolkit().getScreenSize().height*0.75)));
+		try {
+			setIconImage(ImageIO.read(getClass().getResource("/images/icone.png")));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		setVisible(true);
 
 	}
@@ -208,16 +215,16 @@ public class IHM extends JFrame implements ComponentListener {
 			break;
 
 		case OPTION_VALIDER:
-			/*modele.Parametres params = new modele.Parametres();
+			Parametres params = new Parametres();
 			params.j1_identifiant = popupO.identifiantJoueur1.getText();
 			params.j2_identifiant = popupO.identifiantJoueur2.getText();
-			params.j1_type = popupO.selectJoueur1.getSelectedIndex();
-			params.j2_type = popupO.selectJoueur2.getSelectedIndex();
+			params.j1_type = Parametres.NiveauJoueur.getFromIndex(popupO.selectJoueur1.getSelectedIndex());
+			params.j2_type = Parametres.NiveauJoueur.getFromIndex(popupO.selectJoueur2.getSelectedIndex());
 
 			Echange e = new Echange();
 			e.ajouter("parametres", params);
 			com.envoyer(e);
-			*/
+			
 			popupO.setVisible(false);
 			popupB.setVisible(false);
 			break;
