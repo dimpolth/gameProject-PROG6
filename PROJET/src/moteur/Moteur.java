@@ -398,22 +398,27 @@ public class Moteur {
 		if (joueurCourant.recupereJoueurOpposant(joueurCourant, j1, j2, false).isJoueurHumain()) {
 			if (i <= 0) {
 				ech.ajouter("annuler", false);
+				ech.ajouter("refaire", true);
 			} else {
 				ech.ajouter("annuler", true);
-				if (i == h.histoPrincipal.size() - 1)
+				if (i == h.histoPrincipal.size() - 1) {
 					ech.ajouter("refaire", false);
-				else
+				}
+				else {
 					ech.ajouter("refaire", true);
+				}
 			}
 		} else {
 			if (i <= 1) {
 				ech.ajouter("annuler", false);
+				ech.ajouter("refaire", true);
 			} else {
 				ech.ajouter("annuler", true);
-				if (i == h.histoPrincipal.size() - 1)
+				if (i == h.histoPrincipal.size() - 1) {
 					ech.ajouter("refaire", false);
-				else
+				} else {
 					ech.ajouter("refaire", true);
+				}
 			}
 		}
 		com.envoyer(ech);

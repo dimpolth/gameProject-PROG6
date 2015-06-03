@@ -94,10 +94,12 @@ public class IHM extends JFrame implements ComponentListener {
 		
 		boutonAnnuler = new Bouton("Annuler");
 		boutonAnnuler.addActionListener(new Ecouteur(Ecouteur.Bouton.ANNULER, this));
+		boutonAnnuler.setEnabled(false);
 		voletSudCentre.add(boutonAnnuler);
 		
 		boutonRefaire = new Bouton("Refaire");
 		boutonRefaire.addActionListener(new Ecouteur(Ecouteur.Bouton.REFAIRE, this));
+		boutonRefaire.setEnabled(false);
 		voletSudCentre.add(boutonRefaire);
 		
 		Bouton boutonValidation = new Bouton("Terminer");
@@ -316,6 +318,11 @@ public class IHM extends JFrame implements ComponentListener {
 		}
 		if((dataValue = e.get("refaire")) != null) {
 			boutonRefaire.setEnabled((boolean)dataValue);
+		}
+		if((dataValue = e.get("score")) != null) {
+			int[] score = (int[]) dataValue;
+			bandeauInfos.setScore(1, score[0]);
+			bandeauInfos.setScore(2, score[1]);
 		}
 
 	}
