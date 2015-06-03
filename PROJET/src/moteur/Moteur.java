@@ -192,21 +192,16 @@ public class Moteur {
 		return listePions;
 	}
 
-	boolean partieTerminee() {
-		if (j1.scoreNul()) {
-			ech.vider();
-			ech.ajouter("bandeauSup", "<html><font color=#FF0000>" + j2.getNom() + "</font></html>");
-			ech.ajouter("bandeauInf", "<html><font color=#FF0000>à remporté la partie</font></html>");
-			com.envoyer(ech);
-			return true;
-		} else if (j2.scoreNul()) {
-			ech.vider();
-			ech.ajouter("bandeauSup", "<html><font color=#FF0000>" + j1.getNom() + "</font></html>");
+	boolean partieTerminee(boolean aucunDeplacement) {
+		ech.vider();
+		if (joueurCourant.scoreNul() || aucunDeplacement) {
+			ech.ajouter("bandeauSup", "<html><font color=#FF0000>" + joueurCourant.recupereJoueurOpposant(joueurCourant, j1, j2, false).getNom() + "</font></html>");
 			ech.ajouter("bandeauInf", "<html><font color=#FF0000>à remporté la partie</font></html>");
 			com.envoyer(ech);
 			return true;
 		} else
 			return false;
+		
 	}
 
 	boolean selectionPion(Point p) {
@@ -235,6 +230,7 @@ public class Moteur {
 
 	void selectionDestination(Point p) {
 		ArrayList<Point> l = deplacementPossible(pDepart, h.histoTour, null);
+		System.out.println(l);
 		if (listePointDebut.contains(p) && !tourEnCours) {
 			pDepart = p;
 			if (joueurCourant.isJoueurHumain()) {
@@ -322,7 +318,7 @@ public class Moteur {
 		ech.vider();
 		ech.ajouter("pionDeselectionne", true);
 		com.envoyer(ech);
-		if (partieTerminee()) {
+		if (partieTerminee(false)) {
 			e = EtatTour.partieFinie;
 			System.out.println("FINI");
 		} else {
