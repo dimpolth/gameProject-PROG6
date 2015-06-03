@@ -150,7 +150,7 @@ public class IntelligenceArtificielle implements Runnable {
 	 */
 	private TourDeJeu coupNormal(){
 		TourDeJeu tourSolution = new TourDeJeu();
-		int profondeur = 4;
+		int profondeur = 5;
 		int iterateurProf = 0;
 		
 		// ALPHA BETA
@@ -184,16 +184,7 @@ public class IntelligenceArtificielle implements Runnable {
 			profondeur -= 2;
 		else if(listeToursJouables.size() >= 30 && profondeur > 3)
 			profondeur -= 3;
-		else if(listeToursJouables.size() < 5)
-			profondeur += 3;
-		else if(listeToursJouables.size() == 1)
-			profondeur += 4;
-		*/
-		
-		if(listeToursJouables.size() == 1)
-			profondeur += 2;
-		else if(listeToursJouables.size() < 5)
-			profondeur += 1;
+		 */
 		
 		
 		if(listeToursJouables.size() > 0)
@@ -263,9 +254,7 @@ public class IntelligenceArtificielle implements Runnable {
 		else if(listeToursJouables.size() >= 30 && profondeur > 3)
 			profondeur -= 3;
 		*/
-		if(listeToursJouables.size() == 1)
-			profondeur += 1;
-		
+
 		it = listeToursJouables.iterator();
 		
 		while(it.hasNext()){
@@ -310,9 +299,6 @@ public class IntelligenceArtificielle implements Runnable {
 		if(listeToursJouables.isEmpty()) // Si il n'y a plus de tours possibles on a perdu
 			return MIN;
 		
-		if(listeToursJouables.size() == 1)
-			profondeur += 1;
-	
 		// Réduction dynamique de la profondeur explorée
 		/*
 		if(listeToursJouables.size() >= 10 && profondeur > 1)
@@ -342,6 +328,7 @@ public class IntelligenceArtificielle implements Runnable {
 
 		return valRes;
 	}
+	
 	
 	/*
 	 * getToursJouables, renvoie une liste de liste de tous les tours jouables pour le joueur à un instant t
