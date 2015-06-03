@@ -18,7 +18,6 @@ class AnimDisparition extends Animation {
 	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		//System.out.println("CONNARD");
 		long actuel = System.currentTimeMillis();
 		if(actuel - tempsDepart > TerrainGraphique.ANIM_DISP) {
 			horloge.stop();

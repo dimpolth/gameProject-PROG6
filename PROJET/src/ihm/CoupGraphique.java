@@ -6,27 +6,29 @@ import java.util.ArrayList;
 public class CoupGraphique implements Runnable {
 	private Point[] deplacement;
 	private Point[] choixPrise;
-	private ArrayList<Point> pionsManges;
+	private ArrayList<Point> pionsManges, chemin;
 	private int[] score;
 	private static TerrainGraphique tg;
 	private static boolean animationEnCours = false;
 	private String bandeauSup,bandeauInf;
 	
-	public CoupGraphique(Point[] d, Point[] c, ArrayList<Point> p, int[] s,String bS,String bI) {
+	public CoupGraphique(Point[] d, Point[] c, ArrayList<Point> p, int[] s,String bS,String bI, ArrayList<Point> chemin) {
 		deplacement = d;
 		choixPrise = c;
 		pionsManges = p;
 		score = s;
 		bandeauSup = bS;
 		bandeauInf = bI;
+		this.chemin = chemin;
 	}
-	public CoupGraphique(Point[] d, Point[] c, ArrayList<Point> p, int[] s) {
+	public CoupGraphique(Point[] d, Point[] c, ArrayList<Point> p, int[] s, ArrayList<Point> chemin) {
 		deplacement = d;
 		choixPrise = c;
 		pionsManges = p;
 		score = s;
 		bandeauSup = null;
 		bandeauInf = null;
+		this.chemin = chemin;
 	}
 	
 	
@@ -55,12 +57,13 @@ public class CoupGraphique implements Runnable {
 		} else if(choixPrise != null){
 			tg.afficherPrisesPossibles(choixPrise);
 		}
-		
 		try {
 			Thread.sleep(TerrainGraphique.ANIM_DISP);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+		tg.trait = chemin;
+		tg.repaint();
 		
 		if(score != null){
 			tg.ihm.bandeauInfos.setScore(1,score[0]);
