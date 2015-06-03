@@ -113,4 +113,7 @@ public class Joueur {
 	public boolean IaContinue(){
 		return ia.isTourEnCours();
 	}
+	public IntelligenceArtificielle getIntelligenceArtificielle(){
+		return this.ia;
+	}
 }
