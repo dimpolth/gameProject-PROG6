@@ -1,5 +1,6 @@
 package ihm;
 
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -30,6 +31,7 @@ public class Chargement extends JComponent implements ActionListener {
 		}
 		afficher = false;
 		horloge = new Timer(10, this);
+		setPreferredSize(new Dimension(44,44));
 	}
 
 	public void afficher() {
