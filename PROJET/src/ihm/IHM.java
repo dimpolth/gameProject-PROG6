@@ -1,4 +1,5 @@
 package ihm;
+
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -6,13 +7,14 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.Point;
 import java.awt.event.*;
+import java.io.IOException;
 import java.util.LinkedList;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 
 import modele.*;
 import reseau.*;
-
 
 @SuppressWarnings("serial")
 public class IHM extends JFrame implements ComponentListener {
@@ -25,8 +27,13 @@ public class IHM extends JFrame implements ComponentListener {
 	PopupMenu popupM;
 	PopupOptions popupO;
 	PopupRegles popupR;
+	PopupVictoire popupV;
 	TerrainGraphique tg;
 	BandeauInfos bandeauInfos;
+	Chargement chargement;
+	
+	Bouton boutonAnnuler;
+	Bouton boutonRefaire;
 
 	public IHM() {
 
@@ -53,49 +60,51 @@ public class IHM extends JFrame implements ComponentListener {
 		Bouton boutonMenu = new Bouton("Menu");
 		boutonMenu.addActionListener(new Ecouteur(Ecouteur.Bouton.MENU, this));
 		panneauMenu.add(boutonMenu);
+		chargement = new Chargement();
+		panneauMenu.add(chargement);
 		Bouton boutonParam = new Bouton("Paramètres");
-		boutonParam.addActionListener(new Ecouteur(Ecouteur.Bouton.PARAMETRES,
-				this));
+		boutonParam.addActionListener(new Ecouteur(Ecouteur.Bouton.PARAMETRES, this));
 		panneauMenu.add(boutonParam);
-		
+
 		tg = new TerrainGraphique(this);
-		
+
 		// Infos partie en cours
 		bandeauInfos = new BandeauInfos(tg);
 		voletNord.add(bandeauInfos);
 
-	
 		// ZONE CENTRE
-		
+
 		coucheJeu.add(tg, BorderLayout.CENTER);
 
 		// ZONE SUD
-		JPanel voletSud = new JPanel(new GridBagLayout());
+		JPanel voletSud = new JPanel(new BorderLayout());
 		coucheJeu.add(voletSud, BorderLayout.SOUTH);
 
-		GridBagConstraints contraintes = new GridBagConstraints();
-		contraintes.fill = GridBagConstraints.BOTH;
-		contraintes.insets = new Insets(2, 2, 5, 2);
-
-		Bouton boutonValidation = new Bouton("Terminer mon tour");
-		boutonValidation.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent pEv){
-				Echange e = new Echange();
-				e.ajouter("finTour", true);
-				com.envoyer(e);
-			}
-		});
-		contraintes.gridwidth = GridBagConstraints.REMAINDER;
-		voletSud.add(boutonValidation, contraintes);
-		Bouton boutonAnnuler = new Bouton("Annuler");
-		boutonAnnuler.addActionListener(new Ecouteur(Ecouteur.Bouton.ANNULER,
-				this));
-		contraintes.gridwidth = 1;
-		voletSud.add(boutonAnnuler, contraintes);
-		Bouton boutonRefaire = new Bouton("Refaire");
-		boutonRefaire.addActionListener(new Ecouteur(Ecouteur.Bouton.REFAIRE,
-				this));
-		voletSud.add(boutonRefaire, contraintes);
+		
+		JPanel voletSudOuest = new JPanel();
+		voletSud.add(voletSudOuest, BorderLayout.WEST);
+		JPanel voletSudCentre = new JPanel();
+		voletSud.add(voletSudCentre, BorderLayout.CENTER);
+		JPanel voletSudEst = new JPanel();
+		voletSud.add(voletSudEst, BorderLayout.EAST);
+		
+		Bouton boutonAide = new Bouton("Aide");
+		boutonAide.addActionListener(new Ecouteur(Ecouteur.Bouton.AIDE, this));
+		voletSudOuest.add(boutonAide);
+		
+		boutonAnnuler = new Bouton("Annuler");
+		boutonAnnuler.addActionListener(new Ecouteur(Ecouteur.Bouton.ANNULER, this));
+		boutonAnnuler.setEnabled(false);
+		voletSudCentre.add(boutonAnnuler);
+		
+		boutonRefaire = new Bouton("Refaire");
+		boutonRefaire.addActionListener(new Ecouteur(Ecouteur.Bouton.REFAIRE, this));
+		boutonRefaire.setEnabled(false);
+		voletSudCentre.add(boutonRefaire);
+		
+		Bouton boutonValidation = new Bouton("Terminer");
+		boutonValidation.addActionListener(new Ecouteur(Ecouteur.Bouton.TERMINER, this));
+		voletSudEst.add(boutonValidation);
 
 		JLayeredPane gestionCouche = getLayeredPane();
 		popupB = new PopupBloquant();
@@ -109,33 +118,40 @@ public class IHM extends JFrame implements ComponentListener {
 		popupO.setVisible(false);
 		popupR = new PopupRegles(this);
 		gestionCouche.add(popupR, new Integer(3));
-
 		popupR.setVisible(false);
+		popupV = new PopupVictoire();
+		gestionCouche.add(popupV, new Integer(4));
+		popupV.setVisible(false);
 
 		theme.setTheme(Theme.Type.BOIS);
-		
+
 		setMinimumSize(new Dimension(640, 480));
-		setSize(1000, 750);
+		setSize(Math.max(640,(int)(java.awt.Toolkit.getDefaultToolkit().getScreenSize().width*0.75)), Math.max(480,(int)(java.awt.Toolkit.getDefaultToolkit().getScreenSize().height*0.75)));
+		try {
+			setIconImage(ImageIO.read(getClass().getResource("/images/icone.png")));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		setVisible(true);
 		
 		
 
 	}
-	
-	public Joueur[] getParamsJoueurs(){
+
+	public Joueur[] getParamsJoueurs() {
 		Joueur[] j = new Joueur[2];
 		j[0] = new Joueur();
 		j[1] = new Joueur();
-		j[0].setNom(popupO.identifiantJoueur1.getText());		
+		j[0].setNom(popupO.identifiantJoueur1.getText());
 		j[1].setNom(popupO.identifiantJoueur2.getText());
 		return j;
-		
+
 	}
 
 	public void lancer() {
 		Echange e = new Echange();
-		e.ajouter("nouvellePartie",true);
-		e.ajouter("terrain", true);		
+		e.ajouter("nouvellePartie", true);
+		e.ajouter("terrain", true);
 		e.ajouter("joueurs", getParamsJoueurs());
 		com.envoyer(e);
 	}
@@ -169,9 +185,7 @@ public class IHM extends JFrame implements ComponentListener {
 		case QUITTER:
 			// Confirmation avant de quitter
 			String choix[] = { "Oui", "Non" };
-			int retour = JOptionPane.showOptionDialog(this,
-					"Voulez-vous sauvegarder la partie avant de quitter ?",
-					"Attention", 1, 1, null, choix, choix[1]);
+			int retour = JOptionPane.showOptionDialog(this, "Voulez-vous sauvegarder la partie avant de quitter ?", "Attention", 1, 1, null, choix, choix[1]);
 			if (retour == 1)
 				System.exit(0);
 			else
@@ -197,21 +211,32 @@ public class IHM extends JFrame implements ComponentListener {
 			e2.ajouter("refaire", true);
 			com.envoyer(e2);
 			break;
+		case TERMINER:
+			Echange e3 = new Echange();
+			e3.ajouter("finTour", true);
+			com.envoyer(e3);
+			break;
+		case AIDE:
+			Echange e4 = new Echange();
+			e4.ajouter("aide", true);
+			com.envoyer(e4);
+			break;
 		case OPTION_ANNULER:
 			popupO.setVisible(false);
 			popupB.setVisible(false);
 			break;
+
 		case OPTION_VALIDER:
-			/*modele.Parametres params = new modele.Parametres();
+			Parametres params = new Parametres();
 			params.j1_identifiant = popupO.identifiantJoueur1.getText();
-			params.j2_identifiant = popupO.identifiantJoueur2.getText();			
-			params.j1_type = popupO.selectJoueur1.getSelectedIndex();
-			params.j2_type = popupO.selectJoueur2.getSelectedIndex();
-			
-			Echange e = new Echange();			
+			params.j2_identifiant = popupO.identifiantJoueur2.getText();
+			params.j1_type = Parametres.NiveauJoueur.getFromIndex(popupO.selectJoueur1.getSelectedIndex());
+			params.j2_type = Parametres.NiveauJoueur.getFromIndex(popupO.selectJoueur2.getSelectedIndex());
+
+			Echange e = new Echange();
 			e.ajouter("parametres", params);
 			com.envoyer(e);
-			*/
+			
 			popupO.setVisible(false);
 			popupB.setVisible(false);
 			break;
@@ -244,63 +269,67 @@ public class IHM extends JFrame implements ComponentListener {
 	}
 
 	public void notifier(Echange e) {
-		int tpsAnimation = 0;		
-		
+		int tpsAnimation = 0;
+
 		Object dataValue;
-		
+
 		if ((dataValue = e.get("terrain")) != null) {
-			
+
 			tg.dessinerTerrain((Case[][]) dataValue);
 		}
-		if((dataValue = e.get("coup")) != null){			
-			tg.lCoups.addLast( (CoupGraphique) dataValue );			
+		if ((dataValue = e.get("coup")) != null) {
+			tg.lCoups.addLast((CoupGraphique) dataValue);
 			CoupGraphique.afficherCoups(tg);
 		}
-		
-		
+
 		/* Gardez cet ordre */
-		if((dataValue = e.get("pionDeselectionne")) != null){
+		if ((dataValue = e.get("pionDeselectionne")) != null) {
 			tg.deselectionner();
 		}
+
 		
 		if((dataValue = e.get("pionSelectionne")) != null){			
 			tg.selectionner( (Point)dataValue );
+
 		}
-		/*if((dataValue = e.get("coups")) != null){
-			LinkedList<CoupGraphique> cg = (LinkedList<CoupGraphique>)dataValue;
-			java.util.Iterator<CoupGraphique> it = cg.iterator();
-			while(it.hasNext()){
-				tg.lCoups.addLast(it.next());
-			}
-			
-			CoupGraphique.afficherCoups(tg);
-		}*/
-		
 		/*
-		if ((dataValue = e.get("deplacement")) != null) {
-			Point[] pts = (Point[]) dataValue;
-			tg.deplacer(pts[0], pts[1]);
-			tpsAnimation += TerrainGraphique.ANIM_DEPL;
-		}
-		if ((dataValue = e.get("pionsManges")) != null) {
-			new ExecuterDans(this, "pionsManges", dataValue, tpsAnimation);
-		}
-		if ((dataValue = e.get("choixPrise")) != null) {
-			new ExecuterDans(this, "choixPrise", dataValue, tpsAnimation);
-		}
-		if ((dataValue = e.get("joueurs")) != null) {
-			new ExecuterDans(this, "joueurs", dataValue, tpsAnimation);
-		}
-		
-		*/
-		
+		 * if((dataValue = e.get("coups")) != null){ LinkedList<CoupGraphique>
+		 * cg = (LinkedList<CoupGraphique>)dataValue;
+		 * java.util.Iterator<CoupGraphique> it = cg.iterator();
+		 * while(it.hasNext()){ tg.lCoups.addLast(it.next()); }
+		 * 
+		 * CoupGraphique.afficherCoups(tg); }
+		 */
+
+		/*
+		 * if ((dataValue = e.get("deplacement")) != null) { Point[] pts =
+		 * (Point[]) dataValue; tg.deplacer(pts[0], pts[1]); tpsAnimation +=
+		 * TerrainGraphique.ANIM_DEPL; } if ((dataValue = e.get("pionsManges"))
+		 * != null) { new ExecuterDans(this, "pionsManges", dataValue,
+		 * tpsAnimation); } if ((dataValue = e.get("choixPrise")) != null) { new
+		 * ExecuterDans(this, "choixPrise", dataValue, tpsAnimation); } if
+		 * ((dataValue = e.get("joueurs")) != null) { new ExecuterDans(this,
+		 * "joueurs", dataValue, tpsAnimation); }
+		 */
+
 		if ((dataValue = e.get("bandeauSup")) != null) {
-			bandeauInfos.setTexteSup( (String)dataValue   );
+			bandeauInfos.setTexteSup((String) dataValue);
 		}
-		
+
 		if ((dataValue = e.get("bandeauInf")) != null) {
-			bandeauInfos.setTexteInf( (String)dataValue   );
+			bandeauInfos.setTexteInf((String) dataValue);
 		}
-		
+		if((dataValue = e.get("annuler")) != null) {
+			boutonAnnuler.setEnabled((boolean)dataValue);
+		}
+		if((dataValue = e.get("refaire")) != null) {
+			boutonRefaire.setEnabled((boolean)dataValue);
+		}
+		if((dataValue = e.get("score")) != null) {
+			int[] score = (int[]) dataValue;
+			bandeauInfos.setScore(1, score[0]);
+			bandeauInfos.setScore(2, score[1]);
+		}
+
 	}
 }
