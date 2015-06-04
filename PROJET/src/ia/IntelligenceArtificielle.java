@@ -73,18 +73,6 @@ public class IntelligenceArtificielle {
 			break;
 		}
 		
-	//	Iterator<Coup> it = this.getTourDeJeuCourant().getListeCoups().iterator();
-		/*System.out.println("\n\n ****\t Résultat \t**** \n\n");
-		this.moteur.t.dessineTableauAvecIntersections();
-		while(it.hasNext()){
-			Coup coupT = it.next();
-			Point pDep = coupT.getpDepart(), pArr = coupT.getpArrivee();
-			this.moteur.t.deplacement(pDep, pArr, this.joueurIA, new ArrayList<Point>());
-			this.moteur.t.manger(this.joueurIA, this.moteur.t.recupereDirection(pDep, pArr), pDep, pArr, coupT.getChoixPrise());
-			this.moteur.t.dessineTableauAvecIntersections();
-		}
-		*/
-		
 		listeCoupsDuTour = this.getTourDeJeuCourant().getListeCoups();
 		
 		if(!listeCoupsDuTour.isEmpty()){
@@ -122,18 +110,6 @@ public class IntelligenceArtificielle {
 		if(listeToursJouables.size() > 0)
 			tourSolution = listeToursJouables.get(rand.nextInt(listeToursJouables.size()));
 
-		/*
-		it = listeToursJouables.iterator();
-		
-		while(it.hasNext()){
-			tourTemp = it.next().clone();
-			
-			if(tourTemp.getValeurResultat() > max){
-				max = tourTemp.getValeurResultat();
-				tourSolution = tourTemp;
-			}
-		}
-		*/
 		return tourSolution;
 	}
 	
@@ -174,7 +150,7 @@ public class IntelligenceArtificielle {
 		double tempsDepart = (double) System.currentTimeMillis(), temp; // pour tests
 		
 		// Récupération de tous les tours jouables pour le terrain et le joueur courant
-		listeToursJouables = getToursJouables(this.moteur.t,this.getJoueurIA());
+		listeToursJouables = getToursJouables(this.moteur.t, this.getJoueurIA());
 		
 		// Adaptation dynamique de la profondeur explorée
 		/*
@@ -190,12 +166,10 @@ public class IntelligenceArtificielle {
 		nbPionsRestantsTot = nbPionsRestantsJCourant + nbPionsRestantsJAdv;
 		
 		//System.out.println(nbPionsRestants);
-		
 		if((nbPionsRestantsTot <= 10) && (nbPionsRestantsJCourant < nbPionsRestantsJAdv))
 			profondeur += 2;
 		else if(nbPionsRestantsTot <= 14 && (nbPionsRestantsJCourant < nbPionsRestantsJAdv))
 			profondeur += 1;
-
 		
 		
 		if(listeToursJouables.size() > 0)
@@ -327,9 +301,11 @@ public class IntelligenceArtificielle {
 	 */
 	private ArrayList<TourDeJeu> getToursJouables(Terrain terrainCourant, Joueur joueurCourant){
 		Point pDepartCourant, pArriveeCourante;
-		ArrayList<Point> listePointsDeDepart, listeCoupsObligatoires, listeVide = new ArrayList<Point>();
+		ArrayList<Point> listePointsDeDepart, listeCoupsObligatoires, listeVide = new ArrayList<Point>(), listePionsManges = new ArrayList<Point>();
 		ArrayList<TourDeJeu> listeToursJouables = new ArrayList<TourDeJeu>(), listeToursTemp, listeToursVide = new ArrayList<TourDeJeu>();
-		TourDeJeu tourTemp, tourVide = new TourDeJeu();
+		TourDeJeu tourTemp;
+		Coup coupTemp = new Coup();
+		
 		boolean priseObligatoire = false;
 		
 		Iterator<Point> itPointsDepart, itPointsArrivee;
@@ -353,6 +329,7 @@ public class IntelligenceArtificielle {
 		while(itPointsDepart.hasNext()){
 			listeToursTemp = listeToursVide; // On initialise une nouvelle liste de tours de jeu
 			pDepartCourant = (Point) itPointsDepart.next().clone();
+			coupTemp.setpDepart(pDepartCourant);
 			
 			itPointsArrivee = this.moteur.deplacementPossible(pDepartCourant, listeVide, cloneTerrain).iterator();
 				
@@ -362,17 +339,18 @@ public class IntelligenceArtificielle {
 					pArriveeCourante = (Point) itPointsArrivee.next().clone();
 					Terrain.Direction dir = cloneTerrain.recupereDirection(pDepartCourant, pArriveeCourante);
 					if(cloneTerrain.estUnePriseAspiration(pDepartCourant, dir))
-						getListeToursPourCoupDepart(listeToursTemp, new TourDeJeu(), new Coup(pDepartCourant, pArriveeCourante, Terrain.ChoixPrise.parAspiration), cloneTerrain, listeVide, 0, joueurCourant);
+						getListeToursPourCoupDepart(listePionsManges, listeToursTemp, new TourDeJeu(), new Coup(pDepartCourant, pArriveeCourante, Terrain.ChoixPrise.parAspiration), cloneTerrain, listeVide, 0, joueurCourant);
 					if(cloneTerrain.estUnePrisePercussion(pDepartCourant, dir))
-						getListeToursPourCoupDepart(listeToursTemp, new TourDeJeu(), new Coup(pDepartCourant, pArriveeCourante, Terrain.ChoixPrise.parPercussion), cloneTerrain, listeVide, 0, joueurCourant);
+						getListeToursPourCoupDepart(listePionsManges, listeToursTemp, new TourDeJeu(), new Coup(pDepartCourant, pArriveeCourante, Terrain.ChoixPrise.parPercussion), cloneTerrain, listeVide, 0, joueurCourant);
 				}
 			}
 			else{	// Les tours ne sont ici constitués que d'un seul coup de gain 0
 				while(itPointsArrivee.hasNext()){
 					pArriveeCourante = (Point) itPointsArrivee.next().clone();
 					if(cloneTerrain.deplacement(pDepartCourant, pArriveeCourante, joueurCourant, listeVide) == 0){
-						tourTemp = new TourDeJeu(new Coup(pDepartCourant,pArriveeCourante));
-						tourTemp.setTerrainFinal(cloneTerrain);
+						coupTemp.setpArrivee(pArriveeCourante);
+						tourTemp = new TourDeJeu(coupTemp.clone());
+						tourTemp.setTerrainFinal(cloneTerrain.copie());
 						listeToursTemp.add(tourTemp);
 						cloneTerrain.deplacement(pArriveeCourante, pDepartCourant, joueurCourant, listeVide);
 					}
@@ -394,20 +372,21 @@ public class IntelligenceArtificielle {
 	 * getListeToursPourCoupDepart, renvoie tous les tours de jeu possible pour le coup de départ donné en paramètre
 	 *				   cette méthode n'est appelée que lors d'un tour avec plusieurs prises
 	 */
-	public void getListeToursPourCoupDepart(ArrayList<TourDeJeu> listeToursComplets, TourDeJeu tourTemp, Coup coupDeDepart, Terrain cloneTerrain, ArrayList<Point> listePredecesseurs, int nbPionsManges, Joueur joueurCourant){
+	public void getListeToursPourCoupDepart(ArrayList<Point> listePionsManges, ArrayList<TourDeJeu> listeToursComplets, TourDeJeu tourTemp, Coup coupDeDepart, Terrain cloneTerrain, ArrayList<Point> listePredecesseurs, int nbPionsManges, Joueur joueurCourant){
 		Iterator<Point> itPointsArriveeSuivants;
 		Terrain terrainCopie;
-		Point pDep, pArr, pArrTemp;
-
+		Point pDep, pArr, pArrTemp, pTemp;
+		int compteur = 0, tailleListe;
 		
 		pDep = coupDeDepart.getpDepart();
 		pArr = coupDeDepart.getpArrivee();
 	
-		terrainCopie = cloneTerrain.copie();
+		terrainCopie = cloneTerrain;
 		
 		terrainCopie.deplacement(pDep, pArr, joueurCourant, listePredecesseurs);
 
-		nbPionsManges += terrainCopie.manger(joueurCourant, terrainCopie.recupereDirection(pDep, pArr), pDep, pArr,coupDeDepart.getChoixPrise()).size();
+		listePionsManges = terrainCopie.manger(joueurCourant, terrainCopie.recupereDirection(pDep, pArr), pDep, pArr,coupDeDepart.getChoixPrise());
+		nbPionsManges += listePionsManges.size();
 		listePredecesseurs.add(pDep);
 		
 		
@@ -426,9 +405,18 @@ public class IntelligenceArtificielle {
 			pArrTemp = (Point) itPointsArriveeSuivants.next().clone();
 			Terrain.Direction dir = terrainCopie.recupereDirection(pDep, pArrTemp);
 			if(terrainCopie.estUnePriseAspiration(pDep, dir))
-				getListeToursPourCoupDepart(listeToursComplets, tourTemp.clone(), new Coup(pDep, pArrTemp, Terrain.ChoixPrise.parAspiration), terrainCopie, listePredecesseurs, nbPionsManges, joueurCourant);
+				getListeToursPourCoupDepart(listePionsManges, listeToursComplets, tourTemp.clone(), new Coup(pDep, pArrTemp, Terrain.ChoixPrise.parAspiration), terrainCopie, listePredecesseurs, nbPionsManges, joueurCourant);
 			if(terrainCopie.estUnePrisePercussion(pDep, dir))
-				getListeToursPourCoupDepart(listeToursComplets, tourTemp.clone(), new Coup(pDep, pArrTemp, Terrain.ChoixPrise.parPercussion), terrainCopie, listePredecesseurs, nbPionsManges, joueurCourant);
+				getListeToursPourCoupDepart(listePionsManges, listeToursComplets, tourTemp.clone(), new Coup(pDep, pArrTemp, Terrain.ChoixPrise.parPercussion), terrainCopie, listePredecesseurs, nbPionsManges, joueurCourant);
+		}
+		
+		Joueur.recupereJoueurOpposant(joueurCourant, joueurIA, joueurAdversaire, false);
+		
+		tailleListe = listePionsManges.size() ;
+		for(compteur = 0; compteur < tailleListe; compteur++){
+			pTemp = listePionsManges.get(0);
+			terrainCopie.setCase(joueurCourant.getJoueurID(), pTemp.x, pTemp.y);
+			listePionsManges.remove(0);
 		}
 	}
 	

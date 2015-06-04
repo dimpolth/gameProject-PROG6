@@ -24,6 +24,7 @@ public class Serveur implements Runnable{
 	
 	public int demarrer(){
 		try{
+			port = 55555;
 			passiveSocket = new ServerSocket(port);
 			port = passiveSocket.getLocalPort();
 			Thread th = new Thread(this);

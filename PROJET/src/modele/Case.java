@@ -9,9 +9,9 @@ public class Case {
 	vide;
 	}
 	
-	private ArrayList<Point> succ;
-	private Etat occupation;
-	private Point pos;
+	public ArrayList<Point> succ;
+	public Etat occupation;
+	public Point pos;
 	
 	
 	

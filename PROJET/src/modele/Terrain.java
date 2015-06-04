@@ -115,6 +115,11 @@ public class Terrain {
 				this.tableau[4][6].setOccupation(Case.Etat.joueur2);
 			break;
 			
+			case 7 :
+				this.tableau[1][1].setOccupation(Case.Etat.joueur1);
+				this.tableau[1][5].setOccupation(Case.Etat.joueur2);
+			break;
+			
 		}
 	}
 	
@@ -122,7 +127,9 @@ public class Terrain {
 		Terrain copieTerrain = new Terrain();
 		for (int i=0;i<LIGNES;i++){
 			for (int j=0;j<COLONNES;j++){
-				copieTerrain.tableau[i][j]=this.tableau[i][j].copie();
+				copieTerrain.tableau[i][j].occupation = this.tableau[i][j].occupation;
+				copieTerrain.tableau[i][j].pos = this.tableau[i][j].pos;
+				copieTerrain.tableau[i][j].succ = this.tableau[i][j].succ;
 			}
 		}
 		return copieTerrain;

@@ -33,6 +33,15 @@ public class Echange implements Serializable{
 		infos = new LinkedHashMap<String,Object>();
 	}
 	
+	public Echange clone(){
+		Echange e = new Echange();
+		for (String dataType : this.getAll()) {
+			Object dataValue = this.get(dataType);
+			e.ajouter(dataType,dataValue);
+		}
+		return e;
+	}
+	
 	public void ajouter(String id, Object donnee){
 		infos.put(id, donnee);
 	}

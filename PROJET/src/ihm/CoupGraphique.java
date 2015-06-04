@@ -1,10 +1,11 @@
 package ihm;
 
 import java.awt.Point;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class CoupGraphique implements Runnable {
+public class CoupGraphique implements Runnable, Serializable {
 	private Point[] deplacement;
 	private Point[] choixPrise;
 	private ArrayList<Point> pionsManges, chemin;
@@ -74,9 +75,11 @@ public class CoupGraphique implements Runnable {
 			tg.ihm.bandeauInfos.setScore(2,score[1]);
 		}
 		
+		if(bandeauSup != null){
+		tg.ihm.bandeauInfos.setTexteSup(bandeauSup);}
 		
-		//tg.ihm.bandeauInfos.setTexteSup(bandeauSup);
-		//tg.ihm.bandeauInfos.setTexteInf(bandeauInf);
+		if(bandeauInf != null){
+		tg.ihm.bandeauInfos.setTexteInf(bandeauInf);}
 		
 		CoupGraphique.animationEnCours = false;
 		
