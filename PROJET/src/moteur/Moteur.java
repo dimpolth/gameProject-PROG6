@@ -10,6 +10,7 @@ import javax.jws.soap.SOAPBinding.ParameterStyle;
 import ia.*;
 import ihm.*;
 import modele.*;
+import modele.Case.Etat;
 //import modele.Joueur.typeJoueur;
 import reseau.*;
 
@@ -86,10 +87,8 @@ public class Moteur {
 			e = EtatTour.jeuxIa;
 			jouerIa();
 		}
-		
-	}
 
-	
+	}
 
 	// Renvoie une liste de points d'arrive permettant une prise
 	/**
@@ -409,15 +408,14 @@ public class Moteur {
 					jeuIa = joueurCourant.jouer();
 					// System.out.println(jeuIa.getpDepart() + ";" +
 					// jeuIa.getpArrivee());
-					//System.out.println("depart "+jeuIa.getpDepart()+" arrivé "+jeuIa.getpArrivee());
+					// System.out.println("depart "+jeuIa.getpDepart()+" arrivé "+jeuIa.getpArrivee());
 					selectionPion(jeuIa.getpDepart());
 					// System.out.println("point depart moteur :"+pDepart);
 					selectionDestination(jeuIa.getpArrivee());
 
 					// t.dessineTableauAvecIntersections();
 
-					//traceTerrain();
-
+					// traceTerrain();
 
 				} while (joueurCourant.IaContinue());
 				// System.out.println(" FIN DU JEU IA");
@@ -461,15 +459,20 @@ public class Moteur {
 		com.envoyer(ech);
 
 	}
-	
-	void traceTerrain(){
+
+	void traceTerrain() {
 		if (trace)
 			t.dessineTableauAvecIntersections();
 	}
-	
-	
 
 	public void action(Echange echange, int j) {
+
+		Case.Etat joueurReception;
+		if (j == 1)
+			joueurReception = Etat.joueur1;
+		else if (j == 2)
+			joueurReception = Etat.joueur2;
+
 		for (String dataType : echange.getAll()) {
 			Object dataValue = echange.get(dataType);
 			// System.out.println(dataType);
@@ -481,7 +484,11 @@ public class Moteur {
 			case "point":
 				if (e == EtatTour.selectionPion) {
 					// System.out.println("e : " + e);
-					selectionPion((Point) dataValue);
+					if (Commnunication.enReseau) {
+						if (joueurCourant.getJoueurID() == joueurReception)
+							selectionPion((Point) dataValue);
+					} else{selectionPion((Point) dataValue);}
+					
 				} else if (e == EtatTour.selectionDestination) {
 					// System.out.println("e : " + e);
 					selectionDestination((Point) dataValue);
@@ -611,13 +618,13 @@ public class Moteur {
 					Sauvegarde chargement = (Sauvegarde) ois.readObject();
 					t = new Terrain(chargement.plateau);
 					h = new Historique(chargement.histo);
-					if(chargement.joueur1.isJoueurHumain())
+					if (chargement.joueur1.isJoueurHumain())
 						j1 = new Joueur(chargement.joueur1);
 					else {
 						j1 = new Joueur(Case.Etat.joueur1, Joueur.typeJoueur.ordinateur, IntelligenceArtificielle.difficulteIA.normal, chargement.joueur2, t);
 						j1.chargerScore(chargement.joueur1.getScore());
 					}
-					if(chargement.joueur2.isJoueurHumain())
+					if (chargement.joueur2.isJoueurHumain())
 						j2 = new Joueur(chargement.joueur2);
 					else {
 						j2 = new Joueur(Case.Etat.joueur2, Joueur.typeJoueur.ordinateur, IntelligenceArtificielle.difficulteIA.normal, chargement.joueur1, t);
