@@ -117,7 +117,7 @@ public class Terrain {
 			
 			case 7 :
 				this.tableau[1][1].setOccupation(Case.Etat.joueur1);
-				this.tableau[1][5].setOccupation(Case.Etat.joueur2);
+				this.tableau[1][2].setOccupation(Case.Etat.joueur2);
 			break;
 			
 			case 8 :
