@@ -339,6 +339,11 @@ public class IHM extends JFrame implements ComponentListener {
 				popupB.setVisible(false);
 				setModeReseau(true);
 				popupReseau.message.setText(errReseau);
+				Parametres param = new Parametres();
+				param.j1_identifiant = popupReseau.identifiant.getText();				
+				Echange ec = new Echange();
+				ec.ajouter("parametres", param);
+				com.envoyer(ec);
 			}
 			else{
 				popupReseau.message.setText(errReseau);

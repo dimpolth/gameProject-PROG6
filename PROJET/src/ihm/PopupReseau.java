@@ -71,7 +71,7 @@ public class PopupReseau extends JPanel {
 		contraintes.gridwidth = GridBagConstraints.REMAINDER;
 		
 		add(selectJoueur2Etiq, contraintes);
-		hote = new JTextField("hote:port");
+		hote = new JTextField("127.0.0.1:55555");
 		contraintes.gridwidth = 1;
 		add(hote, contraintes_groupe_fin);
 		

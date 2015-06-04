@@ -6,9 +6,13 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
+import modele.Parametres;
+
 public class Connexion implements Runnable{
 	
 	private Serveur serveur;
+	
+	protected String identifiant;
 	
 	// Socket connecté au joueur
 	private Socket socket;
@@ -83,6 +87,13 @@ public class Connexion implements Runnable{
 						j=1;
 					else if(serveur.joueurs.get(2).equals(this))
 						j=2;
+					
+					if(recu.get("parametres") != null){
+						Parametres params =(Parametres)recu.get("parametres");
+						if(params.j1_identifiant != null){
+							identifiant = params.j1_identifiant;
+						}
+					}
 					
 					serveur.com.recevoir(recu,j);
 					

@@ -109,6 +109,7 @@ public class Communication {
 			Communication.canaux[ Communication.MOTEUR ].recevoir(e,0);			
 		}
 		else if(loc == Communication.IHM && reseau){	
+			System.out.println("COMMUNICATION IHM : ENVOYER ");
 			Communication.canaux[ Communication.IHM ].client.envoyer(e);			
 		}
 		else if(loc == Communication.MOTEUR && !reseau){
