@@ -478,7 +478,7 @@ public class Moteur {
 
 	}
 
-	public void action(Echange echange) {
+	public void action(Echange echange, int j) {
 		for (String dataType : echange.getAll()) {
 			Object dataValue = echange.get(dataType);
 			// System.out.println(dataType);

@@ -94,7 +94,11 @@ public class Communication {
 		return null;
 	}
 	
-	public void envoyer(Echange e){
+	public void envoyer( Echange e ){
+		envoyer(e,0);
+	}
+	
+	public void envoyer(Echange e, int j){
 		
 		//System.out.println(""+canaux_nom[loc]+" : envoyer -> "+e.toString());
 		
@@ -102,17 +106,16 @@ public class Communication {
 			return;
 				
 		if(loc == Communication.IHM && !reseau){
-			Communication.canaux[ Communication.MOTEUR ].recevoir(e);			
+			Communication.canaux[ Communication.MOTEUR ].recevoir(e,0);			
 		}
 		else if(loc == Communication.IHM && reseau){	
 			Communication.canaux[ Communication.IHM ].client.envoyer(e);			
 		}
 		else if(loc == Communication.MOTEUR && !reseau){
-			Communication.canaux[ Communication.IHM ].recevoir(e);			
+			Communication.canaux[ Communication.IHM ].recevoir(e,0);			
 		}
-		else if(loc == Communication.MOTEUR && reseau){
-			
-			Communication.canaux[ Communication.MOTEUR ].serveur.envoyer(e,null);		
+		else if(loc == Communication.MOTEUR && reseau){			
+			Communication.canaux[ Communication.MOTEUR ].serveur.envoyer(e,j);		
 		}
 		else{
 			
@@ -121,13 +124,13 @@ public class Communication {
 		
 	}
 	
-	void recevoir(Echange e){		
+	void recevoir(Echange e, int j){		
 		//System.out.println(""+canaux_nom[loc]+" : recevoir <- "+e.toString());
 		if(loc == Communication.IHM){
 			ihm.notifier(e);			
 		}
 		else if(loc == Communication.MOTEUR){			
-			moteur.action(e);
+			moteur.action(e,j);
 		}
 	}
 	
