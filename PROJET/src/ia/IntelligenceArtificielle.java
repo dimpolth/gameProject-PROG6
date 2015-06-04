@@ -1,12 +1,14 @@
 package ia;
 import java.awt.Point;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Iterator;
+
 import modele.*;
 import moteur.*;
 
-public class IntelligenceArtificielle {
+public class IntelligenceArtificielle implements Serializable {
 	public enum difficulteIA{
 		facile,
 		normal,
@@ -25,7 +27,7 @@ public class IntelligenceArtificielle {
 	
 	private difficulteIA niveauDifficulte;
 	private Joueur joueurIA, joueurAdversaire;
-	private Moteur moteur;
+	private Terrain terrain;
 	private TourDeJeu tourDeJeuCourant;
 	private boolean tourEnCours;
 	private final int coeffPionsManges = 2;
@@ -33,11 +35,11 @@ public class IntelligenceArtificielle {
 	private final int MAX = 1000;
 	private final int MIN = -1000;
 	
-	public IntelligenceArtificielle(difficulteIA niveauDifficulte, Joueur joueurIA, Joueur joueurAdversaire, Moteur m){
+	public IntelligenceArtificielle(difficulteIA niveauDifficulte, Joueur joueurIA, Joueur joueurAdversaire, Terrain t){
 		this.setNiveauDifficulte(niveauDifficulte);
 		this.setJoueurIA(joueurIA);
 		this.setJoueurAdv(joueurAdversaire);
-		this.setMoteur(m); 
+		terrain = t; 
 		this.setTourDeJeuCourant(new TourDeJeu()); // Ces deux variables servent pour la difficulté 
 		this.setTourEnCours(false); 						   // intermédiaire (normal) et difficile qui renvoyent une 
 	}														   // liste de points
@@ -106,7 +108,7 @@ public class IntelligenceArtificielle {
 		Random rand = new Random();
 		
 		// Récupération de tous les tours jouables pour le terrain et le joueur courant
-		listeToursJouables = getToursJouables(this.moteur.t.copie(),this.getJoueurIA());
+		listeToursJouables = getToursJouables(terrain.copie(),this.getJoueurIA());
 	
 
 		if(listeToursJouables.size() > 0)
@@ -152,7 +154,7 @@ public class IntelligenceArtificielle {
 		double tempsDepart = (double) System.currentTimeMillis(), temp; // pour tests
 		
 		// Récupération de tous les tours jouables pour le terrain et le joueur courant
-		listeToursJouables = getToursJouables(this.moteur.t, this.getJoueurIA());
+		listeToursJouables = getToursJouables(terrain, this.getJoueurIA());
 		
 		if(profondeurDynamique){ 	// Adaptation dynamique de la profondeur explorée
 			if(listeToursJouables.size() >= 10 && profondeur > 1)
@@ -321,7 +323,7 @@ public class IntelligenceArtificielle {
 		listeCoupsObligatoires = cloneTerrain.couplibre(joueurCourant.getJoueurID()); // On regarde si on a des coups obligatoires
 		
 		if(listeCoupsObligatoires.isEmpty()) // DEBUT DE TOUR - Sans coup obligatoire (mouvement libre n'amenant aucune prise)
-			listePointsDeDepart = this.moteur.listePionsJouables(joueurCourant, cloneTerrain);
+			listePointsDeDepart = terrain.listePionsJouables(joueurCourant, cloneTerrain);
 		else{							 // DEBUT DE TOUR - Avec coup/prise obligatoire
 			listePointsDeDepart = listeCoupsObligatoires;
 			priseObligatoire = true;
@@ -335,7 +337,7 @@ public class IntelligenceArtificielle {
 			pDepartCourant = (Point) itPointsDepart.next().clone();
 			coupTemp.setpDepart(pDepartCourant);
 			
-			itPointsArrivee = this.moteur.deplacementPossible(pDepartCourant, listeVide, cloneTerrain).iterator();
+			itPointsArrivee = terrain.deplacementPossible(pDepartCourant, listeVide, cloneTerrain.getTableau()).iterator();
 				
 			if(priseObligatoire){ // Si on a des prises obligatoires il faut trier les solutions disponibles
 				// pour tous les successeurs du point de départ courant
@@ -404,7 +406,7 @@ public class IntelligenceArtificielle {
 		pDep = pArr;
 		
 		// On récupère les successeurs possibles à la position d'arrivée du coup joué
-		itPointsArriveeSuivants = this.moteur.deplacementPossible(pDep, listePredecesseurs, terrainCopie).iterator();
+		itPointsArriveeSuivants = terrain.deplacementPossible(pDep, listePredecesseurs, terrainCopie.getTableau()).iterator();
 
 		while(itPointsArriveeSuivants.hasNext()){
 			pArrTemp = (Point) itPointsArriveeSuivants.next().clone();
@@ -468,14 +470,6 @@ public class IntelligenceArtificielle {
 
 	private void setJoueurAdv(Joueur joueurAdversaire) {
 		this.joueurAdversaire = joueurAdversaire;
-	}
-
-	public Moteur getMoteur() {
-		return moteur;
-	}
-
-	public void setMoteur(Moteur m) {
-		this.moteur = m;
 	}
 
 	public boolean isTourEnCours() {
