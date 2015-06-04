@@ -374,11 +374,11 @@ public class Moteur {
 					jeuIa = joueurCourant.jouer();
 					// System.out.println(jeuIa.getpDepart() + ";" +
 					// jeuIa.getpArrivee());
-					// System.out.println("depart "+jeuIa.getpDepart()+" arrivé "+jeuIa.getpArrivee());
+					//System.out.println("depart "+jeuIa.getpDepart()+" arrivé "+jeuIa.getpArrivee());
 					selectionPion(jeuIa.getpDepart());
 					// System.out.println("point depart moteur :"+pDepart);
 					selectionDestination(jeuIa.getpArrivee());
-					// t.dessineTableauAvecIntersections();
+					//t.dessineTableauAvecIntersections();
 
 				} while (joueurCourant.IaContinue());
 				// System.out.println(" FIN DU JEU IA");
@@ -561,11 +561,21 @@ public class Moteur {
 					final FileInputStream fichier = new FileInputStream((File) dataValue);
 					ois = new ObjectInputStream(fichier);
 					Sauvegarde chargement = (Sauvegarde) ois.readObject();
-					j1 = new Joueur(chargement.joueur1);
-					j2 = new Joueur(chargement.joueur2);
-					joueurCourant = new Joueur(chargement.joueurCourant);
 					t = new Terrain(chargement.plateau);
 					h = new Historique(chargement.histo);
+					if(chargement.joueur1.isJoueurHumain())
+						j1 = new Joueur(chargement.joueur1);
+					else {
+						j1 = new Joueur(Case.Etat.joueur1, Joueur.typeJoueur.ordinateur, IntelligenceArtificielle.difficulteIA.normal, chargement.joueur2, t);
+						j1.chargerScore(chargement.joueur1.getScore());
+					}
+					if(chargement.joueur2.isJoueurHumain())
+						j2 = new Joueur(chargement.joueur2);
+					else {
+						j2 = new Joueur(Case.Etat.joueur2, Joueur.typeJoueur.ordinateur, IntelligenceArtificielle.difficulteIA.normal, chargement.joueur1, t);
+						j2.chargerScore(chargement.joueur2.getScore());
+					}
+					joueurCourant = new Joueur(chargement.joueurCourant);
 				} catch (final java.io.IOException e) {
 					e.printStackTrace();
 				} catch (final ClassNotFoundException e) {
