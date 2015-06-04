@@ -11,6 +11,7 @@ import javax.swing.JPanel;
 @SuppressWarnings("serial")
 class PopupMenu extends JPanel {
 	Bouton boutonMenuReseau, boutonMenuLocal;
+	Bouton boutonMenuSauvegarder, boutonMenuCharger;
 	
 	public PopupMenu(IHM i) {
 		super(new GridBagLayout());
@@ -29,10 +30,10 @@ class PopupMenu extends JPanel {
 		boutonMenuReprendre.addActionListener(new Ecouteur(Ecouteur.Bouton.REPRENDRE, i));
 		add(boutonMenuReprendre, contraintesCategorie);
 
-		Bouton boutonMenuSauvegarder = new Bouton("Sauvegarder la partie");
+		boutonMenuSauvegarder = new Bouton("Sauvegarder la partie");
 		boutonMenuSauvegarder.addActionListener(new Ecouteur(Ecouteur.Bouton.SAUVEGARDER, i));
 		add(boutonMenuSauvegarder, contraintes);		
-		Bouton boutonMenuCharger = new Bouton("Charger une partie");
+		boutonMenuCharger = new Bouton("Charger une partie");
 		boutonMenuCharger.addActionListener(new Ecouteur(Ecouteur.Bouton.CHARGER, i));
 		add(boutonMenuCharger, contraintes);
 		boutonMenuReseau = new Bouton("Jouer en réseau");

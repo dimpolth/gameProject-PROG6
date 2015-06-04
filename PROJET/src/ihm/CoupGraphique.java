@@ -3,6 +3,7 @@ package ihm;
 import java.awt.Point;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class CoupGraphique implements Runnable, Serializable {
 	private Point[] deplacement;
@@ -30,6 +31,7 @@ public class CoupGraphique implements Runnable, Serializable {
 		bandeauSup = null;
 		bandeauInf = null;
 		this.chemin = chemin;
+		
 	}
 	
 	
@@ -38,7 +40,6 @@ public class CoupGraphique implements Runnable, Serializable {
 		t.start();
 	}
 	public void run() {
-		CoupGraphique.animationEnCours = true;	
 		
 		
 		
@@ -55,8 +56,11 @@ public class CoupGraphique implements Runnable, Serializable {
 		}
 		if(pionsManges != null) {
 			tg.manger(pionsManges);
-		} else if(choixPrise != null){
+		}
+		if(choixPrise != null){
 			tg.afficherPrisesPossibles(choixPrise);
+		} else {
+			tg.cacherPrisesPossibles();
 		}
 		try {
 			Thread.sleep(TerrainGraphique.ANIM_DISP);
@@ -71,14 +75,16 @@ public class CoupGraphique implements Runnable, Serializable {
 			tg.ihm.bandeauInfos.setScore(2,score[1]);
 		}
 		
+		if(bandeauSup != null){
+		tg.ihm.bandeauInfos.setTexteSup(bandeauSup);}
 		
-		//tg.ihm.bandeauInfos.setTexteSup(bandeauSup);
-		//tg.ihm.bandeauInfos.setTexteInf(bandeauInf);
+		if(bandeauInf != null){
+		tg.ihm.bandeauInfos.setTexteInf(bandeauInf);}
 		
 		CoupGraphique.animationEnCours = false;
 		
 		if(tg.lCoups.size() != 0) {
-			tg.lCoups.pollFirst().lancer();			
+			tg.lCoups.pollFirst().lancer();
 		}
 		
 		
@@ -86,7 +92,8 @@ public class CoupGraphique implements Runnable, Serializable {
 	
 	public static void afficherCoups(TerrainGraphique tg){
 		CoupGraphique.tg = tg;
-		if(!CoupGraphique.animationEnCours){			
+		if(!CoupGraphique.animationEnCours){
+			CoupGraphique.animationEnCours = true;	
 			tg.lCoups.pollFirst().lancer();
 		}
 	}
