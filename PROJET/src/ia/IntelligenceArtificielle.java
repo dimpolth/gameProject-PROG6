@@ -130,7 +130,7 @@ public class IntelligenceArtificielle implements Serializable {
 	 */
 	private TourDeJeu coupNormal(){
 		TourDeJeu tourSolution = new TourDeJeu();
-		int profondeur = 2;
+		int profondeur = 4;
 		int iterateurProf = 0;
 		
 		
@@ -182,7 +182,7 @@ public class IntelligenceArtificielle implements Serializable {
 		while(it.hasNext()){
 		
 			tourCourant = (TourDeJeu) it.next().clone();
-			tourCourant.getTerrainFinal().dessineTableauAvecIntersections();
+			
 			nbPionsManges = tourCourant.getValeurResultat() * this.coeffPionsManges;
 		
 			valTemp = nbPionsManges + min(profondeur-1, alpha, beta, tourCourant.getTerrainFinal(), iterateurProf+1);
@@ -374,18 +374,20 @@ public class IntelligenceArtificielle implements Serializable {
 	public void getListeToursPourCoupDepart(ArrayList<Point> listePionsManges, ArrayList<TourDeJeu> listeToursComplets, TourDeJeu tourTemp, Coup coupDeDepart, Terrain cloneTerrain, ArrayList<Point> listePredecesseurs, int nbPionsManges, Joueur joueurCourant){
 		Iterator<Point> itPointsArriveeSuivants;
 		Terrain terrainCopie;
-		Point pDep, pArr, pArrTemp, pTemp;
+		Point pDep,pDepSuiv, pDepCopie, pArr, pArrTemp, pTemp;
 		int compteur = 0, tailleListe;
 		
 		pDep = coupDeDepart.getpDepart();
 		pArr = coupDeDepart.getpArrivee();
 	
 		terrainCopie = cloneTerrain;
+
 		
 		terrainCopie.deplacement(pDep, pArr, joueurCourant, listePredecesseurs);
 
 		if(coupDeDepart.getChoixPrise() != null)
 			listePionsManges = terrainCopie.manger(joueurCourant, terrainCopie.recupereDirection(pDep, pArr), pDep, pArr,coupDeDepart.getChoixPrise());
+		
 		nbPionsManges += listePionsManges.size();
 		listePredecesseurs.add(pDep);
 		
@@ -393,31 +395,36 @@ public class IntelligenceArtificielle implements Serializable {
 		// Il y a aprés chaque prise possibilité de s'arrêter
 		tourTemp.addCoup(coupDeDepart);
 		tourTemp.setValeurResultat(nbPionsManges);
-		tourTemp.setTerrainFinal(terrainCopie);
+		tourTemp.setTerrainFinal(terrainCopie.copie());
 		listeToursComplets.add(tourTemp.clone());
 				
-		pDep = pArr;
+		
+		pDepSuiv = pArr;
 		
 		// On récupère les successeurs possibles à la position d'arrivée du coup joué
-		itPointsArriveeSuivants = terrain.deplacementPossible(pDep, listePredecesseurs, terrainCopie.getTableau()).iterator();
+		itPointsArriveeSuivants = terrain.deplacementPossible(pDepSuiv, listePredecesseurs, terrainCopie.getTableau()).iterator();
 
 		while(itPointsArriveeSuivants.hasNext()){
 			pArrTemp = (Point) itPointsArriveeSuivants.next().clone();
-			Terrain.Direction dir = terrainCopie.recupereDirection(pDep, pArrTemp);
-			if(terrainCopie.estUnePriseAspiration(pDep, dir))
-				getListeToursPourCoupDepart(listePionsManges, listeToursComplets, tourTemp.clone(), new Coup(pDep, pArrTemp, Terrain.ChoixPrise.parAspiration), terrainCopie, listePredecesseurs, nbPionsManges, joueurCourant);
-			if(terrainCopie.estUnePrisePercussion(pDep, dir))
-				getListeToursPourCoupDepart(listePionsManges, listeToursComplets, tourTemp.clone(), new Coup(pDep, pArrTemp, Terrain.ChoixPrise.parPercussion), terrainCopie, listePredecesseurs, nbPionsManges, joueurCourant);
+			Terrain.Direction dir = terrainCopie.recupereDirection(pDepSuiv, pArrTemp);
+			if(terrainCopie.estUnePriseAspiration(pDepSuiv, dir))
+				getListeToursPourCoupDepart(listePionsManges, listeToursComplets, tourTemp.clone(), new Coup(pDepSuiv, pArrTemp, Terrain.ChoixPrise.parAspiration), terrainCopie, listePredecesseurs, nbPionsManges, joueurCourant);
+			if(terrainCopie.estUnePrisePercussion(pDepSuiv, dir))
+				getListeToursPourCoupDepart(listePionsManges, listeToursComplets, tourTemp.clone(), new Coup(pDepSuiv, pArrTemp, Terrain.ChoixPrise.parPercussion), terrainCopie, listePredecesseurs, nbPionsManges, joueurCourant);
 		}
 		
-		Joueur.recupereJoueurOpposant(joueurCourant, joueurIA, joueurAdversaire, false);
+		
 		
 		tailleListe = listePionsManges.size() ;
+		
+		terrainCopie.deplacement(pArr, pDep, joueurCourant, new ArrayList<Point>());
+		
 		for(compteur = 0; compteur < tailleListe; compteur++){
 			pTemp = listePionsManges.get(0);
-			terrainCopie.setCase(joueurCourant.getJoueurID(), pTemp.x, pTemp.y);
+			cloneTerrain.setCase(Joueur.recupereJoueurOpposant(joueurCourant, joueurIA, joueurAdversaire, false).getJoueurID(), pTemp.x, pTemp.y);
 			listePionsManges.remove(0);
 		}
+
 	}
 	
 	/*
