@@ -6,8 +6,6 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 public class Theme {
-	TerrainGraphique tg = null;
-	IHM i;
 
 	public enum Type {
 		BOIS("bois"), MARBRE("marbre");
@@ -35,9 +33,7 @@ public class Theme {
 		return id;
 	}
 
-	public void setTheme(Type pId, TerrainGraphique t, IHM ihm_theme) {
-		tg = t;
-		i = ihm_theme;
+	public void setTheme(Type pId) {
 
 		if ((this.id == null || !this.id.equals(pId))) {
 			this.id = pId;
@@ -46,12 +42,12 @@ public class Theme {
 
 		}
 		try {
-			tg.imgPlateau = ImageIO.read(getClass().getResource("/images/themes/" + pId.s + "/plateau.png"));
-			tg.imgPion1 = ImageIO.read(getClass().getResource("/images/themes/" + pId.s + "/pion1.png"));
-			tg.imgPion2 = ImageIO.read(getClass().getResource("/images/themes/" + pId.s + "/pion2.png"));
-			tg.imgCroix = ImageIO.read(getClass().getResource("/images/themes/" + pId.s + "/croix.png"));
+			ihm.tg.imgPlateau = ImageIO.read(getClass().getResource("/images/themes/" + pId.s + "/plateau.png"));
+			ihm.tg.imgPion1 = ImageIO.read(getClass().getResource("/images/themes/" + pId.s + "/pion1.png"));
+			ihm.tg.imgPion2 = ImageIO.read(getClass().getResource("/images/themes/" + pId.s + "/pion2.png"));
+			ihm.tg.imgCroix = ImageIO.read(getClass().getResource("/images/themes/" + pId.s + "/croix.png"));
 
-			i.coucheJeu.add(tg, BorderLayout.CENTER);
+			ihm.coucheJeu.add(ihm.tg, BorderLayout.CENTER);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

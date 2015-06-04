@@ -148,7 +148,7 @@ public class IHM extends JFrame implements ComponentListener {
 		gestionCouche.add(popupV, new Integer(4));
 		popupV.setVisible(false);
 
-		theme.setTheme(Theme.Type.BOIS,tg,this);
+		theme.setTheme(Theme.Type.BOIS);
 		
 		setModeReseau(false);
 
@@ -277,6 +277,11 @@ public class IHM extends JFrame implements ComponentListener {
 			params.j2_identifiant = popupO.identifiantJoueur2.getText();
 			params.j1_type = Parametres.NiveauJoueur.getFromIndex(popupO.selectJoueur1.getSelectedIndex());
 			params.j2_type = Parametres.NiveauJoueur.getFromIndex(popupO.selectJoueur2.getSelectedIndex());
+			
+			if(popupO.theme.getSelectedItem() == "Boisé")
+				theme.setTheme(Theme.Type.BOIS);
+			else if(popupO.theme.getSelectedItem() == "Marbre")
+				theme.setTheme(Theme.Type.MARBRE);
 
 			Echange e = new Echange();
 			e.ajouter("parametres", params);
