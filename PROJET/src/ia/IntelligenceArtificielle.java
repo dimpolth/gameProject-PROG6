@@ -44,8 +44,10 @@ public class IntelligenceArtificielle implements Serializable {
 		this.setTourEnCours(false); 						   // intermédiaire (normal) et difficile qui renvoyent une 
 	}														   // liste de points
 
-	public Coup jouerIA(){
+	public Coup jouerIA(Terrain t){
 		
+		terrain = t;
+		terrain.dessineTableauAvecIntersections();
 		Coup coupSolution = new Coup(new Point(-1,-1), new Point(-1,-1));
 		Coup coupTemp;
 		ArrayList<Coup> listeCoupsDuTour;
