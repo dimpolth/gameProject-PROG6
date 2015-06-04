@@ -340,7 +340,7 @@ public class IHM extends JFrame implements ComponentListener {
 	}
 
 	public void notifier(Echange e) {
-		int tpsAnimation = 0;
+		
 
 		Object dataValue;
 
@@ -401,6 +401,13 @@ public class IHM extends JFrame implements ComponentListener {
 			bandeauInfos.setScore(1, score[0]);
 			bandeauInfos.setScore(2, score[1]);
 		}
+		if((dataValue = e.get("parametres")) != null) {
+			Parametres params = (Parametres)dataValue;
+			bandeauInfos.setIdentifiant(1,params.j1_identifiant);
+			bandeauInfos.setIdentifiant(2,params.j2_identifiant);			
+		}
+		
+		
 
 	}
 }
