@@ -77,7 +77,7 @@ public class Moteur {
 		// "Joueur 2");
 		// j1 = new Joueur(Case.Etat.joueur1, Joueur.typeJoueur.ordinateur,
 		// IntelligenceArtificielle.difficulteIA.facile, j2, this);
-		j2 = new Joueur(Case.Etat.joueur2, Joueur.typeJoueur.ordinateur, IntelligenceArtificielle.difficulteIA.facile, j1, t);
+		j2 = new Joueur(Case.Etat.joueur2, Joueur.typeJoueur.ordinateur, IntelligenceArtificielle.difficulteIA.normal, j1, t);
 		joueurCourant = j1;
 		message("bandeauSup", joueurCourant.getNom());
 		message("bandeauInf", "Selection du pion");
@@ -404,7 +404,7 @@ public class Moteur {
 					 * if(jeuIa != null) System.out.println(jeuIa.getpDepart() +
 					 * ";" + jeuIa.getpArrivee());
 					 */
-					jeuIa = joueurCourant.jouer(t);
+					jeuIa = joueurCourant.jouer();
 					// System.out.println(jeuIa.getpDepart() + ";" +
 					// jeuIa.getpArrivee());
 					// System.out.println("depart "+jeuIa.getpDepart()+" arrivé "+jeuIa.getpArrivee());
