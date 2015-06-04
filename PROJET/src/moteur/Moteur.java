@@ -176,8 +176,7 @@ public class Moteur {
 		return b;
 	}
 
-	public ArrayList<Point> listePionsJouables(Joueur j,
-			Terrain copieTerrainEventuelle) {
+	public ArrayList<Point> listePionsJouables(Joueur j, Terrain copieTerrainEventuelle) {
 		Terrain terr = t;
 		if (copieTerrainEventuelle != null) // Utile à l'IA pour travailler sur
 		// une copie de terrain modifiée
@@ -250,7 +249,6 @@ public class Moteur {
 			boolean prisePercu = t.estUnePrisePercussion(pDepart, d);
 			if (t.deplacement(pDepart, pArrive, joueurCourant, h.histoTour) == 0) {
 				Point[] tabPts = { pDepart, pArrive };
-				ech.vider();
 				gestionCoupGraphique(tabPts, null, null, null, "selectionpoint");
 				prise(priseAspi, prisePercu);
 				tourEnCours = true;
@@ -271,7 +269,7 @@ public class Moteur {
 				Point offP = t.offsetPercussion(d, pArrive);
 				perc = new Point(offP.x + pArrive.x, offP.y + pArrive.y);
 				Point[] tabPts = { aspi, perc };
-				gestionCoupGraphique(null, tabPts, null, null, "choixJoueur");
+				gestionCoupGraphique(null, tabPts, null, null,null,"choisissez votre prise");
 				e = EtatTour.attenteChoix;
 			} else {
 				choix = jeuIa.getChoixPrise();
@@ -290,8 +288,12 @@ public class Moteur {
 			int[] score = { j1.getScore(), j2.getScore() };
 			gestionCoupGraphique(null, null, l, score, "priseAspi");
 			//t.dessineTableauAvecIntersections();
-			if (joueurCourant.isJoueurHumain())
+			if (joueurCourant.isJoueurHumain()){
 				testFinTour();
+				ech.vider();
+				ech.ajouter("finTour",true);
+				com.envoyer(ech);}
+				
 		} else if (!priseAspi && prisePercu) {
 			// System.out.println("percu");
 			l = t.manger(joueurCourant, d, pDepart, pArrive,
@@ -300,10 +302,14 @@ public class Moteur {
 			int[] score = { j1.getScore(), j2.getScore() };
 			gestionCoupGraphique(null, null, l, score, "prisePercu");
 			//t.dessineTableauAvecIntersections();
-			if (joueurCourant.isJoueurHumain())
+			if (joueurCourant.isJoueurHumain()){
 				testFinTour();
+				ech.vider();
+				ech.ajouter("finTour",true);
+				com.envoyer(ech);}
 		} else {
-			finTour();
+			if (joueurCourant.isJoueurHumain())
+				finTour();
 		}
 	}
 
@@ -318,6 +324,7 @@ public class Moteur {
 		ech.ajouter("pionDeselectionne", true);
 		ech.ajouter("annuler", true);
 		ech.ajouter("refaire", false);
+		ech.ajouter("finTour",false);
 		com.envoyer(ech);
 		if (partieTerminee(false)) {
 			e = EtatTour.partieFinie;
@@ -341,6 +348,7 @@ public class Moteur {
 			finTour();
 		} else {
 			e = EtatTour.selectionDestination;
+			message("bandeauInf","Selection destination");
 		}
 	}
 
@@ -477,18 +485,17 @@ public class Moteur {
 					ArrayList<Point> l = new ArrayList<Point>();
 					boolean tperc = perc.equals((Point) dataValue);
 					boolean taspi = aspi.equals((Point) dataValue);
-					//System.out.println("perc " + tperc + " aspi " + taspi);
 					if (tperc || taspi) {
 						if (tperc) {
-							// System.out.println("choix percu");
 							l = t.manger(joueurCourant, d, pDepart, pArrive, Terrain.ChoixPrise.parPercussion);
 						} else if (taspi) {
-							// System.out.println("choix aspi");
 							l = t.manger(joueurCourant, d, pDepart, pArrive, Terrain.ChoixPrise.parAspiration);
 						}
 						majScore(l.size());
 						int[] score = { j1.getScore(), j2.getScore() };
 						gestionCoupGraphique(null, null, l, score, "PriseselonchoixJoueur");
+						ech.vider();
+						ech.ajouter("finTour",true);
 						//t.dessineTableauAvecIntersections();
 						testFinTour();
 					}
@@ -565,7 +572,8 @@ public class Moteur {
 				}
 				break;
 			case "finTour":
-				finTour();
+				if (tourEnCours)
+					finTour();
 				break;
 			case "sauvegarder":
 				Sauvegarde s = new Sauvegarde(t, h, j1, j2, joueurCourant);
