@@ -66,9 +66,9 @@ class Client implements Runnable{
 	}
 	
 	// ENVOYER UNE INFORMATION VERS LE SERVEUR
-	public void envoyer(Object e) {
+	public void envoyer(Echange e) {
 		try {
-			oos.writeObject(e);
+			oos.writeObject(e.clone());
 		}
 		catch (Exception ex) {
 		}
@@ -79,31 +79,19 @@ class Client implements Runnable{
 		Thread currentTh = Thread.currentThread();
 		
 		if (currentTh.getName().equals("recep")) {
-			Object obj;
+			
 			while (true) {
 				
 				// System.out.println("boucle");
 				try {
 					Echange retour = (Echange)this.ois.readObject();
-					System.out.println(retour.toString());
 					
-					if(true)
-						continue;
-				
-					obj = this.ois.readObject();
-					Echange e= (Echange)obj;
-					System.out.println("CLIENT RECOIS : "+((Echange) e).toString() );
-				
-					//System.out.println("Reception donnée serveur chez client");
-					com.recevoir(e);
+					com.recevoir(retour);
 				}
 				catch (Exception ex) {
 				}
 				
-				try {
-					Thread.sleep(3000);
-				} catch (Exception e) {
-				}
+				
 			}
 
 		}
