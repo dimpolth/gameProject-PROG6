@@ -36,7 +36,7 @@ public class PopupOptions extends JPanel {
 			return this;
 		}
 	}
-
+	JLabel selectJoueur1Etiq, selectJoueur2Etiq;
 	JTextField identifiantJoueur1, identifiantJoueur2;
 	JComboBox<String> selectJoueur1, selectJoueur2;
 
@@ -54,8 +54,9 @@ public class PopupOptions extends JPanel {
 		contraintes_groupe.gridwidth = 1;
 		GridBagConstraints contraintes_groupe_fin = (GridBagConstraints) contraintes.clone();
 		contraintes_groupe_fin.gridwidth = GridBagConstraints.REMAINDER;
-
-		JLabel selectJoueur1Etiq = new JLabel("1er joueur : ");
+		
+	
+		selectJoueur1Etiq = new JLabel("1er joueur : ");
 		contraintes.gridwidth = GridBagConstraints.REMAINDER;
 		add(selectJoueur1Etiq, contraintes);
 
@@ -75,7 +76,7 @@ public class PopupOptions extends JPanel {
 		
 		add(selectJoueur1, contraintes);
 
-		JLabel selectJoueur2Etiq = new JLabel("2ème joueur : ");
+		selectJoueur2Etiq = new JLabel("2ème joueur : ");
 		contraintes.gridwidth = GridBagConstraints.REMAINDER;
 		
 		add(selectJoueur2Etiq, contraintes);

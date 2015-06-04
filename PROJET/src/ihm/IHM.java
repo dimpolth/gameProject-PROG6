@@ -3,10 +3,14 @@ package ihm;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.Point;
+import java.awt.Toolkit;
 import java.awt.event.*;
 import java.io.IOException;
 import java.util.LinkedList;
@@ -21,6 +25,8 @@ import reseau.*;
 public class IHM extends JFrame implements ComponentListener {
 
 	public Communication com;
+	JFrame fenetreChargement;
+	
 	Theme theme;
 	
 	JPanel coucheJeu;
@@ -32,7 +38,7 @@ public class IHM extends JFrame implements ComponentListener {
 	PopupVictoire popupV;
 	TerrainGraphique tg;
 	BandeauInfos bandeauInfos;
-	Chargement chargement;
+	Chargement chargement, chargement2;
 	
 	Bouton boutonAnnuler;
 	Bouton boutonRefaire;
@@ -44,6 +50,14 @@ public class IHM extends JFrame implements ComponentListener {
 
 		// Initialisation de la fenêtre
 		super("Fanorona");
+		fenetreChargement(true);
+		try {
+			fenetreChargement.setIconImage(ImageIO.read(getClass().getResource("/images/icone.png")));
+			setIconImage(ImageIO.read(getClass().getResource("/images/icone.png")));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
 
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		addComponentListener(this);
@@ -139,13 +153,12 @@ public class IHM extends JFrame implements ComponentListener {
 		setModeReseau(false);
 
 		setMinimumSize(new Dimension(800, 600));
-		setSize(800,600);
-		//setSize(Math.max(800,(int)(java.awt.Toolkit.getDefaultToolkit().getScreenSize().width*0.75)), Math.max(600,(int)(java.awt.Toolkit.getDefaultToolkit().getScreenSize().height*0.75)));
-		try {
-			setIconImage(ImageIO.read(getClass().getResource("/images/icone.png")));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		setSize(Math.max(800,(int)(java.awt.Toolkit.getDefaultToolkit().getScreenSize().width*0.75)), Math.max(600,(int)(java.awt.Toolkit.getDefaultToolkit().getScreenSize().height*0.75)));
+		Toolkit screen = Toolkit.getDefaultToolkit();
+        Dimension dFen = screen.getScreenSize();
+		setLocation(dFen.width/2-getSize().width/2,dFen.height/2-getSize().height/2);
+		
+		fenetreChargement(false);
 		setVisible(true);
 		
 
@@ -179,24 +192,31 @@ public class IHM extends JFrame implements ComponentListener {
 		case SAUVEGARDER:
 			JFileChooser fcSauver = new JFileChooser();
 			if (fcSauver.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
-				System.out.println("Action : sauvegarder");
+				Echange e = new Echange();
+				e.ajouter("sauvegarder", fcSauver.getSelectedFile());
+				com.envoyer(e);				
 			}
 			break;
 		case CHARGER:
 			JFileChooser fcCharger = new JFileChooser();
 			if (fcCharger.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-				System.out.println("Action : charger");
+				Echange e = new Echange();
+				e.ajouter("charger", fcCharger.getSelectedFile());
+				com.envoyer(e);
 			}
 			break;
 		case MODE:
 			if(modeReseau){
 				String choix[] = { "Confirmer", "Annuler" };
-				int retour = JOptionPane.showOptionDialog(this, "Revenir au jeu local quittera la partie réseau.", "Attention", 1, 1, null, choix, choix[1]);
-				if (retour == 1)
-					setModeReseau(false);								
+				int retour = JOptionPane.showOptionDialog(this, "Revenir au jeu local quittera la partie réseau.", "Attention", 1, JOptionPane.INFORMATION_MESSAGE, null, choix, choix[1]);
+				
+				if (retour == 0){
+					setModeReseau(false);	
+				}
+				popupB.setVisible(false);
 			}
 			else{			
-				popupReseau.erreur.setText("");
+				popupReseau.message.setText("");
 				popupReseau.setVisible(true);
 			}
 			popupM.setVisible(false);
@@ -281,7 +301,14 @@ public class IHM extends JFrame implements ComponentListener {
 			String errReseau = null;
 			// Nouveau serveur
 			if(popupReseau.etreHote.isSelected()){
-				errReseau = Communication.modeReseau("");				
+				errReseau = Communication.modeReseau("");
+				if(errReseau == null){
+					
+					JOptionPane.showMessageDialog( this,
+					                     "Le serveur est ouvert sur le port : "+Communication.getPort()+"",
+					                     "Port "+Communication.getPort()+"",
+					                      1);
+				}
 			}
 			else{
 				System.out.println("1");
@@ -297,10 +324,10 @@ public class IHM extends JFrame implements ComponentListener {
 				popupReseau.setVisible(false);
 				popupB.setVisible(false);
 				setModeReseau(true);
-				popupReseau.erreur.setText(errReseau);
+				popupReseau.message.setText(errReseau);
 			}
 			else{
-				popupReseau.erreur.setText(errReseau);
+				popupReseau.message.setText(errReseau);
 			}
 			
 			
@@ -308,6 +335,37 @@ public class IHM extends JFrame implements ComponentListener {
 		}
 		
 	
+	}
+	
+	public void fenetreChargement(boolean b){
+		if(b){
+			
+			Toolkit screen = Toolkit.getDefaultToolkit();
+	        Dimension dFen = screen.getScreenSize();
+			fenetreChargement = new JFrame();			
+			fenetreChargement.setLayout(new GridLayout(2,1));
+			JLabel texte = new JLabel("Chargement en cours...",SwingConstants.CENTER);
+			texte.setFont(new Font("Arial", Font.BOLD, 25));
+			fenetreChargement.add(texte);
+			JPanel p = new JPanel();
+			chargement2 = new Chargement();
+			chargement2.afficher();
+			p.add(chargement2);
+			fenetreChargement.add(p);
+			fenetreChargement.setUndecorated(true);
+			//fenetreChargement.setSize(300,200);
+			fenetreChargement.setSize(dFen.width/5,dFen.height/5);
+			fenetreChargement.setResizable(false);        
+			fenetreChargement.setLocation(dFen.width/2-fenetreChargement.getSize().width/2,dFen.height/2-fenetreChargement.getSize().height/2);
+			fenetreChargement.setVisible(true);
+			
+		}
+		else{
+			chargement2.cacher();
+			fenetreChargement.setVisible(false);
+		}
+		
+		
 	}
 	
 	public void setModeReseau(boolean r){
@@ -319,6 +377,18 @@ public class IHM extends JFrame implements ComponentListener {
 			popupM.boutonMenuReseau.setVisible(false);
 			popupM.boutonMenuLocal.setVisible(true);
 		}
+		
+		popupO.selectJoueur1Etiq.setVisible(!r);
+		popupO.selectJoueur2Etiq.setVisible(!r);
+		popupO.identifiantJoueur1.setVisible(!r);
+		popupO.identifiantJoueur2.setVisible(!r);
+		popupO.selectJoueur1.setVisible(!r);
+		popupO.selectJoueur2.setVisible(!r);
+		
+		popupM.boutonMenuSauvegarder.setEnabled(!r);
+		popupM.boutonMenuCharger.setEnabled(!r);
+		
+		modeReseau = r;
 	}
 
 	@Override
@@ -336,8 +406,10 @@ public class IHM extends JFrame implements ComponentListener {
 		popupM.setBounds(getWidth() / 2 - 150, getHeight() / 2 - 275, 300, 550);
 		popupO.setBounds(getWidth() / 2 - 300, getHeight() / 2 - 250, 600, 500);
 		popupR.setBounds(getWidth() / 2 - 400, getHeight() / 2 - 250, 800, 500);
-		popupReseau.setBounds(getWidth() / 2 - 200, getHeight() / 2 - 175, 400, 350);
+
+		popupReseau.setBounds(getWidth() / 2 - 200, getHeight() / 2 - 225, 400, 450);		
 		popupV.setBounds(0, 0, getWidth(), getHeight());
+
 	}
 
 	@Override
