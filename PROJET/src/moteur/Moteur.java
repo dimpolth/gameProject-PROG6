@@ -62,7 +62,7 @@ public class Moteur {
 	 */
 	public void init() {
 		t = new Terrain();
-		
+		t.TerrainTest(7);
 		h = new Historique();
 		h.ajouterTour(t);
 		ech = new Echange();
@@ -259,7 +259,6 @@ public class Moteur {
 			boolean prisePercu = t.estUnePrisePercussion(pDepart, d);
 			if (t.deplacement(pDepart, pArrive, joueurCourant, h.histoTour) == 0) {
 				Point[] tabPts = { pDepart, pArrive };
-				ech.vider();
 				gestionCoupGraphique(tabPts, null, null, null, "selectionpoint");
 				prise(priseAspi, prisePercu);
 				tourEnCours = true;
@@ -280,7 +279,7 @@ public class Moteur {
 				Point offP = t.offsetPercussion(d, pArrive);
 				perc = new Point(offP.x + pArrive.x, offP.y + pArrive.y);
 				Point[] tabPts = { aspi, perc };
-				gestionCoupGraphique(null, tabPts, null, null, "choixJoueur");
+				gestionCoupGraphique(null, tabPts, null, null,null,"choisissez votre prise");
 				e = EtatTour.attenteChoix;
 			} else {
 				choix = jeuIa.getChoixPrise();
@@ -299,8 +298,12 @@ public class Moteur {
 			int[] score = { j1.getScore(), j2.getScore() };
 			gestionCoupGraphique(null, null, l, score, "priseAspi");
 			//t.dessineTableauAvecIntersections();
-			if (joueurCourant.isJoueurHumain())
+			if (joueurCourant.isJoueurHumain()){
 				testFinTour();
+				ech.vider();
+				ech.ajouter("finTour",true);
+				com.envoyer(ech);}
+				
 		} else if (!priseAspi && prisePercu) {
 			// System.out.println("percu");
 			l = t.manger(joueurCourant, d, pDepart, pArrive,
@@ -309,14 +312,19 @@ public class Moteur {
 			int[] score = { j1.getScore(), j2.getScore() };
 			gestionCoupGraphique(null, null, l, score, "prisePercu");
 			//t.dessineTableauAvecIntersections();
-			if (joueurCourant.isJoueurHumain())
+			if (joueurCourant.isJoueurHumain()){
 				testFinTour();
+				ech.vider();
+				ech.ajouter("finTour",true);
+				com.envoyer(ech);}
 		} else {
-			finTour();
+			if(joueurCourant.isJoueurHumain())
+				finTour();
 		}
 	}
 
 	void finTour() {
+		//this.t.dessineTableauAvecIntersections();
 		if (joueurCourant.getJoueurID() == Case.Etat.joueur1)
 			joueurCourant = j2;
 		else
@@ -327,6 +335,7 @@ public class Moteur {
 		ech.ajouter("pionDeselectionne", true);
 		ech.ajouter("annuler", true);
 		ech.ajouter("refaire", false);
+		ech.ajouter("finTour",false);
 		com.envoyer(ech);
 		if (partieTerminee(false)) {
 			e = EtatTour.partieFinie;
@@ -350,6 +359,7 @@ public class Moteur {
 			finTour();
 		} else {
 			e = EtatTour.selectionDestination;
+			message("bandeauInf","Selection destination");
 		}
 	}
 
@@ -406,20 +416,22 @@ public class Moteur {
 	}
 
 	void jouerIa() {
-		System.out.println(e);
-		
-		// System.out.println("DEBUT TOUR IA");
 		Thread th = new Thread(){
 			public void run(){
 				do {
 					// System.out.println(joueurCourant.getNom());
 					// System.out.println("boucle IA");
+					/*if(jeuIa != null)
+						 System.out.println(jeuIa.getpDepart() + ";" + jeuIa.getpArrivee());
+						 */
 					jeuIa = joueurCourant.jouer();
+					//System.out.println(jeuIa.getpDepart() + ";" + jeuIa.getpArrivee());
 					// System.out.println("depart "+jeuIa.getpDepart()+" arrivé "+jeuIa.getpArrivee());
 					selectionPion(jeuIa.getpDepart());
 					// System.out.println("point depart moteur :"+pDepart);
 					selectionDestination(jeuIa.getpArrivee());
 					// t.dessineTableauAvecIntersections();
+
 				} while (joueurCourant.IaContinue());
 					// System.out.println(" FIN DU JEU IA");
 		
@@ -428,7 +440,7 @@ public class Moteur {
 		};
 		
 		th.start();
-;
+		
 	}
 
 	void gestionBouton() {
@@ -486,18 +498,17 @@ public class Moteur {
 					ArrayList<Point> l = new ArrayList<Point>();
 					boolean tperc = perc.equals((Point) dataValue);
 					boolean taspi = aspi.equals((Point) dataValue);
-					//System.out.println("perc " + tperc + " aspi " + taspi);
 					if (tperc || taspi) {
 						if (tperc) {
-							// System.out.println("choix percu");
 							l = t.manger(joueurCourant, d, pDepart, pArrive, Terrain.ChoixPrise.parPercussion);
 						} else if (taspi) {
-							// System.out.println("choix aspi");
 							l = t.manger(joueurCourant, d, pDepart, pArrive, Terrain.ChoixPrise.parAspiration);
 						}
 						majScore(l.size());
 						int[] score = { j1.getScore(), j2.getScore() };
 						gestionCoupGraphique(null, null, l, score, "PriseselonchoixJoueur");
+						ech.vider();
+						ech.ajouter("finTour",true);
 						//t.dessineTableauAvecIntersections();
 						testFinTour();
 					}
@@ -574,7 +585,8 @@ public class Moteur {
 				}
 				break;
 			case "finTour":
-				finTour();
+				if (tourEnCours)
+					finTour();
 				break;
 			case "sauvegarder":
 				Sauvegarde s = new Sauvegarde(t, h, j1, j2, joueurCourant);
@@ -658,6 +670,10 @@ public class Moteur {
 					else if(p.j1_type == Parametres.NiveauJoueur.DIFFICILE)
 						j2.chargerIa(IntelligenceArtificielle.difficulteIA.difficile, j1, this);
 				}
+				ech.vider();
+				ech.ajouter("parametres", p);
+				com.envoyer(ech);
+				message("bandeauSup", joueurCourant.getNom());
 				break;
 			}
 		}

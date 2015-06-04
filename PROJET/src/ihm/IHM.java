@@ -1,6 +1,7 @@
 package ihm;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -35,6 +36,7 @@ public class IHM extends JFrame implements ComponentListener {
 	
 	Bouton boutonAnnuler;
 	Bouton boutonRefaire;
+	Bouton boutonValidation;
 	
 	boolean modeReseau = false;
 
@@ -105,12 +107,13 @@ public class IHM extends JFrame implements ComponentListener {
 		boutonRefaire.setEnabled(false);
 		voletSudCentre.add(boutonRefaire);
 		
-		Bouton boutonValidation = new Bouton("Terminer");
+		boutonValidation = new Bouton("Terminer");
 		boutonValidation.addActionListener(new Ecouteur(Ecouteur.Bouton.TERMINER, this));
+		boutonValidation.setEnabled(false);
 		voletSudEst.add(boutonValidation);
 
 		JLayeredPane gestionCouche = getLayeredPane();
-		popupB = new PopupBloquant();
+		popupB = new PopupBloquant(new Color(0, 0, 0, 128));
 		gestionCouche.add(popupB, new Integer(1));
 		popupB.setVisible(false);
 		popupM = new PopupMenu(this);
@@ -135,8 +138,8 @@ public class IHM extends JFrame implements ComponentListener {
 		
 		setModeReseau(false);
 
-		setMinimumSize(new Dimension(640, 480));
-		setSize(Math.max(640,(int)(java.awt.Toolkit.getDefaultToolkit().getScreenSize().width*0.75)), Math.max(480,(int)(java.awt.Toolkit.getDefaultToolkit().getScreenSize().height*0.75)));
+		setMinimumSize(new Dimension(800, 600));
+		setSize(Math.max(800,(int)(java.awt.Toolkit.getDefaultToolkit().getScreenSize().width*0.75)), Math.max(600,(int)(java.awt.Toolkit.getDefaultToolkit().getScreenSize().height*0.75)));
 		try {
 			setIconImage(ImageIO.read(getClass().getResource("/images/icone.png")));
 		} catch (IOException e) {
@@ -354,7 +357,10 @@ public class IHM extends JFrame implements ComponentListener {
 		popupM.setBounds(getWidth() / 2 - 150, getHeight() / 2 - 275, 300, 550);
 		popupO.setBounds(getWidth() / 2 - 300, getHeight() / 2 - 250, 600, 500);
 		popupR.setBounds(getWidth() / 2 - 400, getHeight() / 2 - 250, 800, 500);
-		popupReseau.setBounds(getWidth() / 2 - 200, getHeight() / 2 - 225, 400, 450);
+
+		popupReseau.setBounds(getWidth() / 2 - 200, getHeight() / 2 - 225, 400, 450);		
+		popupV.setBounds(0, 0, getWidth(), getHeight());
+
 	}
 
 	@Override
@@ -365,9 +371,7 @@ public class IHM extends JFrame implements ComponentListener {
 		
 
 		Object dataValue;
-
 		if ((dataValue = e.get("terrain")) != null) {
-
 			tg.dessinerTerrain((Case[][]) dataValue);
 		}
 		if ((dataValue = e.get("coup")) != null) {
@@ -427,6 +431,10 @@ public class IHM extends JFrame implements ComponentListener {
 			Parametres params = (Parametres)dataValue;
 			bandeauInfos.setIdentifiant(1,params.j1_identifiant);
 			bandeauInfos.setIdentifiant(2,params.j2_identifiant);			
+		}
+		if((dataValue = e.get("finTour")) != null) {
+			boutonValidation.setEnabled((boolean)dataValue);
+				
 		}
 		
 		
