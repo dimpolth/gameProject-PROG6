@@ -309,11 +309,20 @@ public class IHM extends JFrame implements ComponentListener {
 				errReseau = Communication.modeReseau("");
 				if(errReseau == null){
 					
+					// 2 joueurs humain si on lance une partie réseau
+					Parametres param = new Parametres();					
+					param.j1_type = Parametres.NiveauJoueur.HUMAIN;
+					param.j2_type = Parametres.NiveauJoueur.HUMAIN;
+					Echange ec = new Echange();
+					ec.ajouter("parametres", param);
+					com.envoyer(ec);
+					
 					JOptionPane.showMessageDialog( this,
 					                     "Le serveur est ouvert sur le port : "+Communication.getPort()+"",
 					                     "Port "+Communication.getPort()+"",
 					                      1);
 				}
+				
 			}
 			else{
 				System.out.println("1");
