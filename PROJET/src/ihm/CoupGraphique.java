@@ -36,9 +36,21 @@ public class CoupGraphique implements Runnable, Serializable {
 		this.chemin = chemin;
 		
 	}
+	public CoupGraphique(){
+		terrain=null;
+		deplacement=null;
+		choixPrise=null;
+		pionsManges=null;
+		chemin=null;
+		score=null;
+		tg=null;
+		bandeauSup=null;
+		bandeauInf=null;
+	}
 	
 	public CoupGraphique(Case[][] t){
 		terrain = t;
+		this.chemin=new ArrayList<Point>();
 	}
 	
 	
