@@ -1,9 +1,10 @@
 package modele;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 
-public class TourDeJeu {
+public class TourDeJeu implements Serializable {
 	
 	private ArrayList<Coup> listeCoups;
 	private int valeurResultat; // Valeur positive ou négative permettant d'évaluer si ce tour est bénéfique

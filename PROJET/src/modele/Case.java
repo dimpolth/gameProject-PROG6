@@ -1,8 +1,9 @@
 package modele;
 import java.awt.*;
+import java.io.Serializable;
 import java.util.*;
 
-public class Case {
+public class Case implements Serializable {
 	public enum Etat {
 	joueur1,
 	joueur2,
