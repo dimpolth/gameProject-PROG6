@@ -2,7 +2,9 @@ package reseau;
 
 import java.net.Socket;
 import java.net.ServerSocket;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Vector;
 import java.io.InputStream;
 import java.io.IOException;
@@ -16,7 +18,8 @@ public class Serveur implements Runnable{
 	private int port = 0;
 
 	// Les différents joueurs connectés sont stockés dans un vecteur
-	public Vector<Connexion> connexions = new Vector<Connexion>();
+	public ArrayList<Connexion> connexions = new ArrayList<Connexion>();
+	public LinkedHashMap<Integer,Connexion> joueurs = new LinkedHashMap<Integer,Connexion>(2);
 	
 	Serveur(Communication c){		
 		com = c;		
@@ -40,6 +43,7 @@ public class Serveur implements Runnable{
 		return this.port;
 	}
 	
+		
 	public void run(){
 		
 		
@@ -72,21 +76,35 @@ public class Serveur implements Runnable{
 	
 	}
 	
-	public void envoyer(Echange e, Connexion con){
-		if(con != null){
-			con.envoyer(e);
+	public void envoyer(Echange e, int j){
+		if(j >= 1 && j<= 2){
+			joueurs.get(j).envoyer(e);
+			com.envoyer(e);
 		}
 		else{
+			int exception = 0;
+			if(j < 0)
+				exception = j * -1;
 			
 			Iterator<Connexion> it = connexions.iterator();
-			while(it.hasNext()){				
-				it.next().envoyer(e);
+			Connexion con;
+			while(it.hasNext()){
+				con = it.next();
+				if(exception >= 1 && exception <=2){
+					if(joueurs.get(exception).equals(con))
+						continue;
+				}
+				con.envoyer(e);
 			}
 		}
 	}
 	
 	public void nouvelleConnexion(Connexion c){		
-		connexions.addElement(c);		
+		connexions.add(c);	
+		if(joueurs.size() < 2){
+			if(joueurs.get(1) == null) joueurs.put(1,c);
+			else joueurs.put(2,c)  ;
+		}
 	}
 	
 	public void fermerConnexion(Connexion c){

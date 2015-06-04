@@ -40,7 +40,7 @@ public class Moteur {
 	Boolean tourEnCours;
 	ArrayList<Point> listePointDebut;
 	Coup jeuIa;
-	boolean trace = true;
+	boolean trace = false;
 
 	public Moteur() {
 	}
@@ -470,7 +470,7 @@ public class Moteur {
 	
 	
 
-	public void action(Echange echange) {
+	public void action(Echange echange, int j) {
 		for (String dataType : echange.getAll()) {
 			Object dataValue = echange.get(dataType);
 			// System.out.println(dataType);
