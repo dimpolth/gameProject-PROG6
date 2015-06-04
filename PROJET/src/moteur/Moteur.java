@@ -307,7 +307,6 @@ public class Moteur {
 				e = EtatTour.selectionPion;
 			} else {
 				e = EtatTour.jeuxIa;
-				joueurCourant.getIa().setTerrain(t);
 				jouerIa();
 			}
 		}
@@ -405,7 +404,7 @@ public class Moteur {
 					 * if(jeuIa != null) System.out.println(jeuIa.getpDepart() +
 					 * ";" + jeuIa.getpArrivee());
 					 */
-					jeuIa = joueurCourant.jouer();
+					jeuIa = joueurCourant.jouer(t);
 					// System.out.println(jeuIa.getpDepart() + ";" +
 					// jeuIa.getpArrivee());
 					// System.out.println("depart "+jeuIa.getpDepart()+" arrivé "+jeuIa.getpArrivee());
@@ -462,7 +461,9 @@ public class Moteur {
 
 	void traceTerrain() {
 		if (trace)
+			System.out.println("----MOTEUR----");
 			t.dessineTableauAvecIntersections();
+			System.out.println("----MOTEUR----");
 	}
 
 	public void action(Echange echange, int j) {
