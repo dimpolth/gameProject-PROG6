@@ -126,9 +126,8 @@ public class IHM extends JFrame implements ComponentListener {
 
 		theme.setTheme(Theme.Type.BOIS);
 
-		setMinimumSize(new Dimension(640, 480));
-		setSize(640, 480);
-		//setSize(Math.max(640,(int)(java.awt.Toolkit.getDefaultToolkit().getScreenSize().width*0.75)), Math.max(480,(int)(java.awt.Toolkit.getDefaultToolkit().getScreenSize().height*0.75)));
+		setMinimumSize(new Dimension(800, 600));
+		setSize(Math.max(800,(int)(java.awt.Toolkit.getDefaultToolkit().getScreenSize().width*0.75)), Math.max(600,(int)(java.awt.Toolkit.getDefaultToolkit().getScreenSize().height*0.75)));
 		try {
 			setIconImage(ImageIO.read(getClass().getResource("/images/icone.png")));
 		} catch (IOException e) {
@@ -275,9 +274,7 @@ public class IHM extends JFrame implements ComponentListener {
 		int tpsAnimation = 0;
 
 		Object dataValue;
-
 		if ((dataValue = e.get("terrain")) != null) {
-
 			tg.dessinerTerrain((Case[][]) dataValue);
 		}
 		if ((dataValue = e.get("coup")) != null) {

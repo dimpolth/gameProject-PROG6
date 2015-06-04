@@ -146,10 +146,6 @@ public class TerrainGraphique extends JPanel implements ComponentListener {
 	}
 
 	public void clicCase(Point pt) {
-		if (prisesPossibles.contains(pt)) {
-			cacherPrisesPossibles();
-		}
-
 		Echange e = new Echange();
 		e.ajouter("point", pt);
 		ihm.com.envoyer(e);

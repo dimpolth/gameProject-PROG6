@@ -2,6 +2,7 @@ package ihm;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class CoupGraphique implements Runnable {
 	private Point[] deplacement;
@@ -29,6 +30,7 @@ public class CoupGraphique implements Runnable {
 		bandeauSup = null;
 		bandeauInf = null;
 		this.chemin = chemin;
+		
 	}
 	
 	
@@ -37,7 +39,6 @@ public class CoupGraphique implements Runnable {
 		t.start();
 	}
 	public void run() {
-		CoupGraphique.animationEnCours = true;	
 		
 		
 		
@@ -54,8 +55,11 @@ public class CoupGraphique implements Runnable {
 		}
 		if(pionsManges != null) {
 			tg.manger(pionsManges);
-		} else if(choixPrise != null){
+		}
+		if(choixPrise != null){
 			tg.afficherPrisesPossibles(choixPrise);
+		} else {
+			tg.cacherPrisesPossibles();
 		}
 		try {
 			Thread.sleep(TerrainGraphique.ANIM_DISP);
@@ -77,7 +81,7 @@ public class CoupGraphique implements Runnable {
 		CoupGraphique.animationEnCours = false;
 		
 		if(tg.lCoups.size() != 0) {
-			tg.lCoups.pollFirst().lancer();			
+			tg.lCoups.pollFirst().lancer();
 		}
 		
 		
@@ -85,7 +89,8 @@ public class CoupGraphique implements Runnable {
 	
 	public static void afficherCoups(TerrainGraphique tg){
 		CoupGraphique.tg = tg;
-		if(!CoupGraphique.animationEnCours){			
+		if(!CoupGraphique.animationEnCours){
+			CoupGraphique.animationEnCours = true;	
 			tg.lCoups.pollFirst().lancer();
 		}
 	}
