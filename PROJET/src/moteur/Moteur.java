@@ -174,6 +174,7 @@ public class Moteur {
 
 	boolean selectionPion(Point p) {
 		tourEnCours = false;
+		
 		if (t.getCase(p.x, p.y).getOccupation() != joueurCourant.getJoueurID()) {
 			return false;
 		} else {
@@ -182,6 +183,7 @@ public class Moteur {
 				partieTerminee(true);
 			if (listePointDebut.contains(p)) {
 				pDepart = p;
+				System.out.println(joueurCourant.isJoueurHumain());
 				if (joueurCourant.isJoueurHumain()) {
 					ech.vider();
 					ech.ajouter("pionSelectionne", pDepart);
@@ -629,29 +631,33 @@ public class Moteur {
 			j1.setNom(p.j1_identifiant);
 		if (p.j2_identifiant != null)
 			j2.setNom(p.j2_identifiant);
-		if (p.j1_type == Parametres.NiveauJoueur.HUMAIN) {
-			j1.setJoueurHumain(true);
-			j1.viderIa();
-		} else {
-			j1.setJoueurHumain(false);
-			if (p.j1_type == Parametres.NiveauJoueur.FACILE)
-				j1.chargerIa(IntelligenceArtificielle.difficulteIA.facile, j2, t);
-			else if (p.j1_type == Parametres.NiveauJoueur.MOYEN)
-				j1.chargerIa(IntelligenceArtificielle.difficulteIA.normal, j2, t);
-			else if (p.j1_type == Parametres.NiveauJoueur.DIFFICILE)
-				j1.chargerIa(IntelligenceArtificielle.difficulteIA.difficile, j2, t);
+		if(p.j1_type != null ){
+			if (p.j1_type == Parametres.NiveauJoueur.HUMAIN) {
+				j1.setJoueurHumain(true);
+				j1.viderIa();
+			} else {
+				j1.setJoueurHumain(false);
+				if (p.j1_type == Parametres.NiveauJoueur.FACILE)
+					j1.chargerIa(IntelligenceArtificielle.difficulteIA.facile, j2, t);
+				else if (p.j1_type == Parametres.NiveauJoueur.MOYEN)
+					j1.chargerIa(IntelligenceArtificielle.difficulteIA.normal, j2, t);
+				else if (p.j1_type == Parametres.NiveauJoueur.DIFFICILE)
+					j1.chargerIa(IntelligenceArtificielle.difficulteIA.difficile, j2, t);
+			}
 		}
-		if (p.j2_type == Parametres.NiveauJoueur.HUMAIN) {
-			j2.setJoueurHumain(true);
-			j2.viderIa();
-		} else {
-			j2.setJoueurHumain(false);
-			if (p.j2_type == Parametres.NiveauJoueur.FACILE)
-				j2.chargerIa(IntelligenceArtificielle.difficulteIA.facile, j1, t);
-			else if (p.j2_type == Parametres.NiveauJoueur.MOYEN)
-				j2.chargerIa(IntelligenceArtificielle.difficulteIA.normal, j1, t);
-			else if (p.j1_type == Parametres.NiveauJoueur.DIFFICILE)
-				j2.chargerIa(IntelligenceArtificielle.difficulteIA.difficile, j1, t);
+		if(p.j2_type != null ){
+			if (p.j2_type == Parametres.NiveauJoueur.HUMAIN) {
+				j2.setJoueurHumain(true);
+				j2.viderIa();
+			} else {
+				j2.setJoueurHumain(false);
+				if (p.j2_type == Parametres.NiveauJoueur.FACILE)
+					j2.chargerIa(IntelligenceArtificielle.difficulteIA.facile, j1, t);
+				else if (p.j2_type == Parametres.NiveauJoueur.MOYEN)
+					j2.chargerIa(IntelligenceArtificielle.difficulteIA.normal, j1, t);
+				else if (p.j1_type == Parametres.NiveauJoueur.DIFFICILE)
+					j2.chargerIa(IntelligenceArtificielle.difficulteIA.difficile, j1, t);
+			}
 		}
 		ech.vider();
 		ech.ajouter("parametres", p);
@@ -661,7 +667,7 @@ public class Moteur {
 
 	public void action(Echange echange, int j) {
 
-		System.out.println("Action reçue de joueur " + j);
+		System.out.println("Action reçue de joueur " + j+" : "+echange.toString());
 
 		Case.Etat joueurReception = null;
 		if (j == 1)
@@ -680,7 +686,7 @@ public class Moteur {
 			
 			if (Communication.enReseau() && (joueurCourant.getJoueurID() != joueurReception) && (dataType.equals("point")  || dataType.equals("annuler") || dataType.equals("refaire") || dataType.equals("finTour")))
 				return;
-
+		
 			// System.out.println(dataType);
 			// System.out.println("e : " + e);
 			switch (dataType) {

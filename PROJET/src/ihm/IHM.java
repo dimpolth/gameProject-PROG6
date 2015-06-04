@@ -315,7 +315,7 @@ public class IHM extends JFrame implements ComponentListener {
 					param.j2_type = Parametres.NiveauJoueur.HUMAIN;
 					Echange ec = new Echange();
 					ec.ajouter("parametres", param);
-					//com.envoyer(ec);
+					com.envoyer(ec);
 					
 					JOptionPane.showMessageDialog( this,
 					                     "Le serveur est ouvert sur le port : "+Communication.getPort()+"",
