@@ -3,10 +3,14 @@ package ihm;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.Point;
+import java.awt.Toolkit;
 import java.awt.event.*;
 import java.io.IOException;
 import java.util.LinkedList;
@@ -21,6 +25,8 @@ import reseau.*;
 public class IHM extends JFrame implements ComponentListener {
 
 	public Communication com;
+	JFrame fenetreChargement;
+	
 	Theme theme;
 	
 	JPanel coucheJeu;
@@ -32,7 +38,7 @@ public class IHM extends JFrame implements ComponentListener {
 	PopupVictoire popupV;
 	TerrainGraphique tg;
 	BandeauInfos bandeauInfos;
-	Chargement chargement;
+	Chargement chargement, chargement2;
 	
 	Bouton boutonAnnuler;
 	Bouton boutonRefaire;
@@ -44,6 +50,14 @@ public class IHM extends JFrame implements ComponentListener {
 
 		// Initialisation de la fenêtre
 		super("Fanorona");
+		fenetreChargement(true);
+		try {
+			fenetreChargement.setIconImage(ImageIO.read(getClass().getResource("/images/icone.png")));
+			setIconImage(ImageIO.read(getClass().getResource("/images/icone.png")));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
 
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		addComponentListener(this);
@@ -140,11 +154,11 @@ public class IHM extends JFrame implements ComponentListener {
 
 		setMinimumSize(new Dimension(800, 600));
 		setSize(Math.max(800,(int)(java.awt.Toolkit.getDefaultToolkit().getScreenSize().width*0.75)), Math.max(600,(int)(java.awt.Toolkit.getDefaultToolkit().getScreenSize().height*0.75)));
-		try {
-			setIconImage(ImageIO.read(getClass().getResource("/images/icone.png")));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		Toolkit screen = Toolkit.getDefaultToolkit();
+        Dimension dFen = screen.getScreenSize();
+		setLocation(dFen.width/2-getSize().width/2,dFen.height/2-getSize().height/2);
+		
+		fenetreChargement(false);
 		setVisible(true);
 		
 
@@ -263,6 +277,11 @@ public class IHM extends JFrame implements ComponentListener {
 			params.j2_identifiant = popupO.identifiantJoueur2.getText();
 			params.j1_type = Parametres.NiveauJoueur.getFromIndex(popupO.selectJoueur1.getSelectedIndex());
 			params.j2_type = Parametres.NiveauJoueur.getFromIndex(popupO.selectJoueur2.getSelectedIndex());
+			
+			if(popupO.theme.getSelectedItem() == "Boisé")
+				theme.setTheme(Theme.Type.BOIS);
+			else if(popupO.theme.getSelectedItem() == "Marbre")
+				theme.setTheme(Theme.Type.MARBRE);
 
 			Echange e = new Echange();
 			e.ajouter("parametres", params);
@@ -321,6 +340,37 @@ public class IHM extends JFrame implements ComponentListener {
 		}
 		
 	
+	}
+	
+	public void fenetreChargement(boolean b){
+		if(b){
+			
+			Toolkit screen = Toolkit.getDefaultToolkit();
+	        Dimension dFen = screen.getScreenSize();
+			fenetreChargement = new JFrame();			
+			fenetreChargement.setLayout(new GridLayout(2,1));
+			JLabel texte = new JLabel("Chargement en cours...",SwingConstants.CENTER);
+			texte.setFont(new Font("Arial", Font.BOLD, 25));
+			fenetreChargement.add(texte);
+			JPanel p = new JPanel();
+			chargement2 = new Chargement();
+			chargement2.afficher();
+			p.add(chargement2);
+			fenetreChargement.add(p);
+			fenetreChargement.setUndecorated(true);
+			//fenetreChargement.setSize(300,200);
+			fenetreChargement.setSize(dFen.width/5,dFen.height/5);
+			fenetreChargement.setResizable(false);        
+			fenetreChargement.setLocation(dFen.width/2-fenetreChargement.getSize().width/2,dFen.height/2-fenetreChargement.getSize().height/2);
+			fenetreChargement.setVisible(true);
+			
+		}
+		else{
+			chargement2.cacher();
+			fenetreChargement.setVisible(false);
+		}
+		
+		
 	}
 	
 	public void setModeReseau(boolean r){

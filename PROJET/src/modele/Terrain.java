@@ -1,16 +1,17 @@
 package modele;
+
 import java.awt.Point;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-
-public class Terrain {
+public class Terrain implements Serializable {
 	public enum Direction {
 		haut, bas, gauche, droite, hautGauche, hautDroite, basGauche, basDroite
 	}
 
 	public enum ChoixPrise {
-		parPercussion, parAspiration 
+		parPercussion, parAspiration
 	}
 
 	public final static int LIGNES = 5;
@@ -18,7 +19,8 @@ public class Terrain {
 	public final static int INDICE_MAX_LIGNES = LIGNES - 1;
 	public final static int INDICE_MAX_COLONNES = COLONNES - 1;
 	public Case tableau[][] = new Case[LIGNES][COLONNES];
-	//private Scanner sc;
+
+	// private Scanner sc;
 
 	public Terrain() {
 		for (int ligne = 0; ligne < Terrain.LIGNES; ligne++)
@@ -37,100 +39,114 @@ public class Terrain {
 				}
 			}
 	}
-	
+
 	public Terrain(Terrain t) {
 		tableau = t.getTableau();
 	}
 
-	public void TerrainTest(int numTest){
+	public void TerrainTest(int numTest) {
 		for (int ligne = 0; ligne < Terrain.LIGNES; ligne++)
 			for (int colonne = 0; colonne < Terrain.COLONNES; colonne++)
 				this.tableau[ligne][colonne].setOccupation(Case.Etat.vide);
-			
-		switch(numTest){ // Pour tous les tests le joueur 1 doit commencer
-			case 1 : // Test deux prises dans direction identique d'affilée impossible
-				this.tableau[0][4].setOccupation(Case.Etat.joueur1);
-				this.tableau[1][3].setOccupation(Case.Etat.joueur1);
-				this.tableau[2][5].setOccupation(Case.Etat.joueur1);
-				this.tableau[3][0].setOccupation(Case.Etat.joueur2);
-				this.tableau[3][1].setOccupation(Case.Etat.joueur1);
-				this.tableau[3][4].setOccupation(Case.Etat.joueur2);
-				// Joueur 2 DOIT gagner en un seul tour
+
+		switch (numTest) { // Pour tous les tests le joueur 1 doit commencer
+		case 1: // Test deux prises dans direction identique d'affilée
+				// impossible
+			this.tableau[0][4].setOccupation(Case.Etat.joueur1);
+			this.tableau[1][3].setOccupation(Case.Etat.joueur1);
+			this.tableau[2][5].setOccupation(Case.Etat.joueur1);
+			this.tableau[3][0].setOccupation(Case.Etat.joueur2);
+			this.tableau[3][1].setOccupation(Case.Etat.joueur1);
+			this.tableau[3][4].setOccupation(Case.Etat.joueur2);
+			// Joueur 2 DOIT gagner en un seul tour
+			break;
+
+		case 2: // Test impossible de revenir sur ses pas
+			this.tableau[2][0].setOccupation(Case.Etat.joueur2);
+			this.tableau[2][1].setOccupation(Case.Etat.joueur1);
+			this.tableau[2][3].setOccupation(Case.Etat.joueur2);
+			// Joueur 2 DOIT gagner
+			break;
+
+		case 3: // Test IA Moyenne
+			this.tableau[0][2].setOccupation(Case.Etat.joueur2);
+			this.tableau[0][5].setOccupation(Case.Etat.joueur2);
+			this.tableau[0][6].setOccupation(Case.Etat.joueur1);
+			this.tableau[1][2].setOccupation(Case.Etat.joueur2);
+			this.tableau[3][1].setOccupation(Case.Etat.joueur1);
+			this.tableau[3][2].setOccupation(Case.Etat.joueur1);
+			this.tableau[3][4].setOccupation(Case.Etat.joueur2);
+			this.tableau[4][0].setOccupation(Case.Etat.joueur1);
+			this.tableau[4][3].setOccupation(Case.Etat.joueur2);
+			break;
+
+		case 4: // test aspiration percussion IA moyenne
+			this.tableau[0][0].setOccupation(Case.Etat.joueur2);
+			this.tableau[0][1].setOccupation(Case.Etat.joueur2);
+			this.tableau[0][2].setOccupation(Case.Etat.joueur2);
+			this.tableau[0][3].setOccupation(Case.Etat.joueur1);
+			this.tableau[0][5].setOccupation(Case.Etat.joueur2);
+			break;
+
+		case 5: // Test IA Moyenne
+			this.tableau[0][2].setOccupation(Case.Etat.joueur2);
+			this.tableau[0][5].setOccupation(Case.Etat.joueur2);
+			this.tableau[0][6].setOccupation(Case.Etat.joueur1);
+			this.tableau[1][2].setOccupation(Case.Etat.joueur2);
+			this.tableau[1][4].setOccupation(Case.Etat.joueur2);
+			this.tableau[1][5].setOccupation(Case.Etat.joueur2);
+			this.tableau[1][6].setOccupation(Case.Etat.joueur2);
+			this.tableau[2][0].setOccupation(Case.Etat.joueur1);
+			this.tableau[3][1].setOccupation(Case.Etat.joueur1);
+			this.tableau[3][2].setOccupation(Case.Etat.joueur1);
+			this.tableau[3][4].setOccupation(Case.Etat.joueur2);
+			this.tableau[4][0].setOccupation(Case.Etat.joueur1);
+			this.tableau[4][4].setOccupation(Case.Etat.joueur2);
+			break;
+
+		case 6: // Test IA Moyenne
+			this.tableau[0][2].setOccupation(Case.Etat.joueur1);
+			this.tableau[1][1].setOccupation(Case.Etat.joueur1);
+			this.tableau[1][3].setOccupation(Case.Etat.joueur2);
+			this.tableau[1][4].setOccupation(Case.Etat.joueur2);
+			this.tableau[2][2].setOccupation(Case.Etat.joueur1);
+			this.tableau[3][2].setOccupation(Case.Etat.joueur2);
+			this.tableau[4][1].setOccupation(Case.Etat.joueur1);
+			this.tableau[4][3].setOccupation(Case.Etat.joueur2);
+			this.tableau[4][4].setOccupation(Case.Etat.joueur2);
+			this.tableau[4][5].setOccupation(Case.Etat.joueur2);
+			this.tableau[4][6].setOccupation(Case.Etat.joueur2);
+			break;
+
+		case 7:
+			this.tableau[1][1].setOccupation(Case.Etat.joueur1);
+			this.tableau[1][2].setOccupation(Case.Etat.joueur2);
 			break;
 			
-			case 2 : // Test impossible de revenir sur ses pas
-				this.tableau[2][0].setOccupation(Case.Etat.joueur2);
-				this.tableau[2][1].setOccupation(Case.Etat.joueur1);
-				this.tableau[2][3].setOccupation(Case.Etat.joueur2);
-				// Joueur 2 DOIT gagner
+		case 8: // petit terrain équivalent pour simulations plus rapides
+			for (int i = 0; i < 5; i++)
+				for (int j = 0; j < 5; j++) {
+					if (i == 1 || i == 2)
+						this.tableau[i][j + 2].setOccupation(Case.Etat.joueur1);
+					else
+						this.tableau[i][j + 2].setOccupation(Case.Etat.joueur2);
+				}
+			this.tableau[2][2].setOccupation(Case.Etat.joueur1);
+			this.tableau[2][4].setOccupation(Case.Etat.vide);
+			this.tableau[2][6].setOccupation(Case.Etat.joueur1);
 			break;
 			
-			case 3 :  // Test IA Moyenne
-				this.tableau[0][2].setOccupation(Case.Etat.joueur2);
-				this.tableau[0][5].setOccupation(Case.Etat.joueur2);
-				this.tableau[0][6].setOccupation(Case.Etat.joueur1);
-				this.tableau[1][2].setOccupation(Case.Etat.joueur2);
-				this.tableau[3][1].setOccupation(Case.Etat.joueur1);
-				this.tableau[3][2].setOccupation(Case.Etat.joueur1);
-				this.tableau[3][4].setOccupation(Case.Etat.joueur2);
-				this.tableau[4][0].setOccupation(Case.Etat.joueur1);
-				this.tableau[4][3].setOccupation(Case.Etat.joueur2);
-			break;
-			
-			case 4 : // test aspiration percussion IA moyenne
-				this.tableau[0][0].setOccupation(Case.Etat.joueur2);
-				this.tableau[0][1].setOccupation(Case.Etat.joueur2);
-				this.tableau[0][2].setOccupation(Case.Etat.joueur2);
-				this.tableau[0][3].setOccupation(Case.Etat.joueur1);
-				this.tableau[0][5].setOccupation(Case.Etat.joueur2);
-			break;
-			
-			case 5 :  // Test IA Moyenne
-				this.tableau[0][2].setOccupation(Case.Etat.joueur2);
-				this.tableau[0][5].setOccupation(Case.Etat.joueur2);
-				this.tableau[0][6].setOccupation(Case.Etat.joueur1);
-				this.tableau[1][2].setOccupation(Case.Etat.joueur2);
-				this.tableau[1][4].setOccupation(Case.Etat.joueur2);
-				this.tableau[1][5].setOccupation(Case.Etat.joueur2);
-				this.tableau[1][6].setOccupation(Case.Etat.joueur2);
-				this.tableau[2][0].setOccupation(Case.Etat.joueur1);
-				this.tableau[3][1].setOccupation(Case.Etat.joueur1);
-				this.tableau[3][2].setOccupation(Case.Etat.joueur1);
-				this.tableau[3][4].setOccupation(Case.Etat.joueur2);
-				this.tableau[4][0].setOccupation(Case.Etat.joueur1);
-				this.tableau[4][4].setOccupation(Case.Etat.joueur2);
-			break;
-			
-			case 6 : // Test IA Moyenne 
-				this.tableau[0][2].setOccupation(Case.Etat.joueur1);
-				this.tableau[1][1].setOccupation(Case.Etat.joueur1);
-				this.tableau[1][3].setOccupation(Case.Etat.joueur2);
-				this.tableau[1][4].setOccupation(Case.Etat.joueur2);
-				this.tableau[2][2].setOccupation(Case.Etat.joueur1);
-				this.tableau[3][2].setOccupation(Case.Etat.joueur2);
-				this.tableau[4][1].setOccupation(Case.Etat.joueur1);
-				this.tableau[4][3].setOccupation(Case.Etat.joueur2);
-				this.tableau[4][4].setOccupation(Case.Etat.joueur2);
-				this.tableau[4][5].setOccupation(Case.Etat.joueur2);
-				this.tableau[4][6].setOccupation(Case.Etat.joueur2);
-			break;
-			
-			case 7 :
-				this.tableau[1][1].setOccupation(Case.Etat.joueur1);
-				this.tableau[1][2].setOccupation(Case.Etat.joueur2);
-			break;
-			
-			case 8 :
-				this.tableau[1][1].setOccupation(Case.Etat.joueur1);
-				this.tableau[1][2].setOccupation(Case.Etat.joueur2);
+		case 9:
+			this.tableau[1][1].setOccupation(Case.Etat.joueur1);
+			this.tableau[1][2].setOccupation(Case.Etat.joueur2);
 			break;
 		}
 	}
-	
-	public Terrain copie(){
+
+	public Terrain copie() {
 		Terrain copieTerrain = new Terrain();
-		for (int i=0;i<LIGNES;i++){
-			for (int j=0;j<COLONNES;j++){
+		for (int i = 0; i < LIGNES; i++) {
+			for (int j = 0; j < COLONNES; j++) {
 				copieTerrain.tableau[i][j].occupation = this.tableau[i][j].occupation;
 				copieTerrain.tableau[i][j].pos = this.tableau[i][j].pos;
 				copieTerrain.tableau[i][j].succ = this.tableau[i][j].succ;
@@ -138,7 +154,7 @@ public class Terrain {
 		}
 		return copieTerrain;
 	}
-	
+
 	public Case[][] getTableau() {
 		return tableau;
 	}
@@ -181,10 +197,9 @@ public class Terrain {
 		System.out.println();
 	}
 
-
 	public int deplacement(Point depart, Point arrive, Joueur joueurCourant, ArrayList<Point> listePredecesseurs) {
 
-		if(!listePredecesseurs.isEmpty()) {
+		if (!listePredecesseurs.isEmpty()) {
 			Iterator<Point> iterator = listePredecesseurs.iterator();
 			while (iterator.hasNext()) {
 				Point pNext = iterator.next();
@@ -201,7 +216,16 @@ public class Terrain {
 
 			} else {
 
-				ArrayList<Point> l = tableau[depart.x][depart.y].getSucc(); // on regarde si la case d'arrivée est bien un successeur
+				ArrayList<Point> l = tableau[depart.x][depart.y].getSucc(); // on
+																			// regarde
+																			// si
+																			// la
+																			// case
+																			// d'arrivée
+																			// est
+																			// bien
+																			// un
+																			// successeur
 
 				for (int it = 0; it < l.size(); it++) {
 					Point p = l.get(it);
@@ -218,7 +242,7 @@ public class Terrain {
 
 	public Direction recupereDirection(Point depart, Point arrive) {
 		Direction dir = null;
-		
+
 		if ((arrive.x == depart.x - 1) && (arrive.y == depart.y - 1))
 			dir = Direction.hautGauche;
 		if ((arrive.x == depart.x - 1) && (arrive.y == depart.y))
@@ -239,22 +263,25 @@ public class Terrain {
 		return dir;
 	}
 
-
 	public ArrayList<Point> manger(Joueur joueurCourant, Direction dir, Point pDepart, Point pArrivee, ChoixPrise c) {
 
 		ArrayList<Point> listePionsManges = new ArrayList<Point>();
 		Case.Etat joueurOppose;
 
-		// On indique dans une variable qui est l'adversaire pour reconnaître ses pions
-		
+		// On indique dans une variable qui est l'adversaire pour reconnaître
+		// ses pions
+
 		if (joueurCourant.getJoueurID() == Case.Etat.joueur1)
 			joueurOppose = Case.Etat.joueur2;
-		else 
+		else
 			joueurOppose = Case.Etat.joueur1;
-		
-		if (c == ChoixPrise.parPercussion)  							// Sinon on applique la prise selon le								
-			this.prisePercussion(pArrivee, dir, joueurOppose, listePionsManges); // seul choix possible
-		else if (c == ChoixPrise.parAspiration) 
+
+		if (c == ChoixPrise.parPercussion) // Sinon on applique la prise selon
+											// le
+			this.prisePercussion(pArrivee, dir, joueurOppose, listePionsManges); // seul
+																					// choix
+																					// possible
+		else if (c == ChoixPrise.parAspiration)
 			this.priseAspiration(pDepart, dir, joueurOppose, listePionsManges);
 
 		return listePionsManges;
@@ -276,12 +303,12 @@ public class Terrain {
 		// a une percussion
 		if (this.tableau[pArrivee.x + offsetPercu.x][pArrivee.y + offsetPercu.y].getCase().getOccupation() == joueurOppose) {
 			this.tableau[pArrivee.x + offsetPercu.x][pArrivee.y + offsetPercu.y].setOccupation(Case.Etat.vide);
-			this.prisePercussion(new Point(pArrivee.x + offsetPercu.x, pArrivee.y + offsetPercu.y), dir, joueurOppose,listePionsManges);
-			listePionsManges.add(new Point((pArrivee.x + offsetPercu.x),(pArrivee.y + offsetPercu.y)));		
+			this.prisePercussion(new Point(pArrivee.x + offsetPercu.x, pArrivee.y + offsetPercu.y), dir, joueurOppose, listePionsManges);
+			listePionsManges.add(new Point((pArrivee.x + offsetPercu.x), (pArrivee.y + offsetPercu.y)));
 		}
 
 	}
- 
+
 	/*
 	 * Idem à la méthode "prisePercussion" mais adaptée à la prise par
 	 * aspiration
@@ -294,8 +321,8 @@ public class Terrain {
 		// a une percussion
 		if (this.tableau[pDepart.x + offsetAspi.x][pDepart.y + offsetAspi.y].getCase().getOccupation() == joueurOppose) {
 			this.tableau[pDepart.x + offsetAspi.x][pDepart.y + offsetAspi.y].setOccupation(Case.Etat.vide);
-			this.priseAspiration(new Point(pDepart.x + offsetAspi.x, pDepart.y + offsetAspi.y), dir, joueurOppose,listePionsManges);
-			listePionsManges.add(new Point((pDepart.x + offsetAspi.x),(pDepart.y + offsetAspi.y)));
+			this.priseAspiration(new Point(pDepart.x + offsetAspi.x, pDepart.y + offsetAspi.y), dir, joueurOppose, listePionsManges);
+			listePionsManges.add(new Point((pDepart.x + offsetAspi.x), (pDepart.y + offsetAspi.y)));
 		}
 
 	}
@@ -303,54 +330,53 @@ public class Terrain {
 	public Point offsetPercussion(Direction dir, Point pArrivee) {
 		Point offsetPercu = new Point(0, 0);
 
-
 		switch (dir) { // c'est ce switch qui effectue l'attribution du
 
-							// offset nécessaire
-			case hautGauche:
-				offsetPercu.x = -1;
-				offsetPercu.y = -1;
-				break;
+		// offset nécessaire
+		case hautGauche:
+			offsetPercu.x = -1;
+			offsetPercu.y = -1;
+			break;
 
-			case haut:
-				offsetPercu.x = -1;
-				offsetPercu.y = 0;
-				break;
+		case haut:
+			offsetPercu.x = -1;
+			offsetPercu.y = 0;
+			break;
 
-			case hautDroite:
-				offsetPercu.x = -1;
-				offsetPercu.y = 1;
-				break;
+		case hautDroite:
+			offsetPercu.x = -1;
+			offsetPercu.y = 1;
+			break;
 
-			case droite:
-				offsetPercu.x = 0;
-				offsetPercu.y = 1;
-				break;
+		case droite:
+			offsetPercu.x = 0;
+			offsetPercu.y = 1;
+			break;
 
-			case basDroite:
-				offsetPercu.x = 1;
-				offsetPercu.y = 1;
-				break;
+		case basDroite:
+			offsetPercu.x = 1;
+			offsetPercu.y = 1;
+			break;
 
-			case bas:
-				offsetPercu.x = 1;
-				offsetPercu.y = 0;
-				break;
+		case bas:
+			offsetPercu.x = 1;
+			offsetPercu.y = 0;
+			break;
 
-			case basGauche:
-				offsetPercu.x = 1;
-				offsetPercu.y = -1;
-				break;
+		case basGauche:
+			offsetPercu.x = 1;
+			offsetPercu.y = -1;
+			break;
 
-			case gauche:
-				offsetPercu.x = 0;
-				offsetPercu.y = -1;
-				break;
+		case gauche:
+			offsetPercu.x = 0;
+			offsetPercu.y = -1;
+			break;
 		}
-		
-		if( (pArrivee.x + offsetPercu.x) < 0 || (pArrivee.x + offsetPercu.x > INDICE_MAX_LIGNES) || (pArrivee.y + offsetPercu.y < 0) || (pArrivee.y + offsetPercu.y > INDICE_MAX_COLONNES) )
-			return new Point(0,0);
-					
+
+		if ((pArrivee.x + offsetPercu.x) < 0 || (pArrivee.x + offsetPercu.x > INDICE_MAX_LIGNES) || (pArrivee.y + offsetPercu.y < 0) || (pArrivee.y + offsetPercu.y > INDICE_MAX_COLONNES))
+			return new Point(0, 0);
+
 		return offsetPercu;
 	}
 
@@ -362,74 +388,71 @@ public class Terrain {
 	public Point offsetAspiration(Direction dir, Point pDepart) {
 		Point offsetAspi = new Point(0, 0);
 
+		switch (dir) {
+		case hautGauche:
+			offsetAspi.x = 1;
+			offsetAspi.y = 1;
+			break;
 
-			switch (dir) {
-			case hautGauche:
-				offsetAspi.x = 1;
-				offsetAspi.y = 1;
-				break;
+		case haut:
+			offsetAspi.x = 1;
+			offsetAspi.y = 0;
+			break;
 
-			case haut:
-				offsetAspi.x = 1;
-				offsetAspi.y = 0;
-				break;
+		case hautDroite:
+			offsetAspi.x = 1;
+			offsetAspi.y = -1;
+			break;
 
-			case hautDroite:
-				offsetAspi.x = 1;
-				offsetAspi.y = -1;
-				break;
+		case droite:
+			offsetAspi.x = 0;
+			offsetAspi.y = -1;
+			break;
 
-			case droite:
-				offsetAspi.x = 0;
-				offsetAspi.y = -1;
-				break;
+		case basDroite:
+			offsetAspi.x = -1;
+			offsetAspi.y = -1;
+			break;
 
-			case basDroite:
-				offsetAspi.x = -1;
-				offsetAspi.y = -1;
-				break;
+		case bas:
+			offsetAspi.x = -1;
+			offsetAspi.y = 0;
+			break;
 
-			case bas:
-				offsetAspi.x = -1;
-				offsetAspi.y = 0;
-				break;
+		case basGauche:
+			offsetAspi.x = -1;
+			offsetAspi.y = 1;
+			break;
 
-			case basGauche:
-				offsetAspi.x = -1;
-				offsetAspi.y = 1;
-				break;
+		case gauche:
+			offsetAspi.x = 0;
+			offsetAspi.y = 1;
+			break;
+		}
 
-			case gauche:
-				offsetAspi.x = 0;
-				offsetAspi.y = 1;
-				break;
-			}
+		if ((pDepart.x + offsetAspi.x) < 0 || (pDepart.x + offsetAspi.x > INDICE_MAX_LIGNES) || (pDepart.y + offsetAspi.y < 0) || (pDepart.y + offsetAspi.y > INDICE_MAX_COLONNES))
+			return new Point(0, 0);
 
-		if( (pDepart.x + offsetAspi.x) < 0 || (pDepart.x + offsetAspi.x > INDICE_MAX_LIGNES) || (pDepart.y + offsetAspi.y < 0) || (pDepart.y + offsetAspi.y > INDICE_MAX_COLONNES) )
-			return new Point(0,0);
-		
 		return offsetAspi;
 	}
 
 	/*
-	 * Cette méthode intervient lorsque le joueur peut lors d'un déplacement effectuer soit une prise par 
-	 * percussion soit par aspiration, il doit donc choisir entre une des deux solutions
+	 * Cette méthode intervient lorsque le joueur peut lors d'un déplacement
+	 * effectuer soit une prise par percussion soit par aspiration, il doit donc
+	 * choisir entre une des deux solutions
 	 */
-	/*ChoixPrise choixPriseHumain(){
-
-		this.sc = new Scanner(System.in);
-		char choixPrise = 'Y';
-
-		do {
-			System.out.println("Prise par percussion ? (Y/N) : ");
-			choixPrise = this.sc.nextLine().charAt(0);
-		} while (choixPrise != 'Y' && choixPrise != 'N');
-		
-		if (choixPrise == 'Y')
-			return ChoixPrise.parPercussion;
-		else
-			return ChoixPrise.parAspiration;
-	}*/
+	/*
+	 * ChoixPrise choixPriseHumain(){
+	 * 
+	 * this.sc = new Scanner(System.in); char choixPrise = 'Y';
+	 * 
+	 * do { System.out.println("Prise par percussion ? (Y/N) : "); choixPrise =
+	 * this.sc.nextLine().charAt(0); } while (choixPrise != 'Y' && choixPrise !=
+	 * 'N');
+	 * 
+	 * if (choixPrise == 'Y') return ChoixPrise.parPercussion; else return
+	 * ChoixPrise.parAspiration; }
+	 */
 
 	public boolean estUnePrisePercussion(Point depart, Direction d) {
 		Point cible = new Point();
@@ -515,17 +538,15 @@ public class Terrain {
 		}
 		if (!(cible.x > INDICE_MAX_LIGNES || cible.x < 0 || cible.y > INDICE_MAX_COLONNES || cible.y < 0)) {
 			b = ((tableau[cible.x][cible.y].getOccupation() != tableau[depart.x][depart.y].getOccupation()) && (tableau[cible.x][cible.y].getOccupation() != Case.Etat.vide));
-			//System.out.println("Cible : "+tableau[cible.x][cible.y].getOccupation());
-			//System.out.println("Depart : "+tableau[depart.x][depart.y].getOccupation());
+			// System.out.println("Cible : "+tableau[cible.x][cible.y].getOccupation());
+			// System.out.println("Depart : "+tableau[depart.x][depart.y].getOccupation());
 		}
 		return b;
 	}
 
-
-
 	public ArrayList<Point> couplibre(Case.Etat joueurCourant) {
 		ArrayList<Point> reponse = new ArrayList<Point>();
-	
+
 		for (int x = 0; x < LIGNES; x++) {
 			for (int y = 0; y < COLONNES; y++) {
 				int nbSucc = tableau[x][y].getSucc().size();
@@ -534,7 +555,7 @@ public class Terrain {
 				int z = 0;
 				boolean drap = true;
 				while (z < nbSucc && drap) {
-	
+
 					Point pointSucc = c.getSucc().get(z);
 					Direction d = recupereDirection(c.getPos(), pointSucc);
 					if (c.getOccupation() == joueurCourant) {
@@ -548,7 +569,63 @@ public class Terrain {
 			}
 		}
 		return reponse;
-	}	
-	
-	
+	}
+
+	/**
+	 * Détermine quels sont les déplacements possibles
+	 * 
+	 * @param p
+	 *            Point à partir du quel on veut déterminer les déplacements
+	 *            possibles.
+	 * @param listePredecesseurs
+	 *            ArrayList de Points. Liste des points par lesquels est passé
+	 *            le pion durant le tour.
+	 * @param copieTerrainEventuelle
+	 *            Terrain. Utilisé par l'IA pour simuler des coups.
+	 * @return ArrayList de Points. Liste des emplacements vers lequel le pion
+	 *         courant peut se déplacer.
+	 */
+	public ArrayList<Point> deplacementPossible(Point p, ArrayList<Point> listePredecesseurs, Case[][] copieTerrainEventuelle) {
+		ArrayList<Point> listeSuc = tableau[p.x][p.y].getSucc();
+		ArrayList<Point> listeSolution = new ArrayList<Point>();
+		Iterator<Point> it = listeSuc.iterator();
+		Point pointPrec = new Point();
+		Case[][] terr = tableau;
+		if (copieTerrainEventuelle != null)
+			terr = copieTerrainEventuelle;
+		while (it.hasNext()) {
+			Point temp = (Point) it.next().clone();
+			if (terr[temp.x][temp.y].getOccupation() == Case.Etat.vide && (!listePredecesseurs.contains(temp))) {
+				if (listePredecesseurs.size() == 0)
+					listeSolution.add(temp);
+				else {
+					pointPrec = listePredecesseurs.get(listePredecesseurs.size() - 1);
+					Terrain.Direction dirPrec = recupereDirection(pointPrec, p);
+					Terrain.Direction dirSuiv = recupereDirection(p, temp);
+					if (dirPrec != dirSuiv) {
+						listeSolution.add(temp);
+					}
+				}
+			}
+		}
+		return listeSolution;
+	}
+
+	public ArrayList<Point> listePionsJouables(Joueur j, Terrain copieTerrainEventuelle) {
+		Terrain terr = this;
+		if (copieTerrainEventuelle != null) // Utile à l'IA pour travailler sur
+			// une copie de terrain modifiée
+			terr = copieTerrainEventuelle;
+
+		ArrayList<Point> listePions = couplibre(j.getJoueurID());
+		if (listePions.isEmpty()) {
+			for (int ligne = 0; ligne < Terrain.LIGNES; ligne++)
+				for (int colonne = 0; colonne < Terrain.COLONNES; colonne++)
+					if (terr.tableau[ligne][colonne].getOccupation() == j.getJoueurID())
+						if (deplacementPossible((Point) new Point(ligne, colonne).clone(), new ArrayList<Point>(), null).size() > 0)
+							listePions.add((Point) new Point(ligne, colonne).clone());
+		}
+		return listePions;
+	}
+
 }

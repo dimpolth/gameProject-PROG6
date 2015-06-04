@@ -1,7 +1,9 @@
 package modele;
+import java.io.Serializable;
+
 import ia.*;
 import moteur.*;
-public class Joueur {
+public class Joueur implements Serializable {
 	
 	public enum typeJoueur{
 		humain,
@@ -24,12 +26,12 @@ public class Joueur {
 	}
 	
 	//Constructeur pour joueur ordinateur
-	public Joueur(Case.Etat joueurID, typeJoueur joueur, IntelligenceArtificielle.difficulteIA niveau, Joueur adversaire, Moteur m){
+	public Joueur(Case.Etat joueurID, typeJoueur joueur, IntelligenceArtificielle.difficulteIA niveau, Joueur adversaire, Terrain t){
 		this.setJoueurID(joueurID);
 		score = 22;
 		this.nom = "Ordinateur";
 		this.setJoueurHumain(false);
-		ia = new IntelligenceArtificielle(niveau, this, adversaire, m);
+		ia = new IntelligenceArtificielle(niveau, this, adversaire, t);
 	}
 	
 	public Joueur() {
@@ -114,8 +116,8 @@ public class Joueur {
 		return ia.isTourEnCours();
 	}
 	
-	public void chargerIa(IntelligenceArtificielle.difficulteIA typeIA, Joueur adversaire, Moteur m) {
-		ia = new IntelligenceArtificielle(typeIA, this, adversaire, m);
+	public void chargerIa(IntelligenceArtificielle.difficulteIA typeIA, Joueur adversaire, Terrain t) {
+		ia = new IntelligenceArtificielle(typeIA, this, adversaire, t);
 	}
 	
 	public void viderIa() {
