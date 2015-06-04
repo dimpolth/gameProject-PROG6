@@ -123,4 +123,8 @@ public class Joueur implements Serializable {
 	public void viderIa() {
 		ia = null;
 	}
+	
+	public IntelligenceArtificielle getIa() {
+		return ia;
+	}
 }

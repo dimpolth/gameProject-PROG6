@@ -73,7 +73,7 @@ public class Moteur {
 		// "Joueur 2");
 		// j1 = new Joueur(Case.Etat.joueur1, Joueur.typeJoueur.ordinateur,
 		// IntelligenceArtificielle.difficulteIA.facile, j2, this);
-		j2 = new Joueur(Case.Etat.joueur2, Joueur.typeJoueur.ordinateur, IntelligenceArtificielle.difficulteIA.normal, j1, t);
+		j2 = new Joueur(Case.Etat.joueur2, Joueur.typeJoueur.ordinateur, IntelligenceArtificielle.difficulteIA.facile, j1, t);
 		joueurCourant = j1;
 		if (joueurCourant.isJoueurHumain()) {
 			e = EtatTour.selectionPion;
@@ -293,6 +293,7 @@ public class Moteur {
 				e = EtatTour.selectionPion;
 			} else {
 				e = EtatTour.jeuxIa;
+				joueurCourant.getIa().setTerrain(t);
 				jouerIa();
 			}
 		}

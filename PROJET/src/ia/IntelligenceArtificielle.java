@@ -487,5 +487,9 @@ public class IntelligenceArtificielle implements Serializable {
 	private TourDeJeu getTourDeJeuCourant(){
 		return this.tourDeJeuCourant;
 	}
+	
+	public void setTerrain(Terrain t) {
+		this.terrain = t;
+	}
 
 }
