@@ -28,8 +28,10 @@ public class IntelligenceArtificielle {
 	private Moteur moteur;
 	private TourDeJeu tourDeJeuCourant;
 	private boolean tourEnCours;
-	private static final int MAX = 1000;
-	private static final int MIN = -1000;
+	private final int coeffPionsManges = 2;
+	private final int coeffPositionPions = 1;
+	private final int MAX = 1000;
+	private final int MIN = -1000;
 	
 	public IntelligenceArtificielle(difficulteIA niveauDifficulte, Joueur joueurIA, Joueur joueurAdversaire, Moteur m){
 		this.setNiveauDifficulte(niveauDifficulte);
@@ -130,7 +132,7 @@ public class IntelligenceArtificielle {
 		int iterateurProf = 0;
 		
 		// ALPHA BETA
-		tourSolution = alphaBeta(profondeur, iterateurProf); // simule x-profondeur tours
+		tourSolution = alphaBeta(profondeur, false, iterateurProf); // simule x-profondeur tours
 											  				 // exemple : profondeur = 3
 											  				 // on va simuler un tour jCourant puis un tour jAdv puis 
 		return tourSolution;				 				 // de nouveau un tour jCourant	
@@ -139,7 +141,7 @@ public class IntelligenceArtificielle {
 	/*
 	 * Application de l'algorithme alpha beta
 	 */
-	private TourDeJeu alphaBeta(int profondeur, int iterateurProf){
+	private TourDeJeu alphaBeta(int profondeur, boolean profondeurDynamique, int iterateurProf){
 		ArrayList<TourDeJeu> listeToursJouables = new ArrayList<TourDeJeu>();
 		Iterator<TourDeJeu> it;
 		TourDeJeu tourCourant, tourSolution = new TourDeJeu();
@@ -152,21 +154,22 @@ public class IntelligenceArtificielle {
 		// Récupération de tous les tours jouables pour le terrain et le joueur courant
 		listeToursJouables = getToursJouables(this.moteur.t, this.getJoueurIA());
 		
-		// Adaptation dynamique de la profondeur explorée
-		/*
-		if(listeToursJouables.size() >= 10 && profondeur > 1)
-			profondeur--;
-		else if(listeToursJouables.size() >= 20 && profondeur > 2)
-			profondeur -= 2;
-		else if(listeToursJouables.size() >= 30 && profondeur > 3)
-			profondeur -= 3;
-		 */
+		if(profondeurDynamique){ 	// Adaptation dynamique de la profondeur explorée
+			if(listeToursJouables.size() >= 10 && profondeur > 1)
+				profondeur--;
+			else if(listeToursJouables.size() >= 20 && profondeur > 2)
+				profondeur -= 2;
+			else if(listeToursJouables.size() >= 30 && profondeur > 3)
+				profondeur -= 3;
+		}
+		
 		nbPionsRestantsJCourant = joueurIA.getScore();
 		nbPionsRestantsJAdv = joueurAdversaire.getScore();
 		nbPionsRestantsTot = nbPionsRestantsJCourant + nbPionsRestantsJAdv;
 	
 		
 		//System.out.println(nbPionsRestants);
+		/*
 		if((nbPionsRestantsTot <= 4) && (nbPionsRestantsJCourant <= nbPionsRestantsJAdv))
 			profondeur += 3;
 
@@ -175,7 +178,7 @@ public class IntelligenceArtificielle {
 		
 		else if(nbPionsRestantsTot <= 14 && (nbPionsRestantsJCourant < nbPionsRestantsJAdv))
 			profondeur += 1;
-
+		*/
 		
 		if(listeToursJouables.size() > 0)
 			tourSolution = listeToursJouables.get(0);
@@ -187,7 +190,7 @@ public class IntelligenceArtificielle {
 		
 			tourCourant = (TourDeJeu) it.next().clone();
 			
-			nbPionsManges = tourCourant.getValeurResultat();
+			nbPionsManges = tourCourant.getValeurResultat() * this.coeffPionsManges;
 			
 			valTemp = nbPionsManges + min(profondeur-1, alpha, beta, tourCourant.getTerrainFinal(), iterateurProf+1);
 			
@@ -238,17 +241,14 @@ public class IntelligenceArtificielle {
 		while(it.hasNext()){
 			tourCourant = (TourDeJeu) it.next().clone();
 
-			valTemp = -(tourCourant.getValeurResultat()); // nombre de pions perdus (mangés par l'adversaire) en négatif
+			valTemp = -(tourCourant.getValeurResultat() * this.coeffPionsManges); // nombre de pions perdus (mangés par l'adversaire) en négatif
 
 			valTemp += max(profondeur-1, alpha, beta, tourCourant.getTerrainFinal(), iterateurProf+1);
-			
-			if(valTemp < valRes)
-				valRes = valTemp;
-			
+
+			valRes = Math.min(valTemp, valRes);
 			
 			if(alpha >= valTemp) // élagage
 				return valTemp;
-			
 			
 			beta = Math.min(beta,valRes);	
 		}
@@ -282,12 +282,11 @@ public class IntelligenceArtificielle {
 		while(it.hasNext()){
 			tourCourant = (TourDeJeu) it.next().clone();
 			
-			valTemp = tourCourant.getValeurResultat();
+			valTemp = tourCourant.getValeurResultat() * this.coeffPionsManges;
 			
 			valTemp += min(profondeur-1, alpha, beta, tourCourant.getTerrainFinal(), iterateurProf+1);
-			
-			if(valTemp > valRes)
-				valRes = valTemp;
+
+			valRes = Math.max(valTemp, valRes);
 			
 			if(valTemp >= beta)  // élagage 
 				return valTemp;
@@ -427,6 +426,18 @@ public class IntelligenceArtificielle {
 	}
 	
 	/*
+	 * evalGeometrie : cette fonction renvoie un "score" d'évaluation de la position de force d'un 
+	 * 				   joueur donné sur une map donnée
+	 */
+	int evalGeometrie(Terrain terrainCourant, Joueur joueurCourant){
+		int resultat = 0;
+		
+		
+		
+		return resultat;
+	}
+	
+	/*
 	 * Applique l'algorithme permettant à l'ordinateur de jouer un coup en difficulté "difficile"
 	 */
 	private Coup coupDifficile(){
@@ -482,4 +493,5 @@ public class IntelligenceArtificielle {
 	private TourDeJeu getTourDeJeuCourant(){
 		return this.tourDeJeuCourant;
 	}
+
 }

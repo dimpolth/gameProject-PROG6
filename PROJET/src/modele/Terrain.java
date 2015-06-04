@@ -120,6 +120,18 @@ public class Terrain {
 				this.tableau[1][2].setOccupation(Case.Etat.joueur2);
 			break;
 			
+			case 8 : // petit terrain équivalent pour simulations plus rapides
+			for(int i = 0; i < 5; i++)
+				for(int j = 0; j < 5; j++){
+					if(i == 1 || i == 2)
+						this.tableau[i][j+2].setOccupation(Case.Etat.joueur1);
+					else 
+						this.tableau[i][j+2].setOccupation(Case.Etat.joueur2);
+				}
+			this.tableau[2][2].setOccupation(Case.Etat.joueur1);
+			this.tableau[2][4].setOccupation(Case.Etat.vide);
+			this.tableau[2][6].setOccupation(Case.Etat.joueur1);
+			break;
 		}
 	}
 	
