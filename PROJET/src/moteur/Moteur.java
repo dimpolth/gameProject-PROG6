@@ -493,7 +493,7 @@ public class Moteur {
 			}
 		}
 	}
-	
+
 	void actionAnnuler(Object dataValue) {
 		if (e != EtatTour.partieFinie) {
 			ech.vider();
@@ -522,7 +522,7 @@ public class Moteur {
 			message("bandeauInf", "Selection du pion");
 		}
 	}
-	
+
 	void actionRefaire(Object dataValue) {
 		if (e != EtatTour.partieFinie) {
 			ech.vider();
@@ -550,7 +550,7 @@ public class Moteur {
 			message("bandeauInf", "Selection du pion");
 		}
 	}
-	
+
 	void actionSauvegarder(Object dataValue) {
 		Sauvegarde s = new Sauvegarde(t, h, j1, j2, joueurCourant);
 		ObjectOutputStream oos = null;
@@ -571,7 +571,7 @@ public class Moteur {
 			}
 		}
 	}
-	
+
 	void actionCharger(Object dataValue) {
 		ObjectInputStream ois = null;
 		try {
@@ -580,13 +580,13 @@ public class Moteur {
 			Sauvegarde chargement = (Sauvegarde) ois.readObject();
 			t = new Terrain(chargement.plateau);
 			h = new Historique(chargement.histo);
-			if(chargement.joueur1.isJoueurHumain())
+			if (chargement.joueur1.isJoueurHumain())
 				j1 = new Joueur(chargement.joueur1);
 			else {
 				j1 = new Joueur(Case.Etat.joueur1, Joueur.typeJoueur.ordinateur, IntelligenceArtificielle.difficulteIA.normal, chargement.joueur2, t);
 				j1.chargerScore(chargement.joueur1.getScore());
 			}
-			if(chargement.joueur2.isJoueurHumain())
+			if (chargement.joueur2.isJoueurHumain())
 				j2 = new Joueur(chargement.joueur2);
 			else {
 				j2 = new Joueur(Case.Etat.joueur2, Joueur.typeJoueur.ordinateur, IntelligenceArtificielle.difficulteIA.normal, chargement.joueur1, t);
@@ -613,11 +613,13 @@ public class Moteur {
 		ech.ajouter("score", tabScore);
 		com.envoyer(ech);
 	}
-	
+
 	void actionParametre(Object dataValue) {
 		Parametres p = (Parametres) dataValue;
-		j1.setNom(p.j1_identifiant);
-		j2.setNom(p.j2_identifiant);
+		if (p.j1_identifiant != null)
+			j1.setNom(p.j1_identifiant);
+		if (p.j2_identifiant != null)
+			j2.setNom(p.j2_identifiant);
 		if (p.j1_type == Parametres.NiveauJoueur.HUMAIN) {
 			j1.setJoueurHumain(true);
 			j1.viderIa();
@@ -649,8 +651,8 @@ public class Moteur {
 	}
 
 	public void action(Echange echange, int j) {
-		
-		System.out.println("Action reçue de joueur "+j);
+
+		System.out.println("Action reçue de joueur " + j);
 
 		Case.Etat joueurReception = null;
 		if (j == 1)
@@ -658,10 +660,16 @@ public class Moteur {
 		else if (j == 2)
 			joueurReception = Etat.joueur2;
 
+		if (Communication.enReseau() && trace) {
+			System.out.println("reception :" + joueurReception);
+			System.out.println("courant :" + joueurCourant.getJoueurID());
+			System.out.println(joueurCourant.getJoueurID() != joueurReception);
+		}
+
 		for (String dataType : echange.getAll()) {
 			Object dataValue = echange.get(dataType);
-
-			if (Communication.enReseau() && (joueurCourant.getJoueurID() != joueurReception) && (dataType == "point" || dataType == "annuler" || dataType == "refaire" || dataType== "finTour"))
+			
+			if (Communication.enReseau() && (joueurCourant.getJoueurID() != joueurReception) && (dataType.equals("point")  || dataType.equals("annuler") || dataType.equals("refaire") || dataType.equals("finTour")))
 				return;
 
 			// System.out.println(dataType);
