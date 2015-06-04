@@ -71,9 +71,11 @@ public class CoupGraphique implements Runnable, Serializable {
 			tg.ihm.bandeauInfos.setScore(2,score[1]);
 		}
 		
+		if(bandeauSup != null){
+		tg.ihm.bandeauInfos.setTexteSup(bandeauSup);}
 		
-		//tg.ihm.bandeauInfos.setTexteSup(bandeauSup);
-		//tg.ihm.bandeauInfos.setTexteInf(bandeauInf);
+		if(bandeauInf != null){
+		tg.ihm.bandeauInfos.setTexteInf(bandeauInf);}
 		
 		CoupGraphique.animationEnCours = false;
 		
