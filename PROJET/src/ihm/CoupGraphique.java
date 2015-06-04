@@ -5,7 +5,10 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
 
+import modele.Case;
+
 public class CoupGraphique implements Runnable, Serializable {
+	private Case[][] terrain;
 	private Point[] deplacement;
 	private Point[] choixPrise;
 	private ArrayList<Point> pionsManges, chemin;
@@ -34,6 +37,10 @@ public class CoupGraphique implements Runnable, Serializable {
 		
 	}
 	
+	public CoupGraphique(Case[][] t){
+		terrain = t;
+	}
+	
 	
 	public void lancer(){
 		Thread t = new Thread(this);
@@ -41,7 +48,9 @@ public class CoupGraphique implements Runnable, Serializable {
 	}
 	public void run() {
 		
-		
+		if(terrain != null){
+			tg.dessinerTerrain(terrain);
+		}
 		
 		
 		if(deplacement != null){
