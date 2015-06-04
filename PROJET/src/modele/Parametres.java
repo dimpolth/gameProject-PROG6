@@ -23,7 +23,9 @@ public class Parametres implements Serializable{
 		}
 	}
 
-	public String j1_identifiant, j2_identifiant;
-	public NiveauJoueur j1_type, j2_type;
+	public String j1_identifiant=null;
+	public String j2_identifiant=null;
+	public NiveauJoueur j1_type = null;
+	public NiveauJoueur j2_type=null;
 
 }
