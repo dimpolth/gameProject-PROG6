@@ -404,7 +404,7 @@ public class Moteur {
 					 * if(jeuIa != null) System.out.println(jeuIa.getpDepart() +
 					 * ";" + jeuIa.getpArrivee());
 					 */
-					jeuIa = joueurCourant.jouer(t);
+					jeuIa = joueurCourant.jouer();
 					// System.out.println(jeuIa.getpDepart() + ";" +
 					// jeuIa.getpArrivee());
 					// System.out.println("depart "+jeuIa.getpDepart()+" arrivé "+jeuIa.getpArrivee());
