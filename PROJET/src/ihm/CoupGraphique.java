@@ -1,9 +1,14 @@
 package ihm;
 
 import java.awt.Point;
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Random;
 
-public class CoupGraphique implements Runnable {
+import modele.Case;
+
+public class CoupGraphique implements Runnable, Serializable {
+	private Case[][] terrain;
 	private Point[] deplacement;
 	private Point[] choixPrise;
 	private ArrayList<Point> pionsManges, chemin;
@@ -29,6 +34,11 @@ public class CoupGraphique implements Runnable {
 		bandeauSup = null;
 		bandeauInf = null;
 		this.chemin = chemin;
+		
+	}
+	
+	public CoupGraphique(Case[][] t){
+		terrain = t;
 	}
 	
 	
@@ -37,9 +47,10 @@ public class CoupGraphique implements Runnable {
 		t.start();
 	}
 	public void run() {
-		CoupGraphique.animationEnCours = true;	
 		
-		
+		if(terrain != null){
+			tg.dessinerTerrain(terrain);
+		}
 		
 		
 		if(deplacement != null){
@@ -54,8 +65,11 @@ public class CoupGraphique implements Runnable {
 		}
 		if(pionsManges != null) {
 			tg.manger(pionsManges);
-		} else if(choixPrise != null){
+		}
+		if(choixPrise != null){
 			tg.afficherPrisesPossibles(choixPrise);
+		} else {
+			tg.cacherPrisesPossibles();
 		}
 		try {
 			Thread.sleep(TerrainGraphique.ANIM_DISP);
@@ -70,14 +84,16 @@ public class CoupGraphique implements Runnable {
 			tg.ihm.bandeauInfos.setScore(2,score[1]);
 		}
 		
+		if(bandeauSup != null){
+		tg.ihm.bandeauInfos.setTexteSup(bandeauSup);}
 		
-		//tg.ihm.bandeauInfos.setTexteSup(bandeauSup);
-		//tg.ihm.bandeauInfos.setTexteInf(bandeauInf);
+		if(bandeauInf != null){
+		tg.ihm.bandeauInfos.setTexteInf(bandeauInf);}
 		
 		CoupGraphique.animationEnCours = false;
 		
 		if(tg.lCoups.size() != 0) {
-			tg.lCoups.pollFirst().lancer();			
+			tg.lCoups.pollFirst().lancer();
 		}
 		
 		
@@ -85,7 +101,8 @@ public class CoupGraphique implements Runnable {
 	
 	public static void afficherCoups(TerrainGraphique tg){
 		CoupGraphique.tg = tg;
-		if(!CoupGraphique.animationEnCours){			
+		if(!CoupGraphique.animationEnCours){
+			CoupGraphique.animationEnCours = true;	
 			tg.lCoups.pollFirst().lancer();
 		}
 	}

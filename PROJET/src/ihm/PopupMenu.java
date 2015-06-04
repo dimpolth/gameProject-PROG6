@@ -10,6 +10,9 @@ import javax.swing.JPanel;
 
 @SuppressWarnings("serial")
 class PopupMenu extends JPanel {
+	Bouton boutonMenuReseau, boutonMenuLocal;
+	Bouton boutonMenuSauvegarder, boutonMenuCharger;
+	
 	public PopupMenu(IHM i) {
 		super(new GridBagLayout());
 		// this.setBorder(BorderFactory.createLineBorder(Color.black));
@@ -21,18 +24,26 @@ class PopupMenu extends JPanel {
 		contraintes.ipadx = 180;
 
 		GridBagConstraints contraintesCategorie = (GridBagConstraints) contraintes.clone();
-		contraintesCategorie.insets = new Insets(2, 2, 25, 2);
+		contraintesCategorie.insets = new Insets(2, 2, 15, 2);
 
 		Bouton boutonMenuReprendre = new Bouton("Reprendre la partie");
 		boutonMenuReprendre.addActionListener(new Ecouteur(Ecouteur.Bouton.REPRENDRE, i));
 		add(boutonMenuReprendre, contraintesCategorie);
 
-		Bouton boutonMenuSauvegarder = new Bouton("Sauvegarder la partie");
+		boutonMenuSauvegarder = new Bouton("Sauvegarder la partie");
 		boutonMenuSauvegarder.addActionListener(new Ecouteur(Ecouteur.Bouton.SAUVEGARDER, i));
-		add(boutonMenuSauvegarder, contraintes);
-		Bouton boutonMenuCharger = new Bouton("Charger une partie");
+		add(boutonMenuSauvegarder, contraintes);		
+		boutonMenuCharger = new Bouton("Charger une partie");
 		boutonMenuCharger.addActionListener(new Ecouteur(Ecouteur.Bouton.CHARGER, i));
 		add(boutonMenuCharger, contraintes);
+		boutonMenuReseau = new Bouton("Jouer en réseau");
+		boutonMenuReseau.addActionListener(new Ecouteur(Ecouteur.Bouton.MODE, i));
+		add(boutonMenuReseau, contraintesCategorie);
+		
+		boutonMenuLocal = new Bouton("Jouer en local");
+		boutonMenuLocal.addActionListener(new Ecouteur(Ecouteur.Bouton.MODE, i));
+		add(boutonMenuLocal, contraintesCategorie);
+		
 		Bouton boutonMenuRegles = new Bouton("Regles du jeu");
 		boutonMenuRegles.addActionListener(new Ecouteur(Ecouteur.Bouton.REGLES, i));
 		add(boutonMenuRegles, contraintesCategorie);

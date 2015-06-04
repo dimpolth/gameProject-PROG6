@@ -8,7 +8,7 @@ import moteur.*;
 
 public class Communication {
 	
-	static Communication canaux[]= new Communication[2];
+	public static Communication canaux[]= new Communication[2];
 	
 	static String[] canaux_nom = {"IHM","MOTEUR"};
 	public static final int IHM = 0;
@@ -16,8 +16,8 @@ public class Communication {
 	
 	static boolean reseau = false;
 	
-	Serveur serveur = null;
-	Client client = null;
+	public Serveur serveur = null;
+	public Client client = null;
 	
 	IHM ihm = null;
 	Moteur moteur = null;
@@ -37,7 +37,7 @@ public class Communication {
 		
 	}
 	
-	public static void modeReseau(String host){
+	public static String modeReseau(String host){
 		// Si il y a une modification
 		if(host == null && reseau || host != null && !reseau){
 				
@@ -51,8 +51,8 @@ public class Communication {
 					int port = s.demarrer();
 					host = "127.0.0.1:"+port;
 					System.out.println("HOST : "+host);
-					if(port == 0) return;
-					System.out.println(s);
+					if(port == 0) return "Aucun port disponible pour ouvrir une connexion.";
+					
 					Communication.canaux[ Communication.MOTEUR ].serveur = s;
 				}
 				
@@ -65,15 +65,15 @@ public class Communication {
 					reseau = true;
 				}
 				catch(UnknownHostException ex){
-					System.out.println("Host introuvable");	
+					return "Host introuvable";
 					
 				}
 				catch(IOException ex){
-					System.out.println("Problème réseau");
+					return "Un problème réseau est survenue";
 					
 				}
 				catch(Exception ex){
-					System.out.println("Une erreur est survenue");
+					return "Une erreur est survenue";
 					
 				}
 				
@@ -90,6 +90,8 @@ public class Communication {
 			
 		
 		}
+		
+		return null;
 	}
 	
 	public void envoyer(Echange e){
@@ -127,6 +129,10 @@ public class Communication {
 		else if(loc == Communication.MOTEUR){			
 			moteur.action(e);
 		}
+	}
+	
+	public static int getPort(){
+		return Communication.canaux[ Communication.MOTEUR ].serveur.getPort();
 	}
 	
 	

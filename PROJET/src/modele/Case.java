@@ -1,17 +1,18 @@
 package modele;
 import java.awt.*;
+import java.io.Serializable;
 import java.util.*;
 
-public class Case {
+public class Case implements Serializable {
 	public enum Etat {
 	joueur1,
 	joueur2,
 	vide;
 	}
 	
-	private ArrayList<Point> succ;
-	private Etat occupation;
-	private Point pos;
+	public ArrayList<Point> succ;
+	public Etat occupation;
+	public Point pos;
 	
 	
 	

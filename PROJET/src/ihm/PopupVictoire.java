@@ -5,6 +5,9 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.geom.Point2D;
+import java.awt.geom.Point2D.Float;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Random;
 
@@ -14,54 +17,80 @@ import javax.swing.Timer;
 
 public class PopupVictoire extends JPanel implements ActionListener {
 	private Timer t;
-	private long precedentLancement;
+	private long prochainLancement, precTemps;
 	private LinkedList<Fusee> fusees;
 	private Random aleat;
-	
+
 	public PopupVictoire() {
 		super();
+		setOpaque(false);
 		t = new Timer(10, this);
-		precedentLancement = 0;
+		prochainLancement = 0;
+		precTemps = 0;
 		fusees = new LinkedList<Fusee>();
 		aleat = new Random();
 	}
-	
+
 	public void lancer() {
 		setVisible(true);
 		repaint();
-		//tirer();
+		tirer();
 		t.start();
 	}
-	
+
 	public void arreter() {
 		setVisible(false);
 		t.stop();
 	}
-	
+
 	private void tirer() {
-		precedentLancement = System.currentTimeMillis();
-		for(int i=0 ; i<aleat.nextInt(3)+1 ; i++) {
-			fusees.add(new Fusee(new Point(aleat.nextInt(getWidth()),getHeight()), aleat.nextInt(3000)+1000, aleat.nextInt(100)+50));
-		}
 	}
-	
+
 	public void paintComponent(Graphics g) {
-		g.setColor(Color.PINK);
-		g.fillRect(0, 0, getWidth(), getHeight());
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		
 	}
 }
 
-class Fusee {
-	public Fusee(Point c, long t, int n) {
-		coord = c;
-		tempsExplosion = t;
-		nombreParticule = n;
+enum Forme {Ovale};
+
+class Particule {
+	public Float coord;
+	public Float vecteur;
+	public Forme forme;
+	public Color couleur;
+	public Float taille;
+	
+	public Particule(Random a, Forme f, Color c) {
+		coord = new Float(a.nextFloat(), 1);
+		vecteur = new Float((a.nextFloat()/5)-0.1f,a.nextFloat()/3);
+		forme = f;
+		couleur = c;
+		if(f == Forme.Ovale) {
+			taille.x = 0.001f;
+			taille.y = 0.003f;
+		}
 	}
-	public Point coord;
-	public long tempsExplosion;
-	public int nombreParticule;
+	public void maj(float facteurSeconde) {
+		coord.x = coord.x + vecteur.x*facteurSeconde;
+		coord.y = coord.y + vecteur.y*facteurSeconde;
+		vecteur.x = vecteur.x *0.75f;
+		vecteur.y = vecteur.y - 0.2f*facteurSeconde; 
+	}
+	public void afficher(Graphics g, int w, int h) {
+		g.setColor(couleur);
+		if(forme == Forme.Ovale) {
+			g.fillOval((int)(coord.x*w), (int)(coord.y*h), (int)(taille.x*w), (int)(taille.y*h));
+		}
+	}
+}
+
+class Fusee extends Particule {
+	public Fusee(Random a, Forme f, Color c) {
+		super(a, f, c);
+	}
+	
 }

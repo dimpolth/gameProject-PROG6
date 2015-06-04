@@ -28,6 +28,8 @@ public class Bouton extends JButton implements MouseListener {
 	Image fond;
 	Color couleur;
 
+	boolean active = true;
+
 	String texte;
 
 	Bouton(String texte) {
@@ -45,7 +47,7 @@ public class Bouton extends JButton implements MouseListener {
 		Font font = new Font("Arial", Font.BOLD, 14);
 		g.setFont(font);
 		FontMetrics fm = g.getFontMetrics();
-		
+
 		g.drawImage(fond, 0, 0, this.getWidth(), this.getHeight(), null);
 
 		g.setColor(Color.WHITE);
@@ -59,7 +61,10 @@ public class Bouton extends JButton implements MouseListener {
 			fondNormal = ImageIO.read(getClass().getResource("/images/themes/" + pTheme.getId() + "/bouton_normal.png"));
 			fondSurvol = ImageIO.read(getClass().getResource("/images/themes/" + pTheme.getId() + "/bouton_survol.png"));
 			fondClique = ImageIO.read(getClass().getResource("/images/themes/" + pTheme.getId() + "/bouton_clique.png"));
-			fond = fondNormal;
+			if(active)
+				fond = fondNormal;
+			else
+				fond = fondClique;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -77,6 +82,13 @@ public class Bouton extends JButton implements MouseListener {
 	}
 
 	@Override
+	public void setEnabled(boolean b) {
+		super.setEnabled(b);
+		active = b;
+		fond = fondClique;
+	}
+
+	@Override
 	public void mouseClicked(MouseEvent arg0) {
 		// fond = fondClique;
 
@@ -84,27 +96,34 @@ public class Bouton extends JButton implements MouseListener {
 
 	@Override
 	public void mouseEntered(MouseEvent arg0) {
-		if(fond == fondNormal)
-			fond = fondSurvol;
+		if (active) {
+			if (fond == fondNormal)
+				fond = fondSurvol;
+		}
 	}
 
 	@Override
 	public void mouseExited(MouseEvent arg0) {
-		if(fond == fondSurvol)
-			fond = fondNormal;
+		if (active) {
+			if (fond == fondSurvol)
+				fond = fondNormal;
+		}
 	}
 
 	@Override
 	public void mousePressed(MouseEvent arg0) {
-		fond = fondClique;
+		if (active) {
+			fond = fondClique;
+		}
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-
-		if (e.getY() > 0 && e.getY() < this.getHeight() && (e.getX() > 0 && e.getX() < this.getWidth())) {
-			fond = fondSurvol;
-		} else
-			fond = fondNormal;
+		if (active) {
+			if (e.getY() > 0 && e.getY() < this.getHeight() && (e.getX() > 0 && e.getX() < this.getWidth())) {
+				fond = fondSurvol;
+			} else
+				fond = fondNormal;
+		}
 	}
 }

@@ -1,10 +1,11 @@
 package modele;
 import java.awt.Point;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 
 
-public class Terrain {
+public class Terrain implements Serializable {
 	public enum Direction {
 		haut, bas, gauche, droite, hautGauche, hautDroite, basGauche, basDroite
 	}
@@ -115,6 +116,23 @@ public class Terrain {
 				this.tableau[4][6].setOccupation(Case.Etat.joueur2);
 			break;
 			
+			case 7 :
+				this.tableau[1][1].setOccupation(Case.Etat.joueur1);
+				this.tableau[1][2].setOccupation(Case.Etat.joueur2);
+			break;
+			
+			case 8 : // petit terrain équivalent pour simulations plus rapides
+			for(int i = 0; i < 5; i++)
+				for(int j = 0; j < 5; j++){
+					if(i == 1 || i == 2)
+						this.tableau[i][j+2].setOccupation(Case.Etat.joueur1);
+					else 
+						this.tableau[i][j+2].setOccupation(Case.Etat.joueur2);
+				}
+			this.tableau[2][2].setOccupation(Case.Etat.joueur1);
+			this.tableau[2][4].setOccupation(Case.Etat.vide);
+			this.tableau[2][6].setOccupation(Case.Etat.joueur1);
+			break;
 		}
 	}
 	
@@ -122,7 +140,9 @@ public class Terrain {
 		Terrain copieTerrain = new Terrain();
 		for (int i=0;i<LIGNES;i++){
 			for (int j=0;j<COLONNES;j++){
-				copieTerrain.tableau[i][j]=this.tableau[i][j].copie();
+				copieTerrain.tableau[i][j].occupation = this.tableau[i][j].occupation;
+				copieTerrain.tableau[i][j].pos = this.tableau[i][j].pos;
+				copieTerrain.tableau[i][j].succ = this.tableau[i][j].succ;
 			}
 		}
 		return copieTerrain;
@@ -539,5 +559,61 @@ public class Terrain {
 		return reponse;
 	}	
 	
+	/**
+	 * Détermine quels sont les déplacements possibles
+	 * 
+	 * @param p
+	 *            Point à partir du quel on veut déterminer les déplacements
+	 *            possibles.
+	 * @param listePredecesseurs
+	 *            ArrayList de Points. Liste des points par lesquels est passé
+	 *            le pion durant le tour.
+	 * @param copieTerrainEventuelle
+	 *            Terrain. Utilisé par l'IA pour simuler des coups.
+	 * @return ArrayList de Points. Liste des emplacements vers lequel le pion
+	 *         courant peut se déplacer.
+	 */
+	public ArrayList<Point> deplacementPossible(Point p, ArrayList<Point> listePredecesseurs, Case[][] copieTerrainEventuelle) {
+		ArrayList<Point> listeSuc = tableau[p.x][p.y].getSucc();
+		ArrayList<Point> listeSolution = new ArrayList<Point>();
+		Iterator<Point> it = listeSuc.iterator();
+		Point pointPrec = new Point();
+		Case[][] terr = tableau;
+		if (copieTerrainEventuelle != null)
+			terr = copieTerrainEventuelle;
+		while (it.hasNext()) {
+			Point temp = (Point) it.next().clone();
+			if (terr[temp.x][temp.y].getOccupation() == Case.Etat.vide && (!listePredecesseurs.contains(temp))) {
+				if (listePredecesseurs.size() == 0)
+					listeSolution.add(temp);
+				else {
+					pointPrec = listePredecesseurs.get(listePredecesseurs.size() - 1);
+					Terrain.Direction dirPrec = recupereDirection(pointPrec, p);
+					Terrain.Direction dirSuiv = recupereDirection(p, temp);
+					if (dirPrec != dirSuiv) {
+						listeSolution.add(temp);
+					}
+				}
+			}
+		}
+		return listeSolution;
+	}
+	
+	public ArrayList<Point> listePionsJouables(Joueur j, Terrain copieTerrainEventuelle) {
+		Terrain terr = this;
+		if (copieTerrainEventuelle != null) // Utile à l'IA pour travailler sur
+			// une copie de terrain modifiée
+			terr = copieTerrainEventuelle;
+
+		ArrayList<Point> listePions = couplibre(j.getJoueurID());
+		if (listePions.isEmpty()) {
+			for (int ligne = 0; ligne < Terrain.LIGNES; ligne++)
+				for (int colonne = 0; colonne < Terrain.COLONNES; colonne++)
+					if (terr.tableau[ligne][colonne].getOccupation() == j.getJoueurID())
+						if (deplacementPossible((Point) new Point(ligne, colonne).clone(), new ArrayList<Point>(), null).size() > 0)
+							listePions.add((Point) new Point(ligne, colonne).clone());
+		}
+		return listePions;
+	}
 	
 }

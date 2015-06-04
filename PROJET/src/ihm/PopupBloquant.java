@@ -9,9 +9,9 @@ import javax.swing.JPanel;
 
 @SuppressWarnings("serial")
 class PopupBloquant extends JPanel {
-	public PopupBloquant() {
+	public PopupBloquant(Color c) {
 		super();
-		setBackground(new Color(0, 0, 0, 128));
+		setBackground(c);
 		setOpaque(false);
 		addMouseListener(new MouseAdapter() {
 		});
