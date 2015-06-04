@@ -35,6 +35,7 @@ public class IHM extends JFrame implements ComponentListener {
 	
 	Bouton boutonAnnuler;
 	Bouton boutonRefaire;
+	Bouton boutonValidation;
 	
 	boolean modeReseau = false;
 
@@ -105,8 +106,9 @@ public class IHM extends JFrame implements ComponentListener {
 		boutonRefaire.setEnabled(false);
 		voletSudCentre.add(boutonRefaire);
 		
-		Bouton boutonValidation = new Bouton("Terminer");
+		boutonValidation = new Bouton("Terminer");
 		boutonValidation.addActionListener(new Ecouteur(Ecouteur.Bouton.TERMINER, this));
+		boutonValidation.setEnabled(false);
 		voletSudEst.add(boutonValidation);
 
 		JLayeredPane gestionCouche = getLayeredPane();
@@ -405,6 +407,10 @@ public class IHM extends JFrame implements ComponentListener {
 			Parametres params = (Parametres)dataValue;
 			bandeauInfos.setIdentifiant(1,params.j1_identifiant);
 			bandeauInfos.setIdentifiant(2,params.j2_identifiant);			
+		}
+		if((dataValue = e.get("finTour")) != null) {
+			boutonValidation.setEnabled((boolean)dataValue);
+				
 		}
 		
 		

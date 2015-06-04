@@ -406,8 +406,6 @@ public class Moteur {
 	}
 
 	void jouerIa() {
-		System.out.println(e);
-		
 		// System.out.println("DEBUT TOUR IA");
 		Thread th = new Thread(){
 			public void run(){
@@ -632,9 +630,7 @@ public class Moteur {
 			
 			case "parametres":
 				Parametres p = (Parametres) dataValue;
-				System.out.println(j1.getNom());
 				j1.setNom(p.j1_identifiant);
-				System.out.println(j1.getNom());
 				j2.setNom(p.j2_identifiant);
 				if(p.j1_type == Parametres.NiveauJoueur.HUMAIN) {
 					j1.setJoueurHumain(true);
@@ -663,6 +659,7 @@ public class Moteur {
 				ech.vider();
 				ech.ajouter("parametres", p);
 				com.envoyer(ech);
+				message("bandeauSup", joueurCourant.getNom());
 				break;
 			}
 		}
