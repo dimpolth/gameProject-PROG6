@@ -138,6 +138,10 @@ public class Communication {
 		return Communication.canaux[ Communication.MOTEUR ].serveur.getPort();
 	}
 	
+	public static boolean enReseau(){
+		return Communication.reseau;
+	}
+	
 	
 	
 	
