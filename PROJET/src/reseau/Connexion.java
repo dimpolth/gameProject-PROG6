@@ -82,8 +82,15 @@ public class Connexion implements Runnable{
 					//Object e3 = ois.readObject();
 					
 					//System.err.println("Reception d'une donnée cliente : "+((Echange)e3).infos.size());
-					//System.out.println("Reception d'une donnée cliente sur le serveur : "+recu.infos.size());					
-					serveur.com.recevoir(recu);
+					//System.out.println("Reception d'une donnée cliente sur le serveur : "+recu.infos.size());
+					
+					int j = 0;
+					if(serveur.joueurs.get(1).equals(this))
+						j=1;
+					else if(serveur.joueurs.get(2).equals(this))
+						j=2;
+					
+					serveur.com.recevoir(recu,j);
 					
 					//System.out.println("Reception d'une donnée cliente sur le serveur : TRAITE");
 					
