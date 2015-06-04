@@ -1,9 +1,10 @@
 package modele;
 import java.awt.Point;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 
-public class Historique {
+public class Historique implements Serializable {
 
 	public ArrayList<Terrain> histoPrincipal;
 	public ArrayList<Point> histoTour;
