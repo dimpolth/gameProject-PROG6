@@ -182,8 +182,10 @@ public class Moteur {
 				partieTerminee(true);
 			if (listePointDebut.contains(p)) {
 				pDepart = p;
+				System.out.println("Point valide");
 				if (joueurCourant.isJoueurHumain()) {
 					ech.vider();
+					System.out.println("ON est passé a selection direction");
 					ech.ajouter("pionSelectionne", pDepart);
 					com.envoyer(ech);
 				}
@@ -672,7 +674,7 @@ public class Moteur {
 		if (Communication.enReseau() && trace) {
 			System.out.println("reception :" + joueurReception);
 			System.out.println("courant :" + joueurCourant.getJoueurID());
-			System.out.println(joueurCourant.getJoueurID() != joueurReception);
+			System.out.println("comparaison "+!joueurCourant.getJoueurID().equals(joueurReception));
 		}
 
 		for (String dataType : echange.getAll()) {
