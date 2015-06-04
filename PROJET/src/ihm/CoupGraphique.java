@@ -1,9 +1,10 @@
 package ihm;
 
 import java.awt.Point;
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class CoupGraphique implements Runnable {
+public class CoupGraphique implements Runnable, Serializable {
 	private Point[] deplacement;
 	private Point[] choixPrise;
 	private ArrayList<Point> pionsManges, chemin;

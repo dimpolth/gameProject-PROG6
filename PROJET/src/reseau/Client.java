@@ -14,7 +14,7 @@ class Client implements Runnable{
 	private String host;
 	
 	
-	// CONSTRUCTEUR (param = GUI)
+	// CONSTRUCTEUR
 	public Client(Communication c) {		
 		com = c;
 	}
@@ -34,6 +34,7 @@ class Client implements Runnable{
 		String[] hostInfos = host.split(":");
 		if(hostInfos[1] == null)
 			System.out.println("Pas de port");
+		
 		
 		int port = Integer.valueOf(hostInfos[1]);
 		// Nouveau socket pour la connexion
@@ -67,7 +68,7 @@ class Client implements Runnable{
 	// ENVOYER UNE INFORMATION VERS LE SERVEUR
 	public void envoyer(Echange e) {
 		try {
-			this.oos.writeObject(e);
+			oos.writeObject(e.clone());
 		}
 		catch (Exception ex) {
 		}
@@ -76,17 +77,21 @@ class Client implements Runnable{
 	@Override
 	public void run() {
 		Thread currentTh = Thread.currentThread();
-		Echange e = new Echange();
+		
 		if (currentTh.getName().equals("recep")) {
-			e.vider();
+			
 			while (true) {
+				
 				// System.out.println("boucle");
 				try {
-					e = (Echange)this.ois.readObject();
-					com.recevoir(e);
+					Echange retour = (Echange)this.ois.readObject();
+					
+					com.recevoir(retour);
 				}
 				catch (Exception ex) {
 				}
+				
+				
 			}
 
 		}

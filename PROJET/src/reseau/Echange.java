@@ -1,7 +1,11 @@
 package reseau;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
+
+import javax.swing.text.html.HTMLDocument.Iterator;
 
 
 /*
@@ -11,12 +15,31 @@ import java.util.Map;
  * 
  */
 
-public class Echange {
+public class Echange implements Serializable{
 	
-	public Map<String,Object> infos = new LinkedHashMap<String,Object>();
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6L;
+	public LinkedHashMap<String,Object> infos = new LinkedHashMap<String,Object>() ;
+	
+	public Echange(){
+		
+	}
 	
 	public void vider(){
 		infos.clear();
+		infos = new LinkedHashMap<String,Object>();
+	}
+	
+	public Echange clone(){
+		Echange e = new Echange();
+		for (String dataType : this.getAll()) {
+			Object dataValue = this.get(dataType);
+			e.ajouter(dataType,dataValue);
+		}
+		return e;
 	}
 	
 	public void ajouter(String id, Object donnee){
@@ -33,6 +56,15 @@ public class Echange {
 	
 	public void retirer(String cle){
 		infos.remove(cle);
+	}
+	
+	public String toString(){
+		String s = "["+infos.size()+"]";
+		for (String dataType : infos.keySet()) {
+			Object dataValue = infos.get(dataType);
+			s+=""+dataType+" : "+dataValue+" , ";
+		}
+		return s;
 	}
 	
 	/*
