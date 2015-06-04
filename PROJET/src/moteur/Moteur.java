@@ -7,7 +7,6 @@ import java.util.Iterator;
 import ia.*;
 import ihm.*;
 import modele.*;
-import modele.Joueur.typeJoueur;
 import reseau.*;
 
 public class Moteur {
@@ -31,7 +30,7 @@ public class Moteur {
 	EtatTour e;
 	Point pDepart, pArrive;
 	Joueur joueurCourant;
-	Joueur j1, j2;
+	public Joueur j1, j2;
 	Echange ech;
 	Point aspi, perc;
 	Boolean tourEnCours;
@@ -41,14 +40,25 @@ public class Moteur {
 	public Moteur() {
 	}
 
+	/**
+	 * Constructeur utilisé dans le cas d'un chargement de partie.
+	 * 
+	 * @param t
+	 * Le terrain à charger pour reprendre la partie. 
+	 */
 	Moteur(Terrain t) {
 		this.t = t;
 		h = new Historique();
 		ech = new Echange();
 	}
 
+	/**
+	 * Initialise le moteur.
+	 * Cette methode n'est pas dans le constructeur car si une nouvelle partie est lancée par l'utilisateur, le moteur ne peut pas se construir lui-même.
+	 */
 	public void init() {
 		t = new Terrain();
+		
 		h = new Historique();
 		h.ajouterTour(t);
 		ech = new Echange();
@@ -59,7 +69,7 @@ public class Moteur {
 		// j1 = new Joueur(Case.Etat.joueur1, Joueur.typeJoueur.ordinateur,
 		// IntelligenceArtificielle.difficulteIA.facile, j2, this);
 		j2 = new Joueur(Case.Etat.joueur2, Joueur.typeJoueur.ordinateur,
-				IntelligenceArtificielle.difficulteIA.facile, j1, this);
+				IntelligenceArtificielle.difficulteIA.normal, j1, this);
 		joueurCourant = j1;
 		if (joueurCourant.isJoueurHumain()) {
 			e = EtatTour.selectionPion;
@@ -70,9 +80,18 @@ public class Moteur {
 		message("bandeauSup", joueurCourant.getNom());
 		message("bandeauInf", "Selection du pion");
 	}
-
-	public ArrayList<Point> deplacementPossible(Point p,
-			ArrayList<Point> listePredecesseurs, Terrain copieTerrainEventuelle) {
+	/**
+	 * Détermine quels sont les déplacements possibles
+	 * @param p
+	 * Point à partir du quel on veut déterminer les déplacements possibles.
+	 * @param listePredecesseurs
+	 * ArrayList de Points. Liste des points par lesquels est passé le pion durant le tour.
+	 * @param copieTerrainEventuelle
+	 * Terrain. Utilisé par l'IA pour simuler des coups.
+	 * @return
+	 * ArrayList de Points. Liste des emplacements vers lequel le pion courant peut se déplacer.
+	 */
+	public ArrayList<Point> deplacementPossible(Point p, ArrayList<Point> listePredecesseurs, Terrain copieTerrainEventuelle) {
 		ArrayList<Point> listeSuc = t.tableau[p.x][p.y].getSucc();
 		ArrayList<Point> listeSolution = new ArrayList<Point>();
 		Iterator<Point> it = listeSuc.iterator();
@@ -353,7 +372,7 @@ public class Moteur {
 		com.envoyer(ech);
 	}
 
-	void calculerScore() {
+	public void calculerScore() {
 		int scoreJ1 = 0;
 		int scoreJ2 = 0;
 		for (int i = 0; i < Terrain.LIGNES; i++) {
@@ -378,18 +397,29 @@ public class Moteur {
 	}
 
 	void jouerIa() {
+		System.out.println(e);
+		
 		// System.out.println("DEBUT TOUR IA");
-		do {
-			// System.out.println("boucle IA");
-			jeuIa = joueurCourant.jouer();
-			// System.out.println("depart "+jeuIa.getpDepart()+" arrivé "+jeuIa.getpArrivee());
-			selectionPion(jeuIa.getpDepart());
-			// System.out.println("point depart moteur :"+pDepart);
-			selectionDestination(jeuIa.getpArrivee());
-			// t.dessineTableauAvecIntersections();
-		} while (joueurCourant.IaContinue());
-		// System.out.println(" FIN DU JEU IA");
-		finTour();
+		Thread th = new Thread(){
+			public void run(){
+				do {
+					// System.out.println(joueurCourant.getNom());
+					// System.out.println("boucle IA");
+					jeuIa = joueurCourant.jouer();
+					// System.out.println("depart "+jeuIa.getpDepart()+" arrivé "+jeuIa.getpArrivee());
+					selectionPion(jeuIa.getpDepart());
+					// System.out.println("point depart moteur :"+pDepart);
+					selectionDestination(jeuIa.getpArrivee());
+					// t.dessineTableauAvecIntersections();
+				} while (joueurCourant.IaContinue());
+					// System.out.println(" FIN DU JEU IA");
+		
+				finTour();
+			}
+		};
+		
+		th.start();
+;
 	}
 
 	void gestionBouton() {
@@ -422,6 +452,7 @@ public class Moteur {
 			}
 		}
 		com.envoyer(ech);
+
 	}
 
 	public void action(Echange echange) {
