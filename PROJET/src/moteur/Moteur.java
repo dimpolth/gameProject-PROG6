@@ -466,8 +466,10 @@ public class Moteur {
 	}
 
 	public void action(Echange echange, int j) {
+		
+		System.out.println("Action reçue de joueur "+j);
 
-		Case.Etat joueurReception;
+		Case.Etat joueurReception = null;
 		if (j == 1)
 			joueurReception = Etat.joueur1;
 		else if (j == 2)
@@ -475,6 +477,10 @@ public class Moteur {
 
 		for (String dataType : echange.getAll()) {
 			Object dataValue = echange.get(dataType);
+
+			if (Communication.enReseau() && (joueurCourant.getJoueurID() != joueurReception) && (dataType == "point" || dataType == "annuler" || dataType == "refaire" || dataType== "finTour"))
+				return;
+
 			// System.out.println(dataType);
 			// System.out.println("e : " + e);
 			switch (dataType) {
@@ -484,14 +490,12 @@ public class Moteur {
 			case "point":
 				if (e == EtatTour.selectionPion) {
 					// System.out.println("e : " + e);
-					if (Commnunication.enReseau) {
-						if (joueurCourant.getJoueurID() == joueurReception)
-							selectionPion((Point) dataValue);
-					} else{selectionPion((Point) dataValue);}
-					
+					selectionPion((Point) dataValue);
+
 				} else if (e == EtatTour.selectionDestination) {
 					// System.out.println("e : " + e);
 					selectionDestination((Point) dataValue);
+
 				} else if (e == EtatTour.attenteChoix) {
 					// System.out.println("e : " + e);
 					Terrain.Direction d = t.recupereDirection(pDepart, pArrive);
