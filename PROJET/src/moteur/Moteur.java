@@ -13,7 +13,6 @@ public class Moteur {
 	public static void main(String[] args) {
 		Moteur m = new Moteur();
 		IHM i = new IHM();
-		i.setVisible(true);
 		i.com = new Communication(i, m, Communication.IHM);
 		m.com = new Communication(i, m, Communication.MOTEUR);
 		// m.init();

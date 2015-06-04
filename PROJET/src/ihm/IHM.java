@@ -1,6 +1,7 @@
 package ihm;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -107,7 +108,7 @@ public class IHM extends JFrame implements ComponentListener {
 		voletSudEst.add(boutonValidation);
 
 		JLayeredPane gestionCouche = getLayeredPane();
-		popupB = new PopupBloquant();
+		popupB = new PopupBloquant(new Color(0, 0, 0, 128));
 		gestionCouche.add(popupB, new Integer(1));
 		popupB.setVisible(false);
 		popupM = new PopupMenu(this);
@@ -126,7 +127,8 @@ public class IHM extends JFrame implements ComponentListener {
 		theme.setTheme(Theme.Type.BOIS);
 
 		setMinimumSize(new Dimension(640, 480));
-		setSize(Math.max(640,(int)(java.awt.Toolkit.getDefaultToolkit().getScreenSize().width*0.75)), Math.max(480,(int)(java.awt.Toolkit.getDefaultToolkit().getScreenSize().height*0.75)));
+		setSize(640, 480);
+		//setSize(Math.max(640,(int)(java.awt.Toolkit.getDefaultToolkit().getScreenSize().width*0.75)), Math.max(480,(int)(java.awt.Toolkit.getDefaultToolkit().getScreenSize().height*0.75)));
 		try {
 			setIconImage(ImageIO.read(getClass().getResource("/images/icone.png")));
 		} catch (IOException e) {
@@ -262,6 +264,7 @@ public class IHM extends JFrame implements ComponentListener {
 		popupM.setBounds(getWidth() / 2 - 150, getHeight() / 2 - 250, 300, 500);
 		popupO.setBounds(getWidth() / 2 - 300, getHeight() / 2 - 250, 600, 500);
 		popupR.setBounds(getWidth() / 2 - 400, getHeight() / 2 - 250, 800, 500);
+		popupV.setBounds(0, 0, getWidth(), getHeight());
 	}
 
 	@Override
