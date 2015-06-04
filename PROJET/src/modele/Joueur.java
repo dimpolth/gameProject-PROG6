@@ -108,8 +108,8 @@ public class Joueur implements Serializable {
 		this.nom = nom;
 	}
 	
-	public Coup jouer(Terrain t) {
-		return ia.jouerIA(t);
+	public Coup jouer() {
+		return ia.jouerIA();
 	}
 	
 	public boolean IaContinue(){
