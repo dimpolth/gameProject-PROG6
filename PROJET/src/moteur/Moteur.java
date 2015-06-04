@@ -40,6 +40,7 @@ public class Moteur {
 	Boolean tourEnCours;
 	ArrayList<Point> listePointDebut;
 	Coup jeuIa;
+	boolean trace = true;
 
 	public Moteur() {
 	}
@@ -77,14 +78,15 @@ public class Moteur {
 		// IntelligenceArtificielle.difficulteIA.facile, j2, this);
 		j2 = new Joueur(Case.Etat.joueur2, Joueur.typeJoueur.ordinateur, IntelligenceArtificielle.difficulteIA.normal, j1, t);
 		joueurCourant = j1;
+		message("bandeauSup", joueurCourant.getNom());
+		message("bandeauInf", "Selection du pion");
 		if (joueurCourant.isJoueurHumain()) {
 			e = EtatTour.selectionPion;
 		} else {
 			e = EtatTour.jeuxIa;
 			jouerIa();
 		}
-		message("bandeauSup", joueurCourant.getNom());
-		message("bandeauInf", "Selection du pion");
+		
 	}
 
 	
@@ -242,7 +244,7 @@ public class Moteur {
 				majScore(l.size());
 				int[] score = { j1.getScore(), j2.getScore() };
 				gestionCoupGraphique(null, null, l, score);
-				//t.dessineTableauAvecIntersections();
+				traceTerrain();
 			}
 		} else if (priseAspi && !prisePercu) {
 			// System.out.println("aspi");
@@ -250,7 +252,7 @@ public class Moteur {
 			majScore(l.size());
 			int[] score = { j1.getScore(), j2.getScore() };
 			gestionCoupGraphique(null, null, l, score);
-			//t.dessineTableauAvecIntersections();
+			traceTerrain();
 			if (joueurCourant.isJoueurHumain()) {
 				testFinTour();
 				ech.vider();
@@ -264,7 +266,7 @@ public class Moteur {
 			majScore(l.size());
 			int[] score = { j1.getScore(), j2.getScore() };
 			gestionCoupGraphique(null, null, l, score);
-			//t.dessineTableauAvecIntersections();
+			traceTerrain();
 			if (joueurCourant.isJoueurHumain()) {
 				testFinTour();
 				ech.vider();
@@ -278,7 +280,7 @@ public class Moteur {
 	}
 
 	void finTour() {
-		// this.t.dessineTableauAvecIntersections();
+		// traceTerrain();
 		if (joueurCourant.getJoueurID() == Case.Etat.joueur1)
 			joueurCourant = j2;
 		else
@@ -405,7 +407,7 @@ public class Moteur {
 					selectionPion(jeuIa.getpDepart());
 					// System.out.println("point depart moteur :"+pDepart);
 					selectionDestination(jeuIa.getpArrivee());
-					//t.dessineTableauAvecIntersections();
+					//traceTerrain();
 
 
 				} while (joueurCourant.IaContinue());
@@ -450,6 +452,13 @@ public class Moteur {
 		com.envoyer(ech);
 
 	}
+	
+	void traceTerrain(){
+		if (trace)
+			t.dessineTableauAvecIntersections();
+	}
+	
+	
 
 	public void action(Echange echange) {
 		for (String dataType : echange.getAll()) {
@@ -484,7 +493,7 @@ public class Moteur {
 						gestionCoupGraphique(null, null, l, score);
 						ech.vider();
 						ech.ajouter("finTour", true);
-						//t.dessineTableauAvecIntersections();
+						traceTerrain();
 						testFinTour();
 					}
 				}
