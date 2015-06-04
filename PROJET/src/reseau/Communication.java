@@ -8,7 +8,7 @@ import moteur.*;
 
 public class Communication {
 	
-	static Communication canaux[]= new Communication[2];
+	public static Communication canaux[]= new Communication[2];
 	
 	static String[] canaux_nom = {"IHM","MOTEUR"};
 	public static final int IHM = 0;
@@ -16,8 +16,8 @@ public class Communication {
 	
 	static boolean reseau = false;
 	
-	Serveur serveur = null;
-	Client client = null;
+	public Serveur serveur = null;
+	public Client client = null;
 	
 	IHM ihm = null;
 	Moteur moteur = null;
@@ -129,6 +129,10 @@ public class Communication {
 		else if(loc == Communication.MOTEUR){			
 			moteur.action(e);
 		}
+	}
+	
+	public static int getPort(){
+		return Communication.canaux[ Communication.MOTEUR ].serveur.getPort();
 	}
 	
 	

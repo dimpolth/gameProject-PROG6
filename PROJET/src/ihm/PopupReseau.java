@@ -22,7 +22,9 @@ public class PopupReseau extends JPanel {
 	
 	JCheckBox etreHote;
 	JTextField hote;
-	JLabel erreur;
+	JLabel message;
+	JTextField identifiant;
+	
 
 
 	public PopupReseau(IHM i) {
@@ -39,6 +41,14 @@ public class PopupReseau extends JPanel {
 		contraintes_groupe.gridwidth = 1;
 		GridBagConstraints contraintes_groupe_fin = (GridBagConstraints) contraintes.clone();
 		contraintes_groupe_fin.gridwidth = GridBagConstraints.REMAINDER;
+		
+		JLabel selectJoueurEtiq = new JLabel("Mon identifiant");
+		contraintes.gridwidth = GridBagConstraints.REMAINDER;		
+		add(selectJoueurEtiq, contraintes);
+		
+		identifiant= new JTextField("Joueur-"+System.currentTimeMillis()/1000/1000);
+		contraintes.gridwidth = 1;
+		add(identifiant, contraintes_groupe_fin);
 
 		JLabel selectJoueur1Etiq = new JLabel("Nouveau serveur");
 		contraintes.gridwidth = GridBagConstraints.REMAINDER;
@@ -54,6 +64,8 @@ public class PopupReseau extends JPanel {
 		contraintes.gridwidth = GridBagConstraints.REMAINDER;
 		
 		add(hote, contraintes);*/
+		
+		
 
 		JLabel selectJoueur2Etiq = new JLabel("Rejoindre une partie");
 		contraintes.gridwidth = GridBagConstraints.REMAINDER;
@@ -71,10 +83,10 @@ public class PopupReseau extends JPanel {
 		 * GridBagConstraints.REMAINDER;; add(tour,contraintes);
 		 */
 		
-		erreur = new JLabel("");
-		erreur.setForeground(Color.RED);
+		message = new JLabel("");		
+		message.setForeground(Color.RED);
 		contraintes.gridwidth = GridBagConstraints.REMAINDER;
-		add(erreur,contraintes);
+		add(message,contraintes);
 		
 		Bouton annuler = new Bouton("Annuler");
 		annuler.addActionListener(new Ecouteur(Ecouteur.Bouton.RESEAU_ANNULER, i));

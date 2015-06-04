@@ -187,12 +187,15 @@ public class IHM extends JFrame implements ComponentListener {
 		case MODE:
 			if(modeReseau){
 				String choix[] = { "Confirmer", "Annuler" };
-				int retour = JOptionPane.showOptionDialog(this, "Revenir au jeu local quittera la partie réseau.", "Attention", 1, 1, null, choix, choix[1]);
-				if (retour == 1)
-					setModeReseau(false);								
+				int retour = JOptionPane.showOptionDialog(this, "Revenir au jeu local quittera la partie réseau.", "Attention", 1, JOptionPane.INFORMATION_MESSAGE, null, choix, choix[1]);
+				
+				if (retour == 0){
+					setModeReseau(false);	
+				}
+				popupB.setVisible(false);
 			}
 			else{			
-				popupReseau.erreur.setText("");
+				popupReseau.message.setText("");
 				popupReseau.setVisible(true);
 			}
 			popupM.setVisible(false);
@@ -277,7 +280,14 @@ public class IHM extends JFrame implements ComponentListener {
 			String errReseau = null;
 			// Nouveau serveur
 			if(popupReseau.etreHote.isSelected()){
-				errReseau = Communication.modeReseau("");				
+				errReseau = Communication.modeReseau("");
+				if(errReseau == null){
+					
+					JOptionPane.showMessageDialog( this,
+					                     "Le serveur est ouvert sur le port : "+Communication.getPort()+"",
+					                     "Port "+Communication.getPort()+"",
+					                      1);
+				}
 			}
 			else{
 				System.out.println("1");
@@ -293,10 +303,10 @@ public class IHM extends JFrame implements ComponentListener {
 				popupReseau.setVisible(false);
 				popupB.setVisible(false);
 				setModeReseau(true);
-				popupReseau.erreur.setText(errReseau);
+				popupReseau.message.setText(errReseau);
 			}
 			else{
-				popupReseau.erreur.setText(errReseau);
+				popupReseau.message.setText(errReseau);
 			}
 			
 			
@@ -315,6 +325,18 @@ public class IHM extends JFrame implements ComponentListener {
 			popupM.boutonMenuReseau.setVisible(false);
 			popupM.boutonMenuLocal.setVisible(true);
 		}
+		
+		popupO.selectJoueur1Etiq.setVisible(!r);
+		popupO.selectJoueur2Etiq.setVisible(!r);
+		popupO.identifiantJoueur1.setVisible(!r);
+		popupO.identifiantJoueur2.setVisible(!r);
+		popupO.selectJoueur1.setVisible(!r);
+		popupO.selectJoueur2.setVisible(!r);
+		
+		popupM.boutonMenuSauvegarder.setEnabled(!r);
+		popupM.boutonMenuCharger.setEnabled(!r);
+		
+		modeReseau = r;
 	}
 
 	@Override
@@ -332,7 +354,7 @@ public class IHM extends JFrame implements ComponentListener {
 		popupM.setBounds(getWidth() / 2 - 150, getHeight() / 2 - 275, 300, 550);
 		popupO.setBounds(getWidth() / 2 - 300, getHeight() / 2 - 250, 600, 500);
 		popupR.setBounds(getWidth() / 2 - 400, getHeight() / 2 - 250, 800, 500);
-		popupReseau.setBounds(getWidth() / 2 - 200, getHeight() / 2 - 175, 400, 350);
+		popupReseau.setBounds(getWidth() / 2 - 200, getHeight() / 2 - 225, 400, 450);
 	}
 
 	@Override
