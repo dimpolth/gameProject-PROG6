@@ -4,9 +4,13 @@ import java.awt.Point;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Iterator;
+
+import javax.jws.soap.SOAPBinding.ParameterStyle;
+
 import ia.*;
 import ihm.*;
 import modele.*;
+import modele.Joueur.typeJoueur;
 import reseau.*;
 
 public class Moteur {
@@ -58,18 +62,15 @@ public class Moteur {
 	 */
 	public void init() {
 		t = new Terrain();
-		
+		t.TerrainTest(7);
 		h = new Historique();
 		h.ajouterTour(t);
 		ech = new Echange();
 		listePointDebut = new ArrayList<Point>();
 		j1 = new Joueur(Case.Etat.joueur1, Joueur.typeJoueur.humain, "Joueur 1");
-		// j2 = new Joueur(Case.Etat.joueur2, Joueur.typeJoueur.humain,
-		// "Joueur 2");
-		// j1 = new Joueur(Case.Etat.joueur1, Joueur.typeJoueur.ordinateur,
-		// IntelligenceArtificielle.difficulteIA.facile, j2, this);
-		j2 = new Joueur(Case.Etat.joueur2, Joueur.typeJoueur.ordinateur,
-				IntelligenceArtificielle.difficulteIA.normal, j1, this);
+		// j2 = new Joueur(Case.Etat.joueur2, Joueur.typeJoueur.humain, "Joueur 2");
+		// j1 = new Joueur(Case.Etat.joueur1, Joueur.typeJoueur.ordinateur, IntelligenceArtificielle.difficulteIA.facile, j2, this);
+		j2 = new Joueur(Case.Etat.joueur2, Joueur.typeJoueur.ordinateur, IntelligenceArtificielle.difficulteIA.normal, j1, this);
 		joueurCourant = j1;
 		if (joueurCourant.isJoueurHumain()) {
 			e = EtatTour.selectionPion;
@@ -121,6 +122,15 @@ public class Moteur {
 	}
 
 	// Renvoie une liste de points d'arrive permettant une prise
+	/**
+	 * Détermine si des prises sont réalisables parmis les déplacements possibles.
+	 * @param p
+	 * Point à partir duquel on essaye de déterminer des prises
+	 * @param listePredecesseurs
+	 * ArrayList de Points. Liste des points par lesquels est passé le pion durant le tour.
+	 * @return
+	 * ArrayList de Points. Liste des arrivées possibles pour lesquelles une prise sera effectuée.
+	 */
 	ArrayList<Point> prisePossible(Point p, ArrayList<Point> listePredecesseurs) {
 		ArrayList<Point> listePrise = new ArrayList<Point>();
 		ArrayList<Point> listeMouvement = deplacementPossible(p,
@@ -308,12 +318,13 @@ public class Moteur {
 				ech.ajouter("finTour",true);
 				com.envoyer(ech);}
 		} else {
-			if (joueurCourant.isJoueurHumain())
+			if(joueurCourant.isJoueurHumain())
 				finTour();
 		}
 	}
 
 	void finTour() {
+		//this.t.dessineTableauAvecIntersections();
 		if (joueurCourant.getJoueurID() == Case.Etat.joueur1)
 			joueurCourant = j2;
 		else
@@ -405,7 +416,7 @@ public class Moteur {
 	}
 
 	void jouerIa() {
-		System.out.println(e);
+		//System.out.println(e);
 		
 		// System.out.println("DEBUT TOUR IA");
 		Thread th = new Thread(){
@@ -413,12 +424,17 @@ public class Moteur {
 				do {
 					// System.out.println(joueurCourant.getNom());
 					// System.out.println("boucle IA");
+					/*if(jeuIa != null)
+						 System.out.println(jeuIa.getpDepart() + ";" + jeuIa.getpArrivee());
+						 */
 					jeuIa = joueurCourant.jouer();
+					//System.out.println(jeuIa.getpDepart() + ";" + jeuIa.getpArrivee());
 					// System.out.println("depart "+jeuIa.getpDepart()+" arrivé "+jeuIa.getpArrivee());
 					selectionPion(jeuIa.getpDepart());
 					// System.out.println("point depart moteur :"+pDepart);
 					selectionDestination(jeuIa.getpArrivee());
 					// t.dessineTableauAvecIntersections();
+
 				} while (joueurCourant.IaContinue());
 					// System.out.println(" FIN DU JEU IA");
 		
@@ -427,7 +443,7 @@ public class Moteur {
 		};
 		
 		th.start();
-;
+		
 	}
 
 	void gestionBouton() {
@@ -623,8 +639,44 @@ public class Moteur {
 				}
 				ech.vider();
 				ech.ajouter("terrain", t.getTableau());
-				Joueur[] tab = { j1, j2 };
-				ech.ajouter("joueurs", tab);
+				calculerScore();
+				int[] tabScore = {j1.getScore(), j2.getScore()};
+				ech.ajouter("score", tabScore);
+				com.envoyer(ech);
+				break;
+			
+			case "parametres":
+				Parametres p = (Parametres) dataValue;
+				System.out.println(j1.getNom());
+				j1.setNom(p.j1_identifiant);
+				System.out.println(j1.getNom());
+				j2.setNom(p.j2_identifiant);
+				if(p.j1_type == Parametres.NiveauJoueur.HUMAIN) {
+					j1.setJoueurHumain(true);
+					j1.viderIa();
+				} else {
+					j1.setJoueurHumain(false);
+					if(p.j1_type == Parametres.NiveauJoueur.FACILE)
+						j1.chargerIa(IntelligenceArtificielle.difficulteIA.facile, j2, this);
+					else if(p.j1_type == Parametres.NiveauJoueur.MOYEN)
+						j1.chargerIa(IntelligenceArtificielle.difficulteIA.normal, j2, this);
+					else if(p.j1_type == Parametres.NiveauJoueur.DIFFICILE)
+						j1.chargerIa(IntelligenceArtificielle.difficulteIA.difficile, j2, this);
+				}
+				if(p.j2_type == Parametres.NiveauJoueur.HUMAIN) {
+					j2.setJoueurHumain(true);
+					j2.viderIa();
+				} else {
+					j2.setJoueurHumain(false);
+					if(p.j2_type == Parametres.NiveauJoueur.FACILE)
+						j2.chargerIa(IntelligenceArtificielle.difficulteIA.facile, j1, this);
+					else if(p.j2_type == Parametres.NiveauJoueur.MOYEN)
+						j2.chargerIa(IntelligenceArtificielle.difficulteIA.normal, j1, this);
+					else if(p.j1_type == Parametres.NiveauJoueur.DIFFICILE)
+						j2.chargerIa(IntelligenceArtificielle.difficulteIA.difficile, j1, this);
+				}
+				ech.vider();
+				ech.ajouter("parametres", p);
 				com.envoyer(ech);
 				break;
 			}

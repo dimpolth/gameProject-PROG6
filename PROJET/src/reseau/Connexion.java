@@ -40,8 +40,8 @@ public class Connexion implements Runnable{
 	}
 	public void envoyer(Echange e){
 		try {			
-			System.out.println("SERVER ENVOYER : "+((Echange) e).toString() );
-			oos.writeObject(e);	
+			//System.out.println("SERVER ENVOYER : "+((Echange) e).toString() );
+			oos.writeObject(e.clone());	
 			
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
