@@ -1,6 +1,12 @@
 package modele;
 
-public class Parametres {
+import java.io.Serializable;
+
+public class Parametres implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	public enum NiveauJoueur {
 		HUMAIN, FACILE, MOYEN, DIFFICILE;
 		static public NiveauJoueur getFromIndex(int i) {

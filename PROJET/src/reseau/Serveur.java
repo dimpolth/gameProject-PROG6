@@ -9,6 +9,8 @@ import java.util.Vector;
 import java.io.InputStream;
 import java.io.IOException;
 
+import modele.Parametres;
+
 public class Serveur implements Runnable{
 	
 	Communication com;
@@ -27,7 +29,7 @@ public class Serveur implements Runnable{
 	
 	public int demarrer(){
 		try{
-			//port = 55555;
+			port = 55555;
 			passiveSocket = new ServerSocket(port);
 			port = passiveSocket.getLocalPort();
 			Thread th = new Thread(this);
@@ -115,11 +117,26 @@ public class Serveur implements Runnable{
 				Iterator<Connexion>it = connexions.iterator();
 				while(it.hasNext()){
 					Connexion con = it.next();
+					
 					if(!joueurs.containsValue(con)){
+						int j;
 						if(joueurs.get(1) == null)
-							joueurs.put(1,con);
-					}	else
-						joueurs.put(2,con);
+							j=1;
+						else
+							j=2;
+						
+						joueurs.put(j,con);
+						
+						Echange e = new Echange();
+						Parametres params = new Parametres();
+						if(j==1)
+							params.j1_identifiant = con.identifiant;
+						else
+							params.j2_identifiant = con.identifiant;
+						e.ajouter("parametres", params);
+						envoyer(e,j);
+						break;
+					}
 				}
 			}
 			else{
