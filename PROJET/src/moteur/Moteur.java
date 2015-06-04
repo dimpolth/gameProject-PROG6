@@ -40,7 +40,7 @@ public class Moteur {
 	Boolean tourEnCours;
 	ArrayList<Point> listePointDebut;
 	Coup jeuIa;
-	boolean trace = false;
+	boolean trace = true;
 
 	public Moteur() {
 	}
