@@ -48,7 +48,7 @@ public class Moteur {
 
 	public void init() {
 		t = new Terrain();
-		
+		t.TerrainTest(7);
 		h = new Historique();
 		h.ajouterTour(t);
 		ech = new Echange();
@@ -284,11 +284,13 @@ public class Moteur {
 			if (joueurCourant.isJoueurHumain())
 				testFinTour();
 		} else {
-			finTour();
+			if(joueurCourant.isJoueurHumain())
+				finTour();
 		}
 	}
 
 	void finTour() {
+		//this.t.dessineTableauAvecIntersections();
 		if (joueurCourant.getJoueurID() == Case.Etat.joueur1)
 			joueurCourant = j2;
 		else
@@ -378,7 +380,7 @@ public class Moteur {
 	}
 
 	void jouerIa() {
-		System.out.println(e);
+		//System.out.println(e);
 		
 		// System.out.println("DEBUT TOUR IA");
 		Thread th = new Thread(){
@@ -386,12 +388,21 @@ public class Moteur {
 				do {
 					// System.out.println(joueurCourant.getNom());
 					// System.out.println("boucle IA");
+					/*if(jeuIa != null)
+						 System.out.println(jeuIa.getpDepart() + ";" + jeuIa.getpArrivee());
+						 */
 					jeuIa = joueurCourant.jouer();
+					//System.out.println(jeuIa.getpDepart() + ";" + jeuIa.getpArrivee());
 					// System.out.println("depart "+jeuIa.getpDepart()+" arrivé "+jeuIa.getpArrivee());
 					selectionPion(jeuIa.getpDepart());
 					// System.out.println("point depart moteur :"+pDepart);
 					selectionDestination(jeuIa.getpArrivee());
 					// t.dessineTableauAvecIntersections();
+					
+					if(joueurCourant == null)
+						System.out.println("OK");
+					
+					System.out.println("Hey");
 				} while (joueurCourant.IaContinue());
 					// System.out.println(" FIN DU JEU IA");
 		
@@ -400,7 +411,7 @@ public class Moteur {
 		};
 		
 		th.start();
-;
+		
 	}
 
 	void gestionBouton() {

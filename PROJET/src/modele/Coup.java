@@ -11,6 +11,10 @@ public class Coup {
 	private Point pArrivee;
 	private Terrain.ChoixPrise choixPrise;
 	
+	public Coup(){
+		
+	}
+	
 	public Coup(Point pDepart, Point pArrivee) {
 		this.setpDepart(pDepart);
 		this.setpArrivee(pArrivee);
