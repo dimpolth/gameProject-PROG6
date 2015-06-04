@@ -7,8 +7,10 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.Point;
 import java.awt.event.*;
+import java.io.IOException;
 import java.util.LinkedList;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 
 import modele.*;
@@ -25,8 +27,13 @@ public class IHM extends JFrame implements ComponentListener {
 	PopupMenu popupM;
 	PopupOptions popupO;
 	PopupRegles popupR;
+	PopupVictoire popupV;
 	TerrainGraphique tg;
 	BandeauInfos bandeauInfos;
+	Chargement chargement;
+	
+	Bouton boutonAnnuler;
+	Bouton boutonRefaire;
 
 	public IHM() {
 
@@ -53,6 +60,8 @@ public class IHM extends JFrame implements ComponentListener {
 		Bouton boutonMenu = new Bouton("Menu");
 		boutonMenu.addActionListener(new Ecouteur(Ecouteur.Bouton.MENU, this));
 		panneauMenu.add(boutonMenu);
+		chargement = new Chargement();
+		panneauMenu.add(chargement);
 		Bouton boutonParam = new Bouton("Paramètres");
 		boutonParam.addActionListener(new Ecouteur(Ecouteur.Bouton.PARAMETRES, this));
 		panneauMenu.add(boutonParam);
@@ -83,12 +92,14 @@ public class IHM extends JFrame implements ComponentListener {
 		boutonAide.addActionListener(new Ecouteur(Ecouteur.Bouton.AIDE, this));
 		voletSudOuest.add(boutonAide);
 		
-		Bouton boutonAnnuler = new Bouton("Annuler");
+		boutonAnnuler = new Bouton("Annuler");
 		boutonAnnuler.addActionListener(new Ecouteur(Ecouteur.Bouton.ANNULER, this));
+		boutonAnnuler.setEnabled(false);
 		voletSudCentre.add(boutonAnnuler);
 		
-		Bouton boutonRefaire = new Bouton("Refaire");
+		boutonRefaire = new Bouton("Refaire");
 		boutonRefaire.addActionListener(new Ecouteur(Ecouteur.Bouton.REFAIRE, this));
+		boutonRefaire.setEnabled(false);
 		voletSudCentre.add(boutonRefaire);
 		
 		Bouton boutonValidation = new Bouton("Terminer");
@@ -107,14 +118,23 @@ public class IHM extends JFrame implements ComponentListener {
 		popupO.setVisible(false);
 		popupR = new PopupRegles(this);
 		gestionCouche.add(popupR, new Integer(3));
-
 		popupR.setVisible(false);
+		popupV = new PopupVictoire();
+		gestionCouche.add(popupV, new Integer(4));
+		popupV.setVisible(false);
 
 		theme.setTheme(Theme.Type.BOIS);
 
 		setMinimumSize(new Dimension(640, 480));
-		setSize(1000, 750);
+		setSize(Math.max(640,(int)(java.awt.Toolkit.getDefaultToolkit().getScreenSize().width*0.75)), Math.max(480,(int)(java.awt.Toolkit.getDefaultToolkit().getScreenSize().height*0.75)));
+		try {
+			setIconImage(ImageIO.read(getClass().getResource("/images/icone.png")));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		setVisible(true);
+		
+		
 
 	}
 
@@ -172,6 +192,8 @@ public class IHM extends JFrame implements ComponentListener {
 				action(Ecouteur.Bouton.SAUVEGARDER);
 			break;
 		case MENU:
+			//Communication.modeReseau("127.0.0.1:46654");
+			//Communication.modeReseau("");
 			popupB.setVisible(true);
 			popupM.setVisible(true);
 			break;
@@ -205,16 +227,16 @@ public class IHM extends JFrame implements ComponentListener {
 			break;
 
 		case OPTION_VALIDER:
-			/*modele.Parametres params = new modele.Parametres();
+			Parametres params = new Parametres();
 			params.j1_identifiant = popupO.identifiantJoueur1.getText();
 			params.j2_identifiant = popupO.identifiantJoueur2.getText();
-			params.j1_type = popupO.selectJoueur1.getSelectedIndex();
-			params.j2_type = popupO.selectJoueur2.getSelectedIndex();
+			params.j1_type = Parametres.NiveauJoueur.getFromIndex(popupO.selectJoueur1.getSelectedIndex());
+			params.j2_type = Parametres.NiveauJoueur.getFromIndex(popupO.selectJoueur2.getSelectedIndex());
 
 			Echange e = new Echange();
 			e.ajouter("parametres", params);
 			com.envoyer(e);
-			*/
+			
 			popupO.setVisible(false);
 			popupB.setVisible(false);
 			break;
@@ -265,8 +287,10 @@ public class IHM extends JFrame implements ComponentListener {
 			tg.deselectionner();
 		}
 
-		if ((dataValue = e.get("pionSelectionne")) != null) {
-			tg.selectionner((Point) dataValue);
+		
+		if((dataValue = e.get("pionSelectionne")) != null){			
+			tg.selectionner( (Point)dataValue );
+
 		}
 		/*
 		 * if((dataValue = e.get("coups")) != null){ LinkedList<CoupGraphique>
@@ -294,6 +318,17 @@ public class IHM extends JFrame implements ComponentListener {
 
 		if ((dataValue = e.get("bandeauInf")) != null) {
 			bandeauInfos.setTexteInf((String) dataValue);
+		}
+		if((dataValue = e.get("annuler")) != null) {
+			boutonAnnuler.setEnabled((boolean)dataValue);
+		}
+		if((dataValue = e.get("refaire")) != null) {
+			boutonRefaire.setEnabled((boolean)dataValue);
+		}
+		if((dataValue = e.get("score")) != null) {
+			int[] score = (int[]) dataValue;
+			bandeauInfos.setScore(1, score[0]);
+			bandeauInfos.setScore(2, score[1]);
 		}
 
 	}

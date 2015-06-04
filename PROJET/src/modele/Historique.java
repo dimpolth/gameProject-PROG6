@@ -5,9 +5,9 @@ import java.util.ArrayList;
 
 public class Historique {
 
-	ArrayList<Terrain> histoPrincipal;
+	public ArrayList<Terrain> histoPrincipal;
 	public ArrayList<Point> histoTour;
-	int itPrincipal, itTour;
+	private int itPrincipal, itTour;
 	boolean joueur; //true = j1, false = j2
 	
 	public Historique() {
@@ -22,6 +22,10 @@ public class Historique {
 		itPrincipal = h.itPrincipal;
 		itTour = h.itTour;
 		joueur = h.joueur;
+	}
+	
+	public int getItPrincipal(){
+		return itPrincipal;
 	}
 	
 	public void ajouterTour(Terrain t) {
@@ -44,9 +48,8 @@ public class Historique {
 	}
 	
 	public Terrain annuler() {
-		System.out.println("Dessin moteur");
-		if(itPrincipal<=1){
-			System.out.println("PAS de ANNULER POSSIBLE");
+		if(itPrincipal<=0){
+			//System.out.println("PAS de ANNULER POSSIBLE");
 			return null;}
 		else {
 			
@@ -68,13 +71,15 @@ public class Historique {
 		histoTour = new ArrayList<Point>();
 	}
 	
-	void afficher() {
+	public void afficher() {
 		System.out.println("----------------");
-		//for(int it = 0; it < histoPrincipal.size(); it++) {
-			//Terrain tmp = histoPrincipal.get(it);
-			Terrain tmp = histoPrincipal.get(itPrincipal);
-			tmp.dessineTableauAvecIntersections();
-		//}
+		for(int it = 0; it < histoPrincipal.size(); it++) {
+			Terrain tmp = histoPrincipal.get(it);
+			//Terrain tmp = histoPrincipal.get(itPrincipal);
+			//tmp.dessineTableauAvecIntersections();
+		}
+		System.out.println("----------------");
+		System.out.println(itPrincipal);
 		System.out.println("----------------");
 	}
 	

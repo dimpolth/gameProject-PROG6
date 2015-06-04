@@ -1,7 +1,9 @@
 package ihm;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.event.ComponentEvent;
@@ -35,6 +37,8 @@ public class TerrainGraphique extends JPanel implements ComponentListener {
 	protected long tempsGele;
 	private Dimensions dim;
 	protected Pion[][] pions;
+	
+	protected ArrayList<Point> trait;
 
 	private ArrayList<Point> prisesPossibles = new ArrayList<Point>(2);
 	protected Point pionSelectionne = null;
@@ -83,6 +87,16 @@ public class TerrainGraphique extends JPanel implements ComponentListener {
 				pions[i][j].repaint();
 			}
 		}
+	}
+	
+	public void setTrait(ArrayList<Point> l) {
+		trait = l;
+		repaint();
+	}
+	
+	public void cacherTrait() {
+		trait = null;
+		repaint();
 	}
 
 	public void selectionner(Point p) {
@@ -142,8 +156,9 @@ public class TerrainGraphique extends JPanel implements ComponentListener {
 	}
 
 	public void paintComponent(Graphics g) {
-		g.setColor(new Color(238, 238, 238));
-		g.fillRect(0, 0, getWidth(), getHeight());
+		Graphics2D gra = (Graphics2D)g;
+		gra.setColor(new Color(238, 238, 238));
+		gra.fillRect(0, 0, getWidth(), getHeight());
 		double largeur = getWidth(), hauteur = getHeight(), origX = 0, origY = 0;
 		if (largeur / hauteur > 19.0 / 11.0) {
 			origX = (int) ((largeur - (hauteur * 19.0 / 11.0)) / 2.0);
@@ -152,7 +167,18 @@ public class TerrainGraphique extends JPanel implements ComponentListener {
 			origY = (int) ((hauteur - (largeur * 11.0 / 19.0)) / 2.0);
 			hauteur = largeur * 11 / 19;
 		}
-		g.drawImage(imgPlateau, (int) origX, (int) origY, (int) largeur, (int) hauteur, null);
+		gra.drawImage(imgPlateau, (int) origX, (int) origY, (int) largeur, (int) hauteur, null);
+		if(trait != null && trait.size() > 1) {
+			int d = (int) (dim.echelle / 4);
+			Point p = trait.get(0);
+		    gra.setStroke(new BasicStroke(6));
+			for(int i=1 ; i<trait.size() ; i++) {
+				gra.setColor(Color.WHITE);
+				gra.drawLine((int)((p.y+0.5)*dim.echelle+dim.origX)+d, (int)((p.x+0.5)*dim.echelle+dim.origY)+d, (int)((trait.get(i).y+0.5)*dim.echelle+dim.origX)+d, (int)((trait.get(i).x+0.5)*dim.echelle+dim.origY)+d);
+				gra.fillOval((int)((p.y+0.5)*dim.echelle+dim.origX)+d-10, (int)((p.x+0.5)*dim.echelle+dim.origY)+d-10, 20, 20);
+				p = trait.get(i);
+			}
+		}
 	}
 
 	@Override
