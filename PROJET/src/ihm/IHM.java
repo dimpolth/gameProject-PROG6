@@ -178,13 +178,17 @@ public class IHM extends JFrame implements ComponentListener {
 		case SAUVEGARDER:
 			JFileChooser fcSauver = new JFileChooser();
 			if (fcSauver.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
-				System.out.println("Action : sauvegarder");
+				Echange e = new Echange();
+				e.ajouter("sauvegarder", fcSauver.getSelectedFile());
+				com.envoyer(e);				
 			}
 			break;
 		case CHARGER:
 			JFileChooser fcCharger = new JFileChooser();
 			if (fcCharger.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-				System.out.println("Action : charger");
+				Echange e = new Echange();
+				e.ajouter("charger", fcCharger.getSelectedFile());
+				com.envoyer(e);
 			}
 			break;
 		case MODE:
