@@ -632,7 +632,9 @@ public class Moteur {
 			
 			case "parametres":
 				Parametres p = (Parametres) dataValue;
+				System.out.println(j1.getNom());
 				j1.setNom(p.j1_identifiant);
+				System.out.println(j1.getNom());
 				j2.setNom(p.j2_identifiant);
 				if(p.j1_type == Parametres.NiveauJoueur.HUMAIN) {
 					j1.setJoueurHumain(true);
@@ -658,6 +660,9 @@ public class Moteur {
 					else if(p.j1_type == Parametres.NiveauJoueur.DIFFICILE)
 						j2.chargerIa(IntelligenceArtificielle.difficulteIA.difficile, j1, this);
 				}
+				ech.vider();
+				ech.ajouter("parametres", p);
+				com.envoyer(ech);
 				break;
 			}
 		}
