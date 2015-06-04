@@ -175,8 +175,7 @@ public class TerrainGraphique extends JPanel implements ComponentListener {
 			for(int i=1 ; i<trait.size() ; i++) {
 				gra.setColor(Color.WHITE);
 				gra.drawLine((int)((p.y+0.5)*dim.echelle+dim.origX)+d, (int)((p.x+0.5)*dim.echelle+dim.origY)+d, (int)((trait.get(i).y+0.5)*dim.echelle+dim.origX)+d, (int)((trait.get(i).x+0.5)*dim.echelle+dim.origY)+d);
-				if(i != 1)
-					gra.fillOval((int)((p.y+0.5)*dim.echelle+dim.origX)+d-10, (int)((p.x+0.5)*dim.echelle+dim.origY)+d-10, 20, 20);
+				gra.fillOval((int)((p.y+0.5)*dim.echelle+dim.origX)+d-10, (int)((p.x+0.5)*dim.echelle+dim.origY)+d-10, 20, 20);
 				p = trait.get(i);
 			}
 		}
