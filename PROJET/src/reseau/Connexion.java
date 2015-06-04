@@ -32,7 +32,7 @@ public class Connexion implements Runnable{
 
 			Thread t2 = new Thread(this, "recep");
 			t2.start();
-			System.out.println("Une connexion chez le serveur");
+			
 		} catch (Exception e) {
 		}
 		
@@ -44,7 +44,7 @@ public class Connexion implements Runnable{
 			oos.writeObject(e.clone());	
 			
 		} catch (IOException ioe) {
-			ioe.printStackTrace();
+			serveur.terminerConnexion(this);
 		}
 	}
 
@@ -76,13 +76,7 @@ public class Connexion implements Runnable{
 				
 				
 				try {					
-					Echange recu = (Echange)ois.readObject();
-					//String e2 = (String)ois.readObject();
-					//System.err.println("Reception d'une donnée cliente : "+e2);
-					//Object e3 = ois.readObject();
-					
-					//System.err.println("Reception d'une donnée cliente : "+((Echange)e3).infos.size());
-					//System.out.println("Reception d'une donnée cliente sur le serveur : "+recu.infos.size());
+					Echange recu = (Echange)ois.readObject();					
 					
 					int j = 0;
 					if(serveur.joueurs.get(1).equals(this))

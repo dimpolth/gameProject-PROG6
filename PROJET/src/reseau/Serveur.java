@@ -107,8 +107,27 @@ public class Serveur implements Runnable{
 		}
 	}
 	
-	public void fermerConnexion(Connexion c){
+	public void terminerConnexion(Connexion c){
 		connexions.remove(c);
+		if(joueurs.containsValue(c)){
+			
+			if(connexions.size() >= 2){
+				Iterator<Connexion>it = connexions.iterator();
+				while(it.hasNext()){
+					Connexion con = it.next();
+					if(!joueurs.containsValue(con)){
+						if(joueurs.get(1) == null)
+							joueurs.put(1,con);
+					}	else
+						joueurs.put(2,con);
+				}
+			}
+			else{
+				Echange e = new Echange();
+				e.ajouter("interruptionReseau", "Le joueur adverse a quitté la partie.");
+				envoyer(e,0);
+			}
+		}
 	}
 	
 	public void stopperServeur(){
