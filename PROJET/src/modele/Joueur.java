@@ -113,4 +113,12 @@ public class Joueur {
 	public boolean IaContinue(){
 		return ia.isTourEnCours();
 	}
+	
+	public void chargerIa(IntelligenceArtificielle.difficulteIA typeIA, Joueur adversaire, Moteur m) {
+		ia = new IntelligenceArtificielle(typeIA, this, adversaire, m);
+	}
+	
+	public void viderIa() {
+		ia = null;
+	}
 }

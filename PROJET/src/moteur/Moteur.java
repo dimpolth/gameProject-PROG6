@@ -4,9 +4,13 @@ import java.awt.Point;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Iterator;
+
+import javax.jws.soap.SOAPBinding.ParameterStyle;
+
 import ia.*;
 import ihm.*;
 import modele.*;
+import modele.Joueur.typeJoueur;
 import reseau.*;
 
 public class Moteur {
@@ -64,12 +68,9 @@ public class Moteur {
 		ech = new Echange();
 		listePointDebut = new ArrayList<Point>();
 		j1 = new Joueur(Case.Etat.joueur1, Joueur.typeJoueur.humain, "Joueur 1");
-		// j2 = new Joueur(Case.Etat.joueur2, Joueur.typeJoueur.humain,
-		// "Joueur 2");
-		// j1 = new Joueur(Case.Etat.joueur1, Joueur.typeJoueur.ordinateur,
-		// IntelligenceArtificielle.difficulteIA.facile, j2, this);
-		j2 = new Joueur(Case.Etat.joueur2, Joueur.typeJoueur.ordinateur,
-				IntelligenceArtificielle.difficulteIA.normal, j1, this);
+		// j2 = new Joueur(Case.Etat.joueur2, Joueur.typeJoueur.humain, "Joueur 2");
+		// j1 = new Joueur(Case.Etat.joueur1, Joueur.typeJoueur.ordinateur, IntelligenceArtificielle.difficulteIA.facile, j2, this);
+		j2 = new Joueur(Case.Etat.joueur2, Joueur.typeJoueur.ordinateur, IntelligenceArtificielle.difficulteIA.normal, j1, this);
 		joueurCourant = j1;
 		if (joueurCourant.isJoueurHumain()) {
 			e = EtatTour.selectionPion;
@@ -185,8 +186,7 @@ public class Moteur {
 		return b;
 	}
 
-	public ArrayList<Point> listePionsJouables(Joueur j,
-			Terrain copieTerrainEventuelle) {
+	public ArrayList<Point> listePionsJouables(Joueur j, Terrain copieTerrainEventuelle) {
 		Terrain terr = t;
 		if (copieTerrainEventuelle != null) // Utile à l'IA pour travailler sur
 		// une copie de terrain modifiée
@@ -624,9 +624,40 @@ public class Moteur {
 				}
 				ech.vider();
 				ech.ajouter("terrain", t.getTableau());
-				Joueur[] tab = { j1, j2 };
-				ech.ajouter("joueurs", tab);
+				calculerScore();
+				int[] tabScore = {j1.getScore(), j2.getScore()};
+				ech.ajouter("score", tabScore);
 				com.envoyer(ech);
+				break;
+			
+			case "parametres":
+				Parametres p = (Parametres) dataValue;
+				j1.setNom(p.j1_identifiant);
+				j2.setNom(p.j2_identifiant);
+				if(p.j1_type == Parametres.NiveauJoueur.HUMAIN) {
+					j1.setJoueurHumain(true);
+					j1.viderIa();
+				} else {
+					j1.setJoueurHumain(false);
+					if(p.j1_type == Parametres.NiveauJoueur.FACILE)
+						j1.chargerIa(IntelligenceArtificielle.difficulteIA.facile, j2, this);
+					else if(p.j1_type == Parametres.NiveauJoueur.MOYEN)
+						j1.chargerIa(IntelligenceArtificielle.difficulteIA.normal, j2, this);
+					else if(p.j1_type == Parametres.NiveauJoueur.DIFFICILE)
+						j1.chargerIa(IntelligenceArtificielle.difficulteIA.difficile, j2, this);
+				}
+				if(p.j2_type == Parametres.NiveauJoueur.HUMAIN) {
+					j2.setJoueurHumain(true);
+					j2.viderIa();
+				} else {
+					j2.setJoueurHumain(false);
+					if(p.j2_type == Parametres.NiveauJoueur.FACILE)
+						j2.chargerIa(IntelligenceArtificielle.difficulteIA.facile, j1, this);
+					else if(p.j2_type == Parametres.NiveauJoueur.MOYEN)
+						j2.chargerIa(IntelligenceArtificielle.difficulteIA.normal, j1, this);
+					else if(p.j1_type == Parametres.NiveauJoueur.DIFFICILE)
+						j2.chargerIa(IntelligenceArtificielle.difficulteIA.difficile, j1, this);
+				}
 				break;
 			}
 		}
