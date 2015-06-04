@@ -124,11 +124,12 @@ public class Terrain implements Serializable {
 			case 8 : // petit terrain équivalent pour simulations plus rapides
 			for(int i = 0; i < 5; i++)
 				for(int j = 0; j < 5; j++){
-					if(i == 1 || i == 2)
+					if(i == 0 || i == 1)
 						this.tableau[i][j+2].setOccupation(Case.Etat.joueur1);
 					else 
 						this.tableau[i][j+2].setOccupation(Case.Etat.joueur2);
 				}
+			
 			this.tableau[2][2].setOccupation(Case.Etat.joueur1);
 			this.tableau[2][4].setOccupation(Case.Etat.vide);
 			this.tableau[2][6].setOccupation(Case.Etat.joueur1);
@@ -557,7 +558,34 @@ public class Terrain implements Serializable {
 			}
 		}
 		return reponse;
-	}	
+	}
+	
+	public ArrayList<Coup> coupsObligatoires(Joueur joueurCourant){
+		ArrayList<Coup> listeCoupsRes = new ArrayList<Coup>();
+		ArrayList<Point> listePointsDep = this.listePionsJouables(joueurCourant, null), listeSuc;
+		Iterator<Point> itDepart, itSuc;
+		Point pDepTemp, pArrTemp;
+		Direction dTemp;
+		
+		itDepart = listePointsDep.iterator();
+		
+		while(itDepart.hasNext()){
+			pDepTemp = itDepart.next();
+			listeSuc = this.tableau[pDepTemp.x][pDepTemp.y].succ;
+			itSuc = listeSuc.iterator();
+			
+			while(itSuc.hasNext()){
+				pArrTemp = itSuc.next();
+				
+				dTemp = recupereDirection(pDepTemp,pArrTemp);
+				
+				if ((estUnePriseAspiration(pDepTemp,dTemp) || estUnePrisePercussion(pDepTemp, dTemp)) && (tableau[pArrTemp.x][pArrTemp.y].getOccupation() == Case.Etat.vide))
+					listeCoupsRes.add(new Coup((Point) pDepTemp.clone(),(Point) pArrTemp.clone()));
+			}
+		}
+		
+		return listeCoupsRes;
+	}
 	
 	/**
 	 * Détermine quels sont les déplacements possibles

@@ -39,7 +39,7 @@ public class IntelligenceArtificielle implements Serializable {
 		this.setNiveauDifficulte(niveauDifficulte);
 		this.setJoueurIA(joueurIA);
 		this.setJoueurAdv(joueurAdversaire);
-		terrain = t; 
+		this.terrain = t; 
 		this.setTourDeJeuCourant(new TourDeJeu()); // Ces deux variables servent pour la difficulté 
 		this.setTourEnCours(false); 						   // intermédiaire (normal) et difficile qui renvoyent une 
 	}														   // liste de points
@@ -130,8 +130,9 @@ public class IntelligenceArtificielle implements Serializable {
 	 */
 	private TourDeJeu coupNormal(){
 		TourDeJeu tourSolution = new TourDeJeu();
-		int profondeur = 4;
+		int profondeur = 2;
 		int iterateurProf = 0;
+		
 		
 		// ALPHA BETA
 		tourSolution = alphaBeta(profondeur, false, iterateurProf); // simule x-profondeur tours
@@ -157,30 +158,20 @@ public class IntelligenceArtificielle implements Serializable {
 		listeToursJouables = getToursJouables(terrain, this.getJoueurIA());
 		
 		if(profondeurDynamique){ 	// Adaptation dynamique de la profondeur explorée
-			if(listeToursJouables.size() >= 10 && profondeur > 1)
-				profondeur--;
-			else if(listeToursJouables.size() >= 20 && profondeur > 2)
-				profondeur -= 2;
-			else if(listeToursJouables.size() >= 30 && profondeur > 3)
-				profondeur -= 3;
+			nbPionsRestantsJCourant = joueurIA.getScore();
+			nbPionsRestantsJAdv = joueurAdversaire.getScore();
+			nbPionsRestantsTot = nbPionsRestantsJCourant + nbPionsRestantsJAdv;
+		
+			if((nbPionsRestantsTot <= 4) && (nbPionsRestantsJCourant <= nbPionsRestantsJAdv))
+				profondeur += 3;
+
+			else if(nbPionsRestantsTot <= 6 && (nbPionsRestantsJCourant <= nbPionsRestantsJAdv))
+				profondeur += 2;
+			
+			else if(nbPionsRestantsTot <= 14 && (nbPionsRestantsJCourant < nbPionsRestantsJAdv))
+				profondeur += 1;
 		}
 		
-		nbPionsRestantsJCourant = joueurIA.getScore();
-		nbPionsRestantsJAdv = joueurAdversaire.getScore();
-		nbPionsRestantsTot = nbPionsRestantsJCourant + nbPionsRestantsJAdv;
-	
-		
-		//System.out.println(nbPionsRestants);
-		/*
-		if((nbPionsRestantsTot <= 4) && (nbPionsRestantsJCourant <= nbPionsRestantsJAdv))
-			profondeur += 3;
-
-		else if(nbPionsRestantsTot <= 6 && (nbPionsRestantsJCourant <= nbPionsRestantsJAdv))
-			profondeur += 2;
-		
-		else if(nbPionsRestantsTot <= 14 && (nbPionsRestantsJCourant < nbPionsRestantsJAdv))
-			profondeur += 1;
-		*/
 		
 		if(listeToursJouables.size() > 0)
 			tourSolution = listeToursJouables.get(0);
@@ -191,11 +182,11 @@ public class IntelligenceArtificielle implements Serializable {
 		while(it.hasNext()){
 		
 			tourCourant = (TourDeJeu) it.next().clone();
-			
+			tourCourant.getTerrainFinal().dessineTableauAvecIntersections();
 			nbPionsManges = tourCourant.getValeurResultat() * this.coeffPionsManges;
-			
+		
 			valTemp = nbPionsManges + min(profondeur-1, alpha, beta, tourCourant.getTerrainFinal(), iterateurProf+1);
-			
+	
 			if(valTemp > valMax){
 				valMax = valTemp;
 				tourSolution = (TourDeJeu) tourCourant.clone();
@@ -234,7 +225,7 @@ public class IntelligenceArtificielle implements Serializable {
 		
 		// Récupération de tous les tours jouables pour le terrain et le joueur courant
 		listeToursJouables = getToursJouables(terrainCourant, this.getJoueurAdv());
-		
+	
 		if(listeToursJouables.isEmpty()) // Si il n'y a plus de tours possibles l'IA a perdu (ou plutôt on a gagné)
 			return MAX;
 
@@ -244,7 +235,7 @@ public class IntelligenceArtificielle implements Serializable {
 			tourCourant = (TourDeJeu) it.next().clone();
 
 			valTemp = -(tourCourant.getValeurResultat() * this.coeffPionsManges); // nombre de pions perdus (mangés par l'adversaire) en négatif
-
+		
 			valTemp += max(profondeur-1, alpha, beta, tourCourant.getTerrainFinal(), iterateurProf+1);
 
 			valRes = Math.min(valTemp, valRes);
@@ -321,6 +312,8 @@ public class IntelligenceArtificielle implements Serializable {
 		
 		// Récupération de la liste des points de Départ possibles
 		listeCoupsObligatoires = cloneTerrain.couplibre(joueurCourant.getJoueurID()); // On regarde si on a des coups obligatoires
+		
+		ArrayList<Coup> c = cloneTerrain.coupsObligatoires(joueurCourant);
 		
 		if(listeCoupsObligatoires.isEmpty()) // DEBUT DE TOUR - Sans coup obligatoire (mouvement libre n'amenant aucune prise)
 			listePointsDeDepart = terrain.listePionsJouables(joueurCourant, cloneTerrain);
@@ -468,6 +461,10 @@ public class IntelligenceArtificielle implements Serializable {
 		return joueurAdversaire;
 	}
 
+	public Terrain getTerrain(){
+		return terrain;
+	}
+	
 	private void setJoueurAdv(Joueur joueurAdversaire) {
 		this.joueurAdversaire = joueurAdversaire;
 	}

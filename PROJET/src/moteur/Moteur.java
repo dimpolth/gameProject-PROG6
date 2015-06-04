@@ -235,7 +235,7 @@ public class Moteur {
 				majScore(l.size());
 				int[] score = { j1.getScore(), j2.getScore() };
 				gestionCoupGraphique(null, null, l, score, "PrisechoixIA");
-				 t.dessineTableauAvecIntersections();
+				// t.dessineTableauAvecIntersections();
 			}
 		} else if (priseAspi && !prisePercu) {
 			// System.out.println("aspi");
@@ -243,7 +243,7 @@ public class Moteur {
 			majScore(l.size());
 			int[] score = { j1.getScore(), j2.getScore() };
 			gestionCoupGraphique(null, null, l, score, "priseAspi");
-			 t.dessineTableauAvecIntersections();
+			// t.dessineTableauAvecIntersections();
 			if (joueurCourant.isJoueurHumain()) {
 				testFinTour();
 				ech.vider();
@@ -257,7 +257,7 @@ public class Moteur {
 			majScore(l.size());
 			int[] score = { j1.getScore(), j2.getScore() };
 			gestionCoupGraphique(null, null, l, score, "prisePercu");
-			 t.dessineTableauAvecIntersections();
+			// t.dessineTableauAvecIntersections();
 			if (joueurCourant.isJoueurHumain()) {
 				testFinTour();
 				ech.vider();
@@ -378,7 +378,7 @@ public class Moteur {
 					selectionPion(jeuIa.getpDepart());
 					// System.out.println("point depart moteur :"+pDepart);
 					selectionDestination(jeuIa.getpArrivee());
-					 t.dessineTableauAvecIntersections();
+					// t.dessineTableauAvecIntersections();
 
 				} while (joueurCourant.IaContinue());
 				// System.out.println(" FIN DU JEU IA");
@@ -456,7 +456,7 @@ public class Moteur {
 						gestionCoupGraphique(null, null, l, score, "PriseselonchoixJoueur");
 						ech.vider();
 						ech.ajouter("finTour", true);
-						 t.dessineTableauAvecIntersections();
+						// t.dessineTableauAvecIntersections();
 						testFinTour();
 					}
 				}
