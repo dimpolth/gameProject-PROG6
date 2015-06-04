@@ -82,10 +82,10 @@ public class Bouton extends JButton implements MouseListener {
 	}
 
 	@Override
-	public void setEnabled(boolean b) {
+	public void setEnabled(boolean b) {		
 		super.setEnabled(b);
 		active = b;
-		fond = fondClique;
+		fond =(b) ? fondNormal : fondClique;
 	}
 
 	@Override

@@ -388,8 +388,7 @@ public class IHM extends JFrame implements ComponentListener {
 		popupO.identifiantJoueur1.setVisible(!r);
 		popupO.identifiantJoueur2.setVisible(!r);
 		popupO.selectJoueur1.setVisible(!r);
-		popupO.selectJoueur2.setVisible(!r);
-		
+		popupO.selectJoueur2.setVisible(!r);	
 		popupM.boutonMenuSauvegarder.setEnabled(!r);
 		popupM.boutonMenuCharger.setEnabled(!r);
 		
