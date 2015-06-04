@@ -21,12 +21,13 @@ public class IHM extends JFrame implements ComponentListener {
 
 	public Communication com;
 	Theme theme;
-
+	
 	JPanel coucheJeu;
 	PopupBloquant popupB;
 	PopupMenu popupM;
 	PopupOptions popupO;
 	PopupRegles popupR;
+	PopupReseau popupReseau;
 	PopupVictoire popupV;
 	TerrainGraphique tg;
 	BandeauInfos bandeauInfos;
@@ -34,6 +35,8 @@ public class IHM extends JFrame implements ComponentListener {
 	
 	Bouton boutonAnnuler;
 	Bouton boutonRefaire;
+	
+	boolean modeReseau = false;
 
 	public IHM() {
 
@@ -119,11 +122,18 @@ public class IHM extends JFrame implements ComponentListener {
 		popupR = new PopupRegles(this);
 		gestionCouche.add(popupR, new Integer(3));
 		popupR.setVisible(false);
+		
+		popupReseau = new PopupReseau(this);
+		gestionCouche.add(popupReseau, new Integer(3));
+		popupReseau.setVisible(false);
+		
 		popupV = new PopupVictoire();
 		gestionCouche.add(popupV, new Integer(4));
 		popupV.setVisible(false);
 
 		theme.setTheme(Theme.Type.BOIS);
+		
+		setModeReseau(false);
 
 		setMinimumSize(new Dimension(640, 480));
 		setSize(Math.max(640,(int)(java.awt.Toolkit.getDefaultToolkit().getScreenSize().width*0.75)), Math.max(480,(int)(java.awt.Toolkit.getDefaultToolkit().getScreenSize().height*0.75)));
@@ -133,7 +143,6 @@ public class IHM extends JFrame implements ComponentListener {
 			e.printStackTrace();
 		}
 		setVisible(true);
-		
 		
 
 	}
@@ -175,6 +184,20 @@ public class IHM extends JFrame implements ComponentListener {
 				System.out.println("Action : charger");
 			}
 			break;
+		case MODE:
+			if(modeReseau){
+				String choix[] = { "Confirmer", "Annuler" };
+				int retour = JOptionPane.showOptionDialog(this, "Revenir au jeu local quittera la partie réseau.", "Attention", 1, 1, null, choix, choix[1]);
+				if (retour == 1)
+					setModeReseau(false);								
+			}
+			else{			
+				popupReseau.erreur.setText("");
+				popupReseau.setVisible(true);
+			}
+			popupM.setVisible(false);
+			
+			break;
 		case REGLES:
 			popupM.setVisible(false);
 			popupR.setVisible(true);
@@ -191,13 +214,11 @@ public class IHM extends JFrame implements ComponentListener {
 			else
 				action(Ecouteur.Bouton.SAUVEGARDER);
 			break;
-		case MENU:
-			//Communication.modeReseau("127.0.0.1:46654");
-			//Communication.modeReseau("");
+		case MENU:			
 			popupB.setVisible(true);
 			popupM.setVisible(true);
 			break;
-		case PARAMETRES:
+		case PARAMETRES:			
 			popupB.setVisible(true);
 			popupO.setVisible(true);
 			break;
@@ -244,6 +265,55 @@ public class IHM extends JFrame implements ComponentListener {
 			popupR.setVisible(false);
 			popupM.setVisible(true);
 			break;
+		
+		
+		case RESEAU_ANNULER:
+			popupReseau.setVisible(false);
+			popupM.setVisible(true);
+			break;
+		
+		case RESEAU_VALIDER:
+			
+			String errReseau = null;
+			// Nouveau serveur
+			if(popupReseau.etreHote.isSelected()){
+				errReseau = Communication.modeReseau("");				
+			}
+			else{
+				System.out.println("1");
+				String hoteComplet = popupReseau.hote.getText();
+				if(!hoteComplet.equals("")){
+					System.out.println("2");
+					errReseau = Communication.modeReseau(hoteComplet);
+					System.out.println(errReseau);
+				}
+			}
+			
+			if(errReseau == null){
+				popupReseau.setVisible(false);
+				popupB.setVisible(false);
+				setModeReseau(true);
+				popupReseau.erreur.setText(errReseau);
+			}
+			else{
+				popupReseau.erreur.setText(errReseau);
+			}
+			
+			
+			break;
+		}
+		
+	
+	}
+	
+	public void setModeReseau(boolean r){
+		if(!r){
+			popupM.boutonMenuReseau.setVisible(true);
+			popupM.boutonMenuLocal.setVisible(false);
+		}
+		else{
+			popupM.boutonMenuReseau.setVisible(false);
+			popupM.boutonMenuLocal.setVisible(true);
 		}
 	}
 
@@ -259,9 +329,10 @@ public class IHM extends JFrame implements ComponentListener {
 	public void componentResized(ComponentEvent e) {
 		coucheJeu.setBounds(0, 0, getWidth(), getHeight());
 		popupB.setBounds(0, 0, getWidth(), getHeight());
-		popupM.setBounds(getWidth() / 2 - 150, getHeight() / 2 - 250, 300, 500);
+		popupM.setBounds(getWidth() / 2 - 150, getHeight() / 2 - 275, 300, 550);
 		popupO.setBounds(getWidth() / 2 - 300, getHeight() / 2 - 250, 600, 500);
 		popupR.setBounds(getWidth() / 2 - 400, getHeight() / 2 - 250, 800, 500);
+		popupReseau.setBounds(getWidth() / 2 - 200, getHeight() / 2 - 175, 400, 350);
 	}
 
 	@Override
