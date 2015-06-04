@@ -66,7 +66,8 @@ public class Moteur {
 	public void init() {
 		t = new Terrain();
 
-		// t.TerrainTest(8);
+		//t.TerrainTest(11);
+		
 
 		h = new Historique();
 		h.ajouterTour(t);
@@ -79,6 +80,9 @@ public class Moteur {
 		// IntelligenceArtificielle.difficulteIA.facile, j2, this);
 		j2 = new Joueur(Case.Etat.joueur2, Joueur.typeJoueur.ordinateur, IntelligenceArtificielle.difficulteIA.normal, j1, t);
 		joueurCourant = j1;
+		
+		//calculerScore();
+		
 		message("bandeauSup", joueurCourant.getNom());
 		message("bandeauInf", "Selection du pion");
 		if (joueurCourant.isJoueurHumain()) {
@@ -213,6 +217,7 @@ public class Moteur {
 				boolean prisePercu = t.estUnePrisePercussion(pDepart, d);
 				if (t.deplacement(pDepart, pArrive, joueurCourant, h.histoTour) == 0) {
 					Point[] tabPts = { pDepart, pArrive };
+					System.out.println("TOOTTOOOO MOUOUHAHAH LA TRACE"+tabPts);
 					gestionCoupGraphique(tabPts, null, null, null);
 					prise(priseAspi, prisePercu);
 					tourEnCours = true;
@@ -275,7 +280,7 @@ public class Moteur {
 				testFinTour();
 				ech.vider();
 				ech.ajouter("finTour", true);
-				com.envoyer(ech);
+				com.envoyer(ech,joueurCourant.getJoueurID().getNum());
 			}
 		} else {
 			if (joueurCourant.isJoueurHumain())
@@ -297,6 +302,9 @@ public class Moteur {
 		ech.ajouter("refaire", false);
 		ech.ajouter("finTour", false);
 		com.envoyer(ech);
+		ech.vider();
+		ech.ajouter("annuler", true);
+		com.envoyer(ech, joueurCourant.getJoueurID().getNum());
 		if (partieTerminee(false)) {
 			e = EtatTour.partieFinie;
 			System.out.println("FIN DE PARTIE");
@@ -455,7 +463,7 @@ public class Moteur {
 				}
 			}
 		}
-		com.envoyer(ech);
+		com.envoyer(ech,joueurCourant.getJoueurID().getNum());
 
 	}
 
@@ -488,6 +496,7 @@ public class Moteur {
 				gestionCoupGraphique(null, null, l, score);
 				ech.vider();
 				ech.ajouter("finTour", true);
+				com.envoyer(ech,joueurCourant.getJoueurID().getNum());
 				traceTerrain();
 				testFinTour();
 			}
