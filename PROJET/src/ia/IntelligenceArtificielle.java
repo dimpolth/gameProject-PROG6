@@ -164,13 +164,18 @@ public class IntelligenceArtificielle {
 		nbPionsRestantsJCourant = joueurIA.getScore();
 		nbPionsRestantsJAdv = joueurAdversaire.getScore();
 		nbPionsRestantsTot = nbPionsRestantsJCourant + nbPionsRestantsJAdv;
+	
 		
 		//System.out.println(nbPionsRestants);
-		if((nbPionsRestantsTot <= 10) && (nbPionsRestantsJCourant < nbPionsRestantsJAdv))
+		if((nbPionsRestantsTot <= 4) && (nbPionsRestantsJCourant <= nbPionsRestantsJAdv))
+			profondeur += 3;
+
+		else if(nbPionsRestantsTot <= 6 && (nbPionsRestantsJCourant <= nbPionsRestantsJAdv))
 			profondeur += 2;
+		
 		else if(nbPionsRestantsTot <= 14 && (nbPionsRestantsJCourant < nbPionsRestantsJAdv))
 			profondeur += 1;
-		
+
 		
 		if(listeToursJouables.size() > 0)
 			tourSolution = listeToursJouables.get(0);
@@ -197,7 +202,6 @@ public class IntelligenceArtificielle {
 			}
 			
 		}
-		
 		this.nbExe++;
 		
 		temp = (double) (System.currentTimeMillis() - tempsDepart);
@@ -279,6 +283,7 @@ public class IntelligenceArtificielle {
 			tourCourant = (TourDeJeu) it.next().clone();
 			
 			valTemp = tourCourant.getValeurResultat();
+			
 			valTemp += min(profondeur-1, alpha, beta, tourCourant.getTerrainFinal(), iterateurProf+1);
 			
 			if(valTemp > valRes)
@@ -385,7 +390,8 @@ public class IntelligenceArtificielle {
 		
 		terrainCopie.deplacement(pDep, pArr, joueurCourant, listePredecesseurs);
 
-		listePionsManges = terrainCopie.manger(joueurCourant, terrainCopie.recupereDirection(pDep, pArr), pDep, pArr,coupDeDepart.getChoixPrise());
+		if(coupDeDepart.getChoixPrise() != null)
+			listePionsManges = terrainCopie.manger(joueurCourant, terrainCopie.recupereDirection(pDep, pArr), pDep, pArr,coupDeDepart.getChoixPrise());
 		nbPionsManges += listePionsManges.size();
 		listePredecesseurs.add(pDep);
 		

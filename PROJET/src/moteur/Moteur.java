@@ -62,7 +62,7 @@ public class Moteur {
 	 */
 	public void init() {
 		t = new Terrain();
-		t.TerrainTest(7);
+
 		h = new Historique();
 		h.ajouterTour(t);
 		ech = new Echange();
