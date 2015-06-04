@@ -123,7 +123,7 @@ public class IHM extends JFrame implements ComponentListener {
 		gestionCouche.add(popupV, new Integer(4));
 		popupV.setVisible(false);
 
-		theme.setTheme(Theme.Type.BOIS);
+		theme.setTheme(Theme.Type.BOIS,tg,this);
 
 		setMinimumSize(new Dimension(640, 480));
 		setSize(Math.max(640,(int)(java.awt.Toolkit.getDefaultToolkit().getScreenSize().width*0.75)), Math.max(480,(int)(java.awt.Toolkit.getDefaultToolkit().getScreenSize().height*0.75)));

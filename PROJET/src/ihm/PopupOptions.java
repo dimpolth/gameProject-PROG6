@@ -17,7 +17,7 @@ import javax.swing.text.html.HTMLDocument.Iterator;
 
 @SuppressWarnings("serial")
 public class PopupOptions extends JPanel {
-
+	JComboBox<String> theme;
 	public enum TypeJoueur {
 
 		HUMAIN("Humain"), IA1("IA Facile"), IA2("IA moyenne"), IA3("IA difficile");
@@ -91,7 +91,7 @@ public class PopupOptions extends JPanel {
 		contraintes.gridwidth = GridBagConstraints.REMAINDER;
 		
 		add(themeEtiq, contraintes);
-		JComboBox<String> theme = new JComboBox<>(new String[] { "Boisé" });
+		theme = new JComboBox<>(new String[] { "Boisé", "Marbre" });
 		contraintes.gridwidth = GridBagConstraints.REMAINDER;
 		
 		add(theme, contraintes);

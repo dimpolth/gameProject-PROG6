@@ -26,7 +26,7 @@ public class TerrainGraphique extends JPanel implements ComponentListener {
 	public static final int ANIM_DISP = 500;
 	public static final int ANIM_SELECT = 500;
 
-	private Image imgPlateau;
+	protected Image imgPlateau;
 	protected Image imgPion1;
 	protected Image imgPion2;
 	protected Image imgCroix;
