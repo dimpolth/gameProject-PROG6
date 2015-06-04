@@ -108,8 +108,8 @@ public class Joueur implements Serializable {
 		this.nom = nom;
 	}
 	
-	public Coup jouer() {
-		return ia.jouerIA();
+	public Coup jouer(Terrain t) {
+		return ia.jouerIA(t);
 	}
 	
 	public boolean IaContinue(){
@@ -122,9 +122,5 @@ public class Joueur implements Serializable {
 	
 	public void viderIa() {
 		ia = null;
-	}
-	
-	public IntelligenceArtificielle getIa() {
-		return ia;
 	}
 }
