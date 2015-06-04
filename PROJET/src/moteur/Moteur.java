@@ -10,6 +10,7 @@ import javax.jws.soap.SOAPBinding.ParameterStyle;
 import ia.*;
 import ihm.*;
 import modele.*;
+import modele.Case.Etat;
 //import modele.Joueur.typeJoueur;
 import reseau.*;
 
@@ -40,7 +41,7 @@ public class Moteur {
 	Boolean tourEnCours;
 	ArrayList<Point> listePointDebut;
 	Coup jeuIa;
-	boolean trace = false;
+	boolean trace = true;
 
 	public Moteur() {
 	}
@@ -86,10 +87,8 @@ public class Moteur {
 			e = EtatTour.jeuxIa;
 			jouerIa();
 		}
-		
-	}
 
-	
+	}
 
 	// Renvoie une liste de points d'arrive permettant une prise
 	/**
@@ -408,15 +407,14 @@ public class Moteur {
 					jeuIa = joueurCourant.jouer(t);
 					// System.out.println(jeuIa.getpDepart() + ";" +
 					// jeuIa.getpArrivee());
-					//System.out.println("depart "+jeuIa.getpDepart()+" arrivé "+jeuIa.getpArrivee());
+					// System.out.println("depart "+jeuIa.getpDepart()+" arrivé "+jeuIa.getpArrivee());
 					selectionPion(jeuIa.getpDepart());
 					// System.out.println("point depart moteur :"+pDepart);
 					selectionDestination(jeuIa.getpArrivee());
 
 					// t.dessineTableauAvecIntersections();
 
-					//traceTerrain();
-
+					// traceTerrain();
 
 				} while (joueurCourant.IaContinue());
 				// System.out.println(" FIN DU JEU IA");
@@ -460,12 +458,12 @@ public class Moteur {
 		com.envoyer(ech);
 
 	}
-	
-	void traceTerrain(){
+
+	void traceTerrain() {
 		if (trace)
 			t.dessineTableauAvecIntersections();
 	}
-	
+
 	void actionPoint(Object dataValue) {
 		if (e == EtatTour.selectionPion) {
 			// System.out.println("e : " + e);
@@ -651,8 +649,21 @@ public class Moteur {
 	}
 
 	public void action(Echange echange, int j) {
+		
+		System.out.println("Action reçue de joueur "+j);
+
+		Case.Etat joueurReception = null;
+		if (j == 1)
+			joueurReception = Etat.joueur1;
+		else if (j == 2)
+			joueurReception = Etat.joueur2;
+
 		for (String dataType : echange.getAll()) {
 			Object dataValue = echange.get(dataType);
+
+			if (Communication.enReseau() && (joueurCourant.getJoueurID() != joueurReception) && (dataType == "point" || dataType == "annuler" || dataType == "refaire" || dataType== "finTour"))
+				return;
+
 			// System.out.println(dataType);
 			// System.out.println("e : " + e);
 			switch (dataType) {
