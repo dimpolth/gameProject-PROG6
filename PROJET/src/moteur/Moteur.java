@@ -426,11 +426,7 @@ public class Moteur {
 					// System.out.println("point depart moteur :"+pDepart);
 					selectionDestination(jeuIa.getpArrivee());
 					// t.dessineTableauAvecIntersections();
-					
-					if(joueurCourant == null)
-						System.out.println("OK");
-					
-					System.out.println("Hey");
+
 				} while (joueurCourant.IaContinue());
 					// System.out.println(" FIN DU JEU IA");
 		
