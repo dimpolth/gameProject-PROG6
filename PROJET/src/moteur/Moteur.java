@@ -121,6 +121,15 @@ public class Moteur {
 	}
 
 	// Renvoie une liste de points d'arrive permettant une prise
+	/**
+	 * Détermine si des prises sont réalisables parmis les déplacements possibles.
+	 * @param p
+	 * Point à partir duquel on essaye de déterminer des prises
+	 * @param listePredecesseurs
+	 * ArrayList de Points. Liste des points par lesquels est passé le pion durant le tour.
+	 * @return
+	 * ArrayList de Points. Liste des arrivées possibles pour lesquelles une prise sera effectuée.
+	 */
 	ArrayList<Point> prisePossible(Point p, ArrayList<Point> listePredecesseurs) {
 		ArrayList<Point> listePrise = new ArrayList<Point>();
 		ArrayList<Point> listeMouvement = deplacementPossible(p,
