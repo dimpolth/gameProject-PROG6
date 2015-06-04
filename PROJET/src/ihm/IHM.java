@@ -139,7 +139,8 @@ public class IHM extends JFrame implements ComponentListener {
 		setModeReseau(false);
 
 		setMinimumSize(new Dimension(800, 600));
-		setSize(Math.max(800,(int)(java.awt.Toolkit.getDefaultToolkit().getScreenSize().width*0.75)), Math.max(600,(int)(java.awt.Toolkit.getDefaultToolkit().getScreenSize().height*0.75)));
+		setSize(800,600);
+		//setSize(Math.max(800,(int)(java.awt.Toolkit.getDefaultToolkit().getScreenSize().width*0.75)), Math.max(600,(int)(java.awt.Toolkit.getDefaultToolkit().getScreenSize().height*0.75)));
 		try {
 			setIconImage(ImageIO.read(getClass().getResource("/images/icone.png")));
 		} catch (IOException e) {

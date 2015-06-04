@@ -35,7 +35,6 @@ public class PopupVictoire extends JPanel implements ActionListener {
 		setVisible(true);
 		repaint();
 		tirer();
-		precTemps = System.currentTimeMillis();
 		t.start();
 	}
 
@@ -45,72 +44,53 @@ public class PopupVictoire extends JPanel implements ActionListener {
 	}
 
 	private void tirer() {
-		prochainLancement = System.currentTimeMillis()+2000;
-		for (int i = 0; i < aleat.nextInt(3) + 1; i++) {
-			fusees.add(new Fusee(new Point2D.Float(aleat.nextInt(getWidth()), getHeight()), new Point(aleat.nextInt(20) - 10, aleat.nextInt(30) + 10), System.currentTimeMillis()+aleat.nextInt(3000) + 1000, aleat.nextInt(100) + 50));
-		}
 	}
 
 	public void paintComponent(Graphics g) {
-		if(System.currentTimeMillis() > prochainLancement) {
-			tirer();
-		}
-		g.setColor(Color.PINK);
-		Iterator<Fusee> it = fusees.iterator();
-		while(it.hasNext()) {
-			it.next().afficher(g);
-		}
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		long difTemps = System.currentTimeMillis()-precTemps;
-		precTemps = System.currentTimeMillis();
-		Iterator<Fusee> it = fusees.iterator();
-		while(it.hasNext()) {
-			Fusee fusee = it.next();
-			if(System.currentTimeMillis() > fusee.tempsExplosion) {
-				fusee.exploser();
-				it.remove();
-			}
-			fusee.maj(difTemps);
-		}
-		repaint();
+		
 	}
 }
 
-abstract class Particule {
-	public Point2D.Float coord;
-	public Point vecteur;
+enum Forme {Ovale};
+
+class Particule {
+	public Float coord;
+	public Float vecteur;
+	public Forme forme;
+	public Color couleur;
+	public Float taille;
 	
-	public void maj(long difTemps) {
-		float facteur = difTemps/30;
-		coord.x = coord.x + facteur*vecteur.x;
-		coord.y = coord.y + facteur*vecteur.y;
-		if(vecteur.x > 0)
-			vecteur.x--;
-		else if(vecteur.x < 0)
-			vecteur.x++;
-		vecteur.y = vecteur.y-3;
+	public Particule(Random a, Forme f, Color c) {
+		coord = new Float(a.nextFloat(), 1);
+		vecteur = new Float((a.nextFloat()/5)-0.1f,a.nextFloat()/3);
+		forme = f;
+		couleur = c;
+		if(f == Forme.Ovale) {
+			taille.x = 0.001f;
+			taille.y = 0.003f;
+		}
+	}
+	public void maj(float facteurSeconde) {
+		coord.x = coord.x + vecteur.x*facteurSeconde;
+		coord.y = coord.y + vecteur.y*facteurSeconde;
+		vecteur.x = vecteur.x *0.75f;
+		vecteur.y = vecteur.y - 0.2f*facteurSeconde; 
+	}
+	public void afficher(Graphics g, int w, int h) {
+		g.setColor(couleur);
+		if(forme == Forme.Ovale) {
+			g.fillOval((int)(coord.x*w), (int)(coord.y*h), (int)(taille.x*w), (int)(taille.y*h));
+		}
 	}
 }
 
 class Fusee extends Particule {
-	public long tempsExplosion;
-	public int nombreParticule;
-
-	public Fusee(Point2D.Float c, Point v, long t, int n) {
-		coord = c;
-		vecteur = v;
-		tempsExplosion = t;
-		nombreParticule = n;
+	public Fusee(Random a, Forme f, Color c) {
+		super(a, f, c);
 	}
 	
-	public void exploser() {
-		
-	}
-	
-	public void afficher(Graphics g) {
-		g.fillRect((int)coord.x, (int)coord.y, 10, 20);
-	}
 }
