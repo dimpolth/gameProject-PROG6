@@ -90,7 +90,7 @@ public class Moteur {
 	/**
 	 * Vrai si un enchaînement de coup est en cours. Faux sinon.
 	 */
-	private Boolean tourEnCours;
+	private boolean tourEnCours;
 	
 	private ArrayList<Point> listePointDebut;
 	/**
