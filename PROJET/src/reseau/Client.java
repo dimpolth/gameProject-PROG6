@@ -70,11 +70,14 @@ class Client implements Runnable{
 	
 	// ENVOYER UNE INFORMATION VERS LE SERVEUR
 	public void envoyer(Object o) {
-		Echange e = ((Echange)o).clone();
+		
+		
 		try {
 			
-			;//System.out.println("CLIENT : ENVOYER : "+e.toString());
-			oos.writeObject(e);
+			if(o instanceof Echange)
+				oos.writeObject( ((Echange)o).clone() );
+			else
+				oos.writeObject( (String)o );
 		}
 		catch (Exception ex) {
 		}

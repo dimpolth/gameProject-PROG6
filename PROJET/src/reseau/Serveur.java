@@ -108,15 +108,18 @@ public class Serveur implements Runnable{
 		
 		if(joueurs.get(1) == null){			
 			joueurs.put(1,c);	
+			System.out.println("Nouveau joueur 1");
 			params.j1_identifiant = c.identifiant;			
 		}
 		else if(joueurs.get(2) == null){			
 			joueurs.put(2,c);
+			System.out.println("Nouveau joueur 2 : "+c.identifiant);
 			params.j2_identifiant = c.identifiant;			
 		}		
 	
-		e.ajouter("parametres", params);
-		envoyer(e,0);		
+		e.ajouter("parametres", params);	
+		com.recevoir(e, 0);
+			
 	}
 	
 	public void nouvelleConnexion(Connexion c){		

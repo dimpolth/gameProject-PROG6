@@ -102,11 +102,13 @@ public class Moteur {
 	/**
 	 * Vrai si affichage sur console. Faux sinon. Utilisé en debug.
 	 */
+
 	private boolean trace = true;
 	/**
 	 * Nombre de coups sans prise.
 	 */
 	private int compteurNul;
+
 
 	/**
 	 * Constructeur par défaut.
@@ -402,7 +404,7 @@ public class Moteur {
 	  * ou manuellement s'il décide de s'arrêter pendant un enchaînement.
 	  */
 	public void finTour() {
-		
+		//traceTerrain();
 		if (joueurCourant.getJoueurID() == Case.Etat.joueur1)
 			joueurCourant = j2;
 		else
@@ -518,7 +520,8 @@ public class Moteur {
 	 */
 	public void gestionEvenementGraphique() {
 		ech.vider();
-		System.out.println("PUTAIN DE TERRAIN");
+		traceTerrain();
+		//System.out.println("PUTAIN DE TERRAIN");
 		EvenementGraphique cg = new EvenementGraphique(t.getTableau());
 		ech.ajouter("coup", cg);
 		com.envoyer(ech);
@@ -620,7 +623,7 @@ public class Moteur {
 					jeuIa = joueurCourant.jouer();
 					selectionPion(jeuIa.getpDepart());
 					selectionDestination(jeuIa.getpArrivee());
-					traceTerrain();
+					//traceTerrain();
 				} while (joueurCourant.IaContinue());
 				finTour();
 			}
@@ -866,12 +869,8 @@ public class Moteur {
 	public void actionParametre(Object dataValue) {
 		Parametres p = (Parametres) dataValue;
 		
-		/*
-		System.out.println("1 "+p.j1_identifiant);
-		System.out.println("2 "+p.j2_identifiant);
-		System.out.println("3 "+p.j1_type);
-		System.out.println("4 "+p.j2_type);
-		*/
+	
+		//System.out.println("("+p.j1_identifiant+")"+j1.getNom()+" : ("+p.j2_identifiant+")"+""+j2.getNom());
 		if (p.j1_identifiant != null)
 			j1.setNom(p.j1_identifiant);
 		else
@@ -881,6 +880,8 @@ public class Moteur {
 			j2.setNom(p.j2_identifiant);
 		else 
 			p.j2_identifiant=j2.getNom();
+		
+		//System.out.println("("+p.j1_identifiant+")"+j1.getNom()+" : ("+p.j2_identifiant+")"+""+j2.getNom());
 		
 		if(p.j1_type != null ){
 			if (p.j1_type == Parametres.NiveauJoueur.HUMAIN) {
@@ -943,9 +944,13 @@ public class Moteur {
 			//System.out.println("courant :" + joueurCourant.getJoueurID());
 			//System.out.println("comparaison "+!joueurCourant.getJoueurID().equals(joueurReception));
 		}
+		
+		
 
 		for (String dataType : echange.getAll()) {
 			Object dataValue = echange.get(dataType);
+			
+			
 			
 			if (Communication.enReseau() && (joueurCourant.getJoueurID() != joueurReception) && (dataType.equals("point")  || dataType.equals("annuler") || dataType.equals("refaire") || dataType.equals("finTour")))
 				return;

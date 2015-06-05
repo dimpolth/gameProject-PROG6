@@ -37,7 +37,7 @@ public class Communication {
 		
 	}
 	
-	public static String modeReseau(String host){
+	public static String modeReseau(String host, String identifiant){
 		// Si il y a une modification
 		if(host == null && reseau || host != null && !reseau){
 				
@@ -61,6 +61,7 @@ public class Communication {
 				
 				try{
 					cl.connexion(host);	
+					cl.envoyer(identifiant);
 					Communication.canaux[ Communication.IHM ].client = cl;
 					reseau = true;
 				}

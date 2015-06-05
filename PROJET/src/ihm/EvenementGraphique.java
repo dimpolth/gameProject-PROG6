@@ -95,12 +95,11 @@ public class EvenementGraphique implements Runnable, Serializable {
 	public void run() {
 		System.out.println(terrain);
 		if(terrain != null){
-			//System.out.println("Desinnation du terrain");
-			latence(500);
-			
+			latence(50);
 			tg.dessinerTerrain(terrain);
 			
-			latence(500);
+			
+			latence(50);
 		}
 		
 		
