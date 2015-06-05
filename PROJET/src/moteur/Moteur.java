@@ -83,6 +83,33 @@ public class Moteur {
 		
 		//calculerScore();
 		
+		//message("bandeauSup", joueurCourant.getNom());
+		//message("bandeauInf", "Selection du pion");
+		
+	    gestionCoupGraphique(joueurCourant.getNom(),"Selection du pion");
+		
+	    if (joueurCourant.isJoueurHumain()) {
+			e = EtatTour.selectionPion;
+		} else {
+			e = EtatTour.jeuxIa;
+			jouerIa();
+		}
+
+	}
+	
+	
+	public void init(Object dataValue){
+		t = new Terrain();
+
+		//t.TerrainTest(11);
+		
+
+		h = new Historique();
+		h.ajouterTour(t);
+		ech = new Echange();
+		listePointDebut = new ArrayList<Point>();
+		actionParametre(dataValue);
+		
 		message("bandeauSup", joueurCourant.getNom());
 		message("bandeauInf", "Selection du pion");
 		if (joueurCourant.isJoueurHumain()) {
@@ -91,7 +118,6 @@ public class Moteur {
 			e = EtatTour.jeuxIa;
 			jouerIa();
 		}
-
 	}
 
 	// Renvoie une liste de points d'arrive permettant une prise
@@ -164,6 +190,7 @@ public class Moteur {
 	boolean partieTerminee(boolean aucunDeplacement) {
 		ech.vider();
 		if (joueurCourant.scoreNul() || aucunDeplacement) {
+			System.out.println("FIN DE PARTIE");
 			ech.ajouter("bandeauSup", "<html><font color=#FF0000>" + joueurCourant.recupereJoueurOpposant(joueurCourant, j1, j2, false).getNom() + "</font></html>");
 			ech.ajouter("bandeauInf", "<html><font color=#FF0000>à remporté la partie</font></html>");
 			com.envoyer(ech);
@@ -219,7 +246,7 @@ public class Moteur {
 				boolean prisePercu = t.estUnePrisePercussion(pDepart, d);
 				if (t.deplacement(pDepart, pArrive, joueurCourant, h.histoTour) == 0) {
 					Point[] tabPts = { pDepart, pArrive };
-					System.out.println("TOOTTOOOO MOUOUHAHAH LA TRACE"+tabPts);
+					//System.out.println("TOOTTOOOO MOUOUHAHAH LA TRACE"+tabPts);
 					gestionCoupGraphique(tabPts, null, null, null);
 					prise(priseAspi, prisePercu);
 					tourEnCours = true;
@@ -267,7 +294,7 @@ public class Moteur {
 				testFinTour();
 				ech.vider();
 				ech.ajouter("finTour", true);
-				com.envoyer(ech);
+				com.envoyer(ech,joueurCourant.getJoueurID().getNum());
 			}
 
 		} else if (!priseAspi && prisePercu) {
@@ -300,13 +327,12 @@ public class Moteur {
 		h.ajouterTour(t);
 		ech.vider();
 		ech.ajouter("pionDeselectionne", true);
-		ech.ajouter("annuler", true);
+		ech.ajouter("annuler", false);
 		ech.ajouter("refaire", false);
 		ech.ajouter("finTour", false);
 		com.envoyer(ech);
 		ech.vider();
-		ech.ajouter("annuler", true);
-		com.envoyer(ech, joueurCourant.getJoueurID().getNum());
+		gestionBouton();
 		if (partieTerminee(false)) {
 			e = EtatTour.partieFinie;
 			System.out.println("FIN DE PARTIE");
@@ -373,9 +399,9 @@ public class Moteur {
 
 	// surchage de gestion gestionCoupGraphique pour le cas ou l'on ne met a
 	// jour que les bandeau
-	void gestionCoupGraphique(String chaine1, String chaine2) {
+	void gestionCoupGraphique(String BandeauSup, String BandeauInf) {
 		ech.vider();
-		CoupGraphique cg = new CoupGraphique(null, null, null, null, chaine1, chaine2, null);
+		CoupGraphique cg = new CoupGraphique(null, null, null, null, BandeauSup, BandeauInf, null);
 		ech.ajouter("coup", cg);
 		com.envoyer(ech);
 	}
@@ -531,6 +557,12 @@ public class Moteur {
 			gestionBouton();
 			message("bandeauSup", joueurCourant.getNom());
 			message("bandeauInf", "Selection du pion");
+			if (joueurCourant.isJoueurHumain()) {
+				e = EtatTour.selectionPion;
+			} else {
+				e = EtatTour.jeuxIa;
+				jouerIa();
+			}
 		}
 	}
 
@@ -559,6 +591,12 @@ public class Moteur {
 			gestionBouton();
 			message("bandeauSup", joueurCourant.getNom());
 			message("bandeauInf", "Selection du pion");
+			if (joueurCourant.isJoueurHumain()) {
+				e = EtatTour.selectionPion;
+			} else {
+				e = EtatTour.jeuxIa;
+				jouerIa();
+			}
 		}
 	}
 
@@ -663,6 +701,13 @@ public class Moteur {
 		ech.ajouter("parametres", p);
 		com.envoyer(ech);
 		message("bandeauSup", joueurCourant.getNom());
+		if (joueurCourant.isJoueurHumain()) {
+			e = EtatTour.selectionPion;
+		} else {
+			e = EtatTour.jeuxIa;
+			jouerIa();
+		}
+		
 	}
 
 	public void action(Echange echange, int j) {
@@ -692,6 +737,7 @@ public class Moteur {
 			switch (dataType) {
 			case "nouvellePartie":
 				init();
+				//init(datavalue);
 				break;
 			case "point":
 				actionPoint(dataValue);
