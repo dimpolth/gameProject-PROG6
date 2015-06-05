@@ -524,8 +524,10 @@ public class IHM extends JFrame implements ComponentListener {
 		}
 		if((dataValue = e.get("parametres")) != null) {
 			Parametres params = (Parametres)dataValue;
-			bandeauInfos.setIdentifiant(1,params.j1_identifiant);
-			bandeauInfos.setIdentifiant(2,params.j2_identifiant);			
+			if(params.j1_identifiant != null)
+				bandeauInfos.setIdentifiant(1,params.j1_identifiant);
+			if(params.j2_identifiant != null)
+				bandeauInfos.setIdentifiant(2,params.j2_identifiant);			
 		}
 		if((dataValue = e.get("finTour")) != null) {
 			boutonValidation.setEnabled((boolean)dataValue);
