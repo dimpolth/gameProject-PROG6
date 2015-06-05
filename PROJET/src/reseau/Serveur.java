@@ -54,13 +54,13 @@ public class Serveur implements Runnable{
 			// On garde le port pour pouvoir connecter d'autres clients sur ce même port
 			
 
-			System.out.println("En ecoute sur : " + this.passiveSocket);
+			;//System.out.println("En ecoute sur : " + this.passiveSocket);
 			while (true) {
 				
 				
 				try{
 					Socket activeSocket = this.passiveSocket.accept();
-					System.out.println("Nouvelle connexion");
+					;//System.out.println("Nouvelle connexion");
 				
 					// Lorsqu'un utilisateur se connecte, on créé une nouvelle instance
 					Connexion connexion = new Connexion(this,activeSocket);
@@ -70,7 +70,7 @@ public class Serveur implements Runnable{
 				
 				}
 				catch(Exception ex){
-					System.out.println("Impossible de récupérer le nouveau joueur.");
+					;//System.out.println("Impossible de récupérer le nouveau joueur.");
 				}			
 				
 				

@@ -195,26 +195,26 @@ public class Terrain implements Serializable {
 		for (int ligne = 0; ligne < Terrain.LIGNES; ligne++) {
 			for (int colonne = 0; colonne < Terrain.COLONNES; colonne++) {
 				if (this.tableau[ligne][colonne].getOccupation() == Case.Etat.joueur1)
-					System.out.print("X");
+					;//System.out.print("X");
 				else if (this.tableau[ligne][colonne].getOccupation() == Case.Etat.joueur2)
-					System.out.print("O");
+					;//System.out.print("O");
 				else
-					System.out.print(" ");
+					;//System.out.print(" ");
 
 				if (colonne < Terrain.INDICE_MAX_COLONNES)
-					System.out.print("-");
+					;//System.out.print("-");
 			}
-			System.out.println();
+			;//System.out.println();
 
 			if (ligne < Terrain.INDICE_MAX_LIGNES)
 				if (ligne % 2 == 0)
-					System.out.println("|\\|/|\\|/|\\|/|\\|/|");
+					;//System.out.println("|\\|/|\\|/|\\|/|\\|/|");
 
 				else
-					System.out.println("|/|\\|/|\\|/|\\|/|\\|");
+					;//System.out.println("|/|\\|/|\\|/|\\|/|\\|");
 		}
 
-		System.out.println();
+		;//System.out.println();
 	}
 
 	public int deplacement(Point depart, Point arrive, Joueur joueurCourant, ArrayList<Point> listePredecesseurs) {
@@ -466,7 +466,7 @@ public class Terrain implements Serializable {
 	 * 
 	 * this.sc = new Scanner(System.in); char choixPrise = 'Y';
 	 * 
-	 * do { System.out.println("Prise par percussion ? (Y/N) : "); choixPrise =
+	 * do { ;//System.out.println("Prise par percussion ? (Y/N) : "); choixPrise =
 	 * this.sc.nextLine().charAt(0); } while (choixPrise != 'Y' && choixPrise !=
 	 * 'N');
 	 * 
@@ -558,8 +558,8 @@ public class Terrain implements Serializable {
 		}
 		if (!(cible.x > INDICE_MAX_LIGNES || cible.x < 0 || cible.y > INDICE_MAX_COLONNES || cible.y < 0)) {
 			b = ((tableau[cible.x][cible.y].getOccupation() != tableau[depart.x][depart.y].getOccupation()) && (tableau[cible.x][cible.y].getOccupation() != Case.Etat.vide));
-			// System.out.println("Cible : "+tableau[cible.x][cible.y].getOccupation());
-			// System.out.println("Depart : "+tableau[depart.x][depart.y].getOccupation());
+			// ;//System.out.println("Cible : "+tableau[cible.x][cible.y].getOccupation());
+			// ;//System.out.println("Depart : "+tableau[depart.x][depart.y].getOccupation());
 		}
 		return b;
 	}

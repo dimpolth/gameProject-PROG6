@@ -294,12 +294,19 @@ public class IHM extends JFrame implements ComponentListener {
 			break;
 
 		case OPTION_VALIDER:
+
 			Parametres params = getParametres();
 			
-			if(popupO.theme.getSelectedItem() == "Boisé")
+
+
+			if(popupO.theme.getSelectedItem() == "Standard")
+				theme.setTheme(Theme.Type.STANDARD);
+			else if(popupO.theme.getSelectedItem() == "Boisé")
 				theme.setTheme(Theme.Type.BOIS);
 			else if(popupO.theme.getSelectedItem() == "Marbre")
 				theme.setTheme(Theme.Type.MARBRE);
+			else if(popupO.theme.getSelectedItem() == "Sombre")
+				theme.setTheme(Theme.Type.SOMBRE);
 
 			Echange e = new Echange();
 			e.ajouter("parametres", params);
@@ -346,12 +353,12 @@ public class IHM extends JFrame implements ComponentListener {
 				
 			}
 			else{
-				System.out.println("1");
+				//;//System.out.println("1");
 				String hoteComplet = popupReseau.hote.getText();
 				if(!hoteComplet.equals("")){
-					System.out.println("2");
+					//;//System.out.println("2");
 					errReseau = Communication.modeReseau(hoteComplet);
-					System.out.println(errReseau);
+					//;//System.out.println(errReseau);
 				}
 			}
 			

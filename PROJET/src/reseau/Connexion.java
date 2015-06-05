@@ -55,7 +55,7 @@ public class Connexion implements Runnable{
 	}
 	public void envoyer(Echange e){
 		try {			
-			//System.out.println("SERVER ENVOYER : "+((Echange) e).toString() );
+			//;//System.out.println("SERVER ENVOYER : "+((Echange) e).toString() );
 			oos.writeObject(e.clone());	
 			
 		} catch (IOException ioe) {

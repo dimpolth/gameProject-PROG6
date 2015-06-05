@@ -38,7 +38,7 @@ public class Historique implements Serializable {
 		Terrain c = t.copie();
 		histoPrincipal.add(c);
 		itPrincipal = histoPrincipal.size()-1;
-		//System.out.println("itprincipal"+itPrincipal);
+		//;//System.out.println("itprincipal"+itPrincipal);
 		
 	}
 	
@@ -50,7 +50,7 @@ public class Historique implements Serializable {
 	
 	public Terrain annuler() {
 		if(itPrincipal<=0){
-			//System.out.println("PAS de ANNULER POSSIBLE");
+			//;//System.out.println("PAS de ANNULER POSSIBLE");
 			return null;}
 		else {
 			
@@ -73,15 +73,15 @@ public class Historique implements Serializable {
 	}
 	
 	public void afficher() {
-		System.out.println("----------------");
+		;//System.out.println("----------------");
 		for(int it = 0; it < histoPrincipal.size(); it++) {
 			Terrain tmp = histoPrincipal.get(it);
 			//Terrain tmp = histoPrincipal.get(itPrincipal);
 			//tmp.dessineTableauAvecIntersections();
 		}
-		System.out.println("----------------");
-		System.out.println(itPrincipal);
-		System.out.println("----------------");
+		;//System.out.println("----------------");
+		;//System.out.println(itPrincipal);
+		;//System.out.println("----------------");
 	}
 	
 }
