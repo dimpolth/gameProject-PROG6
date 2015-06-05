@@ -19,6 +19,7 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 
 import modele.*;
+import modele.Parametres.NiveauJoueur;
 import reseau.*;
 
 @SuppressWarnings("serial")
@@ -164,21 +165,23 @@ public class IHM extends JFrame implements ComponentListener {
 
 	}
 
-	public Joueur[] getParamsJoueurs() {
-		Joueur[] j = new Joueur[2];
-		j[0] = new Joueur();
-		j[1] = new Joueur();
-		j[0].setNom(popupO.identifiantJoueur1.getText());
-		j[1].setNom(popupO.identifiantJoueur2.getText());
-		return j;
+	public Parametres getParametres() {		
+		
+		Parametres params = new Parametres();
+		params.j1_identifiant = popupO.identifiantJoueur1.getText();
+		params.j2_identifiant = popupO.identifiantJoueur2.getText();
+		params.j1_type = NiveauJoueur.getFromIndex(popupO.selectJoueur1.getSelectedIndex());
+		params.j2_type = NiveauJoueur.getFromIndex(popupO.selectJoueur2.getSelectedIndex());
+		
+		return params;
 
 	}
 
 	public void lancer() {
 		Echange e = new Echange();
 		e.ajouter("nouvellePartie", true);
-		e.ajouter("terrain", true);
-		e.ajouter("joueurs", getParamsJoueurs());
+		e.ajouter("parametres", getParametres());
+		e.ajouter("terrain", true);		
 		com.envoyer(e);
 	}
 
