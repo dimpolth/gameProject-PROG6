@@ -631,10 +631,10 @@ public class Moteur {
 		
 		
 		
-		System.out.println("1 "+p.j1_identifiant);
-		System.out.println("2 "+p.j2_identifiant);
-		System.out.println("3 "+p.j1_type);
-		System.out.println("4 "+p.j2_type);
+		;//System.out.println("1 "+p.j1_identifiant);
+		;//System.out.println("2 "+p.j2_identifiant);
+		;//System.out.println("3 "+p.j1_type);
+		;//System.out.println("4 "+p.j2_type);
 		
 		if (p.j1_identifiant != null)
 			j1.setNom(p.j1_identifiant);
