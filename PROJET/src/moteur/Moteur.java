@@ -38,7 +38,7 @@ public class Moteur {
 	public Joueur j1, j2;
 	Echange ech;
 	Point aspi, perc;
-	Boolean tourEnCours;
+	boolean tourEnCours;
 	ArrayList<Point> listePointDebut;
 	Coup jeuIa;
 	boolean trace = false;
@@ -110,8 +110,11 @@ public class Moteur {
 		listePointDebut = new ArrayList<Point>();
 		actionParametre(dataValue);
 		
-		message("bandeauSup", joueurCourant.getNom());
-		message("bandeauInf", "Selection du pion");
+		//message("bandeauSup", joueurCourant.getNom());
+		//message("bandeauInf", "Selection du pion");
+		
+		gestionCoupGraphique(joueurCourant.getNom(),"Selection du pion");
+		
 		if (joueurCourant.isJoueurHumain()) {
 			e = EtatTour.selectionPion;
 		} else {
@@ -191,8 +194,11 @@ public class Moteur {
 		ech.vider();
 		if (joueurCourant.scoreNul() || aucunDeplacement) {
 			System.out.println("FIN DE PARTIE");
-			ech.ajouter("bandeauSup", "<html><font color=#FF0000>" + joueurCourant.recupereJoueurOpposant(joueurCourant, j1, j2, false).getNom() + "</font></html>");
-			ech.ajouter("bandeauInf", "<html><font color=#FF0000>à remporté la partie</font></html>");
+			
+			String BandeauSup = "<html><font color=#FF0000>" + joueurCourant.recupereJoueurOpposant(joueurCourant, j1, j2, false).getNom() + "</font></html>";
+			String BandeauInf = "<html><font color=#FF0000>à remporté la partie</font></html>";
+			
+			gestionCoupGraphique(BandeauSup, BandeauInf);
 			com.envoyer(ech);
 			return true;
 		} else
@@ -262,7 +268,6 @@ public class Moteur {
 		if (priseAspi && prisePercu) {
 			Terrain.ChoixPrise choix;
 			if (joueurCourant.isJoueurHumain()) {
-				;//System.out.println("Choix");
 				Point offA = t.offsetAspiration(d, pDepart);
 				aspi = new Point(offA.x + pDepart.x, offA.y + pDepart.y);
 				Point offP = t.offsetPercussion(d, pArrive);
@@ -270,6 +275,8 @@ public class Moteur {
 				Point[] tabPts = { aspi, perc };
 				gestionCoupGraphique(null, tabPts, null, null, null, "choisissez votre prise");
 				e = EtatTour.attenteChoix;
+				ech.vider();
+				ech.ajouter("finTour", false);
 			} else {
 				choix = jeuIa.getChoixPrise();
 				l = t.manger(joueurCourant, d, pDepart, pArrive, choix);
@@ -338,6 +345,7 @@ public class Moteur {
 		} else {
 			// ;//System.out.println("FIN DE TOUR ");
 			gestionCoupGraphique();
+			gestionCoupGraphique(joueurCourant.getNom(),"Selection du pion");
 			if (joueurCourant.isJoueurHumain()) {
 				e = EtatTour.selectionPion;
 			} else {
@@ -345,8 +353,6 @@ public class Moteur {
 				jouerIa();
 			}
 		}
-		message("bandeauSup", joueurCourant.getNom());
-		message("bandeauInf", "Selection du pion");
 	}
 
 	void testFinTour() {
@@ -355,7 +361,7 @@ public class Moteur {
 			finTour();
 		} else {
 			e = EtatTour.selectionDestination;
-			message("bandeauInf", "Selection destination");
+			gestionCoupGraphique(null, "Selection destination");
 		}
 	}
 
@@ -398,9 +404,13 @@ public class Moteur {
 
 	// surchage de gestion gestionCoupGraphique pour le cas ou l'on ne met a
 	// jour que les bandeau
-	void gestionCoupGraphique(String BandeauSup, String BandeauInf) {
+	void gestionCoupGraphique(String bandeauSup, String bandeauInf) {
 		ech.vider();
-		CoupGraphique cg = new CoupGraphique(null, null, null, null, BandeauSup, BandeauInf, null);
+		CoupGraphique cg;
+		if (tourEnCours)
+			cg= new CoupGraphique(null, null, null, null, bandeauSup, bandeauInf, calculChemin());
+		else 
+			cg= new CoupGraphique(null, null, null, null, bandeauSup, bandeauInf, null);
 		ech.ajouter("coup", cg);
 		com.envoyer(ech);
 	}
@@ -433,27 +443,12 @@ public class Moteur {
 		Thread th = new Thread() {
 			public void run() {
 				do {
-					// ;//System.out.println(joueurCourant.getNom());
-					// ;//System.out.println("boucle IA");
-					/*
-					 * if(jeuIa != null) ;//System.out.println(jeuIa.getpDepart() +
-					 * ";" + jeuIa.getpArrivee());
-					 */
 					jeuIa = joueurCourant.jouer();
-					// ;//System.out.println(jeuIa.getpDepart() + ";" +
-					// jeuIa.getpArrivee());
-					// ;//System.out.println("depart "+jeuIa.getpDepart()+" arrivé "+jeuIa.getpArrivee());
 					selectionPion(jeuIa.getpDepart());
-					// ;//System.out.println("point depart moteur :"+pDepart);
 					selectionDestination(jeuIa.getpArrivee());
-
-					// t.dessineTableauAvecIntersections();
-
-					// traceTerrain();
+					traceTerrain();
 
 				} while (joueurCourant.IaContinue());
-				// ;//System.out.println(" FIN DU JEU IA");
-
 				finTour();
 			}
 		};
@@ -667,20 +662,21 @@ public class Moteur {
 		Parametres p = (Parametres) dataValue;
 		
 		
-		
+		/*
 		System.out.println("1 "+p.j1_identifiant);
 		System.out.println("2 "+p.j2_identifiant);
 		System.out.println("3 "+p.j1_type);
 		System.out.println("4 "+p.j2_type);
-		
+		*/
 		if (p.j1_identifiant != null)
 			j1.setNom(p.j1_identifiant);
 		else
-			System.out.println("pas d'identifiant joueur 1");
+			p.j1_identifiant=j1.getNom();
+		
 		if (p.j2_identifiant != null)
 			j2.setNom(p.j2_identifiant);
 		else 
-			System.out.println("pas d'identifiant joueur 2");
+			p.j2_identifiant=j2.getNom();
 		
 		if(p.j1_type != null ){
 			if (p.j1_type == Parametres.NiveauJoueur.HUMAIN) {
@@ -778,7 +774,7 @@ public class Moteur {
 				actionRefaire(dataValue);
 				break;
 			case "finTour":
-				if (tourEnCours)
+				if (tourEnCours && e==EtatTour.selectionDestination)
 					finTour();
 				break;
 			case "sauvegarder":
