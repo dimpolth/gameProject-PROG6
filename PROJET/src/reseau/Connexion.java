@@ -30,12 +30,15 @@ public class Connexion implements Runnable{
 			this.socket = socket;
 			ois = new ObjectInputStream(socket.getInputStream());
 			oos = new ObjectOutputStream(socket.getOutputStream());
-			
+			System.out.println("0 : ");
 			// Premier envoi = identifiant
 			Echange ech = (Echange)ois.readObject();
+			System.out.println("1 : "+ech.toString());
 			if(ech.get("parametres") != null){
+				System.out.println("2");
 				Parametres params =(Parametres)ech.get("parametres");
 				if(params.j1_identifiant != null){
+					System.out.println("3");
 					identifiant = params.j1_identifiant;
 					System.out.println("MON IDENTIFIANT : "+identifiant);
 					ech.infos.clear();

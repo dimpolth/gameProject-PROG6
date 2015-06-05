@@ -108,13 +108,11 @@ public class Serveur implements Runnable{
 		
 		if(joueurs.get(1) == null){			
 			joueurs.put(1,c);	
-			params.j1_identifiant = c.identifiant;
-			joueurs.put(1,c);
+			params.j1_identifiant = c.identifiant;			
 		}
-		else{			
+		else if(joueurs.get(2) == null){			
 			joueurs.put(2,c);
-			params.j2_identifiant = c.identifiant;
-			joueurs.put(2,c);
+			params.j2_identifiant = c.identifiant;			
 		}		
 	
 		e.ajouter("parametres", params);
