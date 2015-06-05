@@ -114,12 +114,4 @@ public class PopupOptions extends Popup {
 		add(valider, contraintes);
 
 	}
-
-	public void paintComponent(Graphics g) {
-		super.paintComponent(g);
-		g.setColor(Color.GRAY);
-		g.fillRect(0, 0, getWidth(), getHeight());
-		g.setColor(Color.white);
-		g.fillRect(10, 10, getWidth() - 20, getHeight() - 20);
-	}
 }

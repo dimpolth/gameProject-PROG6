@@ -3,18 +3,12 @@ package ihm;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.GridLayout;
-import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.*;
 import java.io.IOException;
-import java.util.LinkedList;
-
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
@@ -231,6 +225,8 @@ public class IHM extends JFrame implements ComponentListener {
 			break;
 		case RECOMMENCER:
 			lancer();
+			popupM.setVisible(false);
+			popupB.setVisible(false);
 			break;
 		case QUITTER:
 			String messConfirmation;
@@ -307,10 +303,12 @@ public class IHM extends JFrame implements ComponentListener {
 				theme.setTheme(Theme.Type.MARBRE);
 			else if(popupO.theme.getSelectedItem() == "Sombre")
 				theme.setTheme(Theme.Type.SOMBRE);
-
-			Echange e = new Echange();
-			e.ajouter("parametres", params);
-			com.envoyer(e);
+			
+			if(!Communication.enReseau()){
+				Echange e = new Echange();
+				e.ajouter("parametres", params);
+				com.envoyer(e);
+			}
 			
 			popupO.setVisible(false);
 			popupB.setVisible(false);
@@ -339,8 +337,7 @@ public class IHM extends JFrame implements ComponentListener {
 					param.j1_type = Parametres.NiveauJoueur.HUMAIN;
 					param.j2_type = Parametres.NiveauJoueur.HUMAIN;
 					Echange ec = new Echange();
-					ec.ajouter("nouvellePartie", true);
-					ec.ajouter("parametres", param);					
+					ec.ajouter("nouvellePartie", true);					
 					com.envoyer(ec);					
 					
 					
@@ -371,6 +368,7 @@ public class IHM extends JFrame implements ComponentListener {
 				param.j1_identifiant = popupReseau.identifiant.getText();				
 				Echange ec = new Echange();
 				ec.ajouter("parametres", param);
+				ec.ajouter("terrain", true);
 				com.envoyer(ec);
 			}
 			else{
@@ -524,8 +522,10 @@ public class IHM extends JFrame implements ComponentListener {
 		}
 		if((dataValue = e.get("parametres")) != null) {
 			Parametres params = (Parametres)dataValue;
-			bandeauInfos.setIdentifiant(1,params.j1_identifiant);
-			bandeauInfos.setIdentifiant(2,params.j2_identifiant);			
+			if(params.j1_identifiant != null)
+				bandeauInfos.setIdentifiant(1,params.j1_identifiant);
+			if(params.j2_identifiant != null)
+				bandeauInfos.setIdentifiant(2,params.j2_identifiant);			
 		}
 		if((dataValue = e.get("finTour")) != null) {
 			boutonValidation.setEnabled((boolean)dataValue);

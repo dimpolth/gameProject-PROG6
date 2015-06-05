@@ -16,7 +16,7 @@ import javax.swing.JScrollPane;
 class PopupRegles extends Popup {
 	public PopupRegles(IHM i) {
 		super(new GridBagLayout());
-
+		
 		GridBagConstraints contraintes = new GridBagConstraints();
 		contraintes.gridx = 0;
 
@@ -42,13 +42,5 @@ class PopupRegles extends Popup {
 		retour.addActionListener(new Ecouteur(Ecouteur.Bouton.REGLES_RETOUR, i));
 		add(retour, contraintes);
 
-	}
-
-	public void paintComponent(Graphics g) {
-		super.paintComponent(g);
-		g.setColor(Color.GRAY);
-		g.fillRect(0, 0, getWidth(), getHeight());
-		g.setColor(Color.white);
-		g.fillRect(10, 10, getWidth() - 20, getHeight() - 20);
 	}
 }
