@@ -8,6 +8,7 @@ import java.util.Random;
 import modele.Case;
 
 public class EvenementGraphique implements Runnable, Serializable {
+	public enum FinPartie {VICTOIRE, DEFAITE, AUCUNE};
 	private Case[][] terrain;
 	private Point[] deplacement;
 	private Point[] choixPrise;
@@ -17,6 +18,7 @@ public class EvenementGraphique implements Runnable, Serializable {
 	public static boolean animationEnCours = false;
 	private String bandeauSup,bandeauInf;
 	private int joueurCourant = 0;
+	private FinPartie finPartie = FinPartie.AUCUNE;
 	
 	public EvenementGraphique(Point[] d, Point[] c, ArrayList<Point> p, int[] s,String bS,String bI, ArrayList<Point> chemin) {
 		deplacement = d;
@@ -74,7 +76,6 @@ public class EvenementGraphique implements Runnable, Serializable {
 		
 		if(deplacement != null){
 			tg.deplacer(deplacement[0], deplacement[1]);
-			//;//System.out.println("DEPLACEMENT : "+deplacement[0]+" > "+deplacement[1]);
 		}
 		
 		try {
