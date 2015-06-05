@@ -76,10 +76,18 @@ public class Joueur implements Serializable {
 		ia = new IntelligenceArtificielle(niveau, this, adversaire, t);
 	}
 	
+	/**
+	 * Constructeur par défaut.
+	 */
 	public Joueur() {
 		
 	}
 	
+	/**
+	 * Constructeur par copie.
+	 * @param j
+	 * Jouer à copier.
+	 */
 	public Joueur(Joueur j) {
 		setJoueurID(j.getJoueurID());
 		score = j.getScore();
@@ -88,18 +96,38 @@ public class Joueur implements Serializable {
 		ia = j.ia;
 	}
 
+	/**
+	 * Permet de connaître quels sont les pions du joueur sur le terrain.
+	 * @return
+	 * Type d'occupation sur le Terrain(joueur1 ou joueur2).
+	 */
 	public Case.Etat getJoueurID() {
 		return joueurID;
 	}
 
+	/**
+	 * Permet de modifier les pions du joueur.
+	 * @param joueurID
+	 * Type d'occupation sur le Terrain (joueur1 ou joueur2).
+	 */
 	public void setJoueurID(Case.Etat joueurID) {
 		this.joueurID = joueurID;
 	}
 
+	/**
+	 * Permet de savoir si le joueur est humain.
+	 * @return
+	 * Vrai si le joueur est humain, faux sinon.
+	 */
 	public boolean isJoueurHumain() {
 		return joueurHumain;
 	}
 
+	/**
+	 * Modifie le booléen qui identifie le joueur comme étant humain.
+	 * @param joueurHumain
+	 * Vria si le joueur doit être humain, faux sinon.
+	 */
 	public void setJoueurHumain(boolean joueurHumain) {
 		this.joueurHumain = joueurHumain;
 	}
