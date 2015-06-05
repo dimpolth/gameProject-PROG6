@@ -78,7 +78,8 @@ public class Serveur implements Runnable{
 	
 	}
 	
-	public void envoyer(Echange e, int j){
+	public void envoyer(Object o, int j){
+		Echange e = (Echange)o;
 		if(j >= 1 && j<= 2){
 			joueurs.get(j).envoyer(e);
 			com.envoyer(e);
@@ -111,7 +112,11 @@ public class Serveur implements Runnable{
 	
 	public void terminerConnexion(Connexion c){
 		connexions.remove(c);
+		
+		// Joueur qui s'en va
 		if(joueurs.containsValue(c)){
+			
+			joueurs.remove(c);
 			
 			if(connexions.size() >= 2){
 				Iterator<Connexion>it = connexions.iterator();
@@ -119,11 +124,8 @@ public class Serveur implements Runnable{
 					Connexion con = it.next();
 					
 					if(!joueurs.containsValue(con)){
-						int j;
-						if(joueurs.get(1) == null)
-							j=1;
-						else
-							j=2;
+						
+						int j = (joueurs.get(1) == null) ? 1 : 2;					
 						
 						joueurs.put(j,con);
 						

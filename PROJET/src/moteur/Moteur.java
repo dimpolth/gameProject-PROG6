@@ -300,7 +300,7 @@ public class Moteur {
 		h.ajouterTour(t);
 		ech.vider();
 		ech.ajouter("pionDeselectionne", true);
-		ech.ajouter("annuler", true);
+		ech.ajouter("annuler", false);
 		ech.ajouter("refaire", false);
 		ech.ajouter("finTour", false);
 		com.envoyer(ech);
@@ -665,7 +665,8 @@ public class Moteur {
 		message("bandeauSup", joueurCourant.getNom());
 	}
 
-	public void action(Echange echange, int j) {
+	public void action(Object o, int j) {
+		Echange echange = (Echange)o;
 
 		System.out.println("Action reçue de joueur " + j+" : "+echange.toString());
 
