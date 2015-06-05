@@ -56,6 +56,22 @@ public class EvenementGraphique implements Runnable, Serializable {
 		this.chemin=new ArrayList<Point>();
 	}
 	
+	public EvenementGraphique(String bandeauSup , String bandeauInf , FinPartie b){
+		this.bandeauSup=bandeauSup;
+		this.bandeauInf=bandeauInf;
+		finPartie=b;
+	}
+	
+	public EvenementGraphique(String bandeauSup , String bandeauInf , int i){
+		this.bandeauSup=bandeauSup;
+		this.bandeauInf=bandeauInf;
+		joueurCourant=i;
+	}
+	
+	public EvenementGraphique(int i){
+		joueurCourant=i;
+	}
+	
 	
 	public void lancer(){
 		Thread t = new Thread(this);
