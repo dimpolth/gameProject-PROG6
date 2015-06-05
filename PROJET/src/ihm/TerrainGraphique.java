@@ -32,7 +32,7 @@ public class TerrainGraphique extends JPanel implements ComponentListener {
 	protected Image imgCroix;
 	public IHM ihm;
 	private AnimSelect select;
-	protected LinkedList<CoupGraphique> lCoups = new LinkedList<CoupGraphique>();
+	protected LinkedList<EvenementGraphique> lCoups = new LinkedList<EvenementGraphique>();
 
 	protected long tempsGele;
 	private Dimensions dim;

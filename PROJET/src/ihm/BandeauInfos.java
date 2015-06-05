@@ -97,7 +97,6 @@ class BandeauInfos extends JPanel {
 		add(panJ2, BorderLayout.EAST);
 		add(new JPanel(), BorderLayout.SOUTH);
 		
-	
 	}
 
 	JLabel formater(JLabel lab) {
@@ -115,6 +114,7 @@ class BandeauInfos extends JPanel {
 			j1_identifiant.setText(nom);
 		else
 			j2_identifiant.setText(nom);
+	
 	}
 
 	void setScore(int j, int val) {

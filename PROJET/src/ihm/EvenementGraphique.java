@@ -7,7 +7,7 @@ import java.util.Random;
 
 import modele.Case;
 
-public class CoupGraphique implements Runnable, Serializable {
+public class EvenementGraphique implements Runnable, Serializable {
 	private Case[][] terrain;
 	private Point[] deplacement;
 	private Point[] choixPrise;
@@ -16,8 +16,9 @@ public class CoupGraphique implements Runnable, Serializable {
 	private static TerrainGraphique tg;
 	public static boolean animationEnCours = false;
 	private String bandeauSup,bandeauInf;
+	private int joueurCourant = 0;
 	
-	public CoupGraphique(Point[] d, Point[] c, ArrayList<Point> p, int[] s,String bS,String bI, ArrayList<Point> chemin) {
+	public EvenementGraphique(Point[] d, Point[] c, ArrayList<Point> p, int[] s,String bS,String bI, ArrayList<Point> chemin) {
 		deplacement = d;
 		choixPrise = c;
 		pionsManges = p;
@@ -26,7 +27,7 @@ public class CoupGraphique implements Runnable, Serializable {
 		bandeauInf = bI;
 		this.chemin = chemin;
 	}
-	public CoupGraphique(Point[] d, Point[] c, ArrayList<Point> p, int[] s, ArrayList<Point> chemin) {
+	public EvenementGraphique(Point[] d, Point[] c, ArrayList<Point> p, int[] s, ArrayList<Point> chemin) {
 		deplacement = d;
 		choixPrise = c;
 		pionsManges = p;
@@ -36,7 +37,7 @@ public class CoupGraphique implements Runnable, Serializable {
 		this.chemin = chemin;
 		
 	}
-	public CoupGraphique(){
+	public EvenementGraphique(){
 		terrain=null;
 		deplacement=null;
 		choixPrise=null;
@@ -48,7 +49,7 @@ public class CoupGraphique implements Runnable, Serializable {
 		bandeauInf=null;
 	}
 	
-	public CoupGraphique(Case[][] t){
+	public EvenementGraphique(Case[][] t){
 		terrain = t;
 		this.chemin=new ArrayList<Point>();
 	}
@@ -110,19 +111,23 @@ public class CoupGraphique implements Runnable, Serializable {
 		if(bandeauInf != null){
 		tg.ihm.bandeauInfos.setTexteInf(bandeauInf);}
 		
-		CoupGraphique.animationEnCours = false;
+		EvenementGraphique.animationEnCours = false;
 		
 		if(tg.lCoups.size() != 0) {
 			tg.lCoups.pollFirst().lancer();
+		}
+		
+		if(joueurCourant != 0) {
+			//TODO FROMAGE
 		}
 		
 		
 	}
 	
 	public static void afficherCoups(TerrainGraphique tg){
-		CoupGraphique.tg = tg;
-		if(!CoupGraphique.animationEnCours){
-			CoupGraphique.animationEnCours = true;	
+		EvenementGraphique.tg = tg;
+		if(!EvenementGraphique.animationEnCours){
+			EvenementGraphique.animationEnCours = true;	
 			tg.lCoups.pollFirst().lancer();
 		}
 	}
