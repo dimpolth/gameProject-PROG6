@@ -32,7 +32,7 @@ public class IHM extends JFrame implements ComponentListener {
 	PopupReseau popupReseau;
 	PopupVictoire popupV;
 	TerrainGraphique tg;
-	BandeauInfos bandeauInfos;
+	public BandeauInfos bandeauInfos;
 	Chargement chargement, chargement2;
 	
 	Bouton boutonAnnuler;

@@ -91,7 +91,9 @@ public class Moteur {
 	 * Vrai si un enchaînement de coup est en cours. Faux sinon.
 	 */
 	private boolean tourEnCours;
-	
+	/**
+	 * Liste des points jouables en début de tour (coups obligatoires ou disponibilité de coups libres).
+	 */
 	private ArrayList<Point> listePointDebut;
 	/**
 	 * Coup joué par l'IA.
@@ -329,7 +331,7 @@ public class Moteur {
 
 			}
 		} else if (priseAspi && !prisePercu) {
-			// ;//System.out.println("aspi");
+			//System.out.println("aspi");
 			l = t.manger(joueurCourant, d, pDepart, pArrive, Terrain.ChoixPrise.parAspiration);
 			majScore(l.size());
 			int[] score = { j1.getScore(), j2.getScore() };
@@ -345,7 +347,7 @@ public class Moteur {
 			}
 
 		} else if (!priseAspi && prisePercu) {
-			// ;//System.out.println("percu");
+			//System.out.println("percu");
 			l = t.manger(joueurCourant, d, pDepart, pArrive, Terrain.ChoixPrise.parPercussion);
 			majScore(l.size());
 			int[] score = { j1.getScore(), j2.getScore() };
@@ -386,7 +388,7 @@ public class Moteur {
 		gestionBouton();
 		if (partieTerminee(false)) {
 			e = EtatTour.partieFinie;
-			;//System.out.println("FIN DE PARTIE");
+			//System.out.println("FIN DE PARTIE");
 		} else {
 			// ;//System.out.println("FIN DE TOUR ");
 			gestionEvenementGraphique();
@@ -560,7 +562,6 @@ public class Moteur {
 					selectionPion(jeuIa.getpDepart());
 					selectionDestination(jeuIa.getpArrivee());
 					traceTerrain();
-
 				} while (joueurCourant.IaContinue());
 				finTour();
 			}
@@ -617,13 +618,13 @@ public class Moteur {
 	 */
 	public void actionPoint(Object dataValue) {
 		if (e == EtatTour.selectionPion) {
-			// ;//System.out.println("e : " + e);
+			//System.out.println("e : " + e);
 			selectionPion((Point) dataValue);
 		} else if (e == EtatTour.selectionDestination) {
-			// ;//System.out.println("e : " + e);
+			//System.out.println("e : " + e);
 			selectionDestination((Point) dataValue);
 		} else if (e == EtatTour.attenteChoix) {
-			// ;//System.out.println("e : " + e);
+			//System.out.println("e : " + e);
 			Terrain.Direction d = t.recupereDirection(pDepart, pArrive);
 			ArrayList<Point> l = new ArrayList<Point>();
 			boolean tperc = perc.equals((Point) dataValue);
@@ -875,7 +876,7 @@ public class Moteur {
 			joueurReception = Etat.joueur2;
 
 		if (Communication.enReseau() && trace) {
-			//System.out.println("reception :" + joueurReception);
+			;//System.out.println("reception :" + joueurReception);
 			//System.out.println("courant :" + joueurCourant.getJoueurID());
 			//System.out.println("comparaison "+!joueurCourant.getJoueurID().equals(joueurReception));
 		}

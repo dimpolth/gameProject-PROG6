@@ -135,7 +135,7 @@ public class EvenementGraphique implements Runnable, Serializable {
 		}
 		
 		if(joueurCourant != 0) {
-			//TODO FROMAGE
+			tg.ihm.bandeauInfos.setJoueurActif(joueurCourant);
 		}
 		
 		
