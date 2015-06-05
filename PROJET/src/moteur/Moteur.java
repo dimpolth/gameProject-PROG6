@@ -227,8 +227,10 @@ public class Moteur {
 	public boolean partieTerminee(boolean aucunDeplacement) {
 		ech.vider();
 		if (joueurCourant.scoreNul() || aucunDeplacement) {
+			Joueur gagnant = joueurCourant.recupereJoueurOpposant(joueurCourant, j1, j2, false);
+			Joueur perdant = joueurCourant;
 			System.out.println("FIN DE PARTIE");
-			String BandeauSup = "<html><font color=#FF0000>" + joueurCourant.recupereJoueurOpposant(joueurCourant, j1, j2, false).getNom() + "</font></html>";
+			String BandeauSup = "<html><font color=#FF0000>" + gagnant.getNom() + "</font></html>";
 			String BandeauInf = "<html><font color=#FF0000>a remporté la partie</font></html>";
 			gestionEvenementGraphique(BandeauSup, BandeauInf);
 			com.envoyer(ech);
