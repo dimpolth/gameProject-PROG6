@@ -94,8 +94,10 @@ public class CoupGraphique implements Runnable, Serializable {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		tg.trait = chemin;
-		tg.repaint();
+		if(chemin != null) {
+			tg.trait = chemin;
+			tg.repaint();
+		}
 		
 		if(score != null){
 			tg.ihm.bandeauInfos.setScore(1,score[0]);
