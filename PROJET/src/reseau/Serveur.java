@@ -102,12 +102,29 @@ public class Serveur implements Runnable{
 		}
 	}
 	
+	public void nouveauJoueur(Connexion c){		
+		Echange e = new Echange();
+		Parametres params = new Parametres();
+		
+		if(joueurs.get(1) == null){			
+			joueurs.put(1,c);	
+			params.j1_identifiant = c.identifiant;
+			joueurs.put(1,c);
+		}
+		else{			
+			joueurs.put(2,c);
+			params.j2_identifiant = c.identifiant;
+			joueurs.put(2,c);
+		}		
+	
+		e.ajouter("parametres", params);
+		envoyer(e,0);		
+	}
+	
 	public void nouvelleConnexion(Connexion c){		
 		connexions.add(c);	
-		if(joueurs.size() < 2){
-			if(joueurs.get(1) == null) joueurs.put(1,c);
-			else joueurs.put(2,c)  ;
-		}
+		if(joueurs.size() < 2)
+			nouveauJoueur(c);
 	}
 	
 	public void terminerConnexion(Connexion c){
@@ -125,18 +142,7 @@ public class Serveur implements Runnable{
 					
 					if(!joueurs.containsValue(con)){
 						
-						int j = (joueurs.get(1) == null) ? 1 : 2;					
-						
-						joueurs.put(j,con);
-						
-						Echange e = new Echange();
-						Parametres params = new Parametres();
-						if(j==1)
-							params.j1_identifiant = con.identifiant;
-						else
-							params.j2_identifiant = con.identifiant;
-						e.ajouter("parametres", params);
-						envoyer(e,j);
+						nouveauJoueur(con);
 						break;
 					}
 				}
