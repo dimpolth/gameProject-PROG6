@@ -232,6 +232,24 @@ public class Moteur {
 			System.out.println("FIN DE PARTIE");
 			String BandeauSup = "<html><font color=#FF0000>" + gagnant.getNom() + "</font></html>";
 			String BandeauInf = "<html><font color=#FF0000>a remporté la partie</font></html>";
+			EvenementGraphique cgv = new EvenementGraphique(BandeauSup, BandeauInf, EvenementGraphique.FinPartie.VICTOIRE);
+			EvenementGraphique cgd = new EvenementGraphique(BandeauSup, BandeauInf, EvenementGraphique.FinPartie.DEFAITE);
+			if(com.enReseau()) {
+				ech.ajouter("coup", cgv);
+				com.envoyer(ech, gagnant.getJoueurID().getNum());
+				ech.vider();
+				ech.ajouter("coup", cgd);
+				com.envoyer(ech, perdant.getJoueurID().getNum());
+			} else {
+				if(j1.isJoueurHumain() == j2.isJoueurHumain())
+					gestionEvenementGraphique(BandeauSup, BandeauInf, EvenementGraphique.FinPartie.VICTOIRE);
+				else {
+					if(joueurCourant.isJoueurHumain())
+						gestionEvenementGraphique(BandeauSup, BandeauInf, EvenementGraphique.FinPartie.DEFAITE);
+					else
+						gestionEvenementGraphique(BandeauSup, BandeauInf, EvenementGraphique.FinPartie.VICTOIRE);
+				}
+			}
 			gestionEvenementGraphique(BandeauSup, BandeauInf);
 			com.envoyer(ech);
 			return true;
@@ -508,12 +526,12 @@ public class Moteur {
 	
 	/**
 	 * Surchage de gestion gestionEvenementGraphique pour le cas ou l'on ne met à jour que les bandeaux.
-	 * @param chaine1
-	 * Définie sur quel bandeau ira le message.
-	 * @param chaine2
-	 * Le message à afficher sur le bandeau.
+	 * @param bandeauSup
+	 * Message pour le bandeau supérieur.
+	 * @param bandeauInf
+	 * Message pour le bandeau inférieur.
 	 */
-	void gestionEvenementGraphique(String bandeauSup, String bandeauInf) {
+	public void gestionEvenementGraphique(String bandeauSup, String bandeauInf) {
 		ech.vider();
 		EvenementGraphique cg;
 		if (tourEnCours)
@@ -524,7 +542,16 @@ public class Moteur {
 		com.envoyer(ech);
 	}
 	
-	void gestionEvenementGraphique(String bandeauSup, String bandeauInf,int i) {
+	/**
+	 * Surchage de gestion gestionEvenementGraphique pour le cas ou l'on ne met à jour que les bandeaux et pour transmettre le joueur courant.
+	 * @param bandeauSup
+	 * Message pour le bandeau supérieur.
+	 * @param bandeauInf
+	 * Message pour le bandeau inférieur.
+	 * @param i
+	 * Identifiant du joueur cournat sur le réseau.
+	 */
+	public void gestionEvenementGraphique(String bandeauSup, String bandeauInf, int i) {
 		ech.vider();
 		EvenementGraphique cg;
 		cg = new EvenementGraphique(bandeauSup,bandeauInf,i);
@@ -532,6 +559,23 @@ public class Moteur {
 		com.envoyer(ech);
 	}
 
+	/**
+	 * Surchage de gestion gestionEvenementGraphique pour le cas ou l'on ne met à jour que les bandeaux dans le cas d'une fin de partie.
+	 * @param bandeauSup
+	 * Message pour le bandeau supérieur.
+	 * @param bandeauInf
+	 * Message pour le bandeau inférieur.
+	 * @param fp
+	 * Définit l'animation à afficher.
+	 */
+	public void gestionEvenementGraphique(String bandeauSup, String bandeauInf, EvenementGraphique.FinPartie fp) {
+		ech.vider();
+		EvenementGraphique cg;
+		cg = new EvenementGraphique(bandeauSup, bandeauInf, fp);
+		ech.ajouter("coup", cg);
+		com.envoyer(ech);
+	}
+	
 	/**
 	 * Permet de recalculer les scores des joueurs.
 	 * Utilisée dans les cas de annuler/refaire et lors d'un chargement de partie.
