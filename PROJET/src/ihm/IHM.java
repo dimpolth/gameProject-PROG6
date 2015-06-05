@@ -237,7 +237,7 @@ public class IHM extends JFrame implements ComponentListener {
 				choix[0] = "Quitter"; choix[1]="Annuler";
 			}
 			else{
-				messConfirmation = "";
+				messConfirmation = "Voulez-vous sauvegarder la partie avant de quitter ?";
 				choix[0] = "Oui"; choix[1]="Non";
 			}
 			// Confirmation avant de quitter		
@@ -334,9 +334,10 @@ public class IHM extends JFrame implements ComponentListener {
 		case RESEAU_VALIDER:
 			
 			String errReseau = null;
+			String identifiant = popupReseau.identifiant.getText();;
 			// Nouveau serveur
 			if(popupReseau.etreHote.isSelected()){
-				errReseau = Communication.modeReseau("");
+				errReseau = Communication.modeReseau("",identifiant);
 				if(errReseau == null){
 					
 					// 2 joueurs humain si on lance une partie réseau
@@ -361,7 +362,7 @@ public class IHM extends JFrame implements ComponentListener {
 				String hoteComplet = popupReseau.hote.getText();
 				if(!hoteComplet.equals("")){
 					//;//System.out.println("2");
-					errReseau = Communication.modeReseau(hoteComplet);
+					errReseau = Communication.modeReseau(hoteComplet,identifiant);
 					//;//System.out.println(errReseau);
 				}
 			}
@@ -371,14 +372,7 @@ public class IHM extends JFrame implements ComponentListener {
 				popupB.setVisible(false);
 				setModeReseau(true);
 				popupReseau.message.setText(errReseau);
-				Parametres param = new Parametres();
-				param.j1_identifiant = popupReseau.identifiant.getText();				
-				Echange ec = new Echange();
 				
-				ec.ajouter("parametres", param);
-				ec.ajouter("terrain", true);
-				System.out.println("Doit être envoyé : "+ec.toString());
-				com.envoyer(ec);
 			}
 			else{
 				popupReseau.message.setText(errReseau);
@@ -389,6 +383,10 @@ public class IHM extends JFrame implements ComponentListener {
 		}
 		
 	
+	}
+	
+	public void envoyerIdentifiantReseau(){
+		
 	}
 	
 	public void fenetreChargement(boolean b){
