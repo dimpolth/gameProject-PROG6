@@ -76,7 +76,6 @@ public class Bouton extends JButton implements MouseListener {
 		while (it.hasNext()) {
 			Bouton bt = (Bouton) it.next();
 			bt.setTheme(pTheme);
-
 		}
 
 	}

@@ -9,7 +9,7 @@ import javax.imageio.ImageIO;
 public class Theme {
 
 	public enum Type {
-		STANDARD("standard"), BOIS("bois"), MARBRE("marbre"), SOMBRE("dark");
+		STANDARD("standard"), BOIS("bois"), MARBRE("marbre"), SOMBRE("dark"), COCHON("cochon");
 		public String s;
 		Type(String s) {
 			this.s = s;

@@ -308,6 +308,8 @@ public class IHM extends JFrame implements ComponentListener {
 				theme.setTheme(Theme.Type.MARBRE);
 			else if(popupO.theme.getSelectedItem() == "Sombre")
 				theme.setTheme(Theme.Type.SOMBRE);
+			else if(popupO.theme.getSelectedItem() == "Cochonou")
+				theme.setTheme(Theme.Type.COCHON);
 			
 			if(!Communication.enReseau()){
 				Echange e = new Echange();
@@ -471,9 +473,9 @@ public class IHM extends JFrame implements ComponentListener {
 		Echange e = (Echange)o;
 
 		Object dataValue;
-		if ((dataValue = e.get("terrain")) != null) {
+		/*if ((dataValue = e.get("terrain")) != null) {
 			tg.dessinerTerrain((Case[][]) dataValue);
-		}
+		}*/
 		if ((dataValue = e.get("coup")) != null) {
 			tg.lCoups.addLast((EvenementGraphique) dataValue);
 			EvenementGraphique.afficherCoups(tg);

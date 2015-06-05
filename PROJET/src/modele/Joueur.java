@@ -3,20 +3,50 @@ import java.io.Serializable;
 
 import ia.*;
 import moteur.*;
+/**
+ *Classe contenant tout ce qui définit un joueur. 
+ *Instancie l'IA.
+ */
 public class Joueur implements Serializable {
 	
+	/**
+	 * Définit si le joueur est un humain ou un IA.
+	 */
 	public enum typeJoueur{
 		humain,
 		ordinateur;
 	}
 	
+	/**
+	 * Associe le joueur avec un type d'occupation sur le Terrain.
+	 */
 	private Case.Etat joueurID;
+	/**
+	 * Vrai si le joueur est un humain. Faux sinon.
+	 */
 	private boolean joueurHumain;
+	/**
+	 * Score du joueur. Définit sur [22,0].
+	 */
 	private int score;
+	/**
+	 * Nom du joueur.
+	 */
 	private String nom;
+	/**
+	 * Instance de l'IA si le joueur en est une.
+	 */
 	private IntelligenceArtificielle ia;
 	
-	//Constructeur pour joueur humain
+	/**
+	 * Constructeur pour joueur humain.
+	 * @param joueurID
+	 * Occupation sur le Terrain (j1 ou j2).
+	 * @param joueur
+	 * Type de joueur (humain).
+	 * @param nom
+	 * Nom du joueur donné par les paramètres.
+	 */
 	public Joueur(Case.Etat joueurID, typeJoueur joueur, String nom){
 		this.setJoueurID(joueurID);
 		score = 22;
@@ -25,7 +55,19 @@ public class Joueur implements Serializable {
 		ia = null;
 	}
 	
-	//Constructeur pour joueur ordinateur
+	/**
+	 * Constructeur pour joueur ordinateur
+	 * @param joueurID
+	 * Occupation sur le Terrain (j1 ou j2).
+	 * @param joueur
+	 * Type de joueur (ordinateur).
+	 * @param niveau
+	 * Niveau de l'IA.
+	 * @param adversaire
+	 * Joueur adverse.
+	 * @param t
+	 * Terrain courant transmis par le Moteur.
+	 */
 	public Joueur(Case.Etat joueurID, typeJoueur joueur, IntelligenceArtificielle.difficulteIA niveau, Joueur adversaire, Terrain t){
 		this.setJoueurID(joueurID);
 		score = 22;
