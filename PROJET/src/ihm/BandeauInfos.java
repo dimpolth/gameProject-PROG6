@@ -20,13 +20,14 @@ class BandeauInfos extends JPanel {
 	JLabel j1_identifiant, j1_score,  j2_identifiant, j2_score,
 			texteSup, texteInf;
 	JPanel j1_pion, j2_pion;
+	JPanel panJ1, panJ2;
 
 	BandeauInfos(TerrainGraphique pTg) {
 		super( new BorderLayout(15,15) );
 		tg = pTg;
 		
 		
-		JPanel panJ1 = new JPanel( new BorderLayout() ); 
+		panJ1 = new JPanel( new BorderLayout() ); 
 		j1_pion = new JPanel(){
 			public void paintComponent(Graphics g){
 				g.drawImage(tg.imgPion1, 0, 0, this.getWidth(),this.getWidth(), null);				
@@ -70,7 +71,7 @@ class BandeauInfos extends JPanel {
 		
 		add(panTextes, BorderLayout.CENTER);
 		
-		JPanel panJ2 = new JPanel( new BorderLayout() ); 
+		panJ2 = new JPanel( new BorderLayout() ); 
 		j2_pion = new JPanel(){
 			public void paintComponent(Graphics g){
 				g.drawImage(tg.imgPion2, 0, 0, this.getWidth(),this.getWidth(),  null);				
@@ -97,7 +98,6 @@ class BandeauInfos extends JPanel {
 		add(panJ2, BorderLayout.EAST);
 		add(new JPanel(), BorderLayout.SOUTH);
 		
-	
 	}
 
 	JLabel formater(JLabel lab) {
@@ -115,6 +115,7 @@ class BandeauInfos extends JPanel {
 			j1_identifiant.setText(nom);
 		else
 			j2_identifiant.setText(nom);
+	
 	}
 
 	void setScore(int j, int val) {
@@ -129,6 +130,15 @@ class BandeauInfos extends JPanel {
 	}
 	void setTexteInf(String txt) {
 		texteInf.setText(txt);
+	}
+	public void setJoueurActif(int id) {
+		if(id == 1) {
+			panJ1.setBackground(Color.RED);
+			panJ2.setBackground(Color.LIGHT_GRAY);
+		} else if(id == 2) {
+			panJ1.setBackground(Color.LIGHT_GRAY);
+			panJ2.setBackground(Color.RED);
+		}
 	}
 
 }

@@ -32,7 +32,7 @@ public class IHM extends JFrame implements ComponentListener {
 	PopupReseau popupReseau;
 	PopupVictoire popupV;
 	TerrainGraphique tg;
-	BandeauInfos bandeauInfos;
+	public BandeauInfos bandeauInfos;
 	Chargement chargement, chargement2;
 	
 	Bouton boutonAnnuler;
@@ -266,14 +266,14 @@ public class IHM extends JFrame implements ComponentListener {
 			popupO.setVisible(true);
 			break;
 		case ANNULER:
-			if(!CoupGraphique.animationEnCours){
+			if(!EvenementGraphique.animationEnCours){
 				Echange e1 = new Echange();
 				e1.ajouter("annuler", true);
 				com.envoyer(e1);
 			}
 			break;
 		case REFAIRE:
-			if(!CoupGraphique.animationEnCours){
+			if(!EvenementGraphique.animationEnCours){
 				Echange e2 = new Echange();
 				e2.ajouter("refaire", true);
 				com.envoyer(e2);
@@ -475,8 +475,8 @@ public class IHM extends JFrame implements ComponentListener {
 			tg.dessinerTerrain((Case[][]) dataValue);
 		}
 		if ((dataValue = e.get("coup")) != null) {
-			tg.lCoups.addLast((CoupGraphique) dataValue);
-			CoupGraphique.afficherCoups(tg);
+			tg.lCoups.addLast((EvenementGraphique) dataValue);
+			EvenementGraphique.afficherCoups(tg);
 		}
 
 		/* Gardez cet ordre */
@@ -490,12 +490,12 @@ public class IHM extends JFrame implements ComponentListener {
 
 		}
 		/*
-		 * if((dataValue = e.get("coups")) != null){ LinkedList<CoupGraphique>
-		 * cg = (LinkedList<CoupGraphique>)dataValue;
-		 * java.util.Iterator<CoupGraphique> it = cg.iterator();
+		 * if((dataValue = e.get("coups")) != null){ LinkedList<EvenementGraphique>
+		 * cg = (LinkedList<EvenementGraphique>)dataValue;
+		 * java.util.Iterator<EvenementGraphique> it = cg.iterator();
 		 * while(it.hasNext()){ tg.lCoups.addLast(it.next()); }
 		 * 
-		 * CoupGraphique.afficherCoups(tg); }
+		 * EvenementGraphique.afficherCoups(tg); }
 		 */
 
 		/*

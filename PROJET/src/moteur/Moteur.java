@@ -91,7 +91,9 @@ public class Moteur {
 	 * Vrai si un enchaînement de coup est en cours. Faux sinon.
 	 */
 	private boolean tourEnCours;
-	
+	/**
+	 * Liste des points jouables en début de tour (coups obligatoires ou disponibilité de coups libres).
+	 */
 	private ArrayList<Point> listePointDebut;
 	/**
 	 * Coup joué par l'IA.
@@ -147,7 +149,7 @@ public class Moteur {
 		//message("bandeauSup", joueurCourant.getNom());
 		//message("bandeauInf", "Selection du pion");
 		
-	    gestionCoupGraphique(joueurCourant.getNom(),"Selection du pion");
+	    gestionEvenementGraphique(joueurCourant.getNom(),"Selection du pion");
 		
 	    if (joueurCourant.isJoueurHumain()) {
 			e = EtatTour.selectionPion;
@@ -174,7 +176,7 @@ public class Moteur {
 		//message("bandeauSup", joueurCourant.getNom());
 		//message("bandeauInf", "Selection du pion");
 		
-		gestionCoupGraphique(joueurCourant.getNom(),"Selection du pion");
+		gestionEvenementGraphique(joueurCourant.getNom(),"Selection du pion");
 		
 		if (joueurCourant.isJoueurHumain()) {
 			e = EtatTour.selectionPion;
@@ -226,7 +228,7 @@ public class Moteur {
 			String BandeauSup = "<html><font color=#FF0000>" + joueurCourant.recupereJoueurOpposant(joueurCourant, j1, j2, false).getNom() + "</font></html>";
 			String BandeauInf = "<html><font color=#FF0000>à remporté la partie</font></html>";
 			
-			gestionCoupGraphique(BandeauSup, BandeauInf);
+			gestionEvenementGraphique(BandeauSup, BandeauInf);
 			com.envoyer(ech);
 			return true;
 		} else
@@ -287,7 +289,7 @@ public class Moteur {
 				boolean prisePercu = t.estUnePrisePercussion(pDepart, d);
 				if (t.deplacement(pDepart, pArrive, joueurCourant, h.histoTour) == 0) {
 					Point[] tabPts = { pDepart, pArrive };
-					gestionCoupGraphique(tabPts, null, null, null);
+					gestionEvenementGraphique(tabPts, null, null, null);
 					prise(priseAspi, prisePercu);
 					tourEnCours = true;
 				}
@@ -314,7 +316,7 @@ public class Moteur {
 				Point offP = t.offsetPercussion(d, pArrive);
 				perc = new Point(offP.x + pArrive.x, offP.y + pArrive.y);
 				Point[] tabPts = { aspi, perc };
-				gestionCoupGraphique(null, tabPts, null, null, null, "choisissez votre prise");
+				gestionEvenementGraphique(null, tabPts, null, null, null, "choisissez votre prise");
 				e = EtatTour.attenteChoix;
 				ech.vider();
 				ech.ajouter("finTour", false);
@@ -324,17 +326,17 @@ public class Moteur {
 				majScore(l.size());
 				int[] score = { j1.getScore(), j2.getScore() };
 
-				gestionCoupGraphique(null, null, l, score);
+				gestionEvenementGraphique(null, null, l, score);
 				traceTerrain();
 
 			}
 		} else if (priseAspi && !prisePercu) {
-			// ;//System.out.println("aspi");
+			//System.out.println("aspi");
 			l = t.manger(joueurCourant, d, pDepart, pArrive, Terrain.ChoixPrise.parAspiration);
 			majScore(l.size());
 			int[] score = { j1.getScore(), j2.getScore() };
 
-			gestionCoupGraphique(null, null, l, score);
+			gestionEvenementGraphique(null, null, l, score);
 			traceTerrain();
 
 			if (joueurCourant.isJoueurHumain()) {
@@ -345,12 +347,12 @@ public class Moteur {
 			}
 
 		} else if (!priseAspi && prisePercu) {
-			// ;//System.out.println("percu");
+			//System.out.println("percu");
 			l = t.manger(joueurCourant, d, pDepart, pArrive, Terrain.ChoixPrise.parPercussion);
 			majScore(l.size());
 			int[] score = { j1.getScore(), j2.getScore() };
 
-			gestionCoupGraphique(null, null, l, score);
+			gestionEvenementGraphique(null, null, l, score);
 			traceTerrain();
 			if (joueurCourant.isJoueurHumain()) {
 				testFinTour();
@@ -386,11 +388,11 @@ public class Moteur {
 		gestionBouton();
 		if (partieTerminee(false)) {
 			e = EtatTour.partieFinie;
-			;//System.out.println("FIN DE PARTIE");
+			//System.out.println("FIN DE PARTIE");
 		} else {
 			// ;//System.out.println("FIN DE TOUR ");
-			gestionCoupGraphique();
-			gestionCoupGraphique(joueurCourant.getNom(),"Selection du pion");
+			gestionEvenementGraphique();
+			gestionEvenementGraphique(joueurCourant.getNom(),"Selection du pion");
 			if (joueurCourant.isJoueurHumain()) {
 				e = EtatTour.selectionPion;
 			} else {
@@ -409,7 +411,7 @@ public class Moteur {
 			finTour();
 		} else {
 			e = EtatTour.selectionDestination;
-			gestionCoupGraphique(null, "Selection destination");
+			gestionEvenementGraphique(null, "Selection destination");
 		}
 	}
 	
@@ -448,15 +450,15 @@ public class Moteur {
 	 * @param score
 	 * Score des joueurs mis à jour en fonctions des pions mangés.
 	 */
-	public void gestionCoupGraphique(Point[] deplacement, Point[] choixPrise, ArrayList<Point> pionsManges, int[] score) {
+	public void gestionEvenementGraphique(Point[] deplacement, Point[] choixPrise, ArrayList<Point> pionsManges, int[] score) {
 		ech.vider();
-		CoupGraphique cg = new CoupGraphique(deplacement, choixPrise, pionsManges, score, calculChemin());
+		EvenementGraphique cg = new EvenementGraphique(deplacement, choixPrise, pionsManges, score, calculChemin());
 		ech.ajouter("coup", cg);
 		com.envoyer(ech);
 	}
 
 	/**
-	 * Surchage de gestionCoupGraphique pour le cas ou on coup inclut un changement de bandeau.
+	 * Surchage de gestionEvenementGraphique pour le cas ou on coup inclut un changement de bandeau.
 	 * @param deplacement
 	 * Tableau de deux Points contenant le point de départ et le point d'arrivé.
 	 * Peut être à null en fonction de la situation.
@@ -472,37 +474,37 @@ public class Moteur {
 	 * @param chaine2
 	 * Le message à afficher sur le bandeau.
 	 */
-	public void gestionCoupGraphique(Point[] deplacement, Point[] choixPrise, ArrayList<Point> pionsManges, int[] score, String chaine1, String chaine2) {
+	public void gestionEvenementGraphique(Point[] deplacement, Point[] choixPrise, ArrayList<Point> pionsManges, int[] score, String chaine1, String chaine2) {
 		ech.vider();
-		CoupGraphique cg = new CoupGraphique(deplacement, choixPrise, pionsManges, score, chaine1, chaine2, calculChemin());
+		EvenementGraphique cg = new EvenementGraphique(deplacement, choixPrise, pionsManges, score, chaine1, chaine2, calculChemin());
 		ech.ajouter("coup", cg);
 		com.envoyer(ech);
 	}
 
 	/**
-	 * Surchage de gestionCoupGraphique pour le cas ou l'on envoie un terrain uniquement.
+	 * Surchage de gestionEvenementGraphique pour le cas ou l'on envoie un terrain uniquement.
 	 */
-	public void gestionCoupGraphique() {
+	public void gestionEvenementGraphique() {
 		ech.vider();
-		CoupGraphique cg = new CoupGraphique();
+		EvenementGraphique cg = new EvenementGraphique();
 		ech.ajouter("coup", cg);
 		com.envoyer(ech);
 	}
 
-	void gestionCoupGraphique(String bandeauSup, String bandeauInf) {
+	void gestionEvenementGraphique(String bandeauSup, String bandeauInf) {
 	/**
-	 * Surchage de gestion gestionCoupGraphique pour le cas ou l'on ne met à jour que les bandeaux.
+	 * Surchage de gestion gestionEvenementGraphique pour le cas ou l'on ne met à jour que les bandeaux.
 	 * @param chaine1
 	 * Définie sur quel bandeau ira le message.
 	 * @param chaine2
 	 * Le message à afficher sur le bandeau.
 	 */
 		ech.vider();
-		CoupGraphique cg;
+		EvenementGraphique cg;
 		if (tourEnCours)
-			cg= new CoupGraphique(null, null, null, null, bandeauSup, bandeauInf, calculChemin());
+			cg= new EvenementGraphique(null, null, null, null, bandeauSup, bandeauInf, calculChemin());
 		else 
-			cg= new CoupGraphique(null, null, null, null, bandeauSup, bandeauInf, null);
+			cg= new EvenementGraphique(null, null, null, null, bandeauSup, bandeauInf, null);
 		ech.ajouter("coup", cg);
 		com.envoyer(ech);
 	}
@@ -551,7 +553,6 @@ public class Moteur {
 					selectionPion(jeuIa.getpDepart());
 					selectionDestination(jeuIa.getpArrivee());
 					traceTerrain();
-
 				} while (joueurCourant.IaContinue());
 				finTour();
 			}
@@ -608,13 +609,13 @@ public class Moteur {
 	 */
 	public void actionPoint(Object dataValue) {
 		if (e == EtatTour.selectionPion) {
-			// ;//System.out.println("e : " + e);
+			//System.out.println("e : " + e);
 			selectionPion((Point) dataValue);
 		} else if (e == EtatTour.selectionDestination) {
-			// ;//System.out.println("e : " + e);
+			//System.out.println("e : " + e);
 			selectionDestination((Point) dataValue);
 		} else if (e == EtatTour.attenteChoix) {
-			// ;//System.out.println("e : " + e);
+			//System.out.println("e : " + e);
 			Terrain.Direction d = t.recupereDirection(pDepart, pArrive);
 			ArrayList<Point> l = new ArrayList<Point>();
 			boolean tperc = perc.equals((Point) dataValue);
@@ -627,7 +628,7 @@ public class Moteur {
 				}
 				majScore(l.size());
 				int[] score = { j1.getScore(), j2.getScore() };
-				gestionCoupGraphique(null, null, l, score);
+				gestionEvenementGraphique(null, null, l, score);
 				ech.vider();
 				ech.ajouter("finTour", true);
 				com.envoyer(ech,joueurCourant.getJoueurID().getNum());
@@ -866,7 +867,7 @@ public class Moteur {
 			joueurReception = Etat.joueur2;
 
 		if (Communication.enReseau() && trace) {
-			//System.out.println("reception :" + joueurReception);
+			;//System.out.println("reception :" + joueurReception);
 			//System.out.println("courant :" + joueurCourant.getJoueurID());
 			//System.out.println("comparaison "+!joueurCourant.getJoueurID().equals(joueurReception));
 		}

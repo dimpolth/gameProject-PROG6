@@ -18,14 +18,14 @@ import javax.swing.JEditorPane;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.border.EmptyBorder;
 
 
 @SuppressWarnings("serial")
 class PopupRegles extends Popup {
 	public PopupRegles(IHM i) {
 		super(new BorderLayout());
-		GridBagConstraints contraintes = new GridBagConstraints();
-
+		
 		JEditorPane regles = new JEditorPane();		
 		regles.setAutoscrolls(true);
 		regles.setContentType("text/html");
@@ -35,12 +35,15 @@ class PopupRegles extends Popup {
 		
 		JScrollPane scrollPane = new JScrollPane(regles);	
 		regles.setSize(new Dimension(0,1000));
+		scrollPane.setBorder(new EmptyBorder(25, 25, 0, 25));
+		scrollPane.setOpaque(false);
 		add(scrollPane, BorderLayout.CENTER);
 
-		Bouton retour = new Bouton("Retour au menu");
+		Bouton retour = new Bouton("Retour");
 		retour.addActionListener(new Ecouteur(Ecouteur.Bouton.REGLES_RETOUR, i));
 		JPanel pRetour = new JPanel();
 		pRetour.add(retour);
+		pRetour.setOpaque(false);
 		add(pRetour, BorderLayout.SOUTH);
 	}
 	public String lireFichier_Regle(){
