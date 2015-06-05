@@ -81,6 +81,9 @@ public class TerrainGraphique extends JPanel implements ComponentListener {
 
 	public void dessinerTerrain(Case[][] c) {
 
+		deselectionner();
+		cacherTrait();
+		
 		for (int i = 0; i < 5; i++) {
 			for (int j = 0; j < 9; j++) {
 				pions[i][j].setCouleur(c[i][j].getOccupation());

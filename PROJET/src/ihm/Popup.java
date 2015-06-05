@@ -14,17 +14,16 @@ public abstract class Popup extends JPanel {
 	
 	public Popup() {
 		super();
-		try {
-			img = ImageIO.read(getClass().getResource("/images/themes/bois/fondMenu.png"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public void paintComponent(Graphics g) {
 	}
 	public Popup(LayoutManager l) {
 		super(l);
+	}
+	
+	public void paintComponent(Graphics g) {
+		g.drawImage(img, 0, 0, getWidth(), getHeight(), null);
+		if(img == null) {
+			
+		}
 	}
 	
 	public void setImage(Image i) {
