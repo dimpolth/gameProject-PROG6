@@ -225,6 +225,8 @@ public class IHM extends JFrame implements ComponentListener {
 			break;
 		case RECOMMENCER:
 			lancer();
+			popupM.setVisible(false);
+			popupB.setVisible(false);
 			break;
 		case QUITTER:
 			String messConfirmation;
@@ -301,10 +303,12 @@ public class IHM extends JFrame implements ComponentListener {
 				theme.setTheme(Theme.Type.MARBRE);
 			else if(popupO.theme.getSelectedItem() == "Sombre")
 				theme.setTheme(Theme.Type.SOMBRE);
-
-			Echange e = new Echange();
-			e.ajouter("parametres", params);
-			com.envoyer(e);
+			
+			if(!Communication.enReseau()){
+				Echange e = new Echange();
+				e.ajouter("parametres", params);
+				com.envoyer(e);
+			}
 			
 			popupO.setVisible(false);
 			popupB.setVisible(false);
@@ -333,8 +337,7 @@ public class IHM extends JFrame implements ComponentListener {
 					param.j1_type = Parametres.NiveauJoueur.HUMAIN;
 					param.j2_type = Parametres.NiveauJoueur.HUMAIN;
 					Echange ec = new Echange();
-					ec.ajouter("nouvellePartie", true);
-					ec.ajouter("parametres", param);					
+					ec.ajouter("nouvellePartie", true);					
 					com.envoyer(ec);					
 					
 					
@@ -365,6 +368,7 @@ public class IHM extends JFrame implements ComponentListener {
 				param.j1_identifiant = popupReseau.identifiant.getText();				
 				Echange ec = new Echange();
 				ec.ajouter("parametres", param);
+				ec.ajouter("terrain", true);
 				com.envoyer(ec);
 			}
 			else{
