@@ -55,12 +55,4 @@ class PopupMenu extends Popup {
 		boutonMenuQuitter.addActionListener(new Ecouteur(Ecouteur.Bouton.QUITTER, i));
 		add(boutonMenuQuitter, contraintes);
 	}
-
-	public void paintComponent(Graphics g) {
-		super.paintComponent(g);
-		g.setColor(Color.GRAY);
-		g.fillRect(0, 0, getWidth(), getHeight());
-		g.setColor(Color.white);
-		g.fillRect(10, 10, getWidth() - 20, getHeight() - 20);
-	}
 }

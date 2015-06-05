@@ -32,7 +32,7 @@ public class TerrainGraphique extends JPanel implements ComponentListener {
 	protected Image imgCroix;
 	public IHM ihm;
 	private AnimSelect select;
-	protected LinkedList<CoupGraphique> lCoups = new LinkedList<CoupGraphique>();
+	protected LinkedList<EvenementGraphique> lCoups = new LinkedList<EvenementGraphique>();
 
 	protected long tempsGele;
 	private Dimensions dim;
@@ -81,6 +81,9 @@ public class TerrainGraphique extends JPanel implements ComponentListener {
 
 	public void dessinerTerrain(Case[][] c) {
 
+		deselectionner();
+		cacherTrait();
+		
 		for (int i = 0; i < 5; i++) {
 			for (int j = 0; j < 9; j++) {
 				pions[i][j].setCouleur(c[i][j].getOccupation());
