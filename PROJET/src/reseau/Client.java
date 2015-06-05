@@ -24,12 +24,15 @@ class Client implements Runnable{
 		
 		host = pHost;
 		// On récupère le nom de la machine
+		final InetAddress addr;
 		try {
-			final InetAddress addr = InetAddress.getLocalHost();			
+			addr = InetAddress.getLocalHost();			
 		}
 		catch (final Exception e) {
 			return false;
 		}
+		
+		//System.out.println(addr.toString());
 		
 		String[] hostInfos = host.split(":");
 		if(hostInfos[1] == null)
@@ -86,7 +89,7 @@ class Client implements Runnable{
 				try {
 					Echange retour = (Echange)this.ois.readObject();
 					
-					com.recevoir(retour);
+					com.recevoir(retour,0);
 				}
 				catch (Exception ex) {
 				}

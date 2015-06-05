@@ -13,7 +13,7 @@ import javax.swing.JScrollPane;
 
 
 @SuppressWarnings("serial")
-class PopupRegles extends JPanel {
+class PopupRegles extends Popup {
 	public PopupRegles(IHM i) {
 		super(new GridBagLayout());
 
@@ -45,6 +45,7 @@ class PopupRegles extends JPanel {
 	}
 
 	public void paintComponent(Graphics g) {
+		super.paintComponent(g);
 		g.setColor(Color.GRAY);
 		g.fillRect(0, 0, getWidth(), getHeight());
 		g.setColor(Color.white);
