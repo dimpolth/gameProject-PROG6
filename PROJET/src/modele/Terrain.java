@@ -117,27 +117,27 @@ public class Terrain implements Serializable {
 			this.tableau[4][5].setOccupation(Case.Etat.joueur2);
 			this.tableau[4][6].setOccupation(Case.Etat.joueur2);
 			break;
-			
-			case 7 :
-				this.tableau[1][1].setOccupation(Case.Etat.joueur1);
-				this.tableau[1][2].setOccupation(Case.Etat.joueur2);
+
+		case 7:
+			this.tableau[1][1].setOccupation(Case.Etat.joueur1);
+			this.tableau[1][2].setOccupation(Case.Etat.joueur2);
 			break;
-			
-			case 8 : // petit terrain équivalent pour simulations plus rapides
-			for(int i = 0; i < 5; i++)
-				for(int j = 0; j < 5; j++){
-					if(i == 0 || i == 1)
-						this.tableau[i][j+2].setOccupation(Case.Etat.joueur1);
-					else 
-						this.tableau[i][j+2].setOccupation(Case.Etat.joueur2);
+
+		case 8: // petit terrain équivalent pour simulations plus rapides
+			for (int i = 0; i < 5; i++)
+				for (int j = 0; j < 5; j++) {
+					if (i == 0 || i == 1)
+						this.tableau[i][j + 2].setOccupation(Case.Etat.joueur1);
+					else
+						this.tableau[i][j + 2].setOccupation(Case.Etat.joueur2);
 
 				}
-			
+
 			this.tableau[2][2].setOccupation(Case.Etat.joueur1);
 			this.tableau[2][4].setOccupation(Case.Etat.vide);
 			this.tableau[2][6].setOccupation(Case.Etat.joueur1);
 			break;
-			
+
 		case 9:
 			this.tableau[1][1].setOccupation(Case.Etat.joueur1);
 			this.tableau[1][2].setOccupation(Case.Etat.joueur2);
@@ -218,16 +218,7 @@ public class Terrain implements Serializable {
 
 			} else {
 
-				ArrayList<Point> l = tableau[depart.x][depart.y].getSucc(); // on
-																			// regarde
-																			// si
-																			// la
-																			// case
-																			// d'arrivée
-																			// est
-																			// bien
-																			// un
-																			// successeur
+				ArrayList<Point> l = tableau[depart.x][depart.y].getSucc(); // on regarde si la case d'arrivée est bien un successeur
 
 				for (int it = 0; it < l.size(); it++) {
 					Point p = l.get(it);
@@ -244,7 +235,6 @@ public class Terrain implements Serializable {
 
 	public Direction recupereDirection(Point depart, Point arrive) {
 		Direction dir = null;
-
 		if ((arrive.x == depart.x - 1) && (arrive.y == depart.y - 1))
 			dir = Direction.hautGauche;
 		if ((arrive.x == depart.x - 1) && (arrive.y == depart.y))
@@ -573,34 +563,32 @@ public class Terrain implements Serializable {
 		return reponse;
 	}
 
-	
-	public ArrayList<Coup> coupsObligatoires(Joueur joueurCourant){
+	public ArrayList<Coup> coupsObligatoires(Joueur joueurCourant) {
 		ArrayList<Coup> listeCoupsRes = new ArrayList<Coup>();
 		ArrayList<Point> listePointsDep = this.listePionsJouables(joueurCourant, null), listeSuc;
 		Iterator<Point> itDepart, itSuc;
 		Point pDepTemp, pArrTemp;
 		Direction dTemp;
-		
+
 		itDepart = listePointsDep.iterator();
-		
-		while(itDepart.hasNext()){
+
+		while (itDepart.hasNext()) {
 			pDepTemp = itDepart.next();
 			listeSuc = this.tableau[pDepTemp.x][pDepTemp.y].succ;
 			itSuc = listeSuc.iterator();
-			
-			while(itSuc.hasNext()){
+
+			while (itSuc.hasNext()) {
 				pArrTemp = itSuc.next();
-				
-				dTemp = recupereDirection(pDepTemp,pArrTemp);
-				
-				if ((estUnePriseAspiration(pDepTemp,dTemp) || estUnePrisePercussion(pDepTemp, dTemp)) && (tableau[pArrTemp.x][pArrTemp.y].getOccupation() == Case.Etat.vide))
-					listeCoupsRes.add(new Coup((Point) pDepTemp.clone(),(Point) pArrTemp.clone()));
+
+				dTemp = recupereDirection(pDepTemp, pArrTemp);
+
+				if ((estUnePriseAspiration(pDepTemp, dTemp) || estUnePrisePercussion(pDepTemp, dTemp)) && (tableau[pArrTemp.x][pArrTemp.y].getOccupation() == Case.Etat.vide))
+					listeCoupsRes.add(new Coup((Point) pDepTemp.clone(), (Point) pArrTemp.clone()));
 			}
 		}
-		
+
 		return listeCoupsRes;
 	}
-	
 
 	/**
 	 * Détermine quels sont les déplacements possibles
