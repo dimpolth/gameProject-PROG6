@@ -136,8 +136,8 @@ class BandeauInfos extends JPanel {
 			panJ1.setBackground(Color.RED);
 			panJ2.setBackground(Color.LIGHT_GRAY);
 		} else if(id == 2) {
-			panJ1.setBackground(Color.RED);
-			panJ2.setBackground(Color.LIGHT_GRAY);
+			panJ1.setBackground(Color.LIGHT_GRAY);
+			panJ2.setBackground(Color.RED);
 		}
 	}
 
