@@ -12,4 +12,4 @@ L'équipe est composée de 6 étudiants, et est supervisée par un enseignant tu
 * Mathieu Courbis
 * Maxence Ginet
 * Maxime Duplan
-* Trung Nguyen
+* Trung Minh Nguyễn
