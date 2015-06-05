@@ -153,6 +153,7 @@ public class IHM extends JFrame implements ComponentListener {
         Dimension dFen = screen.getScreenSize();
 		setLocation(dFen.width/2-getSize().width/2,dFen.height/2-getSize().height/2);
 		
+		setSize( new Dimension(800, 600) );
 		fenetreChargement(false);
 		setVisible(true);
 		
@@ -307,6 +308,8 @@ public class IHM extends JFrame implements ComponentListener {
 				theme.setTheme(Theme.Type.MARBRE);
 			else if(popupO.theme.getSelectedItem() == "Sombre")
 				theme.setTheme(Theme.Type.SOMBRE);
+			else if(popupO.theme.getSelectedItem() == "Cochonou")
+				theme.setTheme(Theme.Type.COCHON);
 			
 			if(!Communication.enReseau()){
 				Echange e = new Echange();
@@ -371,8 +374,10 @@ public class IHM extends JFrame implements ComponentListener {
 				Parametres param = new Parametres();
 				param.j1_identifiant = popupReseau.identifiant.getText();				
 				Echange ec = new Echange();
+				
 				ec.ajouter("parametres", param);
 				ec.ajouter("terrain", true);
+				System.out.println("Doit être envoyé : "+ec.toString());
 				com.envoyer(ec);
 			}
 			else{
@@ -468,9 +473,9 @@ public class IHM extends JFrame implements ComponentListener {
 		Echange e = (Echange)o;
 
 		Object dataValue;
-		if ((dataValue = e.get("terrain")) != null) {
+		/*if ((dataValue = e.get("terrain")) != null) {
 			tg.dessinerTerrain((Case[][]) dataValue);
-		}
+		}*/
 		if ((dataValue = e.get("coup")) != null) {
 			tg.lCoups.addLast((EvenementGraphique) dataValue);
 			EvenementGraphique.afficherCoups(tg);
