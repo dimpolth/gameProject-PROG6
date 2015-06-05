@@ -31,6 +31,17 @@ public class Connexion implements Runnable{
 			ois = new ObjectInputStream(socket.getInputStream());
 			oos = new ObjectOutputStream(socket.getOutputStream());
 			
+			// Premier envoi = identifiant
+			Echange ech = (Echange)ois.readObject();
+			if(ech.get("parametres") != null){
+				Parametres params =(Parametres)ech.get("parametres");
+				if(params.j1_identifiant != null){
+					identifiant = params.j1_identifiant;
+					System.out.println("MON IDENTIFIANT : "+identifiant);
+					ech.infos.clear();
+				}
+			}
+			
 			Thread t1 = new Thread(this, "envoi");
 			t1.start();
 
@@ -92,13 +103,7 @@ public class Connexion implements Runnable{
 						else if(serveur.joueurs.get(2).equals(this))
 							j=2;
 						
-						if(ech.get("parametres") != null){
-							Parametres params =(Parametres)ech.get("parametres");
-							if(params.j1_identifiant != null){
-								identifiant = params.j1_identifiant;
-								ech.infos.remove("parametres");
-							}
-						}
+						
 						
 						serveur.com.recevoir(ech,j);					
 						
