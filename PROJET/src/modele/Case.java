@@ -5,10 +5,19 @@ import java.util.*;
 
 public class Case implements Serializable {
 	public enum Etat {
-	joueur1,
-	joueur2,
-	vide;
+		joueur1(1),
+		joueur2(2),
+		vide(0);
+		
+		int entier;
+		Etat(int i){
+			entier=i;
+		}
+		public int getNum(){
+			return entier;
+		}
 	}
+	
 	
 	public ArrayList<Point> succ;
 	public Etat occupation;

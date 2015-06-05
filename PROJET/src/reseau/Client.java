@@ -32,11 +32,11 @@ class Client implements Runnable{
 			return false;
 		}
 		
-		//System.out.println(addr.toString());
+		//;//System.out.println(addr.toString());
 		
 		String[] hostInfos = host.split(":");
 		if(hostInfos[1] == null)
-			System.out.println("Pas de port");
+			;//System.out.println("Pas de port");
 		
 		
 		int port = Integer.valueOf(hostInfos[1]);
@@ -69,9 +69,12 @@ class Client implements Runnable{
 	}
 	
 	// ENVOYER UNE INFORMATION VERS LE SERVEUR
-	public void envoyer(Echange e) {
+	public void envoyer(Object o) {
+		Echange e = (Echange)o;
 		try {
-			oos.writeObject(e.clone());
+			e = e.clone();
+			;//System.out.println("CLIENT : ENVOYER : "+e.toString());
+			oos.writeObject(e);
 		}
 		catch (Exception ex) {
 		}
@@ -85,7 +88,7 @@ class Client implements Runnable{
 			
 			while (true) {
 				
-				// System.out.println("boucle");
+				// ;//System.out.println("boucle");
 				try {
 					Echange retour = (Echange)this.ois.readObject();
 					

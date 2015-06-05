@@ -73,7 +73,7 @@ public class CoupGraphique implements Runnable, Serializable {
 		
 		if(deplacement != null){
 			tg.deplacer(deplacement[0], deplacement[1]);
-			//System.out.println("DEPLACEMENT : "+deplacement[0]+" > "+deplacement[1]);
+			//;//System.out.println("DEPLACEMENT : "+deplacement[0]+" > "+deplacement[1]);
 		}
 		
 		try {

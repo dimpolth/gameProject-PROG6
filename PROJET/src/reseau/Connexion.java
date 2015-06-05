@@ -6,9 +6,13 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
+import modele.Parametres;
+
 public class Connexion implements Runnable{
 	
 	private Serveur serveur;
+	
+	protected String identifiant;
 	
 	// Socket connecté au joueur
 	private Socket socket;
@@ -27,12 +31,23 @@ public class Connexion implements Runnable{
 			ois = new ObjectInputStream(socket.getInputStream());
 			oos = new ObjectOutputStream(socket.getOutputStream());
 			
+			// Premier envoi = identifiant
+			Echange ech = (Echange)ois.readObject();
+			if(ech.get("parametres") != null){
+				Parametres params =(Parametres)ech.get("parametres");
+				if(params.j1_identifiant != null){
+					identifiant = params.j1_identifiant;
+					System.out.println("MON IDENTIFIANT : "+identifiant);
+					ech.infos.clear();
+				}
+			}
+			
 			Thread t1 = new Thread(this, "envoi");
 			t1.start();
 
 			Thread t2 = new Thread(this, "recep");
 			t2.start();
-			System.out.println("Une connexion chez le serveur");
+			
 		} catch (Exception e) {
 		}
 		
@@ -40,11 +55,11 @@ public class Connexion implements Runnable{
 	}
 	public void envoyer(Echange e){
 		try {			
-			//System.out.println("SERVER ENVOYER : "+((Echange) e).toString() );
+			//;//System.out.println("SERVER ENVOYER : "+((Echange) e).toString() );
 			oos.writeObject(e.clone());	
 			
 		} catch (IOException ioe) {
-			ioe.printStackTrace();
+			serveur.terminerConnexion(this);
 		}
 	}
 
@@ -75,24 +90,33 @@ public class Connexion implements Runnable{
 			else if (currentTh.getName().equals("recep")) {
 				
 				
-				try {					
-					Echange recu = (Echange)ois.readObject();
-					//String e2 = (String)ois.readObject();
-					//System.err.println("Reception d'une donnée cliente : "+e2);
-					//Object e3 = ois.readObject();
+				try {				
+					Object recu = ois.readObject();		
 					
-					//System.err.println("Reception d'une donnée cliente : "+((Echange)e3).infos.size());
-					//System.out.println("Reception d'une donnée cliente sur le serveur : "+recu.infos.size());
+					if(recu instanceof Echange){
+						
+						Echange ech = (Echange)recu;					
+						
+						int j = 0;
+						if(serveur.joueurs.get(1).equals(this))
+							j=1;
+						else if(serveur.joueurs.get(2).equals(this))
+							j=2;
+						
+						
+						
+						serveur.com.recevoir(ech,j);					
+						
+					}
+					else{
+						String ordre = (String)recu;
+						
+						if(ordre.equals("/quit")){
+							serveur.terminerConnexion(this);
+						}
+					}
 					
-					int j = 0;
-					if(serveur.joueurs.get(1).equals(this))
-						j=1;
-					else if(serveur.joueurs.get(2).equals(this))
-						j=2;
 					
-					serveur.com.recevoir(recu,j);
-					
-					//System.out.println("Reception d'une donnée cliente sur le serveur : TRAITE");
 					
 				} catch (Exception ex) {
 				}				

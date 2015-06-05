@@ -50,7 +50,7 @@ public class Communication {
 					Serveur s = new Serveur( Communication.canaux[ Communication.MOTEUR ] );
 					int port = s.demarrer();
 					host = "127.0.0.1:"+port;
-					System.out.println("HOST : "+host);
+					;//System.out.println("HOST : "+host);
 					if(port == 0) return "Aucun port disponible pour ouvrir une connexion.";
 					
 					Communication.canaux[ Communication.MOTEUR ].serveur = s;
@@ -94,21 +94,22 @@ public class Communication {
 		return null;
 	}
 	
-	public void envoyer( Echange e ){
+	public void envoyer( Object e ){
 		envoyer(e,0);
 	}
 	
-	public void envoyer(Echange e, int j){
+	public void envoyer(Object e, int j){
 		
-		//System.out.println(""+canaux_nom[loc]+" : envoyer -> "+e.toString());
+		//;//System.out.println(""+canaux_nom[loc]+" : envoyer -> "+e.toString());
 		
-		if(e.infos.size() == 0)
+		if(e instanceof Echange && ((Echange)e).infos.size() == 0)
 			return;
 				
 		if(loc == Communication.IHM && !reseau){
 			Communication.canaux[ Communication.MOTEUR ].recevoir(e,0);			
 		}
 		else if(loc == Communication.IHM && reseau){	
+			;//System.out.println("COMMUNICATION IHM : ENVOYER ");
 			Communication.canaux[ Communication.IHM ].client.envoyer(e);			
 		}
 		else if(loc == Communication.MOTEUR && !reseau){
@@ -124,8 +125,8 @@ public class Communication {
 		
 	}
 	
-	void recevoir(Echange e, int j){		
-		//System.out.println(""+canaux_nom[loc]+" : recevoir <- "+e.toString());
+	void recevoir(Object e, int j){		
+		//;//System.out.println(""+canaux_nom[loc]+" : recevoir <- "+e.toString());
 		if(loc == Communication.IHM){
 			ihm.notifier(e);			
 		}

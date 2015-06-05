@@ -8,7 +8,7 @@ import javax.swing.JPanel;
 
 
 @SuppressWarnings("serial")
-class PopupBloquant extends JPanel {
+class PopupBloquant extends Popup {
 	public PopupBloquant(Color c) {
 		super();
 		setBackground(c);
@@ -18,8 +18,6 @@ class PopupBloquant extends JPanel {
 	}
 
 	public void paintComponent(Graphics g) {
-		g.setColor(getBackground());
-		g.fillRect(0, 0, getWidth(), getHeight());
 		super.paintComponent(g);
 	}
 }

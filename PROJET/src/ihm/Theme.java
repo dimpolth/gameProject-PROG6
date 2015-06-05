@@ -8,7 +8,7 @@ import javax.imageio.ImageIO;
 public class Theme {
 
 	public enum Type {
-		BOIS("bois"), MARBRE("marbre");
+		STANDARD("standard"), BOIS("bois"), MARBRE("marbre"), SOMBRE("dark");
 
 		public String s;
 

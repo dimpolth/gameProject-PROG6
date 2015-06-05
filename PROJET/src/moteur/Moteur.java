@@ -126,7 +126,8 @@ public class Moteur {
 	public void init() {
 		t = new Terrain();
 
-		// t.TerrainTest(8);
+		//t.TerrainTest(11);
+		
 
 		h = new Historique();
 		h.ajouterTour(t);
@@ -137,8 +138,11 @@ public class Moteur {
 		// "Joueur 2");
 		// j1 = new Joueur(Case.Etat.joueur1, Joueur.typeJoueur.ordinateur,
 		// IntelligenceArtificielle.difficulteIA.facile, j2, this);
-		j2 = new Joueur(Case.Etat.joueur2, Joueur.typeJoueur.ordinateur, IntelligenceArtificielle.difficulteIA.facile, j1, t);
+		j2 = new Joueur(Case.Etat.joueur2, Joueur.typeJoueur.ordinateur, IntelligenceArtificielle.difficulteIA.normal, j1, t);
 		joueurCourant = j1;
+		
+		//calculerScore();
+		
 		message("bandeauSup", joueurCourant.getNom());
 		message("bandeauInf", "Selection du pion");
 		if (joueurCourant.isJoueurHumain()) {
@@ -202,6 +206,7 @@ public class Moteur {
 	 */
 	public void selectionPion(Point p) {
 		tourEnCours = false;
+		
 		if (t.getCase(p.x, p.y).getOccupation() != joueurCourant.getJoueurID()) {
 		} else {
 			listePointDebut = t.listePionsJouables(joueurCourant, null);
@@ -211,6 +216,7 @@ public class Moteur {
 				pDepart = p;
 				if (joueurCourant.isJoueurHumain()) {
 					ech.vider();
+					;//System.out.println("ON est passé a selection direction");
 					ech.ajouter("pionSelectionne", pDepart);
 					com.envoyer(ech);
 				}
@@ -269,7 +275,7 @@ public class Moteur {
 		if (priseAspi && prisePercu) {
 			Terrain.ChoixPrise choix;
 			if (joueurCourant.isJoueurHumain()) {
-				System.out.println("Choix");
+				;//System.out.println("Choix");
 				Point offA = t.offsetAspiration(d, pDepart);
 				aspi = new Point(offA.x + pDepart.x, offA.y + pDepart.y);
 				Point offP = t.offsetPercussion(d, pArrive);
@@ -288,7 +294,7 @@ public class Moteur {
 
 			}
 		} else if (priseAspi && !prisePercu) {
-			// System.out.println("aspi");
+			// ;//System.out.println("aspi");
 			l = t.manger(joueurCourant, d, pDepart, pArrive, Terrain.ChoixPrise.parAspiration);
 			majScore(l.size());
 			int[] score = { j1.getScore(), j2.getScore() };
@@ -304,7 +310,7 @@ public class Moteur {
 			}
 
 		} else if (!priseAspi && prisePercu) {
-			// System.out.println("percu");
+			// ;//System.out.println("percu");
 			l = t.manger(joueurCourant, d, pDepart, pArrive, Terrain.ChoixPrise.parPercussion);
 			majScore(l.size());
 			int[] score = { j1.getScore(), j2.getScore() };
@@ -315,7 +321,7 @@ public class Moteur {
 				testFinTour();
 				ech.vider();
 				ech.ajouter("finTour", true);
-				com.envoyer(ech);
+				com.envoyer(ech,joueurCourant.getJoueurID().getNum());
 			}
 		} else {
 			if (joueurCourant.isJoueurHumain())
@@ -337,17 +343,18 @@ public class Moteur {
 		h.ajouterTour(t);
 		ech.vider();
 		ech.ajouter("pionDeselectionne", true);
-		ech.ajouter("annuler", true);
+		ech.ajouter("annuler", false);
 		ech.ajouter("refaire", false);
 		ech.ajouter("finTour", false);
 		com.envoyer(ech);
+		ech.vider();
+		ech.ajouter("annuler", true);
+		com.envoyer(ech, joueurCourant.getJoueurID().getNum());
 		if (partieTerminee(false)) {
 			e = EtatTour.partieFinie;
-			System.out.println("FIN DE PARTIE");
+			;//System.out.println("FIN DE PARTIE");
 		} else {
-			// System.out.println("FIN DE TOUR ");
-			message("bandeauSup", joueurCourant.getNom());
-			message("bandeauInf", "Selection du pion");
+			// ;//System.out.println("FIN DE TOUR ");
 			gestionCoupGraphique();
 			if (joueurCourant.isJoueurHumain()) {
 				e = EtatTour.selectionPion;
@@ -501,18 +508,18 @@ public class Moteur {
 		Thread th = new Thread() {
 			public void run() {
 				do {
-					// System.out.println(joueurCourant.getNom());
-					// System.out.println("boucle IA");
+					// ;//System.out.println(joueurCourant.getNom());
+					// ;//System.out.println("boucle IA");
 					/*
-					 * if(jeuIa != null) System.out.println(jeuIa.getpDepart() +
+					 * if(jeuIa != null) ;//System.out.println(jeuIa.getpDepart() +
 					 * ";" + jeuIa.getpArrivee());
 					 */
-					jeuIa = joueurCourant.jouer(t);
-					// System.out.println(jeuIa.getpDepart() + ";" +
+					jeuIa = joueurCourant.jouer();
+					// ;//System.out.println(jeuIa.getpDepart() + ";" +
 					// jeuIa.getpArrivee());
-					// System.out.println("depart "+jeuIa.getpDepart()+" arrivé "+jeuIa.getpArrivee());
+					// ;//System.out.println("depart "+jeuIa.getpDepart()+" arrivé "+jeuIa.getpArrivee());
 					selectionPion(jeuIa.getpDepart());
-					// System.out.println("point depart moteur :"+pDepart);
+					// ;//System.out.println("point depart moteur :"+pDepart);
 					selectionDestination(jeuIa.getpArrivee());
 
 					// t.dessineTableauAvecIntersections();
@@ -520,7 +527,7 @@ public class Moteur {
 					// traceTerrain();
 
 				} while (joueurCourant.IaContinue());
-				// System.out.println(" FIN DU JEU IA");
+				// ;//System.out.println(" FIN DU JEU IA");
 
 				finTour();
 			}
@@ -559,7 +566,7 @@ public class Moteur {
 				}
 			}
 		}
-		com.envoyer(ech);
+		com.envoyer(ech,joueurCourant.getJoueurID().getNum());
 	}
 
 	/**
@@ -577,13 +584,13 @@ public class Moteur {
 	 */
 	public void actionPoint(Object dataValue) {
 		if (e == EtatTour.selectionPion) {
-			// System.out.println("e : " + e);
+			// ;//System.out.println("e : " + e);
 			selectionPion((Point) dataValue);
 		} else if (e == EtatTour.selectionDestination) {
-			// System.out.println("e : " + e);
+			// ;//System.out.println("e : " + e);
 			selectionDestination((Point) dataValue);
 		} else if (e == EtatTour.attenteChoix) {
-			// System.out.println("e : " + e);
+			// ;//System.out.println("e : " + e);
 			Terrain.Direction d = t.recupereDirection(pDepart, pArrive);
 			ArrayList<Point> l = new ArrayList<Point>();
 			boolean tperc = perc.equals((Point) dataValue);
@@ -599,6 +606,7 @@ public class Moteur {
 				gestionCoupGraphique(null, null, l, score);
 				ech.vider();
 				ech.ajouter("finTour", true);
+				com.envoyer(ech,joueurCourant.getJoueurID().getNum());
 				traceTerrain();
 				testFinTour();
 			}
@@ -707,13 +715,13 @@ public class Moteur {
 			Sauvegarde chargement = (Sauvegarde) ois.readObject();
 			t = new Terrain(chargement.plateau);
 			h = new Historique(chargement.histo);
-			if(chargement.joueur1.isJoueurHumain())
+			if (chargement.joueur1.isJoueurHumain())
 				j1 = new Joueur(chargement.joueur1);
 			else {
 				j1 = new Joueur(Case.Etat.joueur1, Joueur.typeJoueur.ordinateur, IntelligenceArtificielle.difficulteIA.normal, chargement.joueur2, t);
 				j1.chargerScore(chargement.joueur1.getScore());
 			}
-			if(chargement.joueur2.isJoueurHumain())
+			if (chargement.joueur2.isJoueurHumain())
 				j2 = new Joueur(chargement.joueur2);
 			else {
 				j2 = new Joueur(Case.Etat.joueur2, Joueur.typeJoueur.ordinateur, IntelligenceArtificielle.difficulteIA.normal, chargement.joueur1, t);
@@ -748,31 +756,45 @@ public class Moteur {
 	 */
 	public void actionParametre(Object dataValue) {
 		Parametres p = (Parametres) dataValue;
-		j1.setNom(p.j1_identifiant);
-		j2.setNom(p.j2_identifiant);
-		if (p.j1_type == Parametres.NiveauJoueur.HUMAIN) {
-			j1.setJoueurHumain(true);
-			j1.viderIa();
-		} else {
-			j1.setJoueurHumain(false);
-			if (p.j1_type == Parametres.NiveauJoueur.FACILE)
-				j1.chargerIa(IntelligenceArtificielle.difficulteIA.facile, j2, t);
-			else if (p.j1_type == Parametres.NiveauJoueur.MOYEN)
-				j1.chargerIa(IntelligenceArtificielle.difficulteIA.normal, j2, t);
-			else if (p.j1_type == Parametres.NiveauJoueur.DIFFICILE)
-				j1.chargerIa(IntelligenceArtificielle.difficulteIA.difficile, j2, t);
+		
+		
+		
+		System.out.println("1 "+p.j1_identifiant);
+		System.out.println("2 "+p.j2_identifiant);
+		System.out.println("3 "+p.j1_type);
+		System.out.println("4 "+p.j2_type);
+		
+		if (p.j1_identifiant != null)
+			j1.setNom(p.j1_identifiant);
+		if (p.j2_identifiant != null)
+			j2.setNom(p.j2_identifiant);
+		if(p.j1_type != null ){
+			if (p.j1_type == Parametres.NiveauJoueur.HUMAIN) {
+				j1.setJoueurHumain(true);
+				j1.viderIa();
+			} else {
+				j1.setJoueurHumain(false);
+				if (p.j1_type == Parametres.NiveauJoueur.FACILE)
+					j1.chargerIa(IntelligenceArtificielle.difficulteIA.facile, j2, t);
+				else if (p.j1_type == Parametres.NiveauJoueur.MOYEN)
+					j1.chargerIa(IntelligenceArtificielle.difficulteIA.normal, j2, t);
+				else if (p.j1_type == Parametres.NiveauJoueur.DIFFICILE)
+					j1.chargerIa(IntelligenceArtificielle.difficulteIA.difficile, j2, t);
+			}
 		}
-		if (p.j2_type == Parametres.NiveauJoueur.HUMAIN) {
-			j2.setJoueurHumain(true);
-			j2.viderIa();
-		} else {
-			j2.setJoueurHumain(false);
-			if (p.j2_type == Parametres.NiveauJoueur.FACILE)
-				j2.chargerIa(IntelligenceArtificielle.difficulteIA.facile, j1, t);
-			else if (p.j2_type == Parametres.NiveauJoueur.MOYEN)
-				j2.chargerIa(IntelligenceArtificielle.difficulteIA.normal, j1, t);
-			else if (p.j1_type == Parametres.NiveauJoueur.DIFFICILE)
-				j2.chargerIa(IntelligenceArtificielle.difficulteIA.difficile, j1, t);
+		if(p.j2_type != null ){
+			if (p.j2_type == Parametres.NiveauJoueur.HUMAIN) {
+				j2.setJoueurHumain(true);
+				j2.viderIa();
+			} else {
+				j2.setJoueurHumain(false);
+				if (p.j2_type == Parametres.NiveauJoueur.FACILE)
+					j2.chargerIa(IntelligenceArtificielle.difficulteIA.facile, j1, t);
+				else if (p.j2_type == Parametres.NiveauJoueur.MOYEN)
+					j2.chargerIa(IntelligenceArtificielle.difficulteIA.normal, j1, t);
+				else if (p.j1_type == Parametres.NiveauJoueur.DIFFICILE)
+					j2.chargerIa(IntelligenceArtificielle.difficulteIA.difficile, j1, t);
+			}
 		}
 		ech.vider();
 		ech.ajouter("parametres", p);
@@ -782,25 +804,29 @@ public class Moteur {
 
 	/**
 	 * Réalise les différentes actions en fonctions des commandes envoyées par l'IHM.
-	 * @param echange
+	 * @param o
 	 * Contient la commande ainsi qu'un objet qui sera traité dans les actions.
 	 * @param j
 	 * Identifiant de joueur pour le réseau.
 	 */
-	public void action(Echange echange, int j) {
-		
-		System.out.println("Action reçue de joueur "+j);
-
+	public void action(Object o, int j) {
+		Echange echange = (Echange)o;
 		Case.Etat joueurReception = null;
 		if (j == 1)
 			joueurReception = Etat.joueur1;
 		else if (j == 2)
 			joueurReception = Etat.joueur2;
 
+		if (Communication.enReseau() && trace) {
+			//System.out.println("reception :" + joueurReception);
+			//System.out.println("courant :" + joueurCourant.getJoueurID());
+			//System.out.println("comparaison "+!joueurCourant.getJoueurID().equals(joueurReception));
+		}
+
 		for (String dataType : echange.getAll()) {
 			Object dataValue = echange.get(dataType);
-
-			if (Communication.enReseau() && (joueurCourant.getJoueurID() != joueurReception) && (dataType == "point" || dataType == "annuler" || dataType == "refaire" || dataType== "finTour"))
+			
+			if (Communication.enReseau() && (joueurCourant.getJoueurID() != joueurReception) && (dataType.equals("point")  || dataType.equals("annuler") || dataType.equals("refaire") || dataType.equals("finTour")))
 				return;
 			// System.out.println(dataType);
 			// System.out.println("e : " + e);

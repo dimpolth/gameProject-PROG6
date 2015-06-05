@@ -9,6 +9,8 @@ import java.util.Vector;
 import java.io.InputStream;
 import java.io.IOException;
 
+import modele.Parametres;
+
 public class Serveur implements Runnable{
 	
 	Communication com;
@@ -27,7 +29,7 @@ public class Serveur implements Runnable{
 	
 	public int demarrer(){
 		try{
-			//port = 55555;
+			port = 55555;
 			passiveSocket = new ServerSocket(port);
 			port = passiveSocket.getLocalPort();
 			Thread th = new Thread(this);
@@ -52,13 +54,13 @@ public class Serveur implements Runnable{
 			// On garde le port pour pouvoir connecter d'autres clients sur ce même port
 			
 
-			System.out.println("En ecoute sur : " + this.passiveSocket);
+			;//System.out.println("En ecoute sur : " + this.passiveSocket);
 			while (true) {
 				
 				
 				try{
 					Socket activeSocket = this.passiveSocket.accept();
-					System.out.println("Nouvelle connexion");
+					;//System.out.println("Nouvelle connexion");
 				
 					// Lorsqu'un utilisateur se connecte, on créé une nouvelle instance
 					Connexion connexion = new Connexion(this,activeSocket);
@@ -68,7 +70,7 @@ public class Serveur implements Runnable{
 				
 				}
 				catch(Exception ex){
-					System.out.println("Impossible de récupérer le nouveau joueur.");
+					;//System.out.println("Impossible de récupérer le nouveau joueur.");
 				}			
 				
 				
@@ -76,7 +78,8 @@ public class Serveur implements Runnable{
 	
 	}
 	
-	public void envoyer(Echange e, int j){
+	public void envoyer(Object o, int j){
+		Echange e = (Echange)o;
 		if(j >= 1 && j<= 2){
 			joueurs.get(j).envoyer(e);
 			com.envoyer(e);
@@ -99,16 +102,57 @@ public class Serveur implements Runnable{
 		}
 	}
 	
-	public void nouvelleConnexion(Connexion c){		
-		connexions.add(c);	
-		if(joueurs.size() < 2){
-			if(joueurs.get(1) == null) joueurs.put(1,c);
-			else joueurs.put(2,c)  ;
+	public void nouveauJoueur(Connexion c){		
+		Echange e = new Echange();
+		Parametres params = new Parametres();
+		
+		if(joueurs.get(1) == null){			
+			joueurs.put(1,c);	
+			params.j1_identifiant = c.identifiant;
+			joueurs.put(1,c);
 		}
+		else{			
+			joueurs.put(2,c);
+			params.j2_identifiant = c.identifiant;
+			joueurs.put(2,c);
+		}		
+	
+		e.ajouter("parametres", params);
+		envoyer(e,0);		
 	}
 	
-	public void fermerConnexion(Connexion c){
+	public void nouvelleConnexion(Connexion c){		
+		connexions.add(c);	
+		if(joueurs.size() < 2)
+			nouveauJoueur(c);
+	}
+	
+	public void terminerConnexion(Connexion c){
 		connexions.remove(c);
+		
+		// Joueur qui s'en va
+		if(joueurs.containsValue(c)){
+			
+			joueurs.remove(c);
+			
+			if(connexions.size() >= 2){
+				Iterator<Connexion>it = connexions.iterator();
+				while(it.hasNext()){
+					Connexion con = it.next();
+					
+					if(!joueurs.containsValue(con)){
+						
+						nouveauJoueur(con);
+						break;
+					}
+				}
+			}
+			else{
+				Echange e = new Echange();
+				e.ajouter("interruptionReseau", "Le joueur adverse a quitté la partie.");
+				envoyer(e,0);
+			}
+		}
 	}
 	
 	public void stopperServeur(){

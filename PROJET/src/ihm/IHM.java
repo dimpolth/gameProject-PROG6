@@ -3,22 +3,17 @@ package ihm;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.GridLayout;
-import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.*;
 import java.io.IOException;
-import java.util.LinkedList;
-
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
 import modele.*;
+import modele.Parametres.NiveauJoueur;
 import reseau.*;
 
 @SuppressWarnings("serial")
@@ -164,21 +159,23 @@ public class IHM extends JFrame implements ComponentListener {
 
 	}
 
-	public Joueur[] getParamsJoueurs() {
-		Joueur[] j = new Joueur[2];
-		j[0] = new Joueur();
-		j[1] = new Joueur();
-		j[0].setNom(popupO.identifiantJoueur1.getText());
-		j[1].setNom(popupO.identifiantJoueur2.getText());
-		return j;
+	public Parametres getParametres() {		
+		
+		Parametres params = new Parametres();
+		params.j1_identifiant = popupO.identifiantJoueur1.getText();
+		params.j2_identifiant = popupO.identifiantJoueur2.getText();
+		params.j1_type = NiveauJoueur.getFromIndex(popupO.selectJoueur1.getSelectedIndex());
+		params.j2_type = NiveauJoueur.getFromIndex(popupO.selectJoueur2.getSelectedIndex());
+		
+		return params;
 
 	}
 
 	public void lancer() {
 		Echange e = new Echange();
 		e.ajouter("nouvellePartie", true);
-		e.ajouter("terrain", true);
-		e.ajouter("joueurs", getParamsJoueurs());
+		e.ajouter("parametres", getParametres());
+		e.ajouter("terrain", true);		
 		com.envoyer(e);
 	}
 
@@ -230,13 +227,32 @@ public class IHM extends JFrame implements ComponentListener {
 			lancer();
 			break;
 		case QUITTER:
-			// Confirmation avant de quitter
-			String choix[] = { "Oui", "Non" };
-			int retour = JOptionPane.showOptionDialog(this, "Voulez-vous sauvegarder la partie avant de quitter ?", "Attention", 1, 1, null, choix, choix[1]);
-			if (retour == 1)
+			String messConfirmation;
+			String choix[] = new String[2];
+			if((Communication.enReseau())){
+				messConfirmation =  "Vous allez mettre fin à la partie en réseau si aucune autre personne n'est connectée.";
+				choix[0] = "Quitter"; choix[1]="Annuler";
+			}
+			else{
+				messConfirmation = "";
+				choix[0] = "Oui"; choix[1]="Non";
+			}
+			// Confirmation avant de quitter		
+			int retour = JOptionPane.showOptionDialog(this, messConfirmation, "Attention", 1, 1, null, choix, choix[1]);
+			if (retour == 1){
+				
+				if(Communication.enReseau()){
+					com.envoyer("/QUIT");
+				}
+				
 				System.exit(0);
-			else
-				action(Ecouteur.Bouton.SAUVEGARDER);
+				
+			}			
+			else{
+				if(!Communication.enReseau())
+					action(Ecouteur.Bouton.SAUVEGARDER);
+			}
+				
 			break;
 		case MENU:			
 			popupB.setVisible(true);
@@ -272,16 +288,19 @@ public class IHM extends JFrame implements ComponentListener {
 			break;
 
 		case OPTION_VALIDER:
-			Parametres params = new Parametres();
-			params.j1_identifiant = popupO.identifiantJoueur1.getText();
-			params.j2_identifiant = popupO.identifiantJoueur2.getText();
-			params.j1_type = Parametres.NiveauJoueur.getFromIndex(popupO.selectJoueur1.getSelectedIndex());
-			params.j2_type = Parametres.NiveauJoueur.getFromIndex(popupO.selectJoueur2.getSelectedIndex());
+
+			Parametres params = getParametres();
 			
-			if(popupO.theme.getSelectedItem() == "Boisé")
+
+
+			if(popupO.theme.getSelectedItem() == "Standard")
+				theme.setTheme(Theme.Type.STANDARD);
+			else if(popupO.theme.getSelectedItem() == "Boisé")
 				theme.setTheme(Theme.Type.BOIS);
 			else if(popupO.theme.getSelectedItem() == "Marbre")
 				theme.setTheme(Theme.Type.MARBRE);
+			else if(popupO.theme.getSelectedItem() == "Sombre")
+				theme.setTheme(Theme.Type.SOMBRE);
 
 			Echange e = new Echange();
 			e.ajouter("parametres", params);
@@ -309,19 +328,31 @@ public class IHM extends JFrame implements ComponentListener {
 				errReseau = Communication.modeReseau("");
 				if(errReseau == null){
 					
+					// 2 joueurs humain si on lance une partie réseau
+					Parametres param = new Parametres();					
+					param.j1_type = Parametres.NiveauJoueur.HUMAIN;
+					param.j2_type = Parametres.NiveauJoueur.HUMAIN;
+					Echange ec = new Echange();
+					ec.ajouter("nouvellePartie", true);
+					ec.ajouter("parametres", param);					
+					com.envoyer(ec);					
+					
+					
+					
 					JOptionPane.showMessageDialog( this,
 					                     "Le serveur est ouvert sur le port : "+Communication.getPort()+"",
 					                     "Port "+Communication.getPort()+"",
 					                      1);
 				}
+				
 			}
 			else{
-				System.out.println("1");
+				//;//System.out.println("1");
 				String hoteComplet = popupReseau.hote.getText();
 				if(!hoteComplet.equals("")){
-					System.out.println("2");
+					//;//System.out.println("2");
 					errReseau = Communication.modeReseau(hoteComplet);
-					System.out.println(errReseau);
+					//;//System.out.println(errReseau);
 				}
 			}
 			
@@ -330,6 +361,11 @@ public class IHM extends JFrame implements ComponentListener {
 				popupB.setVisible(false);
 				setModeReseau(true);
 				popupReseau.message.setText(errReseau);
+				Parametres param = new Parametres();
+				param.j1_identifiant = popupReseau.identifiant.getText();				
+				Echange ec = new Echange();
+				ec.ajouter("parametres", param);
+				com.envoyer(ec);
 			}
 			else{
 				popupReseau.message.setText(errReseau);
@@ -420,8 +456,8 @@ public class IHM extends JFrame implements ComponentListener {
 	public void componentShown(ComponentEvent e) {
 	}
 
-	public void notifier(Echange e) {
-		
+	public void notifier(Object o) {
+		Echange e = (Echange)o;
 
 		Object dataValue;
 		if ((dataValue = e.get("terrain")) != null) {
@@ -482,8 +518,10 @@ public class IHM extends JFrame implements ComponentListener {
 		}
 		if((dataValue = e.get("parametres")) != null) {
 			Parametres params = (Parametres)dataValue;
-			bandeauInfos.setIdentifiant(1,params.j1_identifiant);
-			bandeauInfos.setIdentifiant(2,params.j2_identifiant);			
+			if(params.j1_identifiant != null)
+				bandeauInfos.setIdentifiant(1,params.j1_identifiant);
+			if(params.j2_identifiant != null)
+				bandeauInfos.setIdentifiant(2,params.j2_identifiant);			
 		}
 		if((dataValue = e.get("finTour")) != null) {
 			boutonValidation.setEnabled((boolean)dataValue);

@@ -114,7 +114,7 @@ public class Echange implements Serializable{
 		    Object dataValue = this.get(dataType);
 		    
 		    switch(dataType){
-		    	case "point" : System.out.println("Point reçu :"+((java.awt.Point)dataValue).toString()+""); break;
+		    	case "point" : ;//System.out.println("Point reçu :"+((java.awt.Point)dataValue).toString()+""); break;
 		    }
 		    // ...
 		}

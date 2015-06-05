@@ -9,7 +9,7 @@ import java.awt.Insets;
 import javax.swing.JPanel;
 
 @SuppressWarnings("serial")
-class PopupMenu extends JPanel {
+class PopupMenu extends Popup {
 	Bouton boutonMenuReseau, boutonMenuLocal;
 	Bouton boutonMenuSauvegarder, boutonMenuCharger;
 	
@@ -57,6 +57,7 @@ class PopupMenu extends JPanel {
 	}
 
 	public void paintComponent(Graphics g) {
+		super.paintComponent(g);
 		g.setColor(Color.GRAY);
 		g.fillRect(0, 0, getWidth(), getHeight());
 		g.setColor(Color.white);
