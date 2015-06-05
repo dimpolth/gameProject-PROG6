@@ -9,6 +9,8 @@ import java.util.Vector;
 import java.io.InputStream;
 import java.io.IOException;
 
+import modele.Parametres;
+
 public class Serveur implements Runnable{
 	
 	Communication com;
@@ -27,7 +29,7 @@ public class Serveur implements Runnable{
 	
 	public int demarrer(){
 		try{
-			//port = 55555;
+			port = 55555;
 			passiveSocket = new ServerSocket(port);
 			port = passiveSocket.getLocalPort();
 			Thread th = new Thread(this);
@@ -76,7 +78,8 @@ public class Serveur implements Runnable{
 	
 	}
 	
-	public void envoyer(Echange e, int j){
+	public void envoyer(Object o, int j){
+		Echange e = (Echange)o;
 		if(j >= 1 && j<= 2){
 			joueurs.get(j).envoyer(e);
 			com.envoyer(e);
@@ -109,17 +112,33 @@ public class Serveur implements Runnable{
 	
 	public void terminerConnexion(Connexion c){
 		connexions.remove(c);
+		
+		// Joueur qui s'en va
 		if(joueurs.containsValue(c)){
+			
+			joueurs.remove(c);
 			
 			if(connexions.size() >= 2){
 				Iterator<Connexion>it = connexions.iterator();
 				while(it.hasNext()){
 					Connexion con = it.next();
+					
 					if(!joueurs.containsValue(con)){
-						if(joueurs.get(1) == null)
-							joueurs.put(1,con);
-					}	else
-						joueurs.put(2,con);
+						
+						int j = (joueurs.get(1) == null) ? 1 : 2;					
+						
+						joueurs.put(j,con);
+						
+						Echange e = new Echange();
+						Parametres params = new Parametres();
+						if(j==1)
+							params.j1_identifiant = con.identifiant;
+						else
+							params.j2_identifiant = con.identifiant;
+						e.ajouter("parametres", params);
+						envoyer(e,j);
+						break;
+					}
 				}
 			}
 			else{

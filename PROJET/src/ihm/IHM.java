@@ -230,13 +230,32 @@ public class IHM extends JFrame implements ComponentListener {
 			lancer();
 			break;
 		case QUITTER:
-			// Confirmation avant de quitter
-			String choix[] = { "Oui", "Non" };
-			int retour = JOptionPane.showOptionDialog(this, "Voulez-vous sauvegarder la partie avant de quitter ?", "Attention", 1, 1, null, choix, choix[1]);
-			if (retour == 1)
+			String messConfirmation;
+			String choix[] = new String[2];
+			if((Communication.enReseau())){
+				messConfirmation =  "Vous allez mettre fin à la partie en réseau si aucune autre personne n'est connectée.";
+				choix[0] = "Quitter"; choix[1]="Annuler";
+			}
+			else{
+				messConfirmation = "";
+				choix[0] = "Oui"; choix[1]="Non";
+			}
+			// Confirmation avant de quitter		
+			int retour = JOptionPane.showOptionDialog(this, messConfirmation, "Attention", 1, 1, null, choix, choix[1]);
+			if (retour == 1){
+				
+				if(Communication.enReseau()){
+					com.envoyer("/QUIT");
+				}
+				
 				System.exit(0);
-			else
-				action(Ecouteur.Bouton.SAUVEGARDER);
+				
+			}			
+			else{
+				if(!Communication.enReseau())
+					action(Ecouteur.Bouton.SAUVEGARDER);
+			}
+				
 			break;
 		case MENU:			
 			popupB.setVisible(true);
@@ -309,11 +328,23 @@ public class IHM extends JFrame implements ComponentListener {
 				errReseau = Communication.modeReseau("");
 				if(errReseau == null){
 					
+					// 2 joueurs humain si on lance une partie réseau
+					Parametres param = new Parametres();					
+					param.j1_type = Parametres.NiveauJoueur.HUMAIN;
+					param.j2_type = Parametres.NiveauJoueur.HUMAIN;
+					Echange ec = new Echange();
+					ec.ajouter("nouvellePartie", param);
+					com.envoyer(ec);
+					
+					
+					
+					
 					JOptionPane.showMessageDialog( this,
 					                     "Le serveur est ouvert sur le port : "+Communication.getPort()+"",
 					                     "Port "+Communication.getPort()+"",
 					                      1);
 				}
+				
 			}
 			else{
 				System.out.println("1");
@@ -330,6 +361,11 @@ public class IHM extends JFrame implements ComponentListener {
 				popupB.setVisible(false);
 				setModeReseau(true);
 				popupReseau.message.setText(errReseau);
+				Parametres param = new Parametres();
+				param.j1_identifiant = popupReseau.identifiant.getText();				
+				Echange ec = new Echange();
+				ec.ajouter("parametres", param);
+				com.envoyer(ec);
 			}
 			else{
 				popupReseau.message.setText(errReseau);
@@ -420,8 +456,8 @@ public class IHM extends JFrame implements ComponentListener {
 	public void componentShown(ComponentEvent e) {
 	}
 
-	public void notifier(Echange e) {
-		
+	public void notifier(Object o) {
+		Echange e = (Echange)o;
 
 		Object dataValue;
 		if ((dataValue = e.get("terrain")) != null) {

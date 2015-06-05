@@ -141,7 +141,25 @@ public class Terrain implements Serializable {
 		case 9:
 			this.tableau[1][1].setOccupation(Case.Etat.joueur1);
 			this.tableau[1][2].setOccupation(Case.Etat.joueur2);
-			break;
+		break;
+		
+		case 10:
+			this.tableau[1][1].setOccupation(Case.Etat.joueur1);
+			this.tableau[2][4].setOccupation(Case.Etat.joueur1);
+			this.tableau[3][1].setOccupation(Case.Etat.joueur2);
+			this.tableau[4][4].setOccupation(Case.Etat.joueur2);
+			this.tableau[0][1].setOccupation(Case.Etat.joueur2);
+			this.tableau[0][4].setOccupation(Case.Etat.joueur2);
+		break;
+		
+		case 11:
+			this.tableau[1][0].setOccupation(Case.Etat.joueur1);
+			this.tableau[2][0].setOccupation(Case.Etat.joueur1);
+			this.tableau[0][1].setOccupation(Case.Etat.joueur2);
+			this.tableau[3][0].setOccupation(Case.Etat.joueur2);
+			this.tableau[4][0].setOccupation(Case.Etat.joueur2);
+			this.tableau[4][4].setOccupation(Case.Etat.joueur2);
+			this.tableau[3][1].setOccupation(Case.Etat.joueur2);
 		}
 	}
 

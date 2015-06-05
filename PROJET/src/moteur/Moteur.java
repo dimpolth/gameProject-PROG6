@@ -66,7 +66,8 @@ public class Moteur {
 	public void init() {
 		t = new Terrain();
 
-		// t.TerrainTest(8);
+		//t.TerrainTest(11);
+		
 
 		h = new Historique();
 		h.ajouterTour(t);
@@ -79,6 +80,9 @@ public class Moteur {
 		// IntelligenceArtificielle.difficulteIA.facile, j2, this);
 		j2 = new Joueur(Case.Etat.joueur2, Joueur.typeJoueur.ordinateur, IntelligenceArtificielle.difficulteIA.normal, j1, t);
 		joueurCourant = j1;
+		
+		//calculerScore();
+		
 		message("bandeauSup", joueurCourant.getNom());
 		message("bandeauInf", "Selection du pion");
 		if (joueurCourant.isJoueurHumain()) {
@@ -170,6 +174,7 @@ public class Moteur {
 
 	boolean selectionPion(Point p) {
 		tourEnCours = false;
+		
 		if (t.getCase(p.x, p.y).getOccupation() != joueurCourant.getJoueurID()) {
 			return false;
 		} else {
@@ -180,6 +185,7 @@ public class Moteur {
 				pDepart = p;
 				if (joueurCourant.isJoueurHumain()) {
 					ech.vider();
+					System.out.println("ON est passé a selection direction");
 					ech.ajouter("pionSelectionne", pDepart);
 					com.envoyer(ech);
 				}
@@ -213,6 +219,7 @@ public class Moteur {
 				boolean prisePercu = t.estUnePrisePercussion(pDepart, d);
 				if (t.deplacement(pDepart, pArrive, joueurCourant, h.histoTour) == 0) {
 					Point[] tabPts = { pDepart, pArrive };
+					System.out.println("TOOTTOOOO MOUOUHAHAH LA TRACE"+tabPts);
 					gestionCoupGraphique(tabPts, null, null, null);
 					prise(priseAspi, prisePercu);
 					tourEnCours = true;
@@ -275,7 +282,7 @@ public class Moteur {
 				testFinTour();
 				ech.vider();
 				ech.ajouter("finTour", true);
-				com.envoyer(ech);
+				com.envoyer(ech,joueurCourant.getJoueurID().getNum());
 			}
 		} else {
 			if (joueurCourant.isJoueurHumain())
@@ -293,10 +300,13 @@ public class Moteur {
 		h.ajouterTour(t);
 		ech.vider();
 		ech.ajouter("pionDeselectionne", true);
-		ech.ajouter("annuler", true);
+		ech.ajouter("annuler", false);
 		ech.ajouter("refaire", false);
 		ech.ajouter("finTour", false);
 		com.envoyer(ech);
+		ech.vider();
+		ech.ajouter("annuler", true);
+		com.envoyer(ech, joueurCourant.getJoueurID().getNum());
 		if (partieTerminee(false)) {
 			e = EtatTour.partieFinie;
 			System.out.println("FIN DE PARTIE");
@@ -455,7 +465,7 @@ public class Moteur {
 				}
 			}
 		}
-		com.envoyer(ech);
+		com.envoyer(ech,joueurCourant.getJoueurID().getNum());
 
 	}
 
@@ -488,12 +498,13 @@ public class Moteur {
 				gestionCoupGraphique(null, null, l, score);
 				ech.vider();
 				ech.ajouter("finTour", true);
+				com.envoyer(ech,joueurCourant.getJoueurID().getNum());
 				traceTerrain();
 				testFinTour();
 			}
 		}
 	}
-	
+
 	void actionAnnuler(Object dataValue) {
 		if (e != EtatTour.partieFinie) {
 			ech.vider();
@@ -522,7 +533,7 @@ public class Moteur {
 			message("bandeauInf", "Selection du pion");
 		}
 	}
-	
+
 	void actionRefaire(Object dataValue) {
 		if (e != EtatTour.partieFinie) {
 			ech.vider();
@@ -550,7 +561,7 @@ public class Moteur {
 			message("bandeauInf", "Selection du pion");
 		}
 	}
-	
+
 	void actionSauvegarder(Object dataValue) {
 		Sauvegarde s = new Sauvegarde(t, h, j1, j2, joueurCourant);
 		ObjectOutputStream oos = null;
@@ -571,7 +582,7 @@ public class Moteur {
 			}
 		}
 	}
-	
+
 	void actionCharger(Object dataValue) {
 		ObjectInputStream ois = null;
 		try {
@@ -580,13 +591,13 @@ public class Moteur {
 			Sauvegarde chargement = (Sauvegarde) ois.readObject();
 			t = new Terrain(chargement.plateau);
 			h = new Historique(chargement.histo);
-			if(chargement.joueur1.isJoueurHumain())
+			if (chargement.joueur1.isJoueurHumain())
 				j1 = new Joueur(chargement.joueur1);
 			else {
 				j1 = new Joueur(Case.Etat.joueur1, Joueur.typeJoueur.ordinateur, IntelligenceArtificielle.difficulteIA.normal, chargement.joueur2, t);
 				j1.chargerScore(chargement.joueur1.getScore());
 			}
-			if(chargement.joueur2.isJoueurHumain())
+			if (chargement.joueur2.isJoueurHumain())
 				j2 = new Joueur(chargement.joueur2);
 			else {
 				j2 = new Joueur(Case.Etat.joueur2, Joueur.typeJoueur.ordinateur, IntelligenceArtificielle.difficulteIA.normal, chargement.joueur1, t);
@@ -613,34 +624,40 @@ public class Moteur {
 		ech.ajouter("score", tabScore);
 		com.envoyer(ech);
 	}
-	
+
 	void actionParametre(Object dataValue) {
 		Parametres p = (Parametres) dataValue;
-		j1.setNom(p.j1_identifiant);
-		j2.setNom(p.j2_identifiant);
-		if (p.j1_type == Parametres.NiveauJoueur.HUMAIN) {
-			j1.setJoueurHumain(true);
-			j1.viderIa();
-		} else {
-			j1.setJoueurHumain(false);
-			if (p.j1_type == Parametres.NiveauJoueur.FACILE)
-				j1.chargerIa(IntelligenceArtificielle.difficulteIA.facile, j2, t);
-			else if (p.j1_type == Parametres.NiveauJoueur.MOYEN)
-				j1.chargerIa(IntelligenceArtificielle.difficulteIA.normal, j2, t);
-			else if (p.j1_type == Parametres.NiveauJoueur.DIFFICILE)
-				j1.chargerIa(IntelligenceArtificielle.difficulteIA.difficile, j2, t);
+		if (p.j1_identifiant != null)
+			j1.setNom(p.j1_identifiant);
+		if (p.j2_identifiant != null)
+			j2.setNom(p.j2_identifiant);
+		if(p.j1_type != null ){
+			if (p.j1_type == Parametres.NiveauJoueur.HUMAIN) {
+				j1.setJoueurHumain(true);
+				j1.viderIa();
+			} else {
+				j1.setJoueurHumain(false);
+				if (p.j1_type == Parametres.NiveauJoueur.FACILE)
+					j1.chargerIa(IntelligenceArtificielle.difficulteIA.facile, j2, t);
+				else if (p.j1_type == Parametres.NiveauJoueur.MOYEN)
+					j1.chargerIa(IntelligenceArtificielle.difficulteIA.normal, j2, t);
+				else if (p.j1_type == Parametres.NiveauJoueur.DIFFICILE)
+					j1.chargerIa(IntelligenceArtificielle.difficulteIA.difficile, j2, t);
+			}
 		}
-		if (p.j2_type == Parametres.NiveauJoueur.HUMAIN) {
-			j2.setJoueurHumain(true);
-			j2.viderIa();
-		} else {
-			j2.setJoueurHumain(false);
-			if (p.j2_type == Parametres.NiveauJoueur.FACILE)
-				j2.chargerIa(IntelligenceArtificielle.difficulteIA.facile, j1, t);
-			else if (p.j2_type == Parametres.NiveauJoueur.MOYEN)
-				j2.chargerIa(IntelligenceArtificielle.difficulteIA.normal, j1, t);
-			else if (p.j1_type == Parametres.NiveauJoueur.DIFFICILE)
-				j2.chargerIa(IntelligenceArtificielle.difficulteIA.difficile, j1, t);
+		if(p.j2_type != null ){
+			if (p.j2_type == Parametres.NiveauJoueur.HUMAIN) {
+				j2.setJoueurHumain(true);
+				j2.viderIa();
+			} else {
+				j2.setJoueurHumain(false);
+				if (p.j2_type == Parametres.NiveauJoueur.FACILE)
+					j2.chargerIa(IntelligenceArtificielle.difficulteIA.facile, j1, t);
+				else if (p.j2_type == Parametres.NiveauJoueur.MOYEN)
+					j2.chargerIa(IntelligenceArtificielle.difficulteIA.normal, j1, t);
+				else if (p.j1_type == Parametres.NiveauJoueur.DIFFICILE)
+					j2.chargerIa(IntelligenceArtificielle.difficulteIA.difficile, j1, t);
+			}
 		}
 		ech.vider();
 		ech.ajouter("parametres", p);
@@ -648,9 +665,10 @@ public class Moteur {
 		message("bandeauSup", joueurCourant.getNom());
 	}
 
-	public void action(Echange echange, int j) {
-		
-		System.out.println("Action reçue de joueur "+j);
+	public void action(Object o, int j) {
+		Echange echange = (Echange)o;
+
+		System.out.println("Action reçue de joueur " + j+" : "+echange.toString());
 
 		Case.Etat joueurReception = null;
 		if (j == 1)
@@ -658,12 +676,18 @@ public class Moteur {
 		else if (j == 2)
 			joueurReception = Etat.joueur2;
 
+		if (Communication.enReseau() && trace) {
+			System.out.println("reception :" + joueurReception);
+			System.out.println("courant :" + joueurCourant.getJoueurID());
+			System.out.println("comparaison "+!joueurCourant.getJoueurID().equals(joueurReception));
+		}
+
 		for (String dataType : echange.getAll()) {
 			Object dataValue = echange.get(dataType);
-
-			if (Communication.enReseau() && (joueurCourant.getJoueurID() != joueurReception) && (dataType == "point" || dataType == "annuler" || dataType == "refaire" || dataType== "finTour"))
+			
+			if (Communication.enReseau() && (joueurCourant.getJoueurID() != joueurReception) && (dataType.equals("point")  || dataType.equals("annuler") || dataType.equals("refaire") || dataType.equals("finTour")))
 				return;
-
+		
 			// System.out.println(dataType);
 			// System.out.println("e : " + e);
 			switch (dataType) {
