@@ -19,6 +19,7 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 
 import modele.*;
+import modele.Parametres.NiveauJoueur;
 import reseau.*;
 
 @SuppressWarnings("serial")
@@ -164,21 +165,23 @@ public class IHM extends JFrame implements ComponentListener {
 
 	}
 
-	public Joueur[] getParamsJoueurs() {
-		Joueur[] j = new Joueur[2];
-		j[0] = new Joueur();
-		j[1] = new Joueur();
-		j[0].setNom(popupO.identifiantJoueur1.getText());
-		j[1].setNom(popupO.identifiantJoueur2.getText());
-		return j;
+	public Parametres getParametres() {		
+		
+		Parametres params = new Parametres();
+		params.j1_identifiant = popupO.identifiantJoueur1.getText();
+		params.j2_identifiant = popupO.identifiantJoueur2.getText();
+		params.j1_type = NiveauJoueur.getFromIndex(popupO.selectJoueur1.getSelectedIndex());
+		params.j2_type = NiveauJoueur.getFromIndex(popupO.selectJoueur2.getSelectedIndex());
+		
+		return params;
 
 	}
 
 	public void lancer() {
 		Echange e = new Echange();
 		e.ajouter("nouvellePartie", true);
-		e.ajouter("terrain", true);
-		e.ajouter("joueurs", getParamsJoueurs());
+		e.ajouter("parametres", getParametres());
+		e.ajouter("terrain", true);		
 		com.envoyer(e);
 	}
 
@@ -230,13 +233,32 @@ public class IHM extends JFrame implements ComponentListener {
 			lancer();
 			break;
 		case QUITTER:
-			// Confirmation avant de quitter
-			String choix[] = { "Oui", "Non" };
-			int retour = JOptionPane.showOptionDialog(this, "Voulez-vous sauvegarder la partie avant de quitter ?", "Attention", 1, 1, null, choix, choix[1]);
-			if (retour == 1)
+			String messConfirmation;
+			String choix[] = new String[2];
+			if((Communication.enReseau())){
+				messConfirmation =  "Vous allez mettre fin à la partie en réseau si aucune autre personne n'est connectée.";
+				choix[0] = "Quitter"; choix[1]="Annuler";
+			}
+			else{
+				messConfirmation = "";
+				choix[0] = "Oui"; choix[1]="Non";
+			}
+			// Confirmation avant de quitter		
+			int retour = JOptionPane.showOptionDialog(this, messConfirmation, "Attention", 1, 1, null, choix, choix[1]);
+			if (retour == 1){
+				
+				if(Communication.enReseau()){
+					com.envoyer("/QUIT");
+				}
+				
 				System.exit(0);
-			else
-				action(Ecouteur.Bouton.SAUVEGARDER);
+				
+			}			
+			else{
+				if(!Communication.enReseau())
+					action(Ecouteur.Bouton.SAUVEGARDER);
+			}
+				
 			break;
 		case MENU:			
 			popupB.setVisible(true);
@@ -277,11 +299,15 @@ public class IHM extends JFrame implements ComponentListener {
 			params.j2_identifiant = popupO.identifiantJoueur2.getText();
 			params.j1_type = Parametres.NiveauJoueur.getFromIndex(popupO.selectJoueur1.getSelectedIndex());
 			params.j2_type = Parametres.NiveauJoueur.getFromIndex(popupO.selectJoueur2.getSelectedIndex());
-			
-			if(popupO.theme.getSelectedItem() == "Boisé")
+
+			if(popupO.theme.getSelectedItem() == "Standard")
+				theme.setTheme(Theme.Type.STANDARD);
+			else if(popupO.theme.getSelectedItem() == "Boisé")
 				theme.setTheme(Theme.Type.BOIS);
 			else if(popupO.theme.getSelectedItem() == "Marbre")
 				theme.setTheme(Theme.Type.MARBRE);
+			else if(popupO.theme.getSelectedItem() == "Sombre")
+				theme.setTheme(Theme.Type.SOMBRE);
 
 			Echange e = new Echange();
 			e.ajouter("parametres", params);
@@ -314,8 +340,11 @@ public class IHM extends JFrame implements ComponentListener {
 					param.j1_type = Parametres.NiveauJoueur.HUMAIN;
 					param.j2_type = Parametres.NiveauJoueur.HUMAIN;
 					Echange ec = new Echange();
-					ec.ajouter("parametres", param);
+					ec.ajouter("nouvellePartie", param);
 					com.envoyer(ec);
+					
+					
+					
 					
 					JOptionPane.showMessageDialog( this,
 					                     "Le serveur est ouvert sur le port : "+Communication.getPort()+"",
@@ -325,12 +354,12 @@ public class IHM extends JFrame implements ComponentListener {
 				
 			}
 			else{
-				System.out.println("1");
+				//;//System.out.println("1");
 				String hoteComplet = popupReseau.hote.getText();
 				if(!hoteComplet.equals("")){
-					System.out.println("2");
+					//;//System.out.println("2");
 					errReseau = Communication.modeReseau(hoteComplet);
-					System.out.println(errReseau);
+					//;//System.out.println(errReseau);
 				}
 			}
 			
@@ -434,8 +463,8 @@ public class IHM extends JFrame implements ComponentListener {
 	public void componentShown(ComponentEvent e) {
 	}
 
-	public void notifier(Echange e) {
-		
+	public void notifier(Object o) {
+		Echange e = (Echange)o;
 
 		Object dataValue;
 		if ((dataValue = e.get("terrain")) != null) {

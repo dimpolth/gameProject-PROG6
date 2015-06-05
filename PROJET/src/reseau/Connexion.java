@@ -44,7 +44,7 @@ public class Connexion implements Runnable{
 	}
 	public void envoyer(Echange e){
 		try {			
-			//System.out.println("SERVER ENVOYER : "+((Echange) e).toString() );
+			//;//System.out.println("SERVER ENVOYER : "+((Echange) e).toString() );
 			oos.writeObject(e.clone());	
 			
 		} catch (IOException ioe) {
@@ -79,25 +79,39 @@ public class Connexion implements Runnable{
 			else if (currentTh.getName().equals("recep")) {
 				
 				
-				try {					
-					Echange recu = (Echange)ois.readObject();					
+				try {				
+					Object recu = ois.readObject();		
 					
-					int j = 0;
-					if(serveur.joueurs.get(1).equals(this))
-						j=1;
-					else if(serveur.joueurs.get(2).equals(this))
-						j=2;
-					
-					if(recu.get("parametres") != null){
-						Parametres params =(Parametres)recu.get("parametres");
-						if(params.j1_identifiant != null){
-							identifiant = params.j1_identifiant;
+					if(recu instanceof Echange){
+						
+						Echange ech = (Echange)recu;					
+						
+						int j = 0;
+						if(serveur.joueurs.get(1).equals(this))
+							j=1;
+						else if(serveur.joueurs.get(2).equals(this))
+							j=2;
+						
+						if(ech.get("parametres") != null){
+							Parametres params =(Parametres)ech.get("parametres");
+							if(params.j1_identifiant != null){
+								identifiant = params.j1_identifiant;
+								ech.infos.remove("parametres");
+							}
+						}
+						
+						serveur.com.recevoir(ech,j);					
+						
+					}
+					else{
+						String ordre = (String)recu;
+						
+						if(ordre.equals("/quit")){
+							serveur.terminerConnexion(this);
 						}
 					}
 					
-					serveur.com.recevoir(recu,j);
 					
-					//System.out.println("Reception d'une donnée cliente sur le serveur : TRAITE");
 					
 				} catch (Exception ex) {
 				}				

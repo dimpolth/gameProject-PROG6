@@ -17,7 +17,7 @@ import javax.swing.JTextField;
 import javax.swing.text.html.HTMLDocument.Iterator;
 
 @SuppressWarnings("serial")
-public class PopupReseau extends JPanel {
+public class PopupReseau extends Popup {
 
 	
 	JCheckBox etreHote;
@@ -101,7 +101,8 @@ public class PopupReseau extends JPanel {
 	}
 
 	public void paintComponent(Graphics g) {
-		g.setColor(Color.red);
+		super.paintComponent(g);
+		g.setColor(Color.GRAY);
 		g.fillRect(0, 0, getWidth(), getHeight());
 		g.setColor(Color.white);
 		g.fillRect(10, 10, getWidth() - 20, getHeight() - 20);
