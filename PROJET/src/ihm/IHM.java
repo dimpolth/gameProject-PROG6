@@ -265,14 +265,18 @@ public class IHM extends JFrame implements ComponentListener {
 			popupO.setVisible(true);
 			break;
 		case ANNULER:
-			Echange e1 = new Echange();
-			e1.ajouter("annuler", true);
-			com.envoyer(e1);
+			if(!CoupGraphique.animationEnCours){
+				Echange e1 = new Echange();
+				e1.ajouter("annuler", true);
+				com.envoyer(e1);
+			}
 			break;
 		case REFAIRE:
-			Echange e2 = new Echange();
-			e2.ajouter("refaire", true);
-			com.envoyer(e2);
+			if(!CoupGraphique.animationEnCours){
+				Echange e2 = new Echange();
+				e2.ajouter("refaire", true);
+				com.envoyer(e2);
+			}
 			break;
 		case TERMINER:
 			Echange e3 = new Echange();

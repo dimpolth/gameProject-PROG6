@@ -14,7 +14,7 @@ public class CoupGraphique implements Runnable, Serializable {
 	private ArrayList<Point> pionsManges, chemin;
 	private int[] score;
 	private static TerrainGraphique tg;
-	private static boolean animationEnCours = false;
+	public static boolean animationEnCours = false;
 	private String bandeauSup,bandeauInf;
 	
 	public CoupGraphique(Point[] d, Point[] c, ArrayList<Point> p, int[] s,String bS,String bI, ArrayList<Point> chemin) {
