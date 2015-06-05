@@ -53,7 +53,38 @@ public class EvenementGraphique implements Runnable, Serializable {
 	
 	public EvenementGraphique(Case[][] t){
 		terrain = t;
+		deplacement=null;
+		choixPrise=null;
+		pionsManges=null;
+		chemin=null;
+		score=null;
+		tg=null;
+		bandeauSup=null;
+		bandeauInf=null;
 		this.chemin=new ArrayList<Point>();
+	}
+	
+	public EvenementGraphique(String bandeauSup , String bandeauInf , FinPartie b){
+		deplacement=null;
+		choixPrise=null;
+		pionsManges=null;
+		chemin=null;
+		score=null;
+		this.bandeauSup=bandeauSup;
+		this.bandeauInf=bandeauInf;
+		finPartie=b;
+		this.chemin=new ArrayList<Point>();
+	}
+	
+	public EvenementGraphique(String bandeauSup , String bandeauInf , int i){
+		this.bandeauSup=bandeauSup;
+		this.bandeauInf=bandeauInf;
+		joueurCourant=i;
+		
+	}
+	
+	public EvenementGraphique(int i){
+		joueurCourant=i;
 	}
 	
 	

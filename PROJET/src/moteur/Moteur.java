@@ -149,7 +149,7 @@ public class Moteur {
 		//message("bandeauSup", joueurCourant.getNom());
 		//message("bandeauInf", "Selection du pion");
 		
-	    gestionEvenementGraphique(joueurCourant.getNom(),"Selection du pion");
+	    gestionEvenementGraphique(joueurCourant.getNom(),"Selection du pion",joueurCourant.getJoueurID().getNum());
 		
 	    if (joueurCourant.isJoueurHumain()) {
 			e = EtatTour.selectionPion;
@@ -226,7 +226,7 @@ public class Moteur {
 			System.out.println("FIN DE PARTIE");
 			
 			String BandeauSup = "<html><font color=#FF0000>" + joueurCourant.recupereJoueurOpposant(joueurCourant, j1, j2, false).getNom() + "</font></html>";
-			String BandeauInf = "<html><font color=#FF0000>à remporté la partie</font></html>";
+			String BandeauInf = "<html><font color=#FF0000>a remporté la partie</font></html>";
 			
 			gestionEvenementGraphique(BandeauSup, BandeauInf);
 			com.envoyer(ech);
@@ -392,7 +392,7 @@ public class Moteur {
 		} else {
 			// ;//System.out.println("FIN DE TOUR ");
 			gestionEvenementGraphique();
-			gestionEvenementGraphique(joueurCourant.getNom(),"Selection du pion");
+			gestionEvenementGraphique(joueurCourant.getNom(),"Selection du pion",joueurCourant.getJoueurID().getNum());
 			if (joueurCourant.isJoueurHumain()) {
 				e = EtatTour.selectionPion;
 			} else {
@@ -486,12 +486,13 @@ public class Moteur {
 	 */
 	public void gestionEvenementGraphique() {
 		ech.vider();
-		EvenementGraphique cg = new EvenementGraphique();
+		System.out.println("PUTAIN DE TERRAIN");
+		EvenementGraphique cg = new EvenementGraphique(t.getTableau());
 		ech.ajouter("coup", cg);
 		com.envoyer(ech);
 	}
 
-	void gestionEvenementGraphique(String bandeauSup, String bandeauInf) {
+	
 	/**
 	 * Surchage de gestion gestionEvenementGraphique pour le cas ou l'on ne met à jour que les bandeaux.
 	 * @param chaine1
@@ -499,12 +500,21 @@ public class Moteur {
 	 * @param chaine2
 	 * Le message à afficher sur le bandeau.
 	 */
+	void gestionEvenementGraphique(String bandeauSup, String bandeauInf) {
 		ech.vider();
 		EvenementGraphique cg;
 		if (tourEnCours)
 			cg= new EvenementGraphique(null, null, null, null, bandeauSup, bandeauInf, calculChemin());
 		else 
 			cg= new EvenementGraphique(null, null, null, null, bandeauSup, bandeauInf, null);
+		ech.ajouter("coup", cg);
+		com.envoyer(ech);
+	}
+	
+	void gestionEvenementGraphique(String bandeauSup, String bandeauInf,int i) {
+		ech.vider();
+		EvenementGraphique cg;
+		cg = new EvenementGraphique(bandeauSup,bandeauInf,i);
 		ech.ajouter("coup", cg);
 		com.envoyer(ech);
 	}
@@ -888,9 +898,7 @@ public class Moteur {
 				actionPoint(dataValue);
 				break;
 			case "terrain":
-				ech.vider();
-				ech.ajouter("terrain", t.getTableau());
-				com.envoyer(ech);
+				gestionEvenementGraphique();
 				break;
 			case "annuler":
 				actionAnnuler();
