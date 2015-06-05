@@ -103,6 +103,10 @@ public class Moteur {
 	 * Vrai si affichage sur console. Faux sinon. Utilisé en debug.
 	 */
 	private boolean trace = true;
+	/**
+	 * Nombre de coups sans prise.
+	 */
+	private int compteurNul;
 
 	/**
 	 * Constructeur par défaut.
@@ -143,7 +147,7 @@ public class Moteur {
 		// IntelligenceArtificielle.difficulteIA.facile, j2, this);
 		j2 = new Joueur(Case.Etat.joueur2, Joueur.typeJoueur.ordinateur, IntelligenceArtificielle.difficulteIA.normal, j1, t);
 		joueurCourant = j1;
-		
+		compteurNul = 0;
 		//calculerScore();
 		
 		//message("bandeauSup", joueurCourant.getNom());
@@ -217,21 +221,24 @@ public class Moteur {
 	 * @param aucunDeplacement
 	 * Permet de savoir si la partie est bloquée.
 	 * @return
-	 * Vrai si la partie a été gagnée par un joueur ou si elle est bloquée.
+	 * Vrai si la partie a été gagnée par un joueur, si elle est bloquée ou si c'est un match nul.
 	 * Faux sinon.
 	 */
 	public boolean partieTerminee(boolean aucunDeplacement) {
 		ech.vider();
 		if (joueurCourant.scoreNul() || aucunDeplacement) {
 			System.out.println("FIN DE PARTIE");
-			
 			String BandeauSup = "<html><font color=#FF0000>" + joueurCourant.recupereJoueurOpposant(joueurCourant, j1, j2, false).getNom() + "</font></html>";
-			String BandeauInf = "<html><font color=#FF0000>à remporté la partie</font></html>";
-			
+			String BandeauInf = "<html><font color=#FF0000>a remporté la partie</font></html>";
 			gestionEvenementGraphique(BandeauSup, BandeauInf);
 			com.envoyer(ech);
 			return true;
-		} else
+		} else if(compteurNul == 24) {
+			String BandeauSup = "<html><font color=#FF0000>Match nul</font></html>";
+			String BandeauInf = "<html><font color=#FF0000>Trop de coups sans prise joués</font></html>";
+			gestionEvenementGraphique(BandeauSup, BandeauInf);
+			return true;
+		}
 			return false;
 	}
 	/**
@@ -309,6 +316,7 @@ public class Moteur {
 		ArrayList<Point> l = new ArrayList<Point>();
 		h.ajouterCoup(pDepart);
 		if (priseAspi && prisePercu) {
+			compteurNul = 0;
 			Terrain.ChoixPrise choix;
 			if (joueurCourant.isJoueurHumain()) {
 				Point offA = t.offsetAspiration(d, pDepart);
@@ -331,6 +339,7 @@ public class Moteur {
 
 			}
 		} else if (priseAspi && !prisePercu) {
+			compteurNul = 0;
 			//System.out.println("aspi");
 			l = t.manger(joueurCourant, d, pDepart, pArrive, Terrain.ChoixPrise.parAspiration);
 			majScore(l.size());
@@ -347,6 +356,7 @@ public class Moteur {
 			}
 
 		} else if (!priseAspi && prisePercu) {
+			compteurNul = 0;
 			//System.out.println("percu");
 			l = t.manger(joueurCourant, d, pDepart, pArrive, Terrain.ChoixPrise.parPercussion);
 			majScore(l.size());
@@ -361,6 +371,7 @@ public class Moteur {
 				com.envoyer(ech,joueurCourant.getJoueurID().getNum());
 			}
 		} else {
+			compteurNul++;
 			if (joueurCourant.isJoueurHumain())
 				finTour();
 		}
@@ -643,6 +654,9 @@ public class Moteur {
 	 */
 	public void actionAnnuler() {
 		if (e != EtatTour.partieFinie) {
+			if(compteurNul != 0) {
+				compteurNul--;
+			}
 			ech.vider();
 			Terrain annulation = h.annuler();
 			if (annulation != null) {
@@ -681,6 +695,7 @@ public class Moteur {
 	 */
 	public void actionRefaire() {
 		if (e != EtatTour.partieFinie) {
+			compteurNul++;
 			ech.vider();
 			Case[][] refaire = h.refaire().getTableau();
 			if (refaire != null) {
