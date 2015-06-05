@@ -16,7 +16,7 @@ import javax.swing.JTextField;
 import javax.swing.text.html.HTMLDocument.Iterator;
 
 @SuppressWarnings("serial")
-public class PopupOptions extends JPanel {
+public class PopupOptions extends Popup {
 	JComboBox<String> theme;
 	public enum TypeJoueur {
 
@@ -92,7 +92,7 @@ public class PopupOptions extends JPanel {
 		contraintes.gridwidth = GridBagConstraints.REMAINDER;
 		
 		add(themeEtiq, contraintes);
-		theme = new JComboBox<>(new String[] { "Boisé", "Marbre" });
+		theme = new JComboBox<>(new String[] { "Boisé", "Marbre", "Sombre", "Standard" });
 		contraintes.gridwidth = GridBagConstraints.REMAINDER;
 		
 		add(theme, contraintes);
@@ -113,12 +113,5 @@ public class PopupOptions extends JPanel {
 
 		add(valider, contraintes);
 
-	}
-
-	public void paintComponent(Graphics g) {
-		g.setColor(Color.red);
-		g.fillRect(0, 0, getWidth(), getHeight());
-		g.setColor(Color.white);
-		g.fillRect(10, 10, getWidth() - 20, getHeight() - 20);
 	}
 }

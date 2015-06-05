@@ -45,7 +45,7 @@ class BandeauInfos extends JPanel {
 		sPanJ1.add(j1_score);
 		
 		panJ1.add(sPanJ1,BorderLayout.CENTER);
-		panJ1.setPreferredSize(new Dimension(200,0));
+		panJ1.setPreferredSize(new Dimension(250,0));
 		panJ1.setBorder(BorderFactory.createLineBorder(Color.black));
 		panJ1.setBackground(Color.LIGHT_GRAY);
 		panJ1.setOpaque(true);
@@ -88,7 +88,7 @@ class BandeauInfos extends JPanel {
 		j2_score = formater(new JLabel("Score : 22"));		
 		sPanJ2.add(j2_score);
 		
-		panJ2.setPreferredSize(new Dimension(200,0));
+		panJ2.setPreferredSize(new Dimension(250,0));
 		panJ2.setBorder(BorderFactory.createLineBorder(Color.black));
 		panJ2.setBackground(Color.LIGHT_GRAY);
 		panJ2.setOpaque(true);

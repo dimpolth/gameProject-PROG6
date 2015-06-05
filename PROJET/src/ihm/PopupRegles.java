@@ -21,10 +21,9 @@ import javax.swing.JScrollPane;
 
 
 @SuppressWarnings("serial")
-class PopupRegles extends JPanel {
+class PopupRegles extends Popup {
 	public PopupRegles(IHM i) {
 		super(new BorderLayout());
-
 		GridBagConstraints contraintes = new GridBagConstraints();
 
 		JEditorPane regles = new JEditorPane();		
@@ -43,8 +42,6 @@ class PopupRegles extends JPanel {
 		JPanel pRetour = new JPanel();
 		pRetour.add(retour);
 		add(pRetour, BorderLayout.SOUTH);
-		
-
 	}
 	public String lireFichier_Regle(){
 		String chaine="";
@@ -61,11 +58,5 @@ class PopupRegles extends JPanel {
 			System.out.println(e.toString());
 		}
 		return chaine;
-	}
-	public void paintComponent(Graphics g) {
-		g.setColor(Color.GRAY);
-		g.fillRect(0, 0, getWidth(), getHeight());
-		g.setColor(Color.white);
-		g.fillRect(10, 10, getWidth() - 20, getHeight() - 20);
 	}
 }

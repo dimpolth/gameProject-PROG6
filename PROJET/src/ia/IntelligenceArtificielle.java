@@ -39,13 +39,13 @@ public class IntelligenceArtificielle implements Serializable {
 		this.setNiveauDifficulte(niveauDifficulte);
 		this.setJoueurIA(joueurIA);
 		this.setJoueurAdv(joueurAdversaire);
-		terrain = t; 
+		this.terrain = t; 
 		this.setTourDeJeuCourant(new TourDeJeu()); // Ces deux variables servent pour la difficulté 
 		this.setTourEnCours(false); 						   // intermédiaire (normal) et difficile qui renvoyent une 
 	}														   // liste de points
 
 	public Coup jouerIA(){
-		
+	
 		Coup coupSolution = new Coup(new Point(-1,-1), new Point(-1,-1));
 		Coup coupTemp;
 		ArrayList<Coup> listeCoupsDuTour;
@@ -133,6 +133,7 @@ public class IntelligenceArtificielle implements Serializable {
 		int profondeur = 4;
 		int iterateurProf = 0;
 		
+		
 		// ALPHA BETA
 		tourSolution = alphaBeta(profondeur, false, iterateurProf); // simule x-profondeur tours
 											  				 // exemple : profondeur = 3
@@ -157,30 +158,20 @@ public class IntelligenceArtificielle implements Serializable {
 		listeToursJouables = getToursJouables(terrain, this.getJoueurIA());
 		
 		if(profondeurDynamique){ 	// Adaptation dynamique de la profondeur explorée
-			if(listeToursJouables.size() >= 10 && profondeur > 1)
-				profondeur--;
-			else if(listeToursJouables.size() >= 20 && profondeur > 2)
-				profondeur -= 2;
-			else if(listeToursJouables.size() >= 30 && profondeur > 3)
-				profondeur -= 3;
+			nbPionsRestantsJCourant = joueurIA.getScore();
+			nbPionsRestantsJAdv = joueurAdversaire.getScore();
+			nbPionsRestantsTot = nbPionsRestantsJCourant + nbPionsRestantsJAdv;
+		
+			if((nbPionsRestantsTot <= 4) && (nbPionsRestantsJCourant <= nbPionsRestantsJAdv))
+				profondeur += 3;
+
+			else if(nbPionsRestantsTot <= 6 && (nbPionsRestantsJCourant <= nbPionsRestantsJAdv))
+				profondeur += 2;
+			
+			else if(nbPionsRestantsTot <= 14 && (nbPionsRestantsJCourant < nbPionsRestantsJAdv))
+				profondeur += 1;
 		}
 		
-		nbPionsRestantsJCourant = joueurIA.getScore();
-		nbPionsRestantsJAdv = joueurAdversaire.getScore();
-		nbPionsRestantsTot = nbPionsRestantsJCourant + nbPionsRestantsJAdv;
-	
-		
-		//System.out.println(nbPionsRestants);
-		/*
-		if((nbPionsRestantsTot <= 4) && (nbPionsRestantsJCourant <= nbPionsRestantsJAdv))
-			profondeur += 3;
-
-		else if(nbPionsRestantsTot <= 6 && (nbPionsRestantsJCourant <= nbPionsRestantsJAdv))
-			profondeur += 2;
-		
-		else if(nbPionsRestantsTot <= 14 && (nbPionsRestantsJCourant < nbPionsRestantsJAdv))
-			profondeur += 1;
-		*/
 		
 		if(listeToursJouables.size() > 0)
 			tourSolution = listeToursJouables.get(0);
@@ -193,9 +184,9 @@ public class IntelligenceArtificielle implements Serializable {
 			tourCourant = (TourDeJeu) it.next().clone();
 			
 			nbPionsManges = tourCourant.getValeurResultat() * this.coeffPionsManges;
-			
+		
 			valTemp = nbPionsManges + min(profondeur-1, alpha, beta, tourCourant.getTerrainFinal(), iterateurProf+1);
-			
+	
 			if(valTemp > valMax){
 				valMax = valTemp;
 				tourSolution = (TourDeJeu) tourCourant.clone();
@@ -234,7 +225,7 @@ public class IntelligenceArtificielle implements Serializable {
 		
 		// Récupération de tous les tours jouables pour le terrain et le joueur courant
 		listeToursJouables = getToursJouables(terrainCourant, this.getJoueurAdv());
-		
+	
 		if(listeToursJouables.isEmpty()) // Si il n'y a plus de tours possibles l'IA a perdu (ou plutôt on a gagné)
 			return MAX;
 
@@ -244,7 +235,7 @@ public class IntelligenceArtificielle implements Serializable {
 			tourCourant = (TourDeJeu) it.next().clone();
 
 			valTemp = -(tourCourant.getValeurResultat() * this.coeffPionsManges); // nombre de pions perdus (mangés par l'adversaire) en négatif
-
+		
 			valTemp += max(profondeur-1, alpha, beta, tourCourant.getTerrainFinal(), iterateurProf+1);
 
 			valRes = Math.min(valTemp, valRes);
@@ -322,6 +313,8 @@ public class IntelligenceArtificielle implements Serializable {
 		// Récupération de la liste des points de Départ possibles
 		listeCoupsObligatoires = cloneTerrain.couplibre(joueurCourant.getJoueurID()); // On regarde si on a des coups obligatoires
 		
+		ArrayList<Coup> c = cloneTerrain.coupsObligatoires(joueurCourant);
+		
 		if(listeCoupsObligatoires.isEmpty()) // DEBUT DE TOUR - Sans coup obligatoire (mouvement libre n'amenant aucune prise)
 			listePointsDeDepart = terrain.listePionsJouables(joueurCourant, cloneTerrain);
 		else{							 // DEBUT DE TOUR - Avec coup/prise obligatoire
@@ -381,18 +374,20 @@ public class IntelligenceArtificielle implements Serializable {
 	public void getListeToursPourCoupDepart(ArrayList<Point> listePionsManges, ArrayList<TourDeJeu> listeToursComplets, TourDeJeu tourTemp, Coup coupDeDepart, Terrain cloneTerrain, ArrayList<Point> listePredecesseurs, int nbPionsManges, Joueur joueurCourant){
 		Iterator<Point> itPointsArriveeSuivants;
 		Terrain terrainCopie;
-		Point pDep, pArr, pArrTemp, pTemp;
+		Point pDep,pDepSuiv, pDepCopie, pArr, pArrTemp, pTemp;
 		int compteur = 0, tailleListe;
 		
 		pDep = coupDeDepart.getpDepart();
 		pArr = coupDeDepart.getpArrivee();
 	
 		terrainCopie = cloneTerrain;
+
 		
 		terrainCopie.deplacement(pDep, pArr, joueurCourant, listePredecesseurs);
 
 		if(coupDeDepart.getChoixPrise() != null)
 			listePionsManges = terrainCopie.manger(joueurCourant, terrainCopie.recupereDirection(pDep, pArr), pDep, pArr,coupDeDepart.getChoixPrise());
+		
 		nbPionsManges += listePionsManges.size();
 		listePredecesseurs.add(pDep);
 		
@@ -400,31 +395,36 @@ public class IntelligenceArtificielle implements Serializable {
 		// Il y a aprés chaque prise possibilité de s'arrêter
 		tourTemp.addCoup(coupDeDepart);
 		tourTemp.setValeurResultat(nbPionsManges);
-		tourTemp.setTerrainFinal(terrainCopie);
+		tourTemp.setTerrainFinal(terrainCopie.copie());
 		listeToursComplets.add(tourTemp.clone());
 				
-		pDep = pArr;
+		
+		pDepSuiv = pArr;
 		
 		// On récupère les successeurs possibles à la position d'arrivée du coup joué
-		itPointsArriveeSuivants = terrain.deplacementPossible(pDep, listePredecesseurs, terrainCopie.getTableau()).iterator();
+		itPointsArriveeSuivants = terrain.deplacementPossible(pDepSuiv, listePredecesseurs, terrainCopie.getTableau()).iterator();
 
 		while(itPointsArriveeSuivants.hasNext()){
 			pArrTemp = (Point) itPointsArriveeSuivants.next().clone();
-			Terrain.Direction dir = terrainCopie.recupereDirection(pDep, pArrTemp);
-			if(terrainCopie.estUnePriseAspiration(pDep, dir))
-				getListeToursPourCoupDepart(listePionsManges, listeToursComplets, tourTemp.clone(), new Coup(pDep, pArrTemp, Terrain.ChoixPrise.parAspiration), terrainCopie, listePredecesseurs, nbPionsManges, joueurCourant);
-			if(terrainCopie.estUnePrisePercussion(pDep, dir))
-				getListeToursPourCoupDepart(listePionsManges, listeToursComplets, tourTemp.clone(), new Coup(pDep, pArrTemp, Terrain.ChoixPrise.parPercussion), terrainCopie, listePredecesseurs, nbPionsManges, joueurCourant);
+			Terrain.Direction dir = terrainCopie.recupereDirection(pDepSuiv, pArrTemp);
+			if(terrainCopie.estUnePriseAspiration(pDepSuiv, dir))
+				getListeToursPourCoupDepart(listePionsManges, listeToursComplets, tourTemp.clone(), new Coup(pDepSuiv, pArrTemp, Terrain.ChoixPrise.parAspiration), terrainCopie, listePredecesseurs, nbPionsManges, joueurCourant);
+			if(terrainCopie.estUnePrisePercussion(pDepSuiv, dir))
+				getListeToursPourCoupDepart(listePionsManges, listeToursComplets, tourTemp.clone(), new Coup(pDepSuiv, pArrTemp, Terrain.ChoixPrise.parPercussion), terrainCopie, listePredecesseurs, nbPionsManges, joueurCourant);
 		}
 		
-		Joueur.recupereJoueurOpposant(joueurCourant, joueurIA, joueurAdversaire, false);
+		
 		
 		tailleListe = listePionsManges.size() ;
+		
+		terrainCopie.deplacement(pArr, pDep, joueurCourant, new ArrayList<Point>());
+		
 		for(compteur = 0; compteur < tailleListe; compteur++){
 			pTemp = listePionsManges.get(0);
-			terrainCopie.setCase(joueurCourant.getJoueurID(), pTemp.x, pTemp.y);
+			cloneTerrain.setCase(Joueur.recupereJoueurOpposant(joueurCourant, joueurIA, joueurAdversaire, false).getJoueurID(), pTemp.x, pTemp.y);
 			listePionsManges.remove(0);
 		}
+
 	}
 	
 	/*
@@ -468,6 +468,10 @@ public class IntelligenceArtificielle implements Serializable {
 		return joueurAdversaire;
 	}
 
+	public Terrain getTerrain(){
+		return terrain;
+	}
+	
 	private void setJoueurAdv(Joueur joueurAdversaire) {
 		this.joueurAdversaire = joueurAdversaire;
 	}
@@ -486,6 +490,10 @@ public class IntelligenceArtificielle implements Serializable {
 	
 	private TourDeJeu getTourDeJeuCourant(){
 		return this.tourDeJeuCourant;
+	}
+	
+	public void setTerrain(Terrain t) {
+		this.terrain = t;
 	}
 
 }

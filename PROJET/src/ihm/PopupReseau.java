@@ -17,7 +17,7 @@ import javax.swing.JTextField;
 import javax.swing.text.html.HTMLDocument.Iterator;
 
 @SuppressWarnings("serial")
-public class PopupReseau extends JPanel {
+public class PopupReseau extends Popup {
 
 	
 	JCheckBox etreHote;
@@ -71,7 +71,7 @@ public class PopupReseau extends JPanel {
 		contraintes.gridwidth = GridBagConstraints.REMAINDER;
 		
 		add(selectJoueur2Etiq, contraintes);
-		hote = new JTextField("hote:port");
+		hote = new JTextField("127.0.0.1:55555");
 		contraintes.gridwidth = 1;
 		add(hote, contraintes_groupe_fin);
 		
@@ -98,12 +98,5 @@ public class PopupReseau extends JPanel {
 
 		add(valider, contraintes);
 
-	}
-
-	public void paintComponent(Graphics g) {
-		g.setColor(Color.red);
-		g.fillRect(0, 0, getWidth(), getHeight());
-		g.setColor(Color.white);
-		g.fillRect(10, 10, getWidth() - 20, getHeight() - 20);
 	}
 }

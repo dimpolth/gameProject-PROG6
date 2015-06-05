@@ -18,8 +18,7 @@ class PopupBloquant extends JPanel {
 	}
 
 	public void paintComponent(Graphics g) {
-		g.setColor(getBackground());
+		g.setColor(new Color(0,0,0,128));
 		g.fillRect(0, 0, getWidth(), getHeight());
-		super.paintComponent(g);
 	}
 }
