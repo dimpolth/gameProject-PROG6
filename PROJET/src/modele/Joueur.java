@@ -73,12 +73,12 @@ public class Joueur implements Serializable {
 		if(joueurCourant.getJoueurID() == J1.getJoueurID()){
 			joueurCourant = J2;
 			if(traceChangeJoueur)
-				System.out.println("Au tour du joueur 2 ! ");
+				;//System.out.println("Au tour du joueur 2 ! ");
 		}
 		else {
 			joueurCourant = J1;
 			if(traceChangeJoueur)
-				System.out.println("Au tour du joueur 1 ! ");
+				;//System.out.println("Au tour du joueur 1 ! ");
 		}
 		
 		return joueurCourant;

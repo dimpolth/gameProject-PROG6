@@ -90,11 +90,11 @@ class Particule {
 			taille = new Float(0.01f, 0.03f);
 		}
 		particules = p;
-		System.out.println("POP");
+		//;//System.out.println("POP");
 	}
 	public boolean maj(float facteurSeconde) {
 		coord.x = coord.x + vecteur.x*facteurSeconde;
-		System.out.println(coord.x+"-"+vecteur.x+"-"+facteurSeconde);
+		//;//System.out.println(coord.x+"-"+vecteur.x+"-"+facteurSeconde);
 		coord.y = coord.y + vecteur.y*facteurSeconde;
 		vecteur.x = vecteur.x *0.75f;
 		vecteur.y = vecteur.y - 0.2f*facteurSeconde;
@@ -117,7 +117,7 @@ class Fusee extends Particule {
 	public boolean maj(float facteurSeconde) {
 		super.maj(facteurSeconde);
 		if(System.currentTimeMillis() > tempsExplosion) {
-			System.out.println("ANIHILIATION !");
+			//;//System.out.println("ANIHILIATION !");
 			return true;
 		}
 		return false;
