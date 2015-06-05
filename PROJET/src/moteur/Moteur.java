@@ -103,7 +103,7 @@ public class Moteur {
 	 * Vrai si affichage sur console. Faux sinon. Utilisé en debug.
 	 */
 
-	private boolean trace = true;
+	private boolean trace = false;
 	/**
 	 * Nombre de coups sans prise.
 	 */
@@ -424,7 +424,7 @@ public class Moteur {
 			//System.out.println("FIN DE PARTIE");
 		} else {
 			//System.out.println("FIN DE TOUR ");
-			traceTerrain();
+			//traceTerrain();
 			gestionEvenementGraphique();
 			gestionEvenementGraphique(joueurCourant.getNom(),"Selection du pion",joueurCourant.getJoueurID().getNum());
 			if (joueurCourant.isJoueurHumain()) {
@@ -520,7 +520,7 @@ public class Moteur {
 	 */
 	public void gestionEvenementGraphique() {
 		ech.vider();
-		traceTerrain();
+		//traceTerrain();
 		//System.out.println("PUTAIN DE TERRAIN");
 		EvenementGraphique cg = new EvenementGraphique(t.getTableau());
 		ech.ajouter("coup", cg);
