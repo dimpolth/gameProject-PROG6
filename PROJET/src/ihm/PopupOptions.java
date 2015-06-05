@@ -92,7 +92,7 @@ public class PopupOptions extends Popup {
 		contraintes.gridwidth = GridBagConstraints.REMAINDER;
 		
 		add(themeEtiq, contraintes);
-		theme = new JComboBox<>(new String[] { "Boisé", "Marbre", "Sombre", "Standard" });
+		theme = new JComboBox<>(new String[] { "Boisé", "Marbre", "Sombre", "Standard", "Cochonou" });
 		contraintes.gridwidth = GridBagConstraints.REMAINDER;
 		
 		add(theme, contraintes);

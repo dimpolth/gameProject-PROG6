@@ -102,7 +102,13 @@ public class Moteur {
 	/**
 	 * Vrai si affichage sur console. Faux sinon. Utilisé en debug.
 	 */
-	private boolean trace = false;
+
+	private boolean trace = true;
+	/**
+	 * Nombre de coups sans prise.
+	 */
+	private int compteurNul;
+
 
 	/**
 	 * Constructeur par défaut.
@@ -143,7 +149,7 @@ public class Moteur {
 		// IntelligenceArtificielle.difficulteIA.facile, j2, this);
 		j2 = new Joueur(Case.Etat.joueur2, Joueur.typeJoueur.ordinateur, IntelligenceArtificielle.difficulteIA.normal, j1, t);
 		joueurCourant = j1;
-		
+		compteurNul = 0;
 		//calculerScore();
 		
 		//message("bandeauSup", joueurCourant.getNom());
@@ -217,21 +223,44 @@ public class Moteur {
 	 * @param aucunDeplacement
 	 * Permet de savoir si la partie est bloquée.
 	 * @return
-	 * Vrai si la partie a été gagnée par un joueur ou si elle est bloquée.
+	 * Vrai si la partie a été gagnée par un joueur, si elle est bloquée ou si c'est un match nul.
 	 * Faux sinon.
 	 */
 	public boolean partieTerminee(boolean aucunDeplacement) {
 		ech.vider();
 		if (joueurCourant.scoreNul() || aucunDeplacement) {
+			Joueur gagnant = joueurCourant.recupereJoueurOpposant(joueurCourant, j1, j2, false);
+			Joueur perdant = joueurCourant;
 			System.out.println("FIN DE PARTIE");
-			
-			String BandeauSup = "<html><font color=#FF0000>" + joueurCourant.recupereJoueurOpposant(joueurCourant, j1, j2, false).getNom() + "</font></html>";
+			String BandeauSup = "<html><font color=#FF0000>" + gagnant.getNom() + "</font></html>";
 			String BandeauInf = "<html><font color=#FF0000>a remporté la partie</font></html>";
-			
+			EvenementGraphique cgv = new EvenementGraphique(BandeauSup, BandeauInf, EvenementGraphique.FinPartie.VICTOIRE);
+			EvenementGraphique cgd = new EvenementGraphique(BandeauSup, BandeauInf, EvenementGraphique.FinPartie.DEFAITE);
+			if(com.enReseau()) {
+				ech.ajouter("coup", cgv);
+				com.envoyer(ech, gagnant.getJoueurID().getNum());
+				ech.vider();
+				ech.ajouter("coup", cgd);
+				com.envoyer(ech, perdant.getJoueurID().getNum());
+			} else {
+				if(j1.isJoueurHumain() == j2.isJoueurHumain())
+					gestionEvenementGraphique(BandeauSup, BandeauInf, EvenementGraphique.FinPartie.VICTOIRE);
+				else {
+					if(joueurCourant.isJoueurHumain())
+						gestionEvenementGraphique(BandeauSup, BandeauInf, EvenementGraphique.FinPartie.DEFAITE);
+					else
+						gestionEvenementGraphique(BandeauSup, BandeauInf, EvenementGraphique.FinPartie.VICTOIRE);
+				}
+			}
 			gestionEvenementGraphique(BandeauSup, BandeauInf);
 			com.envoyer(ech);
 			return true;
-		} else
+		} else if(compteurNul == 24) {
+			String BandeauSup = "<html><font color=#FF0000>Match nul</font></html>";
+			String BandeauInf = "<html><font color=#FF0000>Trop de coups sans prise joués</font></html>";
+			gestionEvenementGraphique(BandeauSup, BandeauInf);
+			return true;
+		}
 			return false;
 	}
 	/**
@@ -309,6 +338,7 @@ public class Moteur {
 		ArrayList<Point> l = new ArrayList<Point>();
 		h.ajouterCoup(pDepart);
 		if (priseAspi && prisePercu) {
+			compteurNul = 0;
 			Terrain.ChoixPrise choix;
 			if (joueurCourant.isJoueurHumain()) {
 				Point offA = t.offsetAspiration(d, pDepart);
@@ -331,6 +361,7 @@ public class Moteur {
 
 			}
 		} else if (priseAspi && !prisePercu) {
+			compteurNul = 0;
 			//System.out.println("aspi");
 			l = t.manger(joueurCourant, d, pDepart, pArrive, Terrain.ChoixPrise.parAspiration);
 			majScore(l.size());
@@ -347,6 +378,7 @@ public class Moteur {
 			}
 
 		} else if (!priseAspi && prisePercu) {
+			compteurNul = 0;
 			//System.out.println("percu");
 			l = t.manger(joueurCourant, d, pDepart, pArrive, Terrain.ChoixPrise.parPercussion);
 			majScore(l.size());
@@ -361,6 +393,7 @@ public class Moteur {
 				com.envoyer(ech,joueurCourant.getJoueurID().getNum());
 			}
 		} else {
+			compteurNul++;
 			if (joueurCourant.isJoueurHumain())
 				finTour();
 		}
@@ -496,12 +529,12 @@ public class Moteur {
 	
 	/**
 	 * Surchage de gestion gestionEvenementGraphique pour le cas ou l'on ne met à jour que les bandeaux.
-	 * @param chaine1
-	 * Définie sur quel bandeau ira le message.
-	 * @param chaine2
-	 * Le message à afficher sur le bandeau.
+	 * @param bandeauSup
+	 * Message pour le bandeau supérieur.
+	 * @param bandeauInf
+	 * Message pour le bandeau inférieur.
 	 */
-	void gestionEvenementGraphique(String bandeauSup, String bandeauInf) {
+	public void gestionEvenementGraphique(String bandeauSup, String bandeauInf) {
 		ech.vider();
 		EvenementGraphique cg;
 		if (tourEnCours)
@@ -512,7 +545,16 @@ public class Moteur {
 		com.envoyer(ech);
 	}
 	
-	void gestionEvenementGraphique(String bandeauSup, String bandeauInf,int i) {
+	/**
+	 * Surchage de gestion gestionEvenementGraphique pour le cas ou l'on ne met à jour que les bandeaux et pour transmettre le joueur courant.
+	 * @param bandeauSup
+	 * Message pour le bandeau supérieur.
+	 * @param bandeauInf
+	 * Message pour le bandeau inférieur.
+	 * @param i
+	 * Identifiant du joueur cournat sur le réseau.
+	 */
+	public void gestionEvenementGraphique(String bandeauSup, String bandeauInf, int i) {
 		ech.vider();
 		EvenementGraphique cg;
 		cg = new EvenementGraphique(bandeauSup,bandeauInf,i);
@@ -520,6 +562,23 @@ public class Moteur {
 		com.envoyer(ech);
 	}
 
+	/**
+	 * Surchage de gestion gestionEvenementGraphique pour le cas ou l'on ne met à jour que les bandeaux dans le cas d'une fin de partie.
+	 * @param bandeauSup
+	 * Message pour le bandeau supérieur.
+	 * @param bandeauInf
+	 * Message pour le bandeau inférieur.
+	 * @param fp
+	 * Définit l'animation à afficher.
+	 */
+	public void gestionEvenementGraphique(String bandeauSup, String bandeauInf, EvenementGraphique.FinPartie fp) {
+		ech.vider();
+		EvenementGraphique cg;
+		cg = new EvenementGraphique(bandeauSup, bandeauInf, fp);
+		ech.ajouter("coup", cg);
+		com.envoyer(ech);
+	}
+	
 	/**
 	 * Permet de recalculer les scores des joueurs.
 	 * Utilisée dans les cas de annuler/refaire et lors d'un chargement de partie.
@@ -654,6 +713,9 @@ public class Moteur {
 	 */
 	public void actionAnnuler() {
 		if (e != EtatTour.partieFinie) {
+			if(compteurNul != 0) {
+				compteurNul--;
+			}
 			ech.vider();
 			Terrain annulation = h.annuler();
 			if (annulation != null) {
@@ -692,6 +754,7 @@ public class Moteur {
 	 */
 	public void actionRefaire() {
 		if (e != EtatTour.partieFinie) {
+			compteurNul++;
 			ech.vider();
 			Case[][] refaire = h.refaire().getTableau();
 			if (refaire != null) {
