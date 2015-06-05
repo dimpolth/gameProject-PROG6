@@ -294,11 +294,10 @@ public class IHM extends JFrame implements ComponentListener {
 			break;
 
 		case OPTION_VALIDER:
-			Parametres params = new Parametres();
-			params.j1_identifiant = popupO.identifiantJoueur1.getText();
-			params.j2_identifiant = popupO.identifiantJoueur2.getText();
-			params.j1_type = Parametres.NiveauJoueur.getFromIndex(popupO.selectJoueur1.getSelectedIndex());
-			params.j2_type = Parametres.NiveauJoueur.getFromIndex(popupO.selectJoueur2.getSelectedIndex());
+
+			Parametres params = getParametres();
+			
+
 
 			if(popupO.theme.getSelectedItem() == "Standard")
 				theme.setTheme(Theme.Type.STANDARD);
@@ -340,9 +339,9 @@ public class IHM extends JFrame implements ComponentListener {
 					param.j1_type = Parametres.NiveauJoueur.HUMAIN;
 					param.j2_type = Parametres.NiveauJoueur.HUMAIN;
 					Echange ec = new Echange();
-					ec.ajouter("nouvellePartie", param);
-					com.envoyer(ec);
-					
+					ec.ajouter("nouvellePartie", true);
+					ec.ajouter("parametres", param);					
+					com.envoyer(ec);					
 					
 					
 					
