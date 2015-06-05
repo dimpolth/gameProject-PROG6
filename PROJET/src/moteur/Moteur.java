@@ -327,7 +327,7 @@ public class Moteur {
 				int[] score = { j1.getScore(), j2.getScore() };
 
 				gestionEvenementGraphique(null, null, l, score);
-				traceTerrain();
+				//traceTerrain();
 
 			}
 		} else if (priseAspi && !prisePercu) {
@@ -337,7 +337,7 @@ public class Moteur {
 			int[] score = { j1.getScore(), j2.getScore() };
 
 			gestionEvenementGraphique(null, null, l, score);
-			traceTerrain();
+			//traceTerrain();
 
 			if (joueurCourant.isJoueurHumain()) {
 				testFinTour();
@@ -353,7 +353,7 @@ public class Moteur {
 			int[] score = { j1.getScore(), j2.getScore() };
 
 			gestionEvenementGraphique(null, null, l, score);
-			traceTerrain();
+			//traceTerrain();
 			if (joueurCourant.isJoueurHumain()) {
 				testFinTour();
 				ech.vider();
@@ -371,7 +371,7 @@ public class Moteur {
 	  * ou manuellement s'il décide de s'arrêter pendant un enchaînement.
 	  */
 	public void finTour() {
-		// traceTerrain();
+		
 		if (joueurCourant.getJoueurID() == Case.Etat.joueur1)
 			joueurCourant = j2;
 		else
@@ -390,7 +390,8 @@ public class Moteur {
 			e = EtatTour.partieFinie;
 			//System.out.println("FIN DE PARTIE");
 		} else {
-			// ;//System.out.println("FIN DE TOUR ");
+			//System.out.println("FIN DE TOUR ");
+			traceTerrain();
 			gestionEvenementGraphique();
 			gestionEvenementGraphique(joueurCourant.getNom(),"Selection du pion",joueurCourant.getJoueurID().getNum());
 			if (joueurCourant.isJoueurHumain()) {
@@ -642,7 +643,7 @@ public class Moteur {
 				ech.vider();
 				ech.ajouter("finTour", true);
 				com.envoyer(ech,joueurCourant.getJoueurID().getNum());
-				traceTerrain();
+				//traceTerrain();
 				testFinTour();
 			}
 		}
