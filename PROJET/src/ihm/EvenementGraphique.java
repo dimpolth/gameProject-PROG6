@@ -62,15 +62,14 @@ public class EvenementGraphique implements Runnable, Serializable {
 		t.start();
 	}
 	public void run() {
-		
+		System.out.println(terrain);
 		if(terrain != null){
+			//System.out.println("Desinnation du terrain");
+			latence(500);
+			
 			tg.dessinerTerrain(terrain);
 			
-			try {
-				Thread.sleep(500);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+			latence(500);
 		}
 		
 		
@@ -78,11 +77,9 @@ public class EvenementGraphique implements Runnable, Serializable {
 			tg.deplacer(deplacement[0], deplacement[1]);
 		}
 		
-		try {
-			Thread.sleep(TerrainGraphique.ANIM_DEPL/4);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+		
+		latence(TerrainGraphique.ANIM_DEPL/4);
+		
 		if(pionsManges != null) {
 			tg.manger(pionsManges);
 		}
@@ -91,11 +88,9 @@ public class EvenementGraphique implements Runnable, Serializable {
 		} else {
 			tg.cacherPrisesPossibles();
 		}
-		try {
-			Thread.sleep(TerrainGraphique.ANIM_DISP);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+		
+		latence(TerrainGraphique.ANIM_DISP);
+	
 		if(chemin != null) {
 			tg.trait = chemin;
 			tg.repaint();
@@ -123,6 +118,14 @@ public class EvenementGraphique implements Runnable, Serializable {
 		}
 		
 		
+	}
+	
+	public void latence(int tps){
+		try {
+			Thread.sleep(tps);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public static void afficherCoups(TerrainGraphique tg){
