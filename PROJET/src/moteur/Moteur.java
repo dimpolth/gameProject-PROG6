@@ -425,7 +425,7 @@ public class Moteur {
 		} else {
 			//System.out.println("FIN DE TOUR ");
 			//traceTerrain();
-			gestionEvenementGraphique();
+			//gestionEvenementGraphique();
 			gestionEvenementGraphique(joueurCourant.getNom(),"Selection du pion",joueurCourant.getJoueurID().getNum());
 			if (joueurCourant.isJoueurHumain()) {
 				e = EtatTour.selectionPion;
