@@ -107,13 +107,11 @@ public class Serveur implements Runnable{
 		Parametres params = new Parametres();
 		
 		if(joueurs.get(1) == null){			
-			joueurs.put(1,c);	
-			System.out.println("Nouveau joueur 1");
+			joueurs.put(1,c);		
 			params.j1_identifiant = c.identifiant;			
 		}
 		else if(joueurs.get(2) == null){			
-			joueurs.put(2,c);
-			System.out.println("Nouveau joueur 2 : "+c.identifiant);
+			joueurs.put(2,c);			
 			params.j2_identifiant = c.identifiant;			
 		}		
 	
