@@ -2,13 +2,17 @@ package ihm;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.*;
+import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
@@ -324,6 +328,13 @@ public class IHM extends JFrame implements ComponentListener {
 			
 			popupO.setVisible(false);
 			popupB.setVisible(false);
+			break;
+		case REGLES_PLUS:
+			try {
+				Desktop.getDesktop().open(new File(getClass().getResource("/documents/regles.pdf").toURI()));
+			} catch (Exception e) {
+				e.printStackTrace();
+			};
 			break;
 		case REGLES_RETOUR:
 			popupR.setVisible(false);
