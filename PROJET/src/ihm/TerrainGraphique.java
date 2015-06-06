@@ -6,6 +6,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
+import java.awt.RenderingHints;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.util.ArrayList;
@@ -45,17 +46,6 @@ public class TerrainGraphique extends JPanel implements ComponentListener {
 
 	public TerrainGraphique(IHM i) {
 		super(null);
-		/*
-		 * imgPlateau = new
-		 * ImageIcon(getClass().getResource("images/themes/bois/plateau.png"
-		 * )).getImage(); imgPion1 = new
-		 * ImageIcon(getClass().getResource("images/themes/bois/pion1.png"
-		 * )).getImage(); imgPion2 = new
-		 * ImageIcon(getClass().getResource("images/themes/bois/pion2.png"
-		 * )).getImage(); imgCroix = new
-		 * ImageIcon(getClass().getResource("images/themes/bois/croix.png"
-		 * )).getImage();
-		 */
 		try {
 			imgPlateau = ImageIO.read(getClass().getResource("/images/themes/bois/plateau.png"));
 			imgPion1 = ImageIO.read(getClass().getResource("/images/themes/bois/pion1.png"));
@@ -172,7 +162,8 @@ public class TerrainGraphique extends JPanel implements ComponentListener {
 
 	public void paintComponent(Graphics g) {
 		Graphics2D gra = (Graphics2D)g;
-		gra.setColor(new Color(238, 238, 238));
+		gra.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+		gra.setColor(ihm.theme.couleurFond);
 		gra.fillRect(0, 0, getWidth(), getHeight());
 		double largeur = getWidth(), hauteur = getHeight(), origX = 0, origY = 0;
 		if (largeur / hauteur > 19.0 / 11.0) {

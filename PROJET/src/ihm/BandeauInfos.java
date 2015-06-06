@@ -26,7 +26,7 @@ class BandeauInfos extends JPanel {
 		super( new BorderLayout(15,15) );
 		tg = pTg;
 		
-		
+		setOpaque(false);
 		panJ1 = new JPanel( new BorderLayout() ); 
 		j1_pion = new JPanel(){
 			public void paintComponent(Graphics g){

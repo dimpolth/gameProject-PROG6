@@ -53,12 +53,11 @@ public class IHM extends JFrame implements ComponentListener {
 			e.printStackTrace();
 		}
 		
-
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		addComponentListener(this);
 
 		theme = new Theme(this);
-
+		
 		coucheJeu = new JPanel(new BorderLayout());
 		coucheJeu.setBounds(0, 0, getSize().width, getSize().height);
 		add(coucheJeu);
@@ -66,10 +65,12 @@ public class IHM extends JFrame implements ComponentListener {
 		// ZONE NORD
 		JPanel voletNord = new JPanel(new BorderLayout());
 		coucheJeu.add(voletNord, BorderLayout.NORTH);
+		voletNord.setOpaque(false);
 
 		// Boutons
 		JPanel panneauMenu = new JPanel();
 		voletNord.add(panneauMenu, BorderLayout.NORTH);
+		panneauMenu.setOpaque(false);
 
 		Bouton boutonMenu = new Bouton("Menu");
 		boutonMenu.addActionListener(new Ecouteur(Ecouteur.Bouton.MENU, this));
@@ -93,13 +94,17 @@ public class IHM extends JFrame implements ComponentListener {
 		// ZONE SUD
 		JPanel voletSud = new JPanel(new BorderLayout());
 		coucheJeu.add(voletSud, BorderLayout.SOUTH);
+		voletSud.setOpaque(false);
 
 		
 		JPanel voletSudOuest = new JPanel();
+		voletSudOuest.setOpaque(false);
 		voletSud.add(voletSudOuest, BorderLayout.WEST);
 		JPanel voletSudCentre = new JPanel();
+		voletSudCentre.setOpaque(false);
 		voletSud.add(voletSudCentre, BorderLayout.CENTER);
 		JPanel voletSudEst = new JPanel();
+		voletSudEst.setOpaque(false);
 		voletSud.add(voletSudEst, BorderLayout.EAST);
 		
 		Bouton boutonAide = new Bouton("Aide");
@@ -454,11 +459,11 @@ public class IHM extends JFrame implements ComponentListener {
 	public void componentResized(ComponentEvent e) {
 		coucheJeu.setBounds(0, 0, getWidth(), getHeight());
 		popupB.setBounds(0, 0, getWidth(), getHeight());
-		popupM.setBounds(getWidth() / 2 - 150, getHeight() / 2 - 275, 300, 550);
-		popupO.setBounds(getWidth() / 2 - 300, getHeight() / 2 - 250, 600, 500);
+		popupM.setBounds(getWidth() / 2 - 175, getHeight() / 2 - 275, 350, 550);
+		popupO.setBounds(getWidth() / 2 - 320, getHeight() / 2 - 200, 640, 400);
 		popupR.setBounds(getWidth() / 2 - 400, getHeight() / 2 - 250, 800, 500);
 
-		popupReseau.setBounds(getWidth() / 2 - 200, getHeight() / 2 - 225, 400, 450);		
+		popupReseau.setBounds(getWidth() / 2 - 175, getHeight() / 2 - 275, 350, 550);		
 		popupV.setBounds(0, 0, getWidth(), getHeight());
 
 	}
