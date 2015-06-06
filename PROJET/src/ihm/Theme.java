@@ -39,7 +39,7 @@ public class Theme {
 	public void setTheme(Type pId) {
 		if ((this.id == null || !this.id.equals(pId))) {
 			this.id = pId;
-			switch(pId) {
+			switch (pId) {
 			case STANDARD:
 				couleurFond = new Color(238, 238, 238);
 				couleurDefaut = Color.LIGHT_GRAY;
@@ -81,12 +81,12 @@ public class Theme {
 				couleurDefaut = new Color(12, 20, 31);
 				couleurJ1 = new Color(111, 195, 223);
 				couleurJ2 = new Color(223, 116, 12);
-				couleurPolice = new Color(230,255,255);
-				couleurPoliceGrisee = new Color(162,186,186);
-				couleurBordures = new Color(230,255,255);
-				couleurSup = new Color(230,255,255);
-				couleurInf = new Color(230,255,255);
-				couleurTDefaut = new Color(230,255,255);
+				couleurPolice = new Color(230, 255, 255);
+				couleurPoliceGrisee = new Color(162, 186, 186);
+				couleurBordures = new Color(230, 255, 255);
+				couleurSup = new Color(230, 255, 255);
+				couleurInf = new Color(230, 255, 255);
+				couleurTDefaut = new Color(230, 255, 255);
 				break;
 			case COCHON:
 				couleurFond = new Color(238, 238, 238);

@@ -16,8 +16,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import javax.imageio.ImageIO;
-//import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
 @SuppressWarnings("serial")
