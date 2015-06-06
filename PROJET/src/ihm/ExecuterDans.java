@@ -9,7 +9,6 @@ import javax.swing.Timer;
 
 import modele.Joueur;
 
-
 class ExecuterDans implements ActionListener {
 	IHM ihm;
 	String id;
@@ -27,18 +26,18 @@ class ExecuterDans implements ActionListener {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		switch(id) {
+		switch (id) {
 		case "pionsManges":
-			ihm.tg.manger((ArrayList<Point>)dataValue);
+			ihm.tg.manger((ArrayList<Point>) dataValue);
 			break;
 		case "choixPrise":
-			ihm.tg.afficherPrisesPossibles((Point[])dataValue);
+			ihm.tg.afficherPrisesPossibles((Point[]) dataValue);
 			break;
 		case "joueurs":
 			Joueur[] joueurs = (Joueur[]) dataValue;
 			for (int j = 1; j <= 2; j++) {
-				ihm.bandeauInfos.setIdentifiant(j,joueurs[j-1].getNom());
-				ihm.bandeauInfos.setScore(j,joueurs[j-1].getScore());
+				ihm.bandeauInfos.setIdentifiant(j, joueurs[j - 1].getNom());
+				ihm.bandeauInfos.setScore(j, joueurs[j - 1].getScore());
 			}
 			break;
 		}
