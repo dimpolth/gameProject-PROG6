@@ -137,14 +137,15 @@ public class EvenementGraphique implements Runnable, Serializable {
 		if(bandeauInf != null){
 		tg.ihm.bandeauInfos.setTexteInf(bandeauInf);}
 		
-		EvenementGraphique.animationEnCours = false;
+		if(joueurCourant != 0) {
+			tg.ihm.bandeauInfos.setJoueurActif(joueurCourant);
+		}
 		
 		if(tg.lCoups.size() != 0) {
 			tg.lCoups.pollFirst().lancer();
 		}
-		
-		if(joueurCourant != 0) {
-			tg.ihm.bandeauInfos.setJoueurActif(joueurCourant);
+		else{
+			EvenementGraphique.animationEnCours = false;
 		}
 		
 		
