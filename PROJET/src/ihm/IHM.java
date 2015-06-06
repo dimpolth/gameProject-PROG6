@@ -350,7 +350,8 @@ public class IHM extends JFrame implements ComponentListener {
 					param.j1_type = Parametres.NiveauJoueur.HUMAIN;
 					param.j2_type = Parametres.NiveauJoueur.HUMAIN;
 					Echange ec = new Echange();
-					ec.ajouter("nouvellePartie", true);					
+					ec.ajouter("nouvellePartie", true);	
+					ec.ajouter("parametres", param);
 					com.envoyer(ec);					
 					
 					

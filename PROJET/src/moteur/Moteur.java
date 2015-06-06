@@ -108,12 +108,15 @@ public class Moteur {
 	 * Nombre de coups sans prise.
 	 */
 	private int compteurNul;
+	
+	private long instance;
 
 
 	/**
 	 * Constructeur par défaut.
 	 */
 	public Moteur() {
+		instance=System.currentTimeMillis();
 	}
 
 	/**
@@ -137,7 +140,6 @@ public class Moteur {
 
 		//t.TerrainTest(11);
 		
-
 		h = new Historique();
 		h.ajouterTour(t);
 		ech = new Echange();
@@ -870,7 +872,7 @@ public class Moteur {
 		Parametres p = (Parametres) dataValue;
 		
 	
-		//System.out.println("("+p.j1_identifiant+")"+j1.getNom()+" : ("+p.j2_identifiant+")"+""+j2.getNom());
+		//System.out.println(instance  +" --- ("+p.j1_identifiant+")"+j1.getNom()+" : ("+p.j2_identifiant+")"+""+j2.getNom());
 		if (p.j1_identifiant != null)
 			j1.setNom(p.j1_identifiant);
 		else
@@ -881,7 +883,7 @@ public class Moteur {
 		else 
 			p.j2_identifiant=j2.getNom();
 		
-		//System.out.println("("+p.j1_identifiant+")"+j1.getNom()+" : ("+p.j2_identifiant+")"+""+j2.getNom());
+		//System.out.println(instance  +" ---("+p.j1_identifiant+")"+j1.getNom()+" : ("+p.j2_identifiant+")"+""+j2.getNom());
 		
 		if(p.j1_type != null ){
 			if (p.j1_type == Parametres.NiveauJoueur.HUMAIN) {
@@ -932,7 +934,9 @@ public class Moteur {
 	 * Identifiant de joueur pour le réseau.
 	 */
 	public void action(Object o, int j) {
+		
 		Echange echange = (Echange)o;
+		
 		Case.Etat joueurReception = null;
 		if (j == 1)
 			joueurReception = Etat.joueur1;
@@ -971,14 +975,14 @@ public class Moteur {
 				actionAnnuler();
 				break;
 			case "joueurs":
-				Joueur[] tabJoueurIntit = (Joueur[]) dataValue;
+				/*Joueur[] tabJoueurIntit = (Joueur[]) dataValue;
 				// recuperer les noms et les type des joueurs.
 				j1.setNom(tabJoueurIntit[0].getNom());
 				j2.setNom(tabJoueurIntit[1].getNom());
 				ech.vider();
 				Joueur[] tabJoueur = { j1, j2 };
 				ech.ajouter("joueurs", tabJoueur);
-				com.envoyer(ech);
+				com.envoyer(ech);*/
 				break;
 			case "refaire":
 				actionRefaire();
