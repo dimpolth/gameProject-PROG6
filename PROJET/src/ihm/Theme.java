@@ -6,6 +6,7 @@ import java.awt.Image;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
 
 public class Theme {
 	public enum Type {
@@ -24,7 +25,7 @@ public class Theme {
 	private IHM ihm;
 	private Type id = null;
 	private Image imgMenuLarge, imgMenuFin;
-	public Color couleurFond = null;
+	public Color couleurFond = null, couleurDefaut = null, couleurJ1 = null, couleurJ2 = null, couleurPolice = null, couleurPoliceGrisee = null, couleurBordures = null;
 
 	Theme(IHM ihm) {
 		this.ihm = ihm;
@@ -40,22 +41,58 @@ public class Theme {
 			switch(pId) {
 			case STANDARD:
 				couleurFond = new Color(238, 238, 238);
+				couleurDefaut = Color.LIGHT_GRAY;
+				couleurJ1 = Color.WHITE;
+				couleurJ2 = Color.BLACK;
+				couleurPolice = Color.WHITE;
+				couleurPoliceGrisee = Color.GRAY;
+				couleurBordures = Color.WHITE;
 				break;
 			case BOIS:
 				couleurFond = new Color(0, 0, 0);
+				couleurDefaut = Color.LIGHT_GRAY;
+				couleurJ1 = Color.YELLOW;
+				couleurJ2 = Color.ORANGE;
+				couleurPolice = Color.WHITE;
+				couleurPoliceGrisee = Color.GRAY;
+				couleurBordures = Color.WHITE;
 				break;
 			case MARBRE:
 				couleurFond = new Color(238, 238, 238);
+				couleurDefaut = Color.LIGHT_GRAY;
+				couleurJ1 = Color.RED;
+				couleurJ2 = Color.RED;
+				couleurPolice = Color.WHITE;
+				couleurPoliceGrisee = Color.GRAY;
+				couleurBordures = Color.WHITE;
 				break;
 			case SOMBRE:
 				couleurFond = new Color(12, 20, 31);
+				couleurDefaut = new Color(12, 20, 31);
+				couleurJ1 = new Color(111, 195, 223);
+				couleurJ2 = new Color(223, 116, 12);
+				couleurPolice = new Color(230,255,255);
+				couleurPoliceGrisee = new Color(162,186,186);
+				couleurBordures = new Color(230,255,255);
 				break;
 			case COCHON:
 				couleurFond = new Color(238, 238, 238);
+				couleurDefaut = Color.LIGHT_GRAY;
+				couleurJ1 = Color.PINK;
+				couleurJ2 = Color.ORANGE;
+				couleurPolice = Color.RED;
+				couleurPoliceGrisee = Color.GRAY;
+				couleurBordures = Color.WHITE;
 				break;
 			}
 			ihm.coucheJeu.setBackground(couleurFond);
-			Bouton.setThemeTous(pId);
+			ihm.bandeauInfos.panTextes.setBackground(couleurDefaut);
+			ihm.bandeauInfos.panTextes.setBorder(BorderFactory.createLineBorder(couleurBordures));
+			ihm.bandeauInfos.panJ1.setBackground(couleurJ1);
+			ihm.bandeauInfos.panJ1.setBorder(BorderFactory.createLineBorder(couleurBordures));
+			ihm.bandeauInfos.panJ2.setBackground(couleurJ2);
+			ihm.bandeauInfos.panJ2.setBorder(BorderFactory.createLineBorder(couleurBordures));
+			Bouton.setThemeTous(pId, couleurPolice, couleurPoliceGrisee);
 			try {
 				ihm.tg.imgPlateau = ImageIO.read(getClass().getResource("/images/themes/" + pId.s + "/plateau.jpg"));
 				ihm.tg.imgPion1 = ImageIO.read(getClass().getResource("/images/themes/" + pId.s + "/pion1.png"));
