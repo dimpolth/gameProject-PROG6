@@ -26,6 +26,7 @@ public class Theme {
 	private Type id = null;
 	private Image imgMenuLarge, imgMenuFin;
 	public Color couleurFond = null, couleurDefaut = null, couleurJ1 = null, couleurJ2 = null, couleurPolice = null, couleurPoliceGrisee = null, couleurBordures = null;
+	public Color couleurSup = null, couleurInf = null, couleurTDefaut = null;
 
 	Theme(IHM ihm) {
 		this.ihm = ihm;
@@ -47,6 +48,9 @@ public class Theme {
 				couleurPolice = Color.WHITE;
 				couleurPoliceGrisee = Color.GRAY;
 				couleurBordures = Color.WHITE;
+				couleurSup = Color.BLACK;
+				couleurInf = Color.BLACK;
+				couleurTDefaut = Color.BLACK;
 				break;
 			case BOIS:
 				couleurFond = new Color(0, 0, 0);
@@ -56,6 +60,9 @@ public class Theme {
 				couleurPolice = Color.WHITE;
 				couleurPoliceGrisee = Color.GRAY;
 				couleurBordures = Color.WHITE;
+				couleurSup = Color.BLACK;
+				couleurInf = Color.BLACK;
+				couleurTDefaut = Color.BLACK;
 				break;
 			case MARBRE:
 				couleurFond = new Color(238, 238, 238);
@@ -65,6 +72,9 @@ public class Theme {
 				couleurPolice = Color.WHITE;
 				couleurPoliceGrisee = Color.GRAY;
 				couleurBordures = Color.WHITE;
+				couleurSup = Color.BLACK;
+				couleurInf = Color.BLACK;
+				couleurTDefaut = Color.BLACK;
 				break;
 			case SOMBRE:
 				couleurFond = new Color(12, 20, 31);
@@ -74,6 +84,9 @@ public class Theme {
 				couleurPolice = new Color(230,255,255);
 				couleurPoliceGrisee = new Color(162,186,186);
 				couleurBordures = new Color(230,255,255);
+				couleurSup = new Color(230,255,255);
+				couleurInf = new Color(230,255,255);
+				couleurTDefaut = new Color(230,255,255);
 				break;
 			case COCHON:
 				couleurFond = new Color(238, 238, 238);
@@ -83,6 +96,9 @@ public class Theme {
 				couleurPolice = Color.RED;
 				couleurPoliceGrisee = Color.GRAY;
 				couleurBordures = Color.WHITE;
+				couleurSup = Color.BLACK;
+				couleurInf = Color.BLACK;
+				couleurTDefaut = Color.BLACK;
 				break;
 			}
 			ihm.coucheJeu.setBackground(couleurFond);
@@ -93,6 +109,12 @@ public class Theme {
 			ihm.bandeauInfos.panJ2.setBackground(couleurJ2);
 			ihm.bandeauInfos.panJ2.setBorder(BorderFactory.createLineBorder(couleurBordures));
 			Bouton.setThemeTous(pId, couleurPolice, couleurPoliceGrisee);
+			ihm.bandeauInfos.j1_identifiant.setForeground(couleurTDefaut);
+			ihm.bandeauInfos.j1_score.setForeground(couleurTDefaut);
+			ihm.bandeauInfos.j2_identifiant.setForeground(couleurTDefaut);
+			ihm.bandeauInfos.j2_score.setForeground(couleurTDefaut);
+			ihm.bandeauInfos.texteInf.setForeground(couleurInf);
+			ihm.bandeauInfos.texteSup.setForeground(couleurSup);
 			try {
 				ihm.tg.imgPlateau = ImageIO.read(getClass().getResource("/images/themes/" + pId.s + "/plateau.jpg"));
 				ihm.tg.imgPion1 = ImageIO.read(getClass().getResource("/images/themes/" + pId.s + "/pion1.png"));

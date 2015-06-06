@@ -39,12 +39,15 @@ class PopupRegles extends Popup {
 		scrollPane.setOpaque(false);
 		add(scrollPane, BorderLayout.CENTER);
 
+		JPanel pBouton = new JPanel();
+		Bouton plus = new Bouton("pdf externe");
+		plus.addActionListener(new Ecouteur(Ecouteur.Bouton.REGLES_PLUS, i));
+		pBouton.add(plus);
 		Bouton retour = new Bouton("Retour");
 		retour.addActionListener(new Ecouteur(Ecouteur.Bouton.REGLES_RETOUR, i));
-		JPanel pRetour = new JPanel();
-		pRetour.add(retour);
-		pRetour.setOpaque(false);
-		add(pRetour, BorderLayout.SOUTH);
+		pBouton.add(retour);
+		pBouton.setOpaque(false);
+		add(pBouton, BorderLayout.SOUTH);
 	}
 	public String lireFichier_Regle(){
 		String chaine="";
