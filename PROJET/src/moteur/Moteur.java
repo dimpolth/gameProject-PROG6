@@ -117,6 +117,8 @@ public class Moteur {
 	 */
 	public Moteur() {
 		instance=System.currentTimeMillis();
+		j1 = new Joueur(Case.Etat.joueur1, Joueur.typeJoueur.humain, "Joueur 1");		
+		j2 = new Joueur(Case.Etat.joueur2, Joueur.typeJoueur.ordinateur, IntelligenceArtificielle.difficulteIA.normal, j1, t);
 	}
 
 	/**
@@ -139,17 +141,18 @@ public class Moteur {
 		t = new Terrain();
 
 		//t.TerrainTest(11);
-		
+		j1.resetScore();
+		j2.resetScore();
 		h = new Historique();
 		h.ajouterTour(t);
 		ech = new Echange();
 		listePointDebut = new ArrayList<Point>();
-		j1 = new Joueur(Case.Etat.joueur1, Joueur.typeJoueur.humain, "Joueur 1");
+		
 		// j2 = new Joueur(Case.Etat.joueur2, Joueur.typeJoueur.humain,
 		// "Joueur 2");
 		// j1 = new Joueur(Case.Etat.joueur1, Joueur.typeJoueur.ordinateur,
 		// IntelligenceArtificielle.difficulteIA.facile, j2, this);
-		j2 = new Joueur(Case.Etat.joueur2, Joueur.typeJoueur.ordinateur, IntelligenceArtificielle.difficulteIA.normal, j1, t);
+		
 		joueurCourant = j1;
 		compteurNul = 0;
 		//calculerScore();

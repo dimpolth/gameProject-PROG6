@@ -49,7 +49,7 @@ public class Joueur implements Serializable {
 	 */
 	public Joueur(Case.Etat joueurID, typeJoueur joueur, String nom){
 		this.setJoueurID(joueurID);
-		score = 22;
+		resetScore();
 		this.nom = nom;
 		this.setJoueurHumain(true);
 		ia = null;
@@ -70,7 +70,7 @@ public class Joueur implements Serializable {
 	 */
 	public Joueur(Case.Etat joueurID, typeJoueur joueur, IntelligenceArtificielle.difficulteIA niveau, Joueur adversaire, Terrain t){
 		this.setJoueurID(joueurID);
-		score = 22;
+		resetScore();
 		this.nom = "Ordinateur";
 		this.setJoueurHumain(false);
 		ia = new IntelligenceArtificielle(niveau, this, adversaire, t);
@@ -152,6 +152,10 @@ public class Joueur implements Serializable {
 		}
 		
 		return joueurCourant;
+	}
+	
+	public void resetScore(){
+		score = 22;
 	}
 	
 	public void setScore(int nbPionsManges) {

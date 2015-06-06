@@ -441,10 +441,14 @@ public class IHM extends JFrame implements ComponentListener {
 		if(!r){
 			popupM.boutonMenuReseau.setVisible(true);
 			popupM.boutonMenuLocal.setVisible(false);
+			popupM.boutonRecommencer.setEnabled(true);
 		}
 		else{
 			popupM.boutonMenuReseau.setVisible(false);
 			popupM.boutonMenuLocal.setVisible(true);
+			if(!Communication.estServeur())				
+				popupM.boutonRecommencer.setEnabled(false);
+			
 		}
 		
 		popupO.selectJoueur1Etiq.setVisible(!r);

@@ -12,6 +12,7 @@ import javax.swing.JPanel;
 class PopupMenu extends Popup {
 	Bouton boutonMenuReseau, boutonMenuLocal;
 	Bouton boutonMenuSauvegarder, boutonMenuCharger;
+	Bouton boutonRecommencer;
 	
 	public PopupMenu(IHM i) {
 		super(new GridBagLayout());
@@ -48,9 +49,9 @@ class PopupMenu extends Popup {
 		boutonMenuRegles.addActionListener(new Ecouteur(Ecouteur.Bouton.REGLES, i));
 		add(boutonMenuRegles, contraintesCategorie);
 
-		Bouton buttonRecommencer = new Bouton("Nouvelle partie");
-		buttonRecommencer.addActionListener(new Ecouteur(Ecouteur.Bouton.RECOMMENCER, i));
-		add(buttonRecommencer, contraintes);
+		boutonRecommencer = new Bouton("Nouvelle partie");
+		boutonRecommencer.addActionListener(new Ecouteur(Ecouteur.Bouton.RECOMMENCER, i));
+		add(boutonRecommencer, contraintes);
 		Bouton boutonMenuQuitter = new Bouton("Quitter le jeu");
 		boutonMenuQuitter.addActionListener(new Ecouteur(Ecouteur.Bouton.QUITTER, i));
 		add(boutonMenuQuitter, contraintes);

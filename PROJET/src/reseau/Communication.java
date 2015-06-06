@@ -144,6 +144,9 @@ public class Communication {
 		return Communication.reseau;
 	}
 	
+	public static boolean estServeur(){
+		return Communication.canaux[ Communication.MOTEUR ].serveur != null;
+	}
 	
 	
 	
