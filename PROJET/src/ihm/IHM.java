@@ -23,6 +23,7 @@ import javax.swing.JLayeredPane;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import modele.Parametres;
 import modele.Parametres.NiveauJoueur;
@@ -52,7 +53,7 @@ public class IHM extends JFrame implements ComponentListener {
 	Bouton boutonRefaire;
 	Bouton boutonValidation;
 
-	boolean modeReseau = false;
+	
 
 	public IHM() {
 
@@ -193,12 +194,36 @@ public class IHM extends JFrame implements ComponentListener {
 
 	}
 
-	public void lancer() {
+	public void nouvellePartie() {
 		Echange e = new Echange();
 		e.ajouter("nouvellePartie", true);
 		e.ajouter("parametres", getParametres());
 		e.ajouter("terrain", true);
 		com.envoyer(e);
+	}
+	
+	public void sauverPartie(){
+		JFileChooser fcSauver = new JFileChooser();
+		fcSauver.addChoosableFileFilter(new FileNameExtensionFilter(".fa", "fanorona"));
+		File fileToBeSaved=null;
+		if (fcSauver.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+			if(!fcSauver.getSelectedFile().getAbsolutePath().endsWith(".fa")){
+			    fileToBeSaved = new File(fcSauver.getSelectedFile() + ".fa");
+			}
+			Echange e = new Echange();
+			e.ajouter("sauvegarder", fileToBeSaved);
+			com.envoyer(e);
+		}
+	}
+	
+	public void chargerPartie(){
+		JFileChooser fcCharger = new JFileChooser();
+		fcCharger.addChoosableFileFilter(new FileNameExtensionFilter(".fa", "fanorona"));
+		if (fcCharger.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+			Echange e = new Echange();
+			e.ajouter("charger", fcCharger.getSelectedFile());
+			com.envoyer(e);
+		}
 	}
 
 	public void action(Ecouteur.Bouton id) {
@@ -209,23 +234,13 @@ public class IHM extends JFrame implements ComponentListener {
 			popupM.setVisible(false);
 			break;
 		case SAUVEGARDER:
-			JFileChooser fcSauver = new JFileChooser();
-			if (fcSauver.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
-				Echange e = new Echange();
-				e.ajouter("sauvegarder", fcSauver.getSelectedFile());
-				com.envoyer(e);
-			}
+			sauverPartie();
 			break;
 		case CHARGER:
-			JFileChooser fcCharger = new JFileChooser();
-			if (fcCharger.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-				Echange e = new Echange();
-				e.ajouter("charger", fcCharger.getSelectedFile());
-				com.envoyer(e);
-			}
+			chargerPartie();
 			break;
 		case MODE:
-			if (modeReseau) {
+			if (Communication.enReseau()) {
 				String choix[] = { "Confirmer", "Annuler" };
 				int retour = JOptionPane.showOptionDialog(this, "Revenir au jeu local quittera la partie réseau.", "Attention", 1, JOptionPane.INFORMATION_MESSAGE, null, choix, choix[1]);
 
@@ -245,7 +260,7 @@ public class IHM extends JFrame implements ComponentListener {
 			popupR.setVisible(true);
 			break;
 		case RECOMMENCER:
-			lancer();
+			nouvellePartie();
 			popupM.setVisible(false);
 			popupB.setVisible(false);
 			break;
@@ -448,7 +463,7 @@ public class IHM extends JFrame implements ComponentListener {
 		popupM.boutonMenuSauvegarder.setEnabled(!r);
 		popupM.boutonMenuCharger.setEnabled(!r);
 
-		modeReseau = r;
+		
 	}
 
 	@Override
@@ -550,15 +565,26 @@ public class IHM extends JFrame implements ComponentListener {
 
 	}
 	
-	public void notifier(String e){
-		String data[] = e.split(":");
-		String dataType = data[0];
-		String dataValue = data[1];
-		System.out.println("IHM : "+e);
-		if(dataType.equals("reseau_interruption")){
-			JOptionPane.showMessageDialog(this, dataValue,
-				      "Interruption réseau",
-				      JOptionPane.WARNING_MESSAGE);			
+	public void notifier(String info){		
+		
+		if(info.equals("/INTER_SERVEUR") || info.equals("/ABANDON")){
+			String message="";
+			if(info.equals("/INTER_SERVEUR")){
+				message = "Le seveur a mis fin à la partie en réseau en cours.";
+			}
+			else{
+				message = "L'adversaire a mis fin à la partie en réseau.";
+			}
+			
+			message +="\n Voulez-vous lancer une nouvelle partie en local ?";
+			int reponse = JOptionPane.showConfirmDialog(this, message,
+				      "Fin de partie réseau",
+				      JOptionPane.YES_NO_OPTION);	
+			setModeReseau(false);
+			
+			if (reponse == JOptionPane.YES_OPTION) nouvellePartie();
+			
 		}
+		
 	}
 }

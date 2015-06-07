@@ -13,6 +13,8 @@ class Client implements Runnable{
 	
 	private String host;
 	
+	private boolean running=true;
+	
 	
 	// CONSTRUCTEUR
 	public Client(Communication c) {		
@@ -80,6 +82,15 @@ class Client implements Runnable{
 		catch (Exception ex) {
 		}
 	}
+	
+	public void terminerConnexion(){
+		try{
+			socket.close();
+			running=false;
+			Communication.reseau = false;
+		}
+		catch(Exception e){}
+	}
 
 	@Override
 	public void run() {
@@ -87,14 +98,23 @@ class Client implements Runnable{
 		
 		if (currentTh.getName().equals("recep")) {
 			
-			while (true) {
+			while (running) {			
 				
-				// ;//System.out.println("boucle");
 				try {
-					Object recu = ois.readObject();									
+					Object recu = ois.readObject();		
+					
+					// INFO SERVEUR
+					if(recu instanceof String){
+						String info = (String)recu;
+						if(info.equals("INTER_SERVEUR") || info.equals("ABANDON")){
+							terminerConnexion();
+						}
+					}
+					
 					com.recevoir(recu,0);					
 				}
 				catch (Exception ex) {
+					terminerConnexion();
 				}
 				
 				

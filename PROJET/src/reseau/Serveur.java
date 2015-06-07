@@ -15,7 +15,9 @@ public class Serveur implements Runnable{
 	
 	Communication com;
 	// Socket Passif
-	private ServerSocket passiveSocket = null;	
+	private ServerSocket passiveSocket = null;
+	
+
 	
 	private int port = 0;
 
@@ -47,15 +49,11 @@ public class Serveur implements Runnable{
 	
 		
 	public void run(){
-		
-		
-			
-			
 			// On garde le port pour pouvoir connecter d'autres clients sur ce même port
 			
 
 			;//System.out.println("En ecoute sur : " + this.passiveSocket);
-			while (true) {
+			while (passiveSocket != null) {
 				
 				
 				try{
@@ -125,16 +123,34 @@ public class Serveur implements Runnable{
 		if(joueurs.size() < 2)
 			nouveauJoueur(c);
 	}
-	
+	public void terminerConnexions(){
+		Iterator<Connexion>it = connexions.iterator();
+		while(it.hasNext()){
+			System.out.println("Fin de connion (stopperServeur)");
+			terminerConnexion(it.next());
+		}
+	}
 	public void terminerConnexion(Connexion c){
+		c.fermer();
 		connexions.remove(c);
+		
 		
 		// Joueur qui s'en va
 		if(joueurs.containsValue(c)){
 			
-			joueurs.remove(c);
-			
-			if(connexions.size() >= 2){
+			// Le serveur quitte
+			if(joueurs.get(1) == c){				
+				envoyer("/INTER_SERVEUR",0);
+				joueurs.remove(c);
+				stopperServeur();				
+			}
+			else if(connexions.size() < 2){
+				envoyer("/ABANDON",0);
+				joueurs.remove(c);
+				stopperServeur();		
+			}
+			else{			
+				joueurs.remove(c);
 				Iterator<Connexion>it = connexions.iterator();
 				while(it.hasNext()){
 					Connexion con = it.next();
@@ -145,16 +161,15 @@ public class Serveur implements Runnable{
 					}
 				}
 			}
-			else{
-				System.out.println("Envoi d'un message aux cliens");
-				String mes = "reseau_interruption:Le joueur adverse a quitté le jeu et a donc mis fin à la partie en réseau.";				
-				envoyer(mes,0);
-			}
+			
+			
+			
 		}
 	}
 	
 	public void stopperServeur(){
-		try{
+		try{			
+			terminerConnexions();
 			passiveSocket.close();
 		}
 		catch(Exception e){

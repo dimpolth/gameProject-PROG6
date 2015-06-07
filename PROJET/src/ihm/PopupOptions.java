@@ -79,6 +79,7 @@ public class PopupOptions extends Popup {
 		contraintes.gridwidth = 1;
 		add(identifiantJoueur2, contraintes);
 		selectJoueur2 = new JComboBox<>(typeJoueurChoix);
+		selectJoueur2.setSelectedItem(TypeJoueur.IA2.getTexte());
 		contraintes.gridwidth = GridBagConstraints.REMAINDER;
 
 		add(selectJoueur2, contraintes);
