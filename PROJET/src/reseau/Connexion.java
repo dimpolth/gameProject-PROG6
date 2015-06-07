@@ -33,13 +33,11 @@ public class Connexion implements Runnable{
 			
 			// Premier envoi = identifiant
 			identifiant = (String)ois.readObject();
-			System.out.println(identifiant);
-			
-			Thread t1 = new Thread(this, "envoi");
-			t1.start();
+			System.out.println(identifiant);			
+		
 
-			Thread t2 = new Thread(this, "recep");
-			t2.start();
+			Thread t = new Thread(this, "recep");
+			t.start();
 			
 		} catch (Exception e) {
 		}
@@ -64,23 +62,10 @@ public class Connexion implements Runnable{
 		
 		while (true) {
 			
-			// Envoi de données
-			if (currentTh.getName().equals("envoi")) {
-
-				/*try {
-					this.oos.writeObject("jco="+getTousConnectes());
-				} catch (Exception e) {
-				}
-				
-				try {
-					Thread.sleep(1500);
-				} catch (Exception e) {
-				}*/
-
-			}
+			
 			
 			// Réception de données
-			else if (currentTh.getName().equals("recep")) {
+			if (currentTh.getName().equals("recep")) {
 				
 				
 				try {				

@@ -45,10 +45,7 @@ class Client implements Runnable{
 		oos = new ObjectOutputStream(socket.getOutputStream());
 		ois = new ObjectInputStream(socket.getInputStream());		
 		
-		// Démarrage de threads pour le dialogue Client/Serveur (envoi/reception)
-		Thread thEnvoi = new Thread(this, "envoi");
-		thEnvoi.start();
-
+		// Démarrage de threads pour le dialogue Client/Serveur (envoi/reception)	
 		Thread thReception = new Thread(this, "recep");
 		thReception.start();	
 		
