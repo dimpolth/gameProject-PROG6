@@ -69,12 +69,13 @@ class Client implements Runnable{
 	public void envoyer(Object o) {
 		
 		
-		try {
-			
+		try {			
 			if(o instanceof Echange)
 				oos.writeObject( ((Echange)o).clone() );
-			else
+			else{
+				System.out.println("CLIent : envoyer");
 				oos.writeObject( (String)o );
+			}
 		}
 		catch (Exception ex) {
 		}
@@ -90,9 +91,8 @@ class Client implements Runnable{
 				
 				// ;//System.out.println("boucle");
 				try {
-					Echange retour = (Echange)this.ois.readObject();
-					
-					com.recevoir(retour,0);
+					Object recu = ois.readObject();									
+					com.recevoir(recu,0);					
 				}
 				catch (Exception ex) {
 				}

@@ -51,7 +51,7 @@ public class Communication {
 					int port = s.demarrer();
 					host = "127.0.0.1:"+port;
 					;//System.out.println("HOST : "+host);
-					if(port == 0) return "Aucun port disponible pour ouvrir une connexion.";
+					if(port == 0) return "Le port n'est pas disponible pour ouvrir une connexion.";
 					
 					Communication.canaux[ Communication.MOTEUR ].serveur = s;
 				}
@@ -70,11 +70,11 @@ public class Communication {
 					
 				}
 				catch(IOException ex){
-					return "Un problème réseau est survenue";
+					return "Impossible de se connecter à l'hôte indiqué.";
 					
 				}
 				catch(Exception ex){
-					return "Une erreur est survenue";
+					return "Une erreur est survenue.";
 					
 				}
 				
@@ -129,7 +129,13 @@ public class Communication {
 	void recevoir(Object e, int j){		
 		//;//System.out.println(""+canaux_nom[loc]+" : recevoir <- "+e.toString());
 		if(loc == Communication.IHM){
-			ihm.notifier(e);			
+			
+			if(e instanceof Echange)
+				ihm.notifier((Echange)e);
+			else{
+				System.out.println((String)e);
+				ihm.notifier((String)e);
+			}
 		}
 		else if(loc == Communication.MOTEUR){			
 			moteur.action(e,j);

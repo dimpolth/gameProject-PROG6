@@ -44,11 +44,13 @@ public class Connexion implements Runnable{
 		
 		
 	}
-	public void envoyer(Echange e){
+	public void envoyer(Object o){
 		try {			
 			//;//System.out.println("SERVER ENVOYER : "+((Echange) e).toString() );
-			oos.writeObject(e.clone());	
-			
+			if(o instanceof Echange)
+				oos.writeObject(((Echange)o).clone());
+			else 
+				oos.writeObject(o);
 		} catch (IOException ioe) {
 			serveur.terminerConnexion(this);
 		}
@@ -81,15 +83,14 @@ public class Connexion implements Runnable{
 						else if(serveur.joueurs.get(2).equals(this))
 							j=2;
 						
-						
-						
 						serveur.com.recevoir(ech,j);					
 						
 					}
 					else{
 						String ordre = (String)recu;
 						
-						if(ordre.equals("/quit")){
+						if(ordre.equals("/QUIT")){
+							System.out.println("recu /quit");
 							serveur.terminerConnexion(this);
 						}
 					}

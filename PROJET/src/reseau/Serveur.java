@@ -79,10 +79,10 @@ public class Serveur implements Runnable{
 	}
 	
 	public void envoyer(Object o, int j){
-		Echange e = (Echange)o;
+		
 		if(j >= 1 && j<= 2){
-			joueurs.get(j).envoyer(e);
-			com.envoyer(e);
+			joueurs.get(j).envoyer(o);
+			com.envoyer(o);
 		}
 		else{
 			int exception = 0;
@@ -97,7 +97,7 @@ public class Serveur implements Runnable{
 					if(joueurs.get(exception).equals(con))
 						continue;
 				}
-				con.envoyer(e);
+				con.envoyer(o);
 			}
 		}
 	}
@@ -139,17 +139,16 @@ public class Serveur implements Runnable{
 				while(it.hasNext()){
 					Connexion con = it.next();
 					
-					if(!joueurs.containsValue(con)){
-						
+					if(!joueurs.containsValue(con)){						
 						nouveauJoueur(con);
 						break;
 					}
 				}
 			}
 			else{
-				Echange e = new Echange();
-				e.ajouter("interruptionReseau", "Le joueur adverse a quitté la partie.");
-				envoyer(e,0);
+				System.out.println("Envoi d'un message aux cliens");
+				String mes = "reseau_interruption:Le joueur adverse a quitté le jeu et a donc mis fin à la partie en réseau.";				
+				envoyer(mes,0);
 			}
 		}
 	}

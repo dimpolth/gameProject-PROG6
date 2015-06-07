@@ -476,8 +476,8 @@ public class IHM extends JFrame implements ComponentListener {
 	public void componentShown(ComponentEvent e) {
 	}
 
-	public void notifier(Object o) {
-		Echange e = (Echange) o;
+	public void notifier(Echange e) {
+	
 
 		Object dataValue;
 		/*
@@ -546,8 +546,19 @@ public class IHM extends JFrame implements ComponentListener {
 		}
 		if ((dataValue = e.get("finTour")) != null) {
 			boutonValidation.setEnabled((boolean) dataValue);
-
 		}
 
+	}
+	
+	public void notifier(String e){
+		String data[] = e.split(":");
+		String dataType = data[0];
+		String dataValue = data[1];
+		System.out.println("IHM : "+e);
+		if(dataType.equals("reseau_interruption")){
+			JOptionPane.showMessageDialog(this, dataValue,
+				      "Interruption réseau",
+				      JOptionPane.WARNING_MESSAGE);			
+		}
 	}
 }
