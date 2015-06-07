@@ -12,10 +12,12 @@ public abstract class Popup extends JPanel {
 
 	public Popup() {
 		super();
+		setOpaque(false);
 	}
 
 	public Popup(LayoutManager l) {
 		super(l);
+		setOpaque(false);
 	}
 
 	public void paintComponent(Graphics g) {
