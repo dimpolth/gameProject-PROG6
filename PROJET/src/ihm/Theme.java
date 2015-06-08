@@ -26,7 +26,7 @@ public class Theme {
 	private Type id = null;
 	private Image imgMenuLarge, imgMenuFin;
 	public Color couleurFond = null, couleurDefaut = null, couleurJ1 = null, couleurJ2 = null, couleurPolice = null, couleurPoliceGrisee = null, couleurBordures = null, couleurMenu = null;
-	public Color couleurSup = null, couleurInf = null, couleurTDefaut = null;
+	public Color couleurSup = null, couleurInf = null, couleurTDefaut = null, couleurReseauMessage = null;
 
 	Theme(IHM ihm) {
 		this.ihm = ihm;
@@ -52,6 +52,7 @@ public class Theme {
 				couleurInf = Color.BLACK;
 				couleurTDefaut = Color.BLACK;
 				couleurMenu = Color.BLACK;
+				couleurReseauMessage = Color.ORANGE;
 				break;
 			case BOIS:
 				couleurFond = new Color(0, 0, 0);
@@ -65,6 +66,7 @@ public class Theme {
 				couleurInf = Color.BLACK;
 				couleurTDefaut = Color.BLACK;
 				couleurMenu = Color.WHITE;
+				couleurReseauMessage = Color.ORANGE;
 				break;
 			case MARBRE:
 				couleurFond = new Color(238, 238, 238);
@@ -78,6 +80,7 @@ public class Theme {
 				couleurInf = Color.BLACK;
 				couleurTDefaut = Color.BLACK;
 				couleurMenu = Color.BLACK;
+				couleurReseauMessage = Color.ORANGE;
 				break;
 			case SOMBRE:
 				couleurFond = new Color(12, 20, 31);
@@ -91,6 +94,7 @@ public class Theme {
 				couleurInf = new Color(230, 255, 255);
 				couleurTDefaut = new Color(230, 255, 255);
 				couleurMenu = new Color(230, 255, 255);
+				couleurReseauMessage = Color.RED;
 				break;
 			case COCHON:
 				couleurFond = new Color(238, 238, 238);
@@ -104,6 +108,7 @@ public class Theme {
 				couleurInf = Color.BLACK;
 				couleurTDefaut = Color.BLACK;
 				couleurMenu = Color.BLACK;
+				couleurReseauMessage = Color.ORANGE;
 				break;
 			}
 			ihm.coucheJeu.setBackground(couleurFond);
@@ -130,6 +135,7 @@ public class Theme {
 			ihm.popupReseau.etiqRejoindre.setForeground(couleurMenu);
 			ihm.popupReseau.etiqHebergerPort.setForeground(couleurMenu);
 			ihm.popupReseau.etiqRejoindrePort.setForeground(couleurMenu);
+			ihm.popupReseau.message.setForeground(couleurReseauMessage);
 			ihm.popupO.selectJoueur1Etiq.setForeground(couleurMenu);
 			ihm.popupO.selectJoueur2Etiq.setForeground(couleurMenu);
 			ihm.popupO.themeEtiq.setForeground(couleurMenu);
