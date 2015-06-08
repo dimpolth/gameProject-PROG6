@@ -1,11 +1,8 @@
 package ihm;
 
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 
 import javax.swing.Timer;
-
-import modele.Case;
 
 public class AnimSelect extends Animation {
 	private boolean grandir;
@@ -27,11 +24,11 @@ public class AnimSelect extends Animation {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		long actuel = System.currentTimeMillis();
-		if(actuel - tempsDepart > TerrainGraphique.ANIM_SELECT) {
+		if (actuel - tempsDepart > TerrainGraphique.ANIM_SELECT) {
 			tempsDepart = System.currentTimeMillis();
 			grandir = !grandir;
-			if(grandir) {
-				if(stop) {
+			if (grandir) {
+				if (stop) {
 					horloge.stop();
 					pion.setBounds((int) ((pion.coord.y + 0.5) * pion.dim.echelle + pion.dim.origX), (int) ((pion.coord.x + 0.5) * pion.dim.echelle + pion.dim.origY), (int) (pion.dim.echelle / 2), (int) (pion.dim.echelle / 2));
 					return;
@@ -39,10 +36,10 @@ public class AnimSelect extends Animation {
 			}
 		}
 		float f;
-		if(grandir) {
-			f = 1+((float)(actuel - tempsDepart)/TerrainGraphique.ANIM_SELECT)/5;
+		if (grandir) {
+			f = 1 + ((float) (actuel - tempsDepart) / TerrainGraphique.ANIM_SELECT) / 5;
 		} else {
-			f = 1.2f-((float)(actuel - tempsDepart)/TerrainGraphique.ANIM_SELECT)/5;
+			f = 1.2f - ((float) (actuel - tempsDepart) / TerrainGraphique.ANIM_SELECT) / 5;
 		}
 		pion.facteurTaille = f;
 		pion.componentResized(null);

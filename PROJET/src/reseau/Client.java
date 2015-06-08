@@ -13,6 +13,8 @@ class Client implements Runnable{
 	
 	private String host;
 	
+	private boolean running=true;
+	
 	
 	// CONSTRUCTEUR
 	public Client(Communication c) {		
@@ -45,10 +47,7 @@ class Client implements Runnable{
 		oos = new ObjectOutputStream(socket.getOutputStream());
 		ois = new ObjectInputStream(socket.getInputStream());		
 		
-		// Démarrage de threads pour le dialogue Client/Serveur (envoi/reception)
-		Thread thEnvoi = new Thread(this, "envoi");
-		thEnvoi.start();
-
+		// Démarrage de threads pour le dialogue Client/Serveur (envoi/reception)	
 		Thread thReception = new Thread(this, "recep");
 		thReception.start();	
 		
@@ -72,15 +71,25 @@ class Client implements Runnable{
 	public void envoyer(Object o) {
 		
 		
-		try {
-			
+		try {			
 			if(o instanceof Echange)
 				oos.writeObject( ((Echange)o).clone() );
-			else
+			else{
+				System.out.println("CLIent : envoyer");
 				oos.writeObject( (String)o );
+			}
 		}
 		catch (Exception ex) {
 		}
+	}
+	
+	public void terminerConnexion(){
+		try{
+			socket.close();
+			running=false;
+			Communication.reseau = false;
+		}
+		catch(Exception e){}
 	}
 
 	@Override
@@ -89,15 +98,23 @@ class Client implements Runnable{
 		
 		if (currentTh.getName().equals("recep")) {
 			
-			while (true) {
+			while (running) {			
 				
-				// ;//System.out.println("boucle");
 				try {
-					Echange retour = (Echange)this.ois.readObject();
+					Object recu = ois.readObject();		
 					
-					com.recevoir(retour,0);
+					// INFO SERVEUR
+					if(recu instanceof String){
+						String info = (String)recu;
+						if(info.equals("INTER_SERVEUR") || info.equals("ABANDON")){
+							terminerConnexion();
+						}
+					}
+					
+					com.recevoir(recu,0);					
 				}
 				catch (Exception ex) {
+					terminerConnexion();
 				}
 				
 				

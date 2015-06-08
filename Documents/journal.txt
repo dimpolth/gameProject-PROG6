@@ -24,6 +24,7 @@ Lundi 25/05 :
 
 Mardi 26/05 :
 	Laurent : Mise en place des animations
+	Adrien : Implémentation de la communicaiton et échange pour dialoguer entre IHM et MOTEUR
 
 Mercredi 27/05 :
 	Laurent : Mise à jour des animations
@@ -33,9 +34,21 @@ Jeudi 28/05 :
 
 Vendredi 29/05 :
 	Laurent : Correction de bugs + dissection du projet en de multiples packages
+	Adrien : Modifictions pour exécutable .jar
 
 Lundi 01/06 :
 	Laurent : Tentative de mise en place d'une animation de sélection + Correction de bugs + Travail sur l'échange
 
 Mardi 02/06 :
 	Laurent : Refonte des animations + Correction de bugs + Travail sur l'échange
+	Adrien : Affichage des scores et bandeaux synchronisés + envoi des paramètres de la partie
+
+Mercredi 03/06 :
+	Adrien : Démarrage du réseau + modifications classe communication pour aiguillage
+	
+Jeudi 04/06 :
+	Adrien : Echanges réseau ihm(s) <-> moteur ok. Réseau fonctionnel : possibilité de jouer une partie. + Sauvegarder/charger + fenêtre chargement
+	
+Vendredi 05/06 :
+	Passage tuteur
+	Adrien : Avancement réseau. Fermeture de fenêtre du jeu pendant une partie réseau gérée. Un observateur prend la place d'un joueur qui quitterait la partie.

@@ -16,8 +16,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import javax.imageio.ImageIO;
-//import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
 @SuppressWarnings("serial")
@@ -26,7 +24,7 @@ public class Bouton extends JButton implements MouseListener {
 
 	Image fondNormal, fondSurvol, fondClique;
 	Image fond;
-	Color couleur;
+	Color couleurNormal, couleurGrisee, couleur;
 
 	boolean active = true;
 
@@ -50,41 +48,47 @@ public class Bouton extends JButton implements MouseListener {
 
 		g.drawImage(fond, 0, 0, this.getWidth(), this.getHeight(), null);
 
-		g.setColor(Color.WHITE);
+		g.setColor(couleur);
 
 		g.drawString(texte, this.getWidth() / 2 - fm.stringWidth(texte) / 2, this.getHeight() / 2 + fm.getHeight() / 4);
 
 	}
 
-	public void setTheme(Theme.Type pTheme) {
+	public void setTheme(Theme.Type pTheme, Color cNorm, Color cGris) {
+		couleurNormal = cNorm;
+		couleurGrisee = cGris;
 		try {
 			fondNormal = ImageIO.read(getClass().getResource("/images/themes/" + pTheme.getId() + "/bouton_normal.png"));
 			fondSurvol = ImageIO.read(getClass().getResource("/images/themes/" + pTheme.getId() + "/bouton_survol.png"));
 			fondClique = ImageIO.read(getClass().getResource("/images/themes/" + pTheme.getId() + "/bouton_clique.png"));
-			if(active)
+			if (active) {
 				fond = fondNormal;
-			else
+				couleur = couleurNormal;
+			} else {
 				fond = fondClique;
+				couleur = couleurGrisee;
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
-	public static void setThemeTous(Theme.Type pTheme) {
+	public static void setThemeTous(Theme.Type pTheme, Color cNorm, Color cGris) {
 
 		Iterator<Bouton> it = boutons.iterator();
 		while (it.hasNext()) {
 			Bouton bt = (Bouton) it.next();
-			bt.setTheme(pTheme);
+			bt.setTheme(pTheme, cNorm, cGris);
 		}
 
 	}
 
 	@Override
-	public void setEnabled(boolean b) {		
+	public void setEnabled(boolean b) {
 		super.setEnabled(b);
 		active = b;
-		fond =(b) ? fondNormal : fondClique;
+		fond = (b) ? fondNormal : fondClique;
+		couleur = (b) ? couleurNormal : couleurGrisee;
 	}
 
 	@Override
@@ -113,6 +117,7 @@ public class Bouton extends JButton implements MouseListener {
 	public void mousePressed(MouseEvent arg0) {
 		if (active) {
 			fond = fondClique;
+			couleur = couleurGrisee;
 		}
 	}
 
@@ -123,6 +128,7 @@ public class Bouton extends JButton implements MouseListener {
 				fond = fondSurvol;
 			} else
 				fond = fondNormal;
+			couleur = couleurNormal;
 		}
 	}
 }

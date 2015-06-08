@@ -4,11 +4,8 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
@@ -31,7 +28,7 @@ public class Chargement extends JComponent implements ActionListener {
 		}
 		afficher = false;
 		horloge = new Timer(10, this);
-		setPreferredSize(new Dimension(44,44));
+		setPreferredSize(new Dimension(44, 44));
 	}
 
 	public void afficher() {
@@ -47,7 +44,8 @@ public class Chargement extends JComponent implements ActionListener {
 	public void paintComponent(Graphics g) {
 		if (afficher) {
 			Graphics2D gra = (Graphics2D) g;
-			//TODO gra.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+			// TODO gra.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+			// RenderingHints.VALUE_ANTIALIAS_ON);
 			gra.rotate(facteur, getWidth() / 2, getHeight() / 2);
 			gra.drawImage(img, 0, 0, getWidth(), getHeight(), null);
 		}

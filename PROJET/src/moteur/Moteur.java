@@ -28,7 +28,7 @@ public class Moteur {
 		i.com = new Communication(i, m, Communication.IHM);
 		m.com = new Communication(i, m, Communication.MOTEUR);
 		// m.init();
-		i.lancer();
+		i.nouvellePartie();
 	}
 
 	/**
@@ -103,17 +103,22 @@ public class Moteur {
 	 * Vrai si affichage sur console. Faux sinon. Utilisé en debug.
 	 */
 
-	private boolean trace = true;
+	private boolean trace = false;
 	/**
 	 * Nombre de coups sans prise.
 	 */
 	private int compteurNul;
+	
+	private long instance;
 
 
 	/**
 	 * Constructeur par défaut.
 	 */
 	public Moteur() {
+		instance=System.currentTimeMillis();
+		j1 = new Joueur(Case.Etat.joueur1, Joueur.typeJoueur.humain, "Joueur 1");		
+		j2 = new Joueur(Case.Etat.joueur2, Joueur.typeJoueur.ordinateur, IntelligenceArtificielle.difficulteIA.normal, j1, t);
 	}
 
 	/**
@@ -136,18 +141,18 @@ public class Moteur {
 		t = new Terrain();
 
 		//t.TerrainTest(11);
-		
-
+		j1.resetScore();
+		j2.resetScore();
 		h = new Historique();
 		h.ajouterTour(t);
 		ech = new Echange();
 		listePointDebut = new ArrayList<Point>();
-		j1 = new Joueur(Case.Etat.joueur1, Joueur.typeJoueur.humain, "Joueur 1");
+		
 		// j2 = new Joueur(Case.Etat.joueur2, Joueur.typeJoueur.humain,
 		// "Joueur 2");
 		// j1 = new Joueur(Case.Etat.joueur1, Joueur.typeJoueur.ordinateur,
 		// IntelligenceArtificielle.difficulteIA.facile, j2, this);
-		j2 = new Joueur(Case.Etat.joueur2, Joueur.typeJoueur.ordinateur, IntelligenceArtificielle.difficulteIA.normal, j1, t);
+		
 		joueurCourant = j1;
 		compteurNul = 0;
 		//calculerScore();
@@ -423,8 +428,9 @@ public class Moteur {
 			e = EtatTour.partieFinie;
 			//System.out.println("FIN DE PARTIE");
 		} else {
-			// ;//System.out.println("FIN DE TOUR ");
-			gestionEvenementGraphique();
+			//System.out.println("FIN DE TOUR ");
+			//traceTerrain();
+			//gestionEvenementGraphique();
 			gestionEvenementGraphique(joueurCourant.getNom(),"Selection du pion",joueurCourant.getJoueurID().getNum());
 			if (joueurCourant.isJoueurHumain()) {
 				e = EtatTour.selectionPion;
@@ -519,7 +525,7 @@ public class Moteur {
 	 */
 	public void gestionEvenementGraphique() {
 		ech.vider();
-		traceTerrain();
+		//traceTerrain();
 		//System.out.println("PUTAIN DE TERRAIN");
 		EvenementGraphique cg = new EvenementGraphique(t.getTableau());
 		ech.ajouter("coup", cg);
@@ -869,7 +875,7 @@ public class Moteur {
 		Parametres p = (Parametres) dataValue;
 		
 	
-		//System.out.println("("+p.j1_identifiant+")"+j1.getNom()+" : ("+p.j2_identifiant+")"+""+j2.getNom());
+		//System.out.println(instance  +" --- ("+p.j1_identifiant+")"+j1.getNom()+" : ("+p.j2_identifiant+")"+""+j2.getNom());
 		if (p.j1_identifiant != null)
 			j1.setNom(p.j1_identifiant);
 		else
@@ -880,7 +886,7 @@ public class Moteur {
 		else 
 			p.j2_identifiant=j2.getNom();
 		
-		//System.out.println("("+p.j1_identifiant+")"+j1.getNom()+" : ("+p.j2_identifiant+")"+""+j2.getNom());
+		//System.out.println(instance  +" ---("+p.j1_identifiant+")"+j1.getNom()+" : ("+p.j2_identifiant+")"+""+j2.getNom());
 		
 		if(p.j1_type != null ){
 			if (p.j1_type == Parametres.NiveauJoueur.HUMAIN) {
@@ -931,7 +937,9 @@ public class Moteur {
 	 * Identifiant de joueur pour le réseau.
 	 */
 	public void action(Object o, int j) {
+		
 		Echange echange = (Echange)o;
+		
 		Case.Etat joueurReception = null;
 		if (j == 1)
 			joueurReception = Etat.joueur1;
@@ -970,14 +978,14 @@ public class Moteur {
 				actionAnnuler();
 				break;
 			case "joueurs":
-				Joueur[] tabJoueurIntit = (Joueur[]) dataValue;
+				/*Joueur[] tabJoueurIntit = (Joueur[]) dataValue;
 				// recuperer les noms et les type des joueurs.
 				j1.setNom(tabJoueurIntit[0].getNom());
 				j2.setNom(tabJoueurIntit[1].getNom());
 				ech.vider();
 				Joueur[] tabJoueur = { j1, j2 };
 				ech.ajouter("joueurs", tabJoueur);
-				com.envoyer(ech);
+				com.envoyer(ech);*/
 				break;
 			case "refaire":
 				actionRefaire();

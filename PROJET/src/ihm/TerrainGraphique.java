@@ -6,19 +6,17 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
+import java.awt.RenderingHints;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.List;
 
 import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
-import reseau.Echange;
 import modele.Case;
-import modele.Terrain;
+import reseau.Echange;
 
 @SuppressWarnings("serial")
 public class TerrainGraphique extends JPanel implements ComponentListener {
@@ -37,7 +35,7 @@ public class TerrainGraphique extends JPanel implements ComponentListener {
 	protected long tempsGele;
 	private Dimensions dim;
 	protected Pion[][] pions;
-	
+
 	protected ArrayList<Point> trait;
 
 	private ArrayList<Point> prisesPossibles = new ArrayList<Point>(2);
@@ -45,17 +43,6 @@ public class TerrainGraphique extends JPanel implements ComponentListener {
 
 	public TerrainGraphique(IHM i) {
 		super(null);
-		/*
-		 * imgPlateau = new
-		 * ImageIcon(getClass().getResource("images/themes/bois/plateau.png"
-		 * )).getImage(); imgPion1 = new
-		 * ImageIcon(getClass().getResource("images/themes/bois/pion1.png"
-		 * )).getImage(); imgPion2 = new
-		 * ImageIcon(getClass().getResource("images/themes/bois/pion2.png"
-		 * )).getImage(); imgCroix = new
-		 * ImageIcon(getClass().getResource("images/themes/bois/croix.png"
-		 * )).getImage();
-		 */
 		try {
 			imgPlateau = ImageIO.read(getClass().getResource("/images/themes/bois/plateau.png"));
 			imgPion1 = ImageIO.read(getClass().getResource("/images/themes/bois/pion1.png"));
@@ -83,23 +70,20 @@ public class TerrainGraphique extends JPanel implements ComponentListener {
 
 		deselectionner();
 		cacherTrait();
-		
-		/*for (int ligne = 0; ligne < Terrain.LIGNES; ligne++) {
-			for (int colonne = 0; colonne < Terrain.COLONNES; colonne++) {
-				if (c[ligne][colonne].getOccupation() == Case.Etat.joueur1)
-					System.out.print("X");
-				else if (c[ligne][colonne].getOccupation() == Case.Etat.joueur2)
-					System.out.print("O");
-				else
-					System.out.print(" ");
 
-				if (colonne < Terrain.INDICE_MAX_COLONNES)
-					;//System.out.print("-");
-			}
-			;System.out.println();
-			
-		}*/
-		
+		/*
+		 * for (int ligne = 0; ligne < Terrain.LIGNES; ligne++) { for (int
+		 * colonne = 0; colonne < Terrain.COLONNES; colonne++) { if
+		 * (c[ligne][colonne].getOccupation() == Case.Etat.joueur1)
+		 * System.out.print("X"); else if (c[ligne][colonne].getOccupation() ==
+		 * Case.Etat.joueur2) System.out.print("O"); else System.out.print(" ");
+		 * 
+		 * if (colonne < Terrain.INDICE_MAX_COLONNES) ;//System.out.print("-");
+		 * } ;System.out.println();
+		 * 
+		 * }
+		 */
+
 		for (int i = 0; i < 5; i++) {
 			for (int j = 0; j < 9; j++) {
 				pions[i][j].setCouleur(c[i][j].getOccupation());
@@ -107,12 +91,12 @@ public class TerrainGraphique extends JPanel implements ComponentListener {
 			}
 		}
 	}
-	
+
 	public void setTrait(ArrayList<Point> l) {
 		trait = l;
 		repaint();
 	}
-	
+
 	public void cacherTrait() {
 		trait = null;
 		repaint();
@@ -171,8 +155,9 @@ public class TerrainGraphique extends JPanel implements ComponentListener {
 	}
 
 	public void paintComponent(Graphics g) {
-		Graphics2D gra = (Graphics2D)g;
-		gra.setColor(new Color(238, 238, 238));
+		Graphics2D gra = (Graphics2D) g;
+		gra.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+		gra.setColor(ihm.theme.couleurFond);
 		gra.fillRect(0, 0, getWidth(), getHeight());
 		double largeur = getWidth(), hauteur = getHeight(), origX = 0, origY = 0;
 		if (largeur / hauteur > 19.0 / 11.0) {
@@ -183,14 +168,14 @@ public class TerrainGraphique extends JPanel implements ComponentListener {
 			hauteur = largeur * 11 / 19;
 		}
 		gra.drawImage(imgPlateau, (int) origX, (int) origY, (int) largeur, (int) hauteur, null);
-		if(trait != null && trait.size() > 1) {
+		if (trait != null && trait.size() > 1) {
 			int d = (int) (dim.echelle / 4);
 			Point p = trait.get(0);
-		    gra.setStroke(new BasicStroke(6));
-			for(int i=1 ; i<trait.size() ; i++) {
+			gra.setStroke(new BasicStroke(6));
+			for (int i = 1; i < trait.size(); i++) {
 				gra.setColor(Color.WHITE);
-				gra.drawLine((int)((p.y+0.5)*dim.echelle+dim.origX)+d, (int)((p.x+0.5)*dim.echelle+dim.origY)+d, (int)((trait.get(i).y+0.5)*dim.echelle+dim.origX)+d, (int)((trait.get(i).x+0.5)*dim.echelle+dim.origY)+d);
-				gra.fillOval((int)((p.y+0.5)*dim.echelle+dim.origX)+d-10, (int)((p.x+0.5)*dim.echelle+dim.origY)+d-10, 20, 20);
+				gra.drawLine((int) ((p.y + 0.5) * dim.echelle + dim.origX) + d, (int) ((p.x + 0.5) * dim.echelle + dim.origY) + d, (int) ((trait.get(i).y + 0.5) * dim.echelle + dim.origX) + d, (int) ((trait.get(i).x + 0.5) * dim.echelle + dim.origY) + d);
+				gra.fillOval((int) ((p.y + 0.5) * dim.echelle + dim.origX) + d - 10, (int) ((p.x + 0.5) * dim.echelle + dim.origY) + d - 10, 20, 20);
 				p = trait.get(i);
 			}
 		}

@@ -1,23 +1,18 @@
 package ihm;
 
-import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.EnumSet;
 
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.text.html.HTMLDocument.Iterator;
 
 @SuppressWarnings("serial")
 public class PopupOptions extends Popup {
 	JComboBox<String> theme;
+
 	public enum TypeJoueur {
 
 		HUMAIN("Humain"), IA1("IA Facile"), IA2("IA moyenne"), IA3("IA difficile");
@@ -36,6 +31,7 @@ public class PopupOptions extends Popup {
 			return this;
 		}
 	}
+
 	JLabel selectJoueur1Etiq, selectJoueur2Etiq;
 	JTextField identifiantJoueur1, identifiantJoueur2;
 	JComboBox<String> selectJoueur1, selectJoueur2;
@@ -54,8 +50,7 @@ public class PopupOptions extends Popup {
 		contraintes_groupe.gridwidth = 1;
 		GridBagConstraints contraintes_groupe_fin = (GridBagConstraints) contraintes.clone();
 		contraintes_groupe_fin.gridwidth = GridBagConstraints.REMAINDER;
-		
-	
+
 		selectJoueur1Etiq = new JLabel("1er joueur : ");
 		contraintes.gridwidth = GridBagConstraints.REMAINDER;
 		add(selectJoueur1Etiq, contraintes);
@@ -73,28 +68,29 @@ public class PopupOptions extends Popup {
 		}
 		selectJoueur1 = new JComboBox<>(typeJoueurChoix);
 		contraintes.gridwidth = GridBagConstraints.REMAINDER;
-		
+
 		add(selectJoueur1, contraintes);
 
 		selectJoueur2Etiq = new JLabel("2ème joueur : ");
 		contraintes.gridwidth = GridBagConstraints.REMAINDER;
-		
+
 		add(selectJoueur2Etiq, contraintes);
 		identifiantJoueur2 = new JTextField("Joueur 2");
 		contraintes.gridwidth = 1;
 		add(identifiantJoueur2, contraintes);
 		selectJoueur2 = new JComboBox<>(typeJoueurChoix);
+		selectJoueur2.setSelectedItem(TypeJoueur.IA2.getTexte());
 		contraintes.gridwidth = GridBagConstraints.REMAINDER;
-		
+
 		add(selectJoueur2, contraintes);
 
 		JLabel themeEtiq = new JLabel("Thème graphique : ");
 		contraintes.gridwidth = GridBagConstraints.REMAINDER;
-		
+
 		add(themeEtiq, contraintes);
 		theme = new JComboBox<>(new String[] { "Boisé", "Marbre", "Sombre", "Standard", "Cochonou" });
 		contraintes.gridwidth = GridBagConstraints.REMAINDER;
-		
+
 		add(theme, contraintes);
 
 		/*

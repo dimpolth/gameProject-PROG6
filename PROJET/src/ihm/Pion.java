@@ -1,7 +1,6 @@
 package ihm;
 
 import java.awt.AlphaComposite;
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -92,10 +91,7 @@ class Pion extends JComponent implements MouseListener, ComponentListener {
 
 	@Override
 	public void componentResized(ComponentEvent e) {
-		setBounds((int) ((facteurPos.y + 0.5) * dim.echelle + dim.origX) - (int)((facteurTaille * dim.echelle / 2)-(dim.echelle / 2))/2,
-				  (int) ((facteurPos.x + 0.5) * dim.echelle + dim.origY) - (int)((facteurTaille * dim.echelle / 2)-(dim.echelle / 2))/2,
-				  (int) (facteurTaille * dim.echelle / 2),
-				  (int) (facteurTaille * dim.echelle / 2));
+		setBounds((int) ((facteurPos.y + 0.5) * dim.echelle + dim.origX) - (int) ((facteurTaille * dim.echelle / 2) - (dim.echelle / 2)) / 2, (int) ((facteurPos.x + 0.5) * dim.echelle + dim.origY) - (int) ((facteurTaille * dim.echelle / 2) - (dim.echelle / 2)) / 2, (int) (facteurTaille * dim.echelle / 2), (int) (facteurTaille * dim.echelle / 2));
 	}
 
 	@Override

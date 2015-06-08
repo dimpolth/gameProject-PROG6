@@ -15,7 +15,9 @@ public class Serveur implements Runnable{
 	
 	Communication com;
 	// Socket Passif
-	private ServerSocket passiveSocket = null;	
+	private ServerSocket passiveSocket = null;
+	
+
 	
 	private int port = 0;
 
@@ -47,15 +49,11 @@ public class Serveur implements Runnable{
 	
 		
 	public void run(){
-		
-		
-			
-			
 			// On garde le port pour pouvoir connecter d'autres clients sur ce même port
 			
 
 			;//System.out.println("En ecoute sur : " + this.passiveSocket);
-			while (true) {
+			while (passiveSocket != null) {
 				
 				
 				try{
@@ -79,10 +77,10 @@ public class Serveur implements Runnable{
 	}
 	
 	public void envoyer(Object o, int j){
-		Echange e = (Echange)o;
+		
 		if(j >= 1 && j<= 2){
-			joueurs.get(j).envoyer(e);
-			com.envoyer(e);
+			joueurs.get(j).envoyer(o);
+			com.envoyer(o);
 		}
 		else{
 			int exception = 0;
@@ -97,7 +95,7 @@ public class Serveur implements Runnable{
 					if(joueurs.get(exception).equals(con))
 						continue;
 				}
-				con.envoyer(e);
+				con.envoyer(o);
 			}
 		}
 	}
@@ -107,13 +105,11 @@ public class Serveur implements Runnable{
 		Parametres params = new Parametres();
 		
 		if(joueurs.get(1) == null){			
-			joueurs.put(1,c);	
-			System.out.println("Nouveau joueur 1");
+			joueurs.put(1,c);		
 			params.j1_identifiant = c.identifiant;			
 		}
 		else if(joueurs.get(2) == null){			
-			joueurs.put(2,c);
-			System.out.println("Nouveau joueur 2 : "+c.identifiant);
+			joueurs.put(2,c);			
 			params.j2_identifiant = c.identifiant;			
 		}		
 	
@@ -127,37 +123,53 @@ public class Serveur implements Runnable{
 		if(joueurs.size() < 2)
 			nouveauJoueur(c);
 	}
-	
+	public void terminerConnexions(){
+		Iterator<Connexion>it = connexions.iterator();
+		while(it.hasNext()){
+			System.out.println("Fin de connion (stopperServeur)");
+			terminerConnexion(it.next());
+		}
+	}
 	public void terminerConnexion(Connexion c){
+		c.fermer();
 		connexions.remove(c);
+		
 		
 		// Joueur qui s'en va
 		if(joueurs.containsValue(c)){
 			
-			joueurs.remove(c);
-			
-			if(connexions.size() >= 2){
+			// Le serveur quitte
+			if(joueurs.get(1) == c){				
+				envoyer("/INTER_SERVEUR",0);
+				joueurs.remove(c);
+				stopperServeur();				
+			}
+			else if(connexions.size() < 2){
+				envoyer("/ABANDON",0);
+				joueurs.remove(c);
+				stopperServeur();		
+			}
+			else{			
+				joueurs.remove(c);
 				Iterator<Connexion>it = connexions.iterator();
 				while(it.hasNext()){
 					Connexion con = it.next();
 					
-					if(!joueurs.containsValue(con)){
-						
+					if(!joueurs.containsValue(con)){						
 						nouveauJoueur(con);
 						break;
 					}
 				}
 			}
-			else{
-				Echange e = new Echange();
-				e.ajouter("interruptionReseau", "Le joueur adverse a quitté la partie.");
-				envoyer(e,0);
-			}
+			
+			
+			
 		}
 	}
 	
 	public void stopperServeur(){
-		try{
+		try{			
+			terminerConnexions();
 			passiveSocket.close();
 		}
 		catch(Exception e){

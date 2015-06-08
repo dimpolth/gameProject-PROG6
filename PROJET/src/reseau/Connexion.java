@@ -10,6 +10,8 @@ import modele.Parametres;
 
 public class Connexion implements Runnable{
 	
+	
+	
 	private Serveur serveur;
 	
 	protected String identifiant;
@@ -23,6 +25,8 @@ public class Connexion implements Runnable{
 	// Flux d'entrée pour recevoir des données du joueur
 	private ObjectInputStream ois;
 	
+	private boolean running = true;
+	
 	Connexion(Serveur serveur, Socket socket) throws UnknownHostException, IOException {
 		
 		try {
@@ -33,54 +37,49 @@ public class Connexion implements Runnable{
 			
 			// Premier envoi = identifiant
 			identifiant = (String)ois.readObject();
-			System.out.println(identifiant);
-			
-			Thread t1 = new Thread(this, "envoi");
-			t1.start();
+			System.out.println(identifiant);			
+		
 
-			Thread t2 = new Thread(this, "recep");
-			t2.start();
+			Thread t = new Thread(this, "recep");
+			t.start();
 			
 		} catch (Exception e) {
 		}
 		
 		
 	}
-	public void envoyer(Echange e){
+	public void envoyer(Object o){
 		try {			
 			//;//System.out.println("SERVER ENVOYER : "+((Echange) e).toString() );
-			oos.writeObject(e.clone());	
-			
+			if(o instanceof Echange)
+				oos.writeObject(((Echange)o).clone());
+			else 
+				oos.writeObject(o);
 		} catch (IOException ioe) {
 			serveur.terminerConnexion(this);
 		}
+	}
+	
+	public void fermer(){
+		try{
+			this.socket.close();
+			running=false;
+		}
+		catch(Exception e){}
 	}
 
 	@Override
 	public void run() {
 		
 		Thread currentTh = Thread.currentThread();
-		Echange e;
 		
-		while (true) {
+		
+		while (running) {
 			
-			// Envoi de données
-			if (currentTh.getName().equals("envoi")) {
-
-				/*try {
-					this.oos.writeObject("jco="+getTousConnectes());
-				} catch (Exception e) {
-				}
-				
-				try {
-					Thread.sleep(1500);
-				} catch (Exception e) {
-				}*/
-
-			}
+			
 			
 			// Réception de données
-			else if (currentTh.getName().equals("recep")) {
+			if (currentTh.getName().equals("recep")) {
 				
 				
 				try {				
@@ -96,15 +95,14 @@ public class Connexion implements Runnable{
 						else if(serveur.joueurs.get(2).equals(this))
 							j=2;
 						
-						
-						
 						serveur.com.recevoir(ech,j);					
 						
 					}
 					else{
 						String ordre = (String)recu;
 						
-						if(ordre.equals("/quit")){
+						if(ordre.equals("/QUIT")){
+							System.out.println("recu /quit");
 							serveur.terminerConnexion(this);
 						}
 					}
@@ -112,6 +110,7 @@ public class Connexion implements Runnable{
 					
 					
 				} catch (Exception ex) {
+					running = false;
 				}				
 
 			}
