@@ -46,12 +46,9 @@ public class Joueur implements Serializable {
 	
 	/**
 	 * Constructeur pour joueur humain.
-	 * @param joueurID
-	 * Occupation sur le Terrain (j1 ou j2).
-	 * @param joueur
-	 * Type de joueur (humain).
-	 * @param nom
-	 * Nom du joueur donné par les paramètres.
+	 * @param joueurID Occupation sur le Terrain (j1 ou j2).
+	 * @param joueur Type de joueur (humain).
+	 * @param nom Nom du joueur donné par les paramètres.
 	 */
 	public Joueur(Case.Etat joueurID, typeJoueur joueur, String nom){
 		this.setJoueurID(joueurID);
@@ -63,16 +60,11 @@ public class Joueur implements Serializable {
 	
 	/**
 	 * Constructeur pour joueur ordinateur
-	 * @param joueurID
-	 * Occupation sur le Terrain (j1 ou j2).
-	 * @param joueur
-	 * Type de joueur (ordinateur).
-	 * @param niveau
-	 * Niveau de l'IA.
-	 * @param adversaire
-	 * Joueur adverse.
-	 * @param t
-	 * Terrain courant transmis par le Moteur.
+	 * @param joueurID Occupation sur le Terrain (j1 ou j2).
+	 * @param joueur Type de joueur (ordinateur).
+	 * @param niveau Niveau de l'IA.
+	 * @param adversaire sJoueur adverse.
+	 * @param t Terrain courant transmis par le Moteur.
 	 */
 	public Joueur(Case.Etat joueurID, typeJoueur joueur, IntelligenceArtificielle.difficulteIA niveau, Joueur adversaire, Terrain t){
 		this.setJoueurID(joueurID);
@@ -91,8 +83,7 @@ public class Joueur implements Serializable {
 	
 	/**
 	 * Constructeur par copie.
-	 * @param j
-	 * Jouer à copier.
+	 * @param j Jouer à copier.
 	 */
 	public Joueur(Joueur j) {
 		setJoueurID(j.getJoueurID());
@@ -104,8 +95,7 @@ public class Joueur implements Serializable {
 
 	/**
 	 * Permet de connaître quels sont les pions du joueur sur le terrain.
-	 * @return
-	 * Type d'occupation sur le Terrain(joueur1 ou joueur2).
+	 * @return Type d'occupation sur le Terrain(joueur1 ou joueur2).
 	 */
 	public Case.Etat getJoueurID() {
 		return joueurID;
@@ -113,8 +103,7 @@ public class Joueur implements Serializable {
 
 	/**
 	 * Permet de modifier les pions du joueur.
-	 * @param joueurID
-	 * Type d'occupation sur le Terrain (joueur1 ou joueur2).
+	 * @param joueurID Type d'occupation sur le Terrain (joueur1 ou joueur2).
 	 */
 	public void setJoueurID(Case.Etat joueurID) {
 		this.joueurID = joueurID;
@@ -122,8 +111,7 @@ public class Joueur implements Serializable {
 
 	/**
 	 * Permet de savoir si le joueur est humain.
-	 * @return
-	 * Vrai si le joueur est humain, faux sinon.
+	 * @return Vrai si le joueur est humain, faux sinon.
 	 */
 	public boolean isJoueurHumain() {
 		return joueurHumain;
@@ -131,8 +119,7 @@ public class Joueur implements Serializable {
 
 	/**
 	 * Modifie le booléen qui identifie le joueur comme étant humain.
-	 * @param joueurHumain
-	 * Vria si le joueur doit être humain, faux sinon.
+	 * @param joueurHumain Vrai si le joueur doit être humain, faux sinon.
 	 */
 	public void setJoueurHumain(boolean joueurHumain) {
 		this.joueurHumain = joueurHumain;
@@ -154,7 +141,7 @@ public class Joueur implements Serializable {
 	 * @param joueurCourant Le joueur qui est entrain de jouer.
 	 * @param J1 Le joueur 1
 	 * @param J2 Le joueur 2
-	 * @param traceChangeJoueur
+	 * @param traceChangeJoueur Sert aux tests de l'IA.
 	 * @return Le joueur adverse.
 	 */
 	public static Joueur recupereJoueurOpposant(Joueur joueurCourant, Joueur J1, Joueur J2, boolean traceChangeJoueur){
