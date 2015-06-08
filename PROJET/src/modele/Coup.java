@@ -81,6 +81,10 @@ public class Coup {
 		this.pArrivee = pArrivee;
 	}
 	
+	/**
+	 * Permet d'obtenir un clone du coup sans qu'ils aient le même référencement.
+	 * @return Clone du coup courant.
+	 */
 	public Coup clone(){
 		Coup copie = new Coup((Point) this.pDepart.clone(), (Point) this.pArrivee.clone(), this.getChoixPrise());
 		return copie;
