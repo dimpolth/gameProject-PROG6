@@ -113,7 +113,7 @@ public class Terrain implements Serializable {
 			this.tableau[3][2].setOccupation(Case.Etat.joueur2);
 			this.tableau[4][1].setOccupation(Case.Etat.joueur1);
 			this.tableau[4][3].setOccupation(Case.Etat.joueur2);
-			this.tableau[4][4].setOccupation(Case.Etat.joueur2);
+			//this.tableau[4][4].setOccupation(Case.Etat.joueur2);
 			this.tableau[4][5].setOccupation(Case.Etat.joueur2);
 			this.tableau[4][6].setOccupation(Case.Etat.joueur2);
 			break;
@@ -583,7 +583,7 @@ public class Terrain implements Serializable {
 
 	public ArrayList<Coup> coupsObligatoires(Joueur joueurCourant) {
 		ArrayList<Coup> listeCoupsRes = new ArrayList<Coup>();
-		ArrayList<Point> listePointsDep = this.listePionsJouables(joueurCourant, null), listeSuc;
+		ArrayList<Point> listePointsDep = this.listePionsJouables(joueurCourant), listeSuc, listeVide = new ArrayList<Point>();;
 		Iterator<Point> itDepart, itSuc;
 		Point pDepTemp, pArrTemp;
 		Direction dTemp;
@@ -592,7 +592,7 @@ public class Terrain implements Serializable {
 
 		while (itDepart.hasNext()) {
 			pDepTemp = itDepart.next();
-			listeSuc = this.tableau[pDepTemp.x][pDepTemp.y].succ;
+			listeSuc = this.deplacementPossible(pDepTemp, listeVide);
 			itSuc = listeSuc.iterator();
 
 			while (itSuc.hasNext()) {
@@ -600,8 +600,12 @@ public class Terrain implements Serializable {
 
 				dTemp = recupereDirection(pDepTemp, pArrTemp);
 
-				if ((estUnePriseAspiration(pDepTemp, dTemp) || estUnePrisePercussion(pDepTemp, dTemp)) && (tableau[pArrTemp.x][pArrTemp.y].getOccupation() == Case.Etat.vide))
-					listeCoupsRes.add(new Coup((Point) pDepTemp.clone(), (Point) pArrTemp.clone()));
+				if ((estUnePriseAspiration(pDepTemp, dTemp) || estUnePrisePercussion(pDepTemp, dTemp)) && (tableau[pArrTemp.x][pArrTemp.y].getOccupation() == Case.Etat.vide)){
+					if(estUnePriseAspiration(pDepTemp, dTemp))
+						listeCoupsRes.add(new Coup((Point) pDepTemp.clone(), (Point) pArrTemp.clone(), Terrain.ChoixPrise.parAspiration));
+					if(estUnePrisePercussion(pDepTemp, dTemp))
+						listeCoupsRes.add(new Coup((Point) pDepTemp.clone(), (Point) pArrTemp.clone(), Terrain.ChoixPrise.parPercussion));
+				}
 			}
 		}
 
@@ -622,14 +626,13 @@ public class Terrain implements Serializable {
 	 * @return ArrayList de Points. Liste des emplacements vers lequel le pion
 	 *         courant peut se déplacer.
 	 */
-	public ArrayList<Point> deplacementPossible(Point p, ArrayList<Point> listePredecesseurs, Case[][] copieTerrainEventuelle) {
+	public ArrayList<Point> deplacementPossible(Point p, ArrayList<Point> listePredecesseurs) {
 		ArrayList<Point> listeSuc = tableau[p.x][p.y].getSucc();
 		ArrayList<Point> listeSolution = new ArrayList<Point>();
 		Iterator<Point> it = listeSuc.iterator();
 		Point pointPrec = new Point();
 		Case[][] terr = tableau;
-		if (copieTerrainEventuelle != null)
-			terr = copieTerrainEventuelle;
+
 		while (it.hasNext()) {
 			Point temp = (Point) it.next().clone();
 			if (terr[temp.x][temp.y].getOccupation() == Case.Etat.vide && (!listePredecesseurs.contains(temp))) {
@@ -648,18 +651,15 @@ public class Terrain implements Serializable {
 		return listeSolution;
 	}
 
-	public ArrayList<Point> listePionsJouables(Joueur j, Terrain copieTerrainEventuelle) {
+	public ArrayList<Point> listePionsJouables(Joueur j) {
 		Terrain terr = this;
-		if (copieTerrainEventuelle != null) // Utile à l'IA pour travailler sur
-			// une copie de terrain modifiée
-			terr = copieTerrainEventuelle;
 
 		ArrayList<Point> listePions = couplibre(j.getJoueurID());
 		if (listePions.isEmpty()) {
 			for (int ligne = 0; ligne < Terrain.LIGNES; ligne++)
 				for (int colonne = 0; colonne < Terrain.COLONNES; colonne++)
 					if (terr.tableau[ligne][colonne].getOccupation() == j.getJoueurID())
-						if (deplacementPossible((Point) new Point(ligne, colonne).clone(), new ArrayList<Point>(), null).size() > 0)
+						if (deplacementPossible((Point) new Point(ligne, colonne).clone(), new ArrayList<Point>()).size() > 0)
 							listePions.add((Point) new Point(ligne, colonne).clone());
 		}
 		return listePions;
