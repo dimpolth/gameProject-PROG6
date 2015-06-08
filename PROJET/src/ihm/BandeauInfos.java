@@ -18,6 +18,7 @@ class BandeauInfos extends JPanel {
 	JLabel j1_identifiant, j1_score, j2_identifiant, j2_score, texteSup, texteInf;
 	JPanel j1_pion, j2_pion;
 	JPanel panJ1, panJ2, panTextes;
+	int idSelect;
 
 	BandeauInfos(TerrainGraphique pTg) {
 		super(new BorderLayout(15, 15));
@@ -129,6 +130,7 @@ class BandeauInfos extends JPanel {
 	}
 
 	public void setJoueurActif(int id) {
+		idSelect = id;
 		if (id == 1) {
 			panJ1.setBackground(tg.ihm.theme.couleurJ1);
 			panJ2.setBackground(tg.ihm.theme.couleurDefaut);

@@ -322,7 +322,6 @@ public class IHM extends JFrame implements ComponentListener {
 		case OPTION_VALIDER:
 
 			Parametres params = getParametres();
-
 			if (popupO.theme.getSelectedItem() == "Standard")
 				theme.setTheme(Theme.Type.STANDARD);
 			else if (popupO.theme.getSelectedItem() == "Boisé")

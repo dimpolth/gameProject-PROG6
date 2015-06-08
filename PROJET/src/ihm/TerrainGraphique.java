@@ -29,7 +29,7 @@ public class TerrainGraphique extends JPanel implements ComponentListener {
 	protected Image imgPion2;
 	protected Image imgCroix;
 	public IHM ihm;
-	private AnimSelect select;
+	public AnimSelect select;
 	protected LinkedList<EvenementGraphique> lCoups = new LinkedList<EvenementGraphique>();
 
 	protected long tempsGele;
@@ -89,6 +89,8 @@ public class TerrainGraphique extends JPanel implements ComponentListener {
 	}
 
 	public void selectionner(Point p) {
+		if (select != null)
+			deselectionner();
 		select = new AnimSelect(pions[p.x][p.y]);
 	}
 
