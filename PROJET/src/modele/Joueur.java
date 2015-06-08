@@ -13,7 +13,13 @@ public class Joueur implements Serializable {
 	 * Définit si le joueur est un humain ou un IA.
 	 */
 	public enum typeJoueur{
+		/**
+		 * Le joueur est un humain.
+		 */
 		humain,
+		/**
+		 * Le joueur est une IA.
+		 */
 		ordinateur;
 	}
 	
@@ -132,6 +138,10 @@ public class Joueur implements Serializable {
 		this.joueurHumain = joueurHumain;
 	}
 	
+	/**
+	 * Permet de connaître le type d'occupation de case de l'adversaire.
+	 * @return Type d'occupation sur le terrain de l'adversaire.
+	 */
 	public Case.Etat opposant(){
 		if (joueurID == Case.Etat.joueur1)
 			return Case.Etat.joueur2;
@@ -139,6 +149,14 @@ public class Joueur implements Serializable {
 			return Case.Etat.joueur1;
 	}
 	
+	/**
+	 * Permet d'obtenir la référence de l'adversaire du joueur courant.
+	 * @param joueurCourant Le joueur qui est entrain de jouer.
+	 * @param J1 Le joueur 1
+	 * @param J2 Le joueur 2
+	 * @param traceChangeJoueur
+	 * @return Le joueur adverse.
+	 */
 	public static Joueur recupereJoueurOpposant(Joueur joueurCourant, Joueur J1, Joueur J2, boolean traceChangeJoueur){
 		if(joueurCourant.getJoueurID() == J1.getJoueurID()){
 			joueurCourant = J2;
@@ -154,46 +172,91 @@ public class Joueur implements Serializable {
 		return joueurCourant;
 	}
 	
+	/**
+	 * Remet le score du joueur à son état initial.
+	 */
 	public void resetScore(){
 		score = 22;
 	}
 	
+	/**
+	 * Met à jour le score du joueur. Utilisé lors de la prise de pions par l'adversaire.
+	 * @param nbPionsManges Nombre de pions mangés par l'adversaire.
+	 */
 	public void setScore(int nbPionsManges) {
 		score -= nbPionsManges;
 	}
 	
+	/**
+	 * Charge un score sur le joueur. Utilisé lors d'un chargement de partie.
+	 * @param score Score à attribuer au joueur.
+	 */
 	public void chargerScore(int score) {
 		this.score = score;
 	}
 	
+	/**
+	 * Permet d'obtenir le score du joueur.
+	 * @return Le score du joueur.
+	 */
 	public int getScore() {
 		return score;
 	}
 	
+	/**
+	 * Permet de savoir si le score du joueur a atteint zéro.
+	 * Utilisé pour savoir si le joueur à perdu la partie.
+	 * @return Vrai si le score est à zéro. Faux sinon.
+	 */
 	public boolean scoreNul() {
 		return (score == 0);
 	}
 	
+	/**
+	 * Permet d'obtenir le nom du joueur.
+	 * @return Le nom du joueur.
+	 */
 	public String getNom() {
 		return nom;
 	}
 	
+	/**
+	 * Modifie le nom du joueur.
+	 * @param nom Nom à attribuer au joueur.
+	 */
 	public void setNom(String nom) {		
 		this.nom = nom;
 	}
 	
+	/**
+	 * Fait jouer un coup à l'IA.
+	 * @return Le coup joué par l'IA.
+	 */
 	public Coup jouer() {
 		return ia.jouerIA();
 	}
 	
+	/**
+	 * Permet de savoir si l'IA a encore un coup à jouer.
+	 * @return Vrai si l'IA continue son tour, faux sinon.
+	 */
 	public boolean IaContinue(){
 		return ia.isTourEnCours();
 	}
 	
+	/**
+	 * Charge une IA sur un joueur. Utilisé lors du chargement d'une partie.
+	 * @param typeIA Difficulté de l'IA.
+	 * @param adversaire Joueur qui affronte l'IA.
+	 * @param t Le terrain de jeu actuel.
+	 */
 	public void chargerIa(IntelligenceArtificielle.difficulteIA typeIA, Joueur adversaire, Terrain t) {
 		ia = new IntelligenceArtificielle(typeIA, this, adversaire, t);
 	}
 	
+	/**
+	 * Permet d'arrêter l'IA. Utilisé si le joueur passe d'humain à IA.
+	 */
 	public void viderIa() {
 		ia = null;
 	}

@@ -35,7 +35,26 @@ public class Moteur {
 	 *Définit les différents états de l'automate
 	 */
 	public enum EtatTour {
-		selectionPion, selectionDestination, attenteChoix, jeuxIa, partieFinie;
+		/**
+		 * Etat d'attente de séléction de pion par le joueur.
+		 */
+		selectionPion,
+		/**
+		 * Etat d'attente de séléction d'une destination par le joueur.
+		 */
+		selectionDestination,
+		/**
+		 * Etat d'attente de séléction d'un choix par le joueur dans le cas  d'une prise multiple.
+		 */
+		attenteChoix,
+		/**
+		 * Etat où l'IA joue.
+		 */
+		jeuxIa,
+		/**
+		 * Etat où la partie est terminée.
+		 */
+		partieFinie;
 	}
 
 	/**
