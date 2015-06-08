@@ -11,6 +11,7 @@ import ia.*;
 import ihm.*;
 import modele.*;
 import modele.Case.Etat;
+import modele.Parametres.NiveauJoueur;
 //import modele.Joueur.typeJoueur;
 import reseau.*;
 
@@ -853,21 +854,8 @@ public class Moteur {
 	 * @param dataValue Paramètres de la partie.
 	 */
 	public void actionParametre(Object dataValue) {
-		Parametres p = (Parametres) dataValue;
-		
-			
-		if (p.j1_identifiant != null)
-			j1.setNom(p.j1_identifiant);
-		else
-			p.j1_identifiant=j1.getNom();
-		
-		if (p.j2_identifiant != null)
-			j2.setNom(p.j2_identifiant);
-		else 
-			p.j2_identifiant=j2.getNom();
-		
-		
-		
+		Parametres p = (Parametres) dataValue;	
+				
 		if(p.j1_type != null ){
 			if (p.j1_type == Parametres.NiveauJoueur.HUMAIN) {
 				j1.setJoueurHumain(true);
@@ -892,10 +880,24 @@ public class Moteur {
 					j2.chargerIa(IntelligenceArtificielle.difficulteIA.facile, j1, t);
 				else if (p.j2_type == Parametres.NiveauJoueur.MOYEN)
 					j2.chargerIa(IntelligenceArtificielle.difficulteIA.normal, j1, t);
-				else if (p.j1_type == Parametres.NiveauJoueur.DIFFICILE)
+				else if (p.j2_type == Parametres.NiveauJoueur.DIFFICILE)
 					j2.chargerIa(IntelligenceArtificielle.difficulteIA.difficile, j1, t);
 			}
 		}
+		
+		if (p.j1_identifiant != null && p.j1_type == Parametres.NiveauJoueur.HUMAIN)
+			j1.setNom(p.j1_identifiant);
+		else
+			p.j1_identifiant=j1.getNom();
+		
+		if (p.j2_identifiant != null && p.j2_type == Parametres.NiveauJoueur.HUMAIN)
+			j2.setNom(p.j2_identifiant);
+		else			
+			p.j2_identifiant=j2.getNom();
+			
+		
+		
+		
 		ech.vider();
 		ech.ajouter("parametres", p);
 		com.envoyer(ech);

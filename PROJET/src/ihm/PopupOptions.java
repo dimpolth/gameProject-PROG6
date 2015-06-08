@@ -3,6 +3,8 @@ package ihm;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.EnumSet;
 
 import javax.swing.JComboBox;
@@ -80,6 +82,10 @@ public class PopupOptions extends Popup {
 		add(identifiantJoueur2, contraintes);
 		selectJoueur2 = new JComboBox<>(typeJoueurChoix);
 		selectJoueur2.setSelectedItem(TypeJoueur.IA2.getTexte());
+		
+		
+		
+		
 		contraintes.gridwidth = GridBagConstraints.REMAINDER;
 
 		add(selectJoueur2, contraintes);
@@ -108,6 +114,30 @@ public class PopupOptions extends Popup {
 		contraintes.gridwidth = GridBagConstraints.REMAINDER;
 
 		add(valider, contraintes);
+		
+	
+		
+		selectJoueur1.addActionListener (new ActionListener () {
+		    public void actionPerformed(ActionEvent e) {		        
+		    	changementTypeJoueur(1);
+		    }
+		});
+		
+		selectJoueur2.addActionListener (new ActionListener () {
+		    public void actionPerformed(ActionEvent e) {		        
+		    	changementTypeJoueur(2);
+		    }
+		});
+		
+		changementTypeJoueur(1);
+		changementTypeJoueur(2);
 
+	}
+	
+	public void changementTypeJoueur(int j){
+		if(j==1)
+			identifiantJoueur1.setEditable( selectJoueur1.getSelectedIndex() <= 0  );
+		else if(j==2)
+			identifiantJoueur2.setEditable( selectJoueur2.getSelectedIndex() <= 0  );
 	}
 }
