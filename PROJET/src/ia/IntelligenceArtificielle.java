@@ -6,7 +6,6 @@ import java.util.Random;
 import java.util.Iterator;
 
 import modele.*;
-import moteur.*;
 
 public class IntelligenceArtificielle implements Serializable {
 	public enum difficulteIA{

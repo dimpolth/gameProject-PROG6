@@ -4,10 +4,26 @@ import java.awt.Point;
 import java.awt.event.ActionEvent;
 import javax.swing.Timer;
 
+/**
+ * Classe gérant les animations de déplacement des pions. 
+ */
 class AnimDeplacement extends Animation {
+
+	/**
+	 * Point de départ du pion.
+	 */
 	private Point origine;
+	/**
+	 * Point d'arrivé du pion.
+	 */
 	private Point destination;
 
+	/**
+	 * Constructeur unique.
+	 * @param p Le pion à animer.
+	 * @param o Le point de départ du pion à animer.
+	 * @param d Le point d'arrivé du pion à animer.
+	 */
 	public AnimDeplacement(Pion p, Point o, Point d) {
 		pion = p;
 		pion.tg.tempsGele = System.currentTimeMillis() + TerrainGraphique.ANIM_DEPL;
@@ -19,6 +35,10 @@ class AnimDeplacement extends Animation {
 	}
 
 	@Override
+	/**
+	 * Effectue l'animation lors de la récéption d'un évènement.
+	 * @param e Evènement déclacheur.
+	 */
 	public void actionPerformed(ActionEvent e) {
 
 		long actuel = System.currentTimeMillis();

@@ -19,11 +19,18 @@ import javax.imageio.ImageIO;
 import javax.swing.JButton;
 
 @SuppressWarnings("serial")
+
 public class Bouton extends JButton implements MouseListener {
+	/**
+	 * Liste des boutons.
+	 */
 	static List<Bouton> boutons = new ArrayList<Bouton>();
 
 	Image fondNormal, fondSurvol, fondClique;
 	Image fond;
+	/**
+	 * Couleur des polices.
+	 */
 	Color couleurNormal, couleurGrisee, couleur;
 
 	boolean active = true;
