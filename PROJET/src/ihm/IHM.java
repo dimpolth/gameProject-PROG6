@@ -23,6 +23,7 @@ import javax.swing.JLayeredPane;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import modele.Parametres;
 import modele.Parametres.NiveauJoueur;
@@ -30,30 +31,61 @@ import reseau.Communication;
 import reseau.Echange;
 
 @SuppressWarnings("serial")
+/**
+ * Classe globale de la fenêtre.
+ */
 public class IHM extends JFrame implements ComponentListener {
 
 	public Communication com;
+	/**
+	 * Mini-fenêtre à afficher au lancement du jeu.
+	 */
 	JFrame fenetreChargement;
-
+	/**
+	 * Theme de la fenêtre.
+	 */
 	Theme theme;
-
+	/**
+	 * Couche de base.
+	 */
 	JPanel coucheJeu;
+	/**
+	 * Couche supérieure bloquante.
+	 */
 	PopupBloquant popupB;
+	/**
+	 * Couche supérieure pour le menu.
+	 */
 	PopupMenu popupM;
+	/**
+	 * 
+	 */
 	PopupOptions popupO;
 	PopupRegles popupR;
 	PopupReseau popupReseau;
 	PopupVictoire popupV;
+	/**
+	 * Plateau de jeu.
+	 */
 	TerrainGraphique tg;
 	public BandeauInfos bandeauInfos;
-	Chargement chargement, chargement2;
+	/**
+	 * Widget de chargement de la fenêtre principale.
+	 */
+	Chargement chargement;
+	/**
+	 * Widget de chargement de la mini-fenêtre.
+	 */
+	Chargement chargement2;
 
 	Bouton boutonAnnuler;
 	Bouton boutonRefaire;
 	Bouton boutonValidation;
 
-	boolean modeReseau = false;
-
+	
+	/**
+	 * Constructeur de l'IHM.
+	 */
 	public IHM() {
 
 		// Initialisation de la fenêtre
@@ -163,7 +195,6 @@ public class IHM extends JFrame implements ComponentListener {
 
 		popupV = new PopupVictoire();
 		gestionCouche.add(popupV, new Integer(4));
-		popupV.setVisible(false);
 
 		theme.setTheme(Theme.Type.BOIS);
 
@@ -193,14 +224,68 @@ public class IHM extends JFrame implements ComponentListener {
 
 	}
 
-	public void lancer() {
+	public void nouvellePartie() {
 		Echange e = new Echange();
 		e.ajouter("nouvellePartie", true);
 		e.ajouter("parametres", getParametres());
 		e.ajouter("terrain", true);
 		com.envoyer(e);
 	}
+	
+	public void sauverPartie(){
+		JFileChooser fcSauver = new JFileChooser();
+		fcSauver.addChoosableFileFilter(new FileNameExtensionFilter(".fa", "fanorona"));
+		File fileToBeSaved=null;
+		if (fcSauver.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+			if(!fcSauver.getSelectedFile().getAbsolutePath().endsWith(".fa")){
+			    fileToBeSaved = new File(fcSauver.getSelectedFile() + ".fa");
+			}
+			Echange e = new Echange();
+			e.ajouter("sauvegarder", fileToBeSaved);
+			com.envoyer(e);
+		}
+	}
+	
+	public void chargerPartie(){
+		JFileChooser fcCharger = new JFileChooser();
+		fcCharger.addChoosableFileFilter(new FileNameExtensionFilter(".fa", "fanorona"));
+		if (fcCharger.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+			Echange e = new Echange();
+			e.ajouter("charger", fcCharger.getSelectedFile());
+			com.envoyer(e);
+		}
+	}
+	
+	public void quitter(boolean confirmation){
+		if ((Communication.enReseau())) {
+			String[] choix = { "Oui", "Non" };
+			int retour;
+			if(confirmation)
+				retour = JOptionPane.showOptionDialog(this, "Vous êtes actuellement sur une partie en réseau. Voulez-vous vraiment quitter ?", "Attention", 1, 1, null, choix, choix[0]);
+			else retour = 0;
+			if (retour == 0) {
+				com.envoyer("/QUIT");
+				System.exit(0);
+			}
+		} else {
+			String[] choix = { "Oui", "Non" };
+			int retour;
+			if(confirmation)
+				retour = JOptionPane.showOptionDialog(this, "Voulez-vous sauvegarder la partie avant de quitter ?", "Attention", 1, 1, null, choix, choix[1]);
+			else retour = 1;
+			if (retour == 1) {
+				System.exit(0);
+			} else if (retour == 0) {
+				action(Ecouteur.Bouton.SAUVEGARDER);
+				System.exit(0);
+			}
+		}
+	}
 
+	/**
+	 * Gestion de toutes les entrées de l'IHM.
+	 * @param id Identifiant du bouton cliqué.
+	 */
 	public void action(Ecouteur.Bouton id) {
 
 		switch (id) {
@@ -209,23 +294,13 @@ public class IHM extends JFrame implements ComponentListener {
 			popupM.setVisible(false);
 			break;
 		case SAUVEGARDER:
-			JFileChooser fcSauver = new JFileChooser();
-			if (fcSauver.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
-				Echange e = new Echange();
-				e.ajouter("sauvegarder", fcSauver.getSelectedFile());
-				com.envoyer(e);
-			}
+			sauverPartie();
 			break;
 		case CHARGER:
-			JFileChooser fcCharger = new JFileChooser();
-			if (fcCharger.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-				Echange e = new Echange();
-				e.ajouter("charger", fcCharger.getSelectedFile());
-				com.envoyer(e);
-			}
+			chargerPartie();
 			break;
 		case MODE:
-			if (modeReseau) {
+			if (Communication.enReseau()) {
 				String choix[] = { "Confirmer", "Annuler" };
 				int retour = JOptionPane.showOptionDialog(this, "Revenir au jeu local quittera la partie réseau.", "Attention", 1, JOptionPane.INFORMATION_MESSAGE, null, choix, choix[1]);
 
@@ -245,28 +320,12 @@ public class IHM extends JFrame implements ComponentListener {
 			popupR.setVisible(true);
 			break;
 		case RECOMMENCER:
-			lancer();
+			nouvellePartie();
 			popupM.setVisible(false);
 			popupB.setVisible(false);
 			break;
 		case QUITTER:
-			if ((Communication.enReseau())) {
-				String[] choix = { "Non", "Oui" };
-				int retour = JOptionPane.showOptionDialog(this, "Vous êtes actuellement sur une partie en réseau. Voulez-vous vraiment quitter ?", "Attention", 1, 1, null, choix, choix[1]);
-				if (retour == 1) {
-					com.envoyer("/QUIT");
-					System.exit(0);
-				}
-			} else {
-				String[] choix = { "Non", "Oui" };
-				int retour = JOptionPane.showOptionDialog(this, "Voulez-vous sauvegarder la partie avant de quitter ?", "Attention", 1, 1, null, choix, choix[1]);
-				if (retour == 0) {
-					System.exit(0);
-				} else if (retour == 1) {
-					action(Ecouteur.Bouton.SAUVEGARDER);
-					System.exit(0);
-				}
-			}
+			quitter(true);
 			break;
 		case MENU:
 			popupB.setVisible(true);
@@ -308,7 +367,6 @@ public class IHM extends JFrame implements ComponentListener {
 		case OPTION_VALIDER:
 
 			Parametres params = getParametres();
-
 			if (popupO.theme.getSelectedItem() == "Standard")
 				theme.setTheme(Theme.Type.STANDARD);
 			else if (popupO.theme.getSelectedItem() == "Boisé")
@@ -342,21 +400,16 @@ public class IHM extends JFrame implements ComponentListener {
 			popupM.setVisible(true);
 			break;
 
-		case RESEAU_ANNULER:
+		case RESEAU_RETOUR:
 			popupReseau.setVisible(false);
 			popupM.setVisible(true);
 			break;
-
-		case RESEAU_VALIDER:
-
+		case RESEAU_HEBERGER:
 			String errReseau = null;
-			String identifiant = popupReseau.identifiant.getText();
-			;
+			String identifiant = popupReseau.champId.getText();
 			// Nouveau serveur
-			if (popupReseau.etreHote.isSelected()) {
 				errReseau = Communication.modeReseau("", identifiant);
 				if (errReseau == null) {
-
 					// 2 joueurs humain si on lance une partie réseau
 					Parametres param = new Parametres();
 					param.j1_type = Parametres.NiveauJoueur.HUMAIN;
@@ -367,36 +420,42 @@ public class IHM extends JFrame implements ComponentListener {
 					com.envoyer(ec);
 					JOptionPane.showMessageDialog(this, "Le serveur est ouvert sur le port : " + Communication.getPort() + "", "Port " + Communication.getPort() + "", 1);
 				}
-
-			} else {
-				// ;//System.out.println("1");
-				String hoteComplet = popupReseau.hote.getText();
-				if (!hoteComplet.equals("")) {
-					// ;//System.out.println("2");
-					errReseau = Communication.modeReseau(hoteComplet, identifiant);
-					// ;//System.out.println(errReseau);
-				}
-			}
-
 			if (errReseau == null) {
 				popupReseau.setVisible(false);
 				popupB.setVisible(false);
 				setModeReseau(true);
 				popupReseau.message.setText(errReseau);
-
 			} else {
 				popupReseau.message.setText(errReseau);
 			}
-
+			break;
+		case RESEAU_REJOINDRE:
+			errReseau = null;
+			identifiant = popupReseau.champId.getText();
+				String hoteComplet = popupReseau.champRejoindre.getText()+":"+popupReseau.champRejoindrePort.getText();
+				if (!hoteComplet.equals("")) {
+					errReseau = Communication.modeReseau(hoteComplet, identifiant);
+				}
+			if (errReseau == null) {
+				popupReseau.setVisible(false);
+				popupB.setVisible(false);
+				setModeReseau(true);
+				popupReseau.message.setText(errReseau);
+			} else {
+				popupReseau.message.setText(errReseau);
+			}
 			break;
 		}
-
 	}
 
 	public void envoyerIdentifiantReseau() {
 
 	}
 
+	/**
+	 * Création de la mini-fenêtre.
+	 * @param b Vrai si on affiche, faux sinon.
+	 */
 	public void fenetreChargement(boolean b) {
 		if (b) {
 
@@ -426,6 +485,10 @@ public class IHM extends JFrame implements ComponentListener {
 
 	}
 
+	/**
+	 * Change l'agencement des boutons si la partie est en réseau.
+	 * @param r Vrai si on est en réseau, faux sinon.
+	 */
 	public void setModeReseau(boolean r) {
 		if (!r) {
 			popupM.boutonMenuReseau.setVisible(true);
@@ -448,7 +511,7 @@ public class IHM extends JFrame implements ComponentListener {
 		popupM.boutonMenuSauvegarder.setEnabled(!r);
 		popupM.boutonMenuCharger.setEnabled(!r);
 
-		modeReseau = r;
+		
 	}
 
 	@Override
@@ -460,6 +523,9 @@ public class IHM extends JFrame implements ComponentListener {
 	}
 
 	@Override
+	/**
+	 * Redimentionnement de la fenêtre.
+	 */
 	public void componentResized(ComponentEvent e) {
 		coucheJeu.setBounds(0, 0, getWidth(), getHeight());
 		popupB.setBounds(0, 0, getWidth(), getHeight());
@@ -467,7 +533,7 @@ public class IHM extends JFrame implements ComponentListener {
 		popupO.setBounds(getWidth() / 2 - 320, getHeight() / 2 - 200, 640, 400);
 		popupR.setBounds(getWidth() / 2 - 400, getHeight() / 2 - 250, 800, 500);
 
-		popupReseau.setBounds(getWidth() / 2 - 175, getHeight() / 2 - 275, 350, 550);
+		popupReseau.setBounds(getWidth() / 2 - 320, getHeight() / 2 - 200, 640, 400);
 		popupV.setBounds(0, 0, getWidth(), getHeight());
 
 	}
@@ -476,14 +542,19 @@ public class IHM extends JFrame implements ComponentListener {
 	public void componentShown(ComponentEvent e) {
 	}
 
+	/**
+	 * Récéption des paquets du Moteur.
+	 * @param e Paquet reçu.
+	 */
 	public void notifier(Echange e) {
 	
-
+		
 		Object dataValue;
-		/*
-		 * if ((dataValue = e.get("terrain")) != null) {
-		 * tg.dessinerTerrain((Case[][]) dataValue); }
-		 */
+		
+		if ((dataValue = e.get("terrain")) != null) {
+			tg.dessinerTerrain((modele.Case[][]) dataValue); 
+		}
+		
 		if ((dataValue = e.get("coup")) != null) {
 			tg.lCoups.addLast((EvenementGraphique) dataValue);
 			EvenementGraphique.afficherCoups(tg);
@@ -532,6 +603,9 @@ public class IHM extends JFrame implements ComponentListener {
 		if ((dataValue = e.get("refaire")) != null) {
 			boutonRefaire.setEnabled((boolean) dataValue);
 		}
+		if ((dataValue = e.get("finTour")) != null) {
+			boutonValidation.setEnabled((boolean) dataValue);
+		}
 		if ((dataValue = e.get("score")) != null) {
 			int[] score = (int[]) dataValue;
 			bandeauInfos.setScore(1, score[0]);
@@ -539,26 +613,41 @@ public class IHM extends JFrame implements ComponentListener {
 		}
 		if ((dataValue = e.get("parametres")) != null) {
 			Parametres params = (Parametres) dataValue;
+			System.out.println(params.j2_identifiant);
 			if (params.j1_identifiant != null)
 				bandeauInfos.setIdentifiant(1, params.j1_identifiant);
 			if (params.j2_identifiant != null)
 				bandeauInfos.setIdentifiant(2, params.j2_identifiant);
 		}
-		if ((dataValue = e.get("finTour")) != null) {
-			boutonValidation.setEnabled((boolean) dataValue);
-		}
+		
 
 	}
 	
-	public void notifier(String e){
-		String data[] = e.split(":");
-		String dataType = data[0];
-		String dataValue = data[1];
-		System.out.println("IHM : "+e);
-		if(dataType.equals("reseau_interruption")){
-			JOptionPane.showMessageDialog(this, dataValue,
-				      "Interruption réseau",
-				      JOptionPane.WARNING_MESSAGE);			
+	/**
+	 * Affiche une popup d'information au joueur.
+	 * @param info 
+	 */
+	public void notifier(String info){		
+		
+		if(info.equals("/INTER_SERVEUR") || info.equals("/ABANDON")){
+			String message="";
+			if(info.equals("/INTER_SERVEUR")){
+				message = "Le seveur a mis fin à la partie en réseau en cours.";
+			}
+			else{
+				message = "L'adversaire a mis fin à la partie en réseau.";
+			}
+			
+			message +="\n Voulez-vous lancer une nouvelle partie en local ?";
+			int reponse = JOptionPane.showConfirmDialog(this, message,
+				      "Fin de partie réseau",
+				      JOptionPane.YES_NO_OPTION);	
+			setModeReseau(false);
+			
+			if (reponse == JOptionPane.YES_OPTION) nouvellePartie();
+			else quitter(false);
+			
 		}
+
 	}
 }

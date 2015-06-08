@@ -20,11 +20,22 @@ class Pion extends JComponent implements MouseListener, ComponentListener {
 	protected TerrainGraphique tg;
 	private Case.Etat etat;
 	private boolean croix;
+	/**
+	 * Niveau de transparence.
+	 */
 	private float alpha;
+	/**
+	 * Dimensions et paramètres de la fenêtre.
+	 */
 	protected Dimensions dim;
-
+	/**
+	 * Coordonnées en pixel d'un pion.
+	 */
 	protected Point coordReelles = new Point();
 	protected float facteurTaille = 1;
+	/**
+	 * Transformation de la position du pion.
+	 */
 	protected Point2D.Float facteurPos = new Point2D.Float();
 
 	public Pion(Point p, TerrainGraphique t, Dimensions d) {
@@ -91,7 +102,22 @@ class Pion extends JComponent implements MouseListener, ComponentListener {
 
 	@Override
 	public void componentResized(ComponentEvent e) {
+		replacer();
+	}
+	/**
+	 * Replace le pion en fonction des redimensionnements et des animations..
+	 */
+	public void replacer() {
 		setBounds((int) ((facteurPos.y + 0.5) * dim.echelle + dim.origX) - (int) ((facteurTaille * dim.echelle / 2) - (dim.echelle / 2)) / 2, (int) ((facteurPos.x + 0.5) * dim.echelle + dim.origY) - (int) ((facteurTaille * dim.echelle / 2) - (dim.echelle / 2)) / 2, (int) (facteurTaille * dim.echelle / 2), (int) (facteurTaille * dim.echelle / 2));
+		repaint();
+	}
+	/**
+	 * Téléportation d'un pion à l'endroit où il doit être.
+	 */
+	public void majPosition() {
+		facteurPos.x = coord.x;
+		facteurPos.y = coord.y;
+		replacer();
 	}
 
 	@Override

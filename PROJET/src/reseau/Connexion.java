@@ -10,6 +10,8 @@ import modele.Parametres;
 
 public class Connexion implements Runnable{
 	
+	
+	
 	private Serveur serveur;
 	
 	protected String identifiant;
@@ -23,6 +25,8 @@ public class Connexion implements Runnable{
 	// Flux d'entrée pour recevoir des données du joueur
 	private ObjectInputStream ois;
 	
+	private boolean running = true;
+	
 	Connexion(Serveur serveur, Socket socket) throws UnknownHostException, IOException {
 		
 		try {
@@ -32,9 +36,7 @@ public class Connexion implements Runnable{
 			oos = new ObjectOutputStream(socket.getOutputStream());
 			
 			// Premier envoi = identifiant
-			identifiant = (String)ois.readObject();
-			System.out.println(identifiant);			
-		
+			identifiant = (String)ois.readObject();	
 
 			Thread t = new Thread(this, "recep");
 			t.start();
@@ -55,14 +57,22 @@ public class Connexion implements Runnable{
 			serveur.terminerConnexion(this);
 		}
 	}
+	
+	public void fermer(){
+		try{
+			this.socket.close();
+			running=false;
+		}
+		catch(Exception e){}
+	}
 
 	@Override
 	public void run() {
 		
 		Thread currentTh = Thread.currentThread();
-		Echange e;
 		
-		while (true) {
+		
+		while (running) {
 			
 			
 			
@@ -89,8 +99,7 @@ public class Connexion implements Runnable{
 					else{
 						String ordre = (String)recu;
 						
-						if(ordre.equals("/QUIT")){
-							System.out.println("recu /quit");
+						if(ordre.equals("/QUIT")){						
 							serveur.terminerConnexion(this);
 						}
 					}
@@ -98,6 +107,7 @@ public class Connexion implements Runnable{
 					
 					
 				} catch (Exception ex) {
+					running = false;
 				}				
 
 			}
