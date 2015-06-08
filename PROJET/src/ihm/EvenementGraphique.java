@@ -100,10 +100,10 @@ public class EvenementGraphique implements Runnable, Serializable {
 
 	public void run() {
 		if (terrain != null) {
-			latence(50);
+			
 			tg.dessinerTerrain(terrain);
 
-			latence(50);
+			latence(200);
 		}
 
 		if (deplacement != null) {

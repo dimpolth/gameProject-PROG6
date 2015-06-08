@@ -194,6 +194,7 @@ public class IHM extends JFrame implements ComponentListener {
 	}
 
 	public void nouvellePartie() {
+		System.out.println("Nouvelle Partie");
 		Echange e = new Echange();
 		e.ajouter("nouvellePartie", true);
 		e.ajouter("parametres", getParametres());
@@ -222,6 +223,32 @@ public class IHM extends JFrame implements ComponentListener {
 			Echange e = new Echange();
 			e.ajouter("charger", fcCharger.getSelectedFile());
 			com.envoyer(e);
+		}
+	}
+	
+	public void quitter(boolean confirmation){
+		if ((Communication.enReseau())) {
+			String[] choix = { "Oui", "Non" };
+			int retour;
+			if(confirmation)
+				retour = JOptionPane.showOptionDialog(this, "Vous êtes actuellement sur une partie en réseau. Voulez-vous vraiment quitter ?", "Attention", 1, 1, null, choix, choix[0]);
+			else retour = 0;
+			if (retour == 0) {
+				com.envoyer("/QUIT");
+				System.exit(0);
+			}
+		} else {
+			String[] choix = { "Oui", "Non" };
+			int retour;
+			if(confirmation)
+				retour = JOptionPane.showOptionDialog(this, "Voulez-vous sauvegarder la partie avant de quitter ?", "Attention", 1, 1, null, choix, choix[1]);
+			else retour = 1;
+			if (retour == 1) {
+				System.exit(0);
+			} else if (retour == 0) {
+				action(Ecouteur.Bouton.SAUVEGARDER);
+				System.exit(0);
+			}
 		}
 	}
 
@@ -264,23 +291,7 @@ public class IHM extends JFrame implements ComponentListener {
 			popupB.setVisible(false);
 			break;
 		case QUITTER:
-			if ((Communication.enReseau())) {
-				String[] choix = { "Non", "Oui" };
-				int retour = JOptionPane.showOptionDialog(this, "Vous êtes actuellement sur une partie en réseau. Voulez-vous vraiment quitter ?", "Attention", 1, 1, null, choix, choix[1]);
-				if (retour == 1) {
-					com.envoyer("/QUIT");
-					System.exit(0);
-				}
-			} else {
-				String[] choix = { "Non", "Oui" };
-				int retour = JOptionPane.showOptionDialog(this, "Voulez-vous sauvegarder la partie avant de quitter ?", "Attention", 1, 1, null, choix, choix[1]);
-				if (retour == 0) {
-					System.exit(0);
-				} else if (retour == 1) {
-					action(Ecouteur.Bouton.SAUVEGARDER);
-					System.exit(0);
-				}
-			}
+			quitter(true);
 			break;
 		case MENU:
 			popupB.setVisible(true);
@@ -322,7 +333,6 @@ public class IHM extends JFrame implements ComponentListener {
 		case OPTION_VALIDER:
 
 			Parametres params = getParametres();
-
 			if (popupO.theme.getSelectedItem() == "Standard")
 				theme.setTheme(Theme.Type.STANDARD);
 			else if (popupO.theme.getSelectedItem() == "Boisé")
@@ -492,12 +502,13 @@ public class IHM extends JFrame implements ComponentListener {
 
 	public void notifier(Echange e) {
 	
-
+		
 		Object dataValue;
-		/*
-		 * if ((dataValue = e.get("terrain")) != null) {
-		 * tg.dessinerTerrain((Case[][]) dataValue); }
-		 */
+		
+		if ((dataValue = e.get("terrain")) != null) {
+			tg.dessinerTerrain((modele.Case[][]) dataValue); 
+		}
+		
 		if ((dataValue = e.get("coup")) != null) {
 			tg.lCoups.addLast((EvenementGraphique) dataValue);
 			EvenementGraphique.afficherCoups(tg);
@@ -546,6 +557,9 @@ public class IHM extends JFrame implements ComponentListener {
 		if ((dataValue = e.get("refaire")) != null) {
 			boutonRefaire.setEnabled((boolean) dataValue);
 		}
+		if ((dataValue = e.get("finTour")) != null) {
+			boutonValidation.setEnabled((boolean) dataValue);
+		}
 		if ((dataValue = e.get("score")) != null) {
 			int[] score = (int[]) dataValue;
 			bandeauInfos.setScore(1, score[0]);
@@ -558,9 +572,7 @@ public class IHM extends JFrame implements ComponentListener {
 			if (params.j2_identifiant != null)
 				bandeauInfos.setIdentifiant(2, params.j2_identifiant);
 		}
-		if ((dataValue = e.get("finTour")) != null) {
-			boutonValidation.setEnabled((boolean) dataValue);
-		}
+		
 
 	}
 	
@@ -582,6 +594,7 @@ public class IHM extends JFrame implements ComponentListener {
 			setModeReseau(false);
 			
 			if (reponse == JOptionPane.YES_OPTION) nouvellePartie();
+			else quitter(false);
 			
 		}
 		

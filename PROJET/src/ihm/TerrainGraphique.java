@@ -16,6 +16,7 @@ import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 import modele.Case;
+import modele.Terrain;
 import reseau.Echange;
 
 @SuppressWarnings("serial")
@@ -69,7 +70,6 @@ public class TerrainGraphique extends JPanel implements ComponentListener {
 	public void dessinerTerrain(Case[][] c) {
 		ihm.popupV.arreter();
 		deselectionner();
-		cacherTrait();
 		for (int i = 0; i < 5; i++) {
 			for (int j = 0; j < 9; j++) {
 				pions[i][j].setCouleur(c[i][j].getOccupation());
@@ -89,6 +89,8 @@ public class TerrainGraphique extends JPanel implements ComponentListener {
 	}
 
 	public void selectionner(Point p) {
+		if (select != null)
+			deselectionner();
 		select = new AnimSelect(pions[p.x][p.y]);
 	}
 

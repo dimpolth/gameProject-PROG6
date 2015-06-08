@@ -16,6 +16,7 @@ public class PopupReseau extends Popup {
 	JTextField hote;
 	JLabel message;
 	JTextField identifiant;
+	JLabel selectJoueurEtiq, selectJoueur1Etiq, selectJoueur2Etiq;
 
 	public PopupReseau(IHM i) {
 		super(new GridBagLayout());
@@ -32,15 +33,15 @@ public class PopupReseau extends Popup {
 		GridBagConstraints contraintes_groupe_fin = (GridBagConstraints) contraintes.clone();
 		contraintes_groupe_fin.gridwidth = GridBagConstraints.REMAINDER;
 
-		JLabel selectJoueurEtiq = new JLabel("Mon identifiant");
+		selectJoueurEtiq = new JLabel("Mon identifiant");
 		contraintes.gridwidth = GridBagConstraints.REMAINDER;
 		add(selectJoueurEtiq, contraintes);
 
-		identifiant = new JTextField("Joueur-" + System.currentTimeMillis() / 1000 / 1000);
+		identifiant = new JTextField("Joueur-" + System.currentTimeMillis() % 100);
 		contraintes.gridwidth = 1;
 		add(identifiant, contraintes_groupe_fin);
 
-		JLabel selectJoueur1Etiq = new JLabel("Nouveau serveur");
+		selectJoueur1Etiq = new JLabel("Nouveau serveur");
 		contraintes.gridwidth = GridBagConstraints.REMAINDER;
 		add(selectJoueur1Etiq, contraintes);
 
@@ -56,7 +57,7 @@ public class PopupReseau extends Popup {
 		 * add(hote, contraintes);
 		 */
 
-		JLabel selectJoueur2Etiq = new JLabel("Rejoindre une partie");
+		selectJoueur2Etiq = new JLabel("Rejoindre une partie");
 		contraintes.gridwidth = GridBagConstraints.REMAINDER;
 
 		add(selectJoueur2Etiq, contraintes);
