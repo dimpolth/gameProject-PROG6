@@ -2,6 +2,7 @@ package modele;
 import java.io.Serializable;
 
 import ia.*;
+import ia.IntelligenceArtificielle.difficulteIA;
 import moteur.*;
 /**
  *Classe contenant tout ce qui définit un joueur. 
@@ -204,7 +205,23 @@ public class Joueur implements Serializable {
 	 * @return Le nom du joueur.
 	 */
 	public String getNom() {
-		return nom;
+		String retourner="Inconnu";
+		if(isJoueurHumain())
+			retourner= nom;
+		else{
+			if(ia != null){				
+				if(ia.getNiveauDifficulte() == difficulteIA.facile)
+					retourner= "IA facile";
+				else if(ia.getNiveauDifficulte() == difficulteIA.normal)
+					retourner= "IA Moyenne";
+				else if(ia.getNiveauDifficulte() == difficulteIA.difficile)				
+					retourner= "IA difficile";				
+				else
+					retourner= "IA inconnue";
+			}
+		}
+		return retourner;
+		
 	}
 	
 	/**
