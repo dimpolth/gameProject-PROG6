@@ -85,6 +85,7 @@ public class EvenementGraphique implements Runnable, Serializable {
 		this.bandeauSup = bandeauSup;
 		this.bandeauInf = bandeauInf;
 		joueurCourant = i;
+		this.chemin = new ArrayList<Point>();
 
 	}
 

@@ -91,7 +91,16 @@ class Pion extends JComponent implements MouseListener, ComponentListener {
 
 	@Override
 	public void componentResized(ComponentEvent e) {
+		replacer();
+	}
+	public void replacer() {
 		setBounds((int) ((facteurPos.y + 0.5) * dim.echelle + dim.origX) - (int) ((facteurTaille * dim.echelle / 2) - (dim.echelle / 2)) / 2, (int) ((facteurPos.x + 0.5) * dim.echelle + dim.origY) - (int) ((facteurTaille * dim.echelle / 2) - (dim.echelle / 2)) / 2, (int) (facteurTaille * dim.echelle / 2), (int) (facteurTaille * dim.echelle / 2));
+		repaint();
+	}
+	public void majPosition() {
+		facteurPos.x = coord.x;
+		facteurPos.y = coord.y;
+		replacer();
 	}
 
 	@Override

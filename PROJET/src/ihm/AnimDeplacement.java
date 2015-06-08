@@ -30,7 +30,7 @@ class AnimDeplacement extends Animation {
 			double facteur = (1 / (1 + Math.exp(-x + 6)));
 			pion.facteurPos.x = (float) (((destination.x - origine.x) * facteur) + origine.x);
 			pion.facteurPos.y = (float) (((destination.y - origine.y) * facteur) + origine.y);
-			pion.componentResized(null);
+			pion.replacer();
 		}
 	}
 }

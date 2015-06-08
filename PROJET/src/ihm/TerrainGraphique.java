@@ -99,12 +99,6 @@ public class TerrainGraphique extends JPanel implements ComponentListener {
 	}
 
 	public void deplacer(Point o, Point a) {
-
-		// deselectionner();
-
-		// Pour repositionner l'autre pion ( sinon pas cliquable )
-		pions[a.x][a.y].deplacer((Point) a.clone(), (Point) o.clone());
-
 		pions[o.x][o.y].deplacer((Point) o.clone(), (Point) a.clone());
 		Point tmp = pions[o.x][o.y].coord;
 		pions[o.x][o.y].coord = pions[a.x][a.y].coord;
@@ -112,6 +106,7 @@ public class TerrainGraphique extends JPanel implements ComponentListener {
 		Pion tmpP = pions[o.x][o.y];
 		pions[o.x][o.y] = pions[a.x][a.y];
 		pions[a.x][a.y] = tmpP;
+		pions[o.x][o.y].majPosition();
 
 	}
 
