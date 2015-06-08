@@ -44,22 +44,22 @@ public class Theme {
 				couleurFond = new Color(238, 238, 238);
 				couleurDefaut = Color.LIGHT_GRAY;
 				couleurJ1 = Color.WHITE;
-				couleurJ2 = Color.BLACK;
+				couleurJ2 = Color.DARK_GRAY;
 				couleurPolice = Color.WHITE;
 				couleurPoliceGrisee = Color.GRAY;
-				couleurBordures = Color.WHITE;
+				couleurBordures = Color.BLACK;
 				couleurSup = Color.BLACK;
 				couleurInf = Color.BLACK;
 				couleurTDefaut = Color.BLACK;
 				break;
 			case BOIS:
 				couleurFond = new Color(0, 0, 0);
-				couleurDefaut = Color.LIGHT_GRAY;
-				couleurJ1 = Color.YELLOW;
-				couleurJ2 = Color.ORANGE;
+				couleurDefaut = new Color(240, 230, 140);
+				couleurJ1 = new Color(218, 165, 32);
+				couleurJ2 = new Color(160, 82, 45);
 				couleurPolice = Color.WHITE;
 				couleurPoliceGrisee = Color.GRAY;
-				couleurBordures = Color.WHITE;
+				couleurBordures = new Color(128,0,0);
 				couleurSup = Color.BLACK;
 				couleurInf = Color.BLACK;
 				couleurTDefaut = Color.BLACK;
@@ -67,11 +67,11 @@ public class Theme {
 			case MARBRE:
 				couleurFond = new Color(238, 238, 238);
 				couleurDefaut = Color.LIGHT_GRAY;
-				couleurJ1 = Color.RED;
-				couleurJ2 = Color.RED;
+				couleurJ1 = Color.WHITE;
+				couleurJ2 = Color.DARK_GRAY;
 				couleurPolice = Color.WHITE;
 				couleurPoliceGrisee = Color.GRAY;
-				couleurBordures = Color.WHITE;
+				couleurBordures = Color.BLACK;
 				couleurSup = Color.BLACK;
 				couleurInf = Color.BLACK;
 				couleurTDefaut = Color.BLACK;
@@ -95,7 +95,7 @@ public class Theme {
 				couleurJ2 = Color.ORANGE;
 				couleurPolice = Color.RED;
 				couleurPoliceGrisee = Color.GRAY;
-				couleurBordures = Color.WHITE;
+				couleurBordures = Color.BLACK;
 				couleurSup = Color.BLACK;
 				couleurInf = Color.BLACK;
 				couleurTDefaut = Color.BLACK;

@@ -36,7 +36,6 @@ public class PopupVictoire extends JPanel {
 		x1 = color_index = 0;
 		moveX = 3;
 		timer = new Timer(DELAY, new MyChangeListener());
-		timer.start();
 		CENTER = new Point(100, 100);
 
 		r = new Random();
@@ -54,6 +53,15 @@ public class PopupVictoire extends JPanel {
 		colors[10] = Color.MAGENTA;
 
 		setBackground(Color.black);
+	}
+	
+	public void lancer() {
+		setVisible(true);
+		timer.start();
+	}
+	public void arreter() {
+		setVisible(false);
+		timer.stop();
 	}
 
 	@Override
