@@ -855,8 +855,7 @@ public class Moteur {
 	public void actionParametre(Object dataValue) {
 		Parametres p = (Parametres) dataValue;
 		
-	
-		System.out.println(" --- ("+p.j1_identifiant+")"+j1.getNom()+" : ("+p.j2_identifiant+")"+""+j2.getNom());
+			
 		if (p.j1_identifiant != null)
 			j1.setNom(p.j1_identifiant);
 		else
@@ -867,7 +866,7 @@ public class Moteur {
 		else 
 			p.j2_identifiant=j2.getNom();
 		
-		System.out.println(" ---("+p.j1_identifiant+")"+j1.getNom()+" : ("+p.j2_identifiant+")"+""+j2.getNom());
+		
 		
 		if(p.j1_type != null ){
 			if (p.j1_type == Parametres.NiveauJoueur.HUMAIN) {

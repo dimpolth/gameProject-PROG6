@@ -74,8 +74,7 @@ class Client implements Runnable{
 		try {			
 			if(o instanceof Echange)
 				oos.writeObject( ((Echange)o).clone() );
-			else{
-				System.out.println("CLIent : envoyer");
+			else{		
 				oos.writeObject( (String)o );
 			}
 		}
@@ -98,7 +97,7 @@ class Client implements Runnable{
 					// INFO SERVEUR
 					if(recu instanceof String){
 						String info = (String)recu;
-						System.out.println(info);
+						
 						if(info.equals("/INTER_SERVEUR") || info.equals("/ABANDON")){
 							deconnexion();
 						}
