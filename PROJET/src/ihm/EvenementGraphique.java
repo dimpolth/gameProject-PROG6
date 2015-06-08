@@ -123,8 +123,11 @@ public class EvenementGraphique implements Runnable, Serializable {
 		latence(TerrainGraphique.ANIM_DISP);
 
 		if (chemin != null) {
-			tg.trait = chemin;
-			tg.repaint();
+			if(chemin.size() != 0) {
+				tg.setTrait(chemin);
+			} else {
+				tg.cacherTrait();
+			}
 		}
 
 		if (score != null) {
