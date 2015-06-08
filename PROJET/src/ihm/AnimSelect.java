@@ -42,6 +42,6 @@ public class AnimSelect extends Animation {
 			f = 1.2f - ((float) (actuel - tempsDepart) / TerrainGraphique.ANIM_SELECT) / 5;
 		}
 		pion.facteurTaille = f;
-		pion.componentResized(null);
+		pion.replacer();
 	}
 }

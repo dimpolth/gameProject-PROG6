@@ -85,6 +85,7 @@ public class EvenementGraphique implements Runnable, Serializable {
 		this.bandeauSup = bandeauSup;
 		this.bandeauInf = bandeauInf;
 		joueurCourant = i;
+		this.chemin = new ArrayList<Point>();
 
 	}
 
@@ -123,8 +124,11 @@ public class EvenementGraphique implements Runnable, Serializable {
 		latence(TerrainGraphique.ANIM_DISP);
 
 		if (chemin != null) {
-			tg.trait = chemin;
-			tg.repaint();
+			if(chemin.size() != 0) {
+				tg.setTrait(chemin);
+			} else {
+				tg.cacherTrait();
+			}
 		}
 
 		if (score != null) {
@@ -149,7 +153,9 @@ public class EvenementGraphique implements Runnable, Serializable {
 		} else {
 			EvenementGraphique.animationEnCours = false;
 		}
-
+		if(finPartie == FinPartie.VICTOIRE) {
+			tg.ihm.popupV.lancer();
+		}
 	}
 
 	public void latence(int tps) {

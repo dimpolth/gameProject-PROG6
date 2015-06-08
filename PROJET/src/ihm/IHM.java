@@ -164,7 +164,6 @@ public class IHM extends JFrame implements ComponentListener {
 
 		popupV = new PopupVictoire();
 		gestionCouche.add(popupV, new Integer(4));
-		popupV.setVisible(false);
 
 		theme.setTheme(Theme.Type.BOIS);
 
