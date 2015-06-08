@@ -56,26 +56,25 @@ class Client implements Runnable{
 	}
 	
 	// DECONNEXION DU SERVEUR
-	public void deconnexion() throws IOException {
+	public void deconnexion(){		
 		
-		// On envoie "déconnexion" au serveur pour signaler la déconnexion
+		try{
+			socket.close();		
+		}
+		catch(Exception e){}
 		
-		System.err.println("Deconnexion");
-
-		// Fermeture de la connexion
-		socket.close();
+		socket = null;
+		Communication.reseau = false;
 		
 	}
 	
 	// ENVOYER UNE INFORMATION VERS LE SERVEUR
 	public void envoyer(Object o) {
 		
-		
 		try {			
 			if(o instanceof Echange)
 				oos.writeObject( ((Echange)o).clone() );
-			else{
-				System.out.println("CLIent : envoyer");
+			else{		
 				oos.writeObject( (String)o );
 			}
 		}
@@ -83,22 +82,14 @@ class Client implements Runnable{
 		}
 	}
 	
-	public void terminerConnexion(){
-		try{
-			socket.close();
-			running=false;
-			Communication.reseau = false;
-		}
-		catch(Exception e){}
-	}
-
+	
 	@Override
 	public void run() {
 		Thread currentTh = Thread.currentThread();
 		
 		if (currentTh.getName().equals("recep")) {
 			
-			while (running) {			
+			while (socket != null && !socket.isClosed()) {			
 				
 				try {
 					Object recu = ois.readObject();		
@@ -106,15 +97,16 @@ class Client implements Runnable{
 					// INFO SERVEUR
 					if(recu instanceof String){
 						String info = (String)recu;
-						if(info.equals("INTER_SERVEUR") || info.equals("ABANDON")){
-							terminerConnexion();
+						
+						if(info.equals("/INTER_SERVEUR") || info.equals("/ABANDON")){
+							deconnexion();
 						}
 					}
 					
 					com.recevoir(recu,0);					
 				}
-				catch (Exception ex) {
-					terminerConnexion();
+				catch (Exception ex) {				
+					deconnexion();
 				}
 				
 				

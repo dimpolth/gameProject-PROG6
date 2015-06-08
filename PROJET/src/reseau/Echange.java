@@ -29,8 +29,10 @@ public class Echange implements Serializable{
 	}
 	
 	public void vider(){
+		infos.clone();
 		infos.clear();
-		infos = new LinkedHashMap<String,Object>();
+		
+		
 	}
 	
 	public Echange clone(){

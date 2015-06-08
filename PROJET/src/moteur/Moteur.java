@@ -10,6 +10,7 @@ import ihm.*;
 import modele.*;
 import modele.Case.Etat;
 import modele.Terrain.Direction;
+import modele.Parametres.NiveauJoueur;
 //import modele.Joueur.typeJoueur;
 import reseau.*;
 
@@ -33,7 +34,26 @@ public class Moteur {
 	 * Définit les différents états de l'automate
 	 */
 	public enum EtatTour {
-		selectionPion, selectionDestination, attenteChoix, jeuxIa, partieFinie;
+		/**
+		 * Etat d'attente de séléction de pion par le joueur.
+		 */
+		selectionPion,
+		/**
+		 * Etat d'attente de séléction d'une destination par le joueur.
+		 */
+		selectionDestination,
+		/**
+		 * Etat d'attente de séléction d'un choix par le joueur dans le cas  d'une prise multiple.
+		 */
+		attenteChoix,
+		/**
+		 * Etat où l'IA joue.
+		 */
+		jeuxIa,
+		/**
+		 * Etat où la partie est terminée.
+		 */
+		partieFinie;
 	}
 
 	/**
@@ -102,7 +122,7 @@ public class Moteur {
 	 * Vrai si affichage sur console. Faux sinon. Utilisé en debug.
 	 */
 
-	private boolean trace = false;
+	private boolean trace = true;
 	/**
 	 * Nombre de coups sans prise.
 	 */
@@ -123,9 +143,13 @@ public class Moteur {
 
 	/**
 	 * Constructeur utilisé dans le cas d'un chargement de partie.
+<<<<<<< HEAD
 	 * 
 	 * @param t
 	 *            Le terrain à charger pour reprendre la partie.
+=======
+	 * @param t Le terrain à charger pour reprendre la partie.
+>>>>>>> branch 'master' of https://github.com/dimpolth/gameProject-PROG6.git
 	 */
 	public Moteur(Terrain t) {
 		this.t = t;
@@ -198,20 +222,14 @@ public class Moteur {
 
 	// Renvoie une liste de points d'arrive permettant une prise
 	/**
-	 * Détermine si des prises sont réalisables parmis les déplacements
-	 * possibles.
-	 * 
-	 * @param p
-	 *            Point à partir duquel on essaye de déterminer des prises
-	 * @param listePredecesseurs
-	 *            ArrayList de Points. Liste des points par lesquels est passé
-	 *            le pion durant le tour.
-	 * @return ArrayList de Points. Liste des arrivées possibles pour lesquelles
-	 *         une prise sera effectuée.
+	 * Détermine si des prises sont réalisables parmis les déplacements possibles.
+	 * @param p Point à partir duquel on essaye de déterminer des prises.
+	 * @param listePredecesseurs ArrayList de Points. Liste des points par lesquels est passé le pion durant le tour.
+	 * @return ArrayList de Points. Liste des arrivées possibles pour lesquelles une prise sera effectuée.
 	 */
 	public ArrayList<Point> prisePossible(Point p, ArrayList<Point> listePredecesseurs) {
 		ArrayList<Point> listePrise = new ArrayList<Point>();
-		ArrayList<Point> listeMouvement = t.deplacementPossible(p, listePredecesseurs, null);
+		ArrayList<Point> listeMouvement = t.deplacementPossible(p, listePredecesseurs);
 		Iterator<Point> it = listeMouvement.iterator();
 		while (it.hasNext()) {
 			Point temp = (Point) it.next().clone();
@@ -224,11 +242,17 @@ public class Moteur {
 
 	/**
 	 * Test à chaque fin de tour si la partie est terminée.
+<<<<<<< HEAD
 	 * 
 	 * @param aucunDeplacement
 	 *            Permet de savoir si la partie est bloquée.
 	 * @return Vrai si la partie a été gagnée par un joueur, si elle est bloquée
 	 *         ou si c'est un match nul. Faux sinon.
+=======
+	 * @param aucunDeplacement Permet de savoir si la partie est bloquée.
+	 * @return Vrai si la partie a été gagnée par un joueur, si elle est bloquée ou si c'est un match nul.
+	 * Faux sinon.
+>>>>>>> branch 'master' of https://github.com/dimpolth/gameProject-PROG6.git
 	 */
 	public boolean partieTerminee(boolean aucunDeplacement) {
 		ech.vider();
@@ -269,18 +293,24 @@ public class Moteur {
 	}
 
 	/**
+<<<<<<< HEAD
 	 * Etat de l'automate où le moteur reçoit le pion sélectionné par le joueur
 	 * ou l'IA. Test si le pion sélectionné correspond aux règles.
 	 * 
 	 * @param p
 	 *            Pion sélectionné
+=======
+	 * Etat de l'automate où le moteur reçoit le pion sélectionné par le joueur ou l'IA.
+	 * Test si le pion sélectionné correspond aux règles. 
+	 * @param p Pion sélectionné
+>>>>>>> branch 'master' of https://github.com/dimpolth/gameProject-PROG6.git
 	 */
 	public void selectionPion(Point p) {
 		tourEnCours = false;
 
 		if (t.getCase(p.x, p.y).getOccupation() != joueurCourant.getJoueurID()) {
 		} else {
-			listePointDebut = t.listePionsJouables(joueurCourant, null);
+			listePointDebut = t.listePionsJouables(joueurCourant);
 			if (listePointDebut.isEmpty())
 				partieTerminee(true);
 			if (listePointDebut.contains(p)) {
@@ -298,11 +328,17 @@ public class Moteur {
 	}
 
 	/**
+<<<<<<< HEAD
 	 * Etat de l'automate où le moteur reçoit la destination sélectionnée par le
 	 * joueur ou l'IA Test si la destination est conforme aux règles.
 	 * 
 	 * @param p
 	 *            Point sélectionné pour effectuer un déplacement.
+=======
+	 * Etat de l'automate où le moteur reçoit la destination sélectionnée par le joueur ou l'IA
+	 * Test si la destination est conforme aux règles.
+	 * @param p Point sélectionné pour effectuer un déplacement.
+>>>>>>> branch 'master' of https://github.com/dimpolth/gameProject-PROG6.git
 	 */
 	public void selectionDestination(Point p) {
 		if (!tourEnCours && listePointDebut.contains(p)) {
@@ -316,7 +352,7 @@ public class Moteur {
 		} else {
 			ArrayList<Point> l = prisePossible(pDepart, h.histoTour);
 			if (l.isEmpty()) {
-				l = t.deplacementPossible(pDepart, h.histoTour, null);
+				l = t.deplacementPossible(pDepart, h.histoTour);
 			}
 			if (l.contains(p)) {
 				pArrive = p;
@@ -333,16 +369,11 @@ public class Moteur {
 		}
 
 	}
-
-	/**
-	 * Effectue une prise en fonction des points de départ et d'arrivé en
-	 * attribut.
-	 * 
-	 * @param priseAspi
-	 *            Vrai si une prise par aspiration est disponible. Faux sinon.
-	 * @param prisePercu
-	 *            Vrai si une prise par percusion est disponible. Faux sinon.
-	 */
+	 /**
+	  * Effectue une prise en fonction des points de départ et d'arrivé en attribut.
+	  * @param priseAspi Vrai si une prise par aspiration est disponible. Faux sinon.
+	  * @param prisePercu Vrai si une prise par percusion est disponible. Faux sinon.
+	  */
 	public void prise(boolean priseAspi, boolean prisePercu) {
 		Terrain.Direction d = t.recupereDirection(pDepart, pArrive);
 		ArrayList<Point> l = new ArrayList<Point>();
@@ -439,7 +470,7 @@ public class Moteur {
 			tourEnCours=false;
 			// System.out.println("FIN DE TOUR ");
 			// traceTerrain();
-			// gestionEvenementGraphique();
+			gestionEvenementGraphique();
 			gestionEvenementGraphique(joueurCourant.getNom(), "Selection du pion", joueurCourant.getJoueurID().getNum());
 			if (joueurCourant.isJoueurHumain()) {
 				e = EtatTour.selectionPion;
@@ -466,9 +497,13 @@ public class Moteur {
 
 	/**
 	 * Met à jour le score de l'adversaire du joueur courant après une prise.
+<<<<<<< HEAD
 	 * 
 	 * @param nbPionsManges
 	 *            Nombre de pions mangés à l'adversaire
+=======
+	 * @param nbPionsManges Nombre de pions mangés à l'adversaire.
+>>>>>>> branch 'master' of https://github.com/dimpolth/gameProject-PROG6.git
 	 */
 	public void majScore(int nbPionsManges) {
 		Joueur.recupereJoueurOpposant(joueurCourant, j1, j2, false).setScore(nbPionsManges);
@@ -476,11 +511,16 @@ public class Moteur {
 
 	/**
 	 * Envoie un message à afficher sur un bandeau de l'IHM.
+<<<<<<< HEAD
 	 * 
 	 * @param destination
 	 *            Bandeau de destination.
 	 * @param message
 	 *            Message à afficher.
+=======
+	 * @param destination Bandeau de destination.
+	 * @param message Message à afficher.
+>>>>>>> branch 'master' of https://github.com/dimpolth/gameProject-PROG6.git
 	 */
 	public void message(String destination, String message) {
 		ech.vider();
@@ -489,6 +529,7 @@ public class Moteur {
 	}
 
 	/**
+<<<<<<< HEAD
 	 * Envoie toutes les informations necessaires à l'IHM pour réaliser
 	 * l'actualisation de l'affichage lié à un coup.
 	 * 
@@ -503,6 +544,15 @@ public class Moteur {
 	 *            Liste des pions mangés pendant le coup.
 	 * @param score
 	 *            Score des joueurs mis à jour en fonctions des pions mangés.
+=======
+	 * Envoie toutes les informations necessaires à l'IHM pour réaliser l'actualisation de l'affichage lié à un coup.
+	 * @param deplacement Tableau de deux Points contenant le point de départ et le point d'arrivé.
+	 * Peut être à null en fonction de la situation.
+	 * @param choixPrise Tableau de deux Points contenant un choix à faire entre une prise par aspiration ou par percussion.
+	 * Peut être null s'il n'y a pas de choix à faire.
+	 * @param pionsManges Liste des pions mangés pendant le coup.
+	 * @param score Score des joueurs mis à jour en fonctions des pions mangés.
+>>>>>>> branch 'master' of https://github.com/dimpolth/gameProject-PROG6.git
 	 */
 	public void gestionEvenementGraphique(Point[] deplacement, Point[] choixPrise, ArrayList<Point> pionsManges, int[] score) {
 		ech.vider();
@@ -512,6 +562,7 @@ public class Moteur {
 	}
 
 	/**
+<<<<<<< HEAD
 	 * Surchage de gestionEvenementGraphique pour le cas ou on coup inclut un
 	 * changement de bandeau.
 	 * 
@@ -530,6 +581,17 @@ public class Moteur {
 	 *            Définie sur quel bandeau ira le message.
 	 * @param chaine2
 	 *            Le message à afficher sur le bandeau.
+=======
+	 * Surchage de gestionEvenementGraphique pour le cas ou on coup inclut un changement de bandeau.
+	 * @param deplacement Tableau de deux Points contenant le point de départ et le point d'arrivé.
+	 * Peut être à null en fonction de la situation.
+	 * @param choixPrise Tableau de deux Points contenant un choix à faire entre une prise par aspiration ou par percussion.
+	 * Peut être null s'il n'y a pas de choix à faire.
+	 * @param pionsManges Liste des pions mangés pendant le coup.
+	 * @param score Score des joueurs mis à jour en fonctions des pions mangés.
+	 * @param chaine1 Définie sur quel bandeau ira le message.
+	 * @param chaine2 Le message à afficher sur le bandeau.
+>>>>>>> branch 'master' of https://github.com/dimpolth/gameProject-PROG6.git
 	 */
 	public void gestionEvenementGraphique(Point[] deplacement, Point[] choixPrise, ArrayList<Point> pionsManges, int[] score, String chaine1, String chaine2) {
 		ech.vider();
@@ -544,21 +606,18 @@ public class Moteur {
 	 */
 	public void gestionEvenementGraphique() {
 		ech.vider();
-		// traceTerrain();
-		// System.out.println("PUTAIN DE TERRAIN");
-		EvenementGraphique cg = new EvenementGraphique((Case[][]) t.getTableau().clone());
+		//traceTerrain();
+		//System.out.println("PUTAIN DE TERRAIN");
+		Terrain t2 = t.copie();
+		EvenementGraphique cg = new EvenementGraphique(t2.getTableau());
 		ech.ajouter("coup", cg);
 		com.envoyer(ech);
 	}
 
 	/**
-	 * Surchage de gestion gestionEvenementGraphique pour le cas ou l'on ne met
-	 * à jour que les bandeaux.
-	 * 
-	 * @param bandeauSup
-	 *            Message pour le bandeau supérieur.
-	 * @param bandeauInf
-	 *            Message pour le bandeau inférieur.
+	 * Surchage de gestion gestionEvenementGraphique pour le cas ou l'on ne met à jour que les bandeaux.
+	 * @param bandeauSup Message pour le bandeau supérieur.
+	 * @param bandeauInf Message pour le bandeau inférieur.
 	 */
 	public void gestionEvenementGraphique(String bandeauSup, String bandeauInf) {
 		ech.vider();
@@ -570,17 +629,12 @@ public class Moteur {
 		ech.ajouter("coup", cg);
 		com.envoyer(ech);
 	}
-
+	
 	/**
-	 * Surchage de gestion gestionEvenementGraphique pour le cas ou l'on ne met
-	 * à jour que les bandeaux et pour transmettre le joueur courant.
-	 * 
-	 * @param bandeauSup
-	 *            Message pour le bandeau supérieur.
-	 * @param bandeauInf
-	 *            Message pour le bandeau inférieur.
-	 * @param i
-	 *            Identifiant du joueur cournat sur le réseau.
+	 * Surchage de gestion gestionEvenementGraphique pour le cas ou l'on ne met à jour que les bandeaux et pour transmettre le joueur courant.
+	 * @param bandeauSup Message pour le bandeau supérieur.
+	 * @param bandeauInf Message pour le bandeau inférieur.
+	 * @param i Identifiant du joueur courant sur le réseau.
 	 */
 	public void gestionEvenementGraphique(String bandeauSup, String bandeauInf, int i) {
 		ech.vider();
@@ -591,15 +645,10 @@ public class Moteur {
 	}
 
 	/**
-	 * Surchage de gestion gestionEvenementGraphique pour le cas ou l'on ne met
-	 * à jour que les bandeaux dans le cas d'une fin de partie.
-	 * 
-	 * @param bandeauSup
-	 *            Message pour le bandeau supérieur.
-	 * @param bandeauInf
-	 *            Message pour le bandeau inférieur.
-	 * @param fp
-	 *            Définit l'animation à afficher.
+	 * Surchage de gestion gestionEvenementGraphique pour le cas ou l'on ne met à jour que les bandeaux dans le cas d'une fin de partie.
+	 * @param bandeauSup Message pour le bandeau supérieur.
+	 * @param bandeauInf Message pour le bandeau inférieur.
+	 * @param fp Définit l'animation à afficher.
 	 */
 	public void gestionEvenementGraphique(String bandeauSup, String bandeauInf, EvenementGraphique.FinPartie fp) {
 		ech.vider();
@@ -630,9 +679,7 @@ public class Moteur {
 
 	/**
 	 * Permet de calculer le chemin du pion pendant le tour.
-	 * 
-	 * @return Liste de Points correspondant aux positions occupées par le pion
-	 *         durant l'enchaînement.
+	 * @return Liste de Points correspondant aux positions occupées par le pion durant l'enchaînement.
 	 */
 	public ArrayList<Point> calculChemin() {
 		ArrayList<Point> chemin = (ArrayList<Point>) h.histoTour.clone();
@@ -667,34 +714,34 @@ public class Moteur {
 	 * l'état d'affiche de l'historique.
 	 */
 	public void gestionBouton() {
-		ech.vider();
+		Echange ech2 = new Echange();
 		int i = h.getItPrincipal();
 		if (Joueur.recupereJoueurOpposant(joueurCourant, j1, j2, false).isJoueurHumain()) {
 			if (i <= 0) {
-				ech.ajouter("annuler", false);
-				ech.ajouter("refaire", true);
+				ech2.ajouter("annuler", false);
+				ech2.ajouter("refaire", true);
 			} else {
-				ech.ajouter("annuler", true);
+				ech2.ajouter("annuler", true);
 				if (i == h.histoPrincipal.size() - 1) {
-					ech.ajouter("refaire", false);
+					ech2.ajouter("refaire", false);
 				} else {
-					ech.ajouter("refaire", true);
+					ech2.ajouter("refaire", true);
 				}
 			}
 		} else {
 			if (i <= 1) {
-				ech.ajouter("annuler", false);
-				ech.ajouter("refaire", true);
+				ech2.ajouter("annuler", false);
+				ech2.ajouter("refaire", true);
 			} else {
-				ech.ajouter("annuler", true);
+				ech2.ajouter("annuler", true);
 				if (i == h.histoPrincipal.size() - 1) {
-					ech.ajouter("refaire", false);
+					ech2.ajouter("refaire", false);
 				} else {
-					ech.ajouter("refaire", true);
+					ech2.ajouter("refaire", true);
 				}
 			}
-		}
-		com.envoyer(ech, joueurCourant.getJoueurID().getNum());
+		}	
+		com.envoyer(ech2,joueurCourant.getJoueurID().getNum());
 	}
 
 	/**
@@ -707,11 +754,8 @@ public class Moteur {
 	}
 
 	/**
-	 * Dirige l'automate en fonction de ce que l'IHM envoie et qui est lié à la
-	 * seléction de pions.
-	 * 
-	 * @param dataValue
-	 *            Point reçu de l'IHM via la méthode action.
+	 * Dirige l'automate en fonction de ce que l'IHM envoie et qui est lié à la seléction de pions.
+	 * @param dataValue Point reçu de l'IHM via la méthode action.
 	 */
 	public void actionPoint(Object dataValue) {
 		if (e == EtatTour.selectionPion) {
@@ -827,9 +871,7 @@ public class Moteur {
 
 	/**
 	 * Sérialise et sauvegarde la partie dans un fichier.
-	 * 
-	 * @param dataValue
-	 *            Référence du fichier sur lequel la sauvegarde sera effectuée.
+	 * @param dataValue Référence du fichier sur lequel la sauvegarde sera effectuée.
 	 */
 	public void actionSauvegarder(Object dataValue) {
 		Sauvegarde s = new Sauvegarde(t, h, j1, j2, joueurCourant);
@@ -854,9 +896,7 @@ public class Moteur {
 
 	/**
 	 * Déserialise et charge un partie à partir d'un fichier.
-	 * 
-	 * @param dataValue
-	 *            Référence du fichier à partir duquel charger.
+	 * @param dataValue Référence du fichier à partir duquel charger.
 	 */
 	public void actionCharger(Object dataValue) {
 		ObjectInputStream ois = null;
@@ -901,31 +941,13 @@ public class Moteur {
 	}
 
 	/**
-	 * Met à jour les paramètres de la partie en fonction de ce qui est envoyé
-	 * par l'IHM.
-	 * 
-	 * @param dataValue
-	 *            Paramètres de la partie.
+	 * Met à jour les paramètres de la partie en fonction de ce qui est envoyé par l'IHM.
+	 * @param dataValue Paramètres de la partie.
 	 */
 	public void actionParametre(Object dataValue) {
-		Parametres p = (Parametres) dataValue;
-
-		// System.out.println(instance
-		// +" --- ("+p.j1_identifiant+")"+j1.getNom()+" : ("+p.j2_identifiant+")"+""+j2.getNom());
-		if (p.j1_identifiant != null)
-			j1.setNom(p.j1_identifiant);
-		else
-			p.j1_identifiant = j1.getNom();
-
-		if (p.j2_identifiant != null)
-			j2.setNom(p.j2_identifiant);
-		else
-			p.j2_identifiant = j2.getNom();
-
-		// System.out.println(instance
-		// +" ---("+p.j1_identifiant+")"+j1.getNom()+" : ("+p.j2_identifiant+")"+""+j2.getNom());
-
-		if (p.j1_type != null) {
+		Parametres p = (Parametres) dataValue;	
+				
+		if(p.j1_type != null ){
 			if (p.j1_type == Parametres.NiveauJoueur.HUMAIN) {
 				j1.setJoueurHumain(true);
 				j1.viderIa();
@@ -949,10 +971,24 @@ public class Moteur {
 					j2.chargerIa(IntelligenceArtificielle.difficulteIA.facile, j1, t);
 				else if (p.j2_type == Parametres.NiveauJoueur.MOYEN)
 					j2.chargerIa(IntelligenceArtificielle.difficulteIA.normal, j1, t);
-				else if (p.j1_type == Parametres.NiveauJoueur.DIFFICILE)
+				else if (p.j2_type == Parametres.NiveauJoueur.DIFFICILE)
 					j2.chargerIa(IntelligenceArtificielle.difficulteIA.difficile, j1, t);
 			}
 		}
+		
+		if (p.j1_identifiant != null && p.j1_type == Parametres.NiveauJoueur.HUMAIN)
+			j1.setNom(p.j1_identifiant);
+		else
+			p.j1_identifiant=j1.getNom();
+		
+		if (p.j2_identifiant != null && p.j2_type == Parametres.NiveauJoueur.HUMAIN)
+			j2.setNom(p.j2_identifiant);
+		else			
+			p.j2_identifiant=j2.getNom();
+			
+		
+		
+		
 		ech.vider();
 		ech.ajouter("parametres", p);
 		com.envoyer(ech);
@@ -1018,14 +1054,9 @@ public class Moteur {
 	}
 
 	/**
-	 * Réalise les différentes actions en fonctions des commandes envoyées par
-	 * l'IHM.
-	 * 
-	 * @param o
-	 *            Contient la commande ainsi qu'un objet qui sera traité dans
-	 *            les actions.
-	 * @param j
-	 *            Identifiant de joueur pour le réseau.
+	 * Réalise les différentes actions en fonctions des commandes envoyées par l'IHM.
+	 * @param o Contient la commande ainsi qu'un objet qui sera traité dans les actions.
+	 * @param j Identifiant de joueur pour le réseau.
 	 */
 	public void action(Object o, int j) {
 

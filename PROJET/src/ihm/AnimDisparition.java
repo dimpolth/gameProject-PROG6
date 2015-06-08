@@ -5,7 +5,14 @@ import javax.swing.Timer;
 
 import modele.Case;
 
+/**
+ * Classe gérant les animations de disparition de pion.
+ */
 class AnimDisparition extends Animation {
+	/**
+	 * Constructeur unique.
+	 * @param p Pion à faire disparaître.
+	 */
 	public AnimDisparition(Pion p) {
 		pion = p;
 		pion.tg.tempsGele = System.currentTimeMillis() + TerrainGraphique.ANIM_DISP;
@@ -15,6 +22,10 @@ class AnimDisparition extends Animation {
 	}
 
 	@Override
+	/**
+	 * Fait disparaître un pion.
+	 * @param e Action qui initie la disparition.
+	 */
 	public void actionPerformed(ActionEvent e) {
 		long actuel = System.currentTimeMillis();
 		if (actuel - tempsDepart > TerrainGraphique.ANIM_DISP) {

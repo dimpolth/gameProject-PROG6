@@ -3,15 +3,36 @@ import java.awt.Point;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-
+/**
+ * Classe permettant de gérer l'historique de la partie.
+ */
 public class Historique implements Serializable {
 
+	/**
+	 * Historique de la partie.
+	 */
 	public ArrayList<Terrain> histoPrincipal;
+	/**
+	 * Historique du tour en cours.
+	 */
 	public ArrayList<Point> histoTour;
-	public ArrayList<Coup> hisTourCoup;
-	private int itPrincipal, itTour, itCoup;
 
+	public ArrayList<Coup> hisTourCoup;
+
+	/**
+	 * Indice du Terrain affiché à l'écran.
+	 */
+	private int itPrincipal;
+	/**
+	 * Indice du point de déplacement.
+	 */
+	private int itTour;
 	
+	private int itCoup;
+	
+	/**
+	 * Constructeur par défaut.
+	 */
 	public Historique() {
 		histoPrincipal = new ArrayList<Terrain>();
 		histoTour = new ArrayList<Point>();
@@ -21,6 +42,10 @@ public class Historique implements Serializable {
 		itCoup = 0 ;
 	}
 	
+	/**
+	 * Constructeur par copie.
+	 * @param h L'historique à copier.
+	 */
 	public Historique(Historique h) {
 		histoPrincipal = h.histoPrincipal;
 		histoTour = h.histoTour;
@@ -29,10 +54,18 @@ public class Historique implements Serializable {
 		itCoup = h.itCoup;
 	}
 	
+	/**
+	 * Permet de savoir quel état du Terrain est affiché.
+	 * @return L'itérateur de l'historique de la partie.
+	 */
 	public int getItPrincipal(){
 		return itPrincipal;
 	}
 	
+	/**
+	 * Ajoute un Terrain à l'historique de la partie.
+	 * @param t Le Terrain à ajouter.
+	 */
 	public void ajouterTour(Terrain t) {
 		if(itPrincipal < histoPrincipal.size()-1) {
 			for(int i = histoPrincipal.size()-1; i > itPrincipal; i--) { 
@@ -51,6 +84,10 @@ public class Historique implements Serializable {
 		
 	}
 	
+	/**
+	 * Ajoute un coup à l'historique du tour.
+	 * @param p Le point où s'est déplacé un pion.
+	 */
 	public void ajouterCoup(Point pDepart,Point pArrive) {
 		histoTour.add((Point)pDepart.clone());
 		hisTourCoup.add(new Coup(pDepart,pArrive));
@@ -64,6 +101,10 @@ public class Historique implements Serializable {
 	}
 	
 	
+	/**
+	 * Fait revenir le terrain au tour précédant.
+	 * @return Terrain du tour précédant.
+	 */
 	public Terrain annuler() {
 		if(itPrincipal<=0){
 			//;//System.out.println("PAS de ANNULER POSSIBLE");
@@ -76,6 +117,10 @@ public class Historique implements Serializable {
 		}
 	}
 	
+	/**
+	 * Fait passer le terrain au tour suivant.
+	 * @return Terrain du tour suivant.
+	 */
 	public Terrain refaire() {
 		if(itPrincipal == histoPrincipal.size()-1)
 			return null;
@@ -84,6 +129,9 @@ public class Historique implements Serializable {
 		}
 	}
 	
+	/**
+	 * Efface l'historique du tour quand il est fini.
+	 */
 	public void effacerHistoTour() {
 		histoTour = new ArrayList<Point>();
 		itTour=0;
@@ -91,6 +139,9 @@ public class Historique implements Serializable {
 		
 	}
 	
+	/**
+	 * Affiche l'historique en console. Utilisé pour le debug.
+	 */
 	public void afficher() {
 		;//System.out.println("----------------");
 		for(int it = 0; it < histoPrincipal.size(); it++) {
