@@ -6,7 +6,6 @@ import java.util.Random;
 import java.util.Iterator;
 
 import modele.*;
-import moteur.*;
 
 public class IntelligenceArtificielle implements Serializable {
 	public enum difficulteIA{
@@ -142,7 +141,7 @@ public class IntelligenceArtificielle implements Serializable {
 		TourDeJeu tourSolution = new TourDeJeu();
 		int profondeur = 6;
 		int iterateurProf = 0;
-		boolean evalGeometrie = false;
+		boolean evalGeometrie = true;
 		
 		// ALPHA BETA
 		tourSolution = alphaBeta(profondeur,evalGeometrie, false, iterateurProf); // simule x-profondeur tours
@@ -163,7 +162,7 @@ public class IntelligenceArtificielle implements Serializable {
 	 * Application de l'algorithme alpha beta
 	 */
 	private TourDeJeu alphaBeta(int profondeur, boolean evalGeometrie, boolean profondeurDynamique, int iterateurProf){
-		ArrayList<TourDeJeu> listeToursJouables = new ArrayList<TourDeJeu>(), listeOld = new ArrayList<TourDeJeu>();
+		ArrayList<TourDeJeu> listeToursJouables = new ArrayList<TourDeJeu>();
 		Iterator<TourDeJeu> it;
 		TourDeJeu tourCourant, tourSolution = new TourDeJeu();
 		Random rand = new Random();
@@ -339,7 +338,7 @@ public class IntelligenceArtificielle implements Serializable {
 		Point pDepartCourant, pArriveeCourante;
 		ArrayList<Coup> listeCoupsObligatoires, listeCoupsDepart = new ArrayList<Coup>();
 		ArrayList<Point> listePointsDeDepart, listeVide = new ArrayList<Point>(), listePionsManges = new ArrayList<Point>();
-		ArrayList<TourDeJeu> listeToursJouables = new ArrayList<TourDeJeu>(), listeToursTemp, listeToursVide = new ArrayList<TourDeJeu>();
+		ArrayList<TourDeJeu> listeToursJouables = new ArrayList<TourDeJeu>(), listeToursTemp;
 		TourDeJeu tourTemp;
 		Coup coupTemp = new Coup();
 		
