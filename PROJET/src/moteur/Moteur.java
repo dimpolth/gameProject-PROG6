@@ -103,7 +103,7 @@ public class Moteur {
 	 * Vrai si affichage sur console. Faux sinon. Utilisé en debug.
 	 */
 
-	private boolean trace = false;
+	private boolean trace = true;
 	/**
 	 * Nombre de coups sans prise.
 	 */
@@ -430,7 +430,7 @@ public class Moteur {
 		} else {
 			//System.out.println("FIN DE TOUR ");
 			//traceTerrain();
-			//gestionEvenementGraphique();
+			gestionEvenementGraphique();
 			gestionEvenementGraphique(joueurCourant.getNom(),"Selection du pion",joueurCourant.getJoueurID().getNum());
 			if (joueurCourant.isJoueurHumain()) {
 				e = EtatTour.selectionPion;
@@ -527,7 +527,8 @@ public class Moteur {
 		ech.vider();
 		//traceTerrain();
 		//System.out.println("PUTAIN DE TERRAIN");
-		EvenementGraphique cg = new EvenementGraphique(t.getTableau());
+		Terrain t2 = t.copie();
+		EvenementGraphique cg = new EvenementGraphique(t2.getTableau());
 		ech.ajouter("coup", cg);
 		com.envoyer(ech);
 	}
@@ -640,34 +641,35 @@ public class Moteur {
 	 * Permet de griser ou d'afficher les boutons annuler/refaire en fonction de l'état d'affiche de l'historique.
 	 */
 	public void gestionBouton() {
-		ech.vider();
+		Echange ech2 = new Echange();
 		int i = h.getItPrincipal();
-		if (joueurCourant.recupereJoueurOpposant(joueurCourant, j1, j2, false).isJoueurHumain()) {
+		if (Joueur.recupereJoueurOpposant(joueurCourant, j1, j2, false).isJoueurHumain()) {
 			if (i <= 0) {
-				ech.ajouter("annuler", false);
-				ech.ajouter("refaire", true);
+				ech2.ajouter("annuler", false);
+				ech2.ajouter("refaire", true);
 			} else {
-				ech.ajouter("annuler", true);
+				ech2.ajouter("annuler", true);
 				if (i == h.histoPrincipal.size() - 1) {
-					ech.ajouter("refaire", false);
+					ech2.ajouter("refaire", false);
 				} else {
-					ech.ajouter("refaire", true);
+					ech2.ajouter("refaire", true);
 				}
 			}
 		} else {
 			if (i <= 1) {
-				ech.ajouter("annuler", false);
-				ech.ajouter("refaire", true);
+				ech2.ajouter("annuler", false);
+				ech2.ajouter("refaire", true);
 			} else {
-				ech.ajouter("annuler", true);
+				ech2.ajouter("annuler", true);
 				if (i == h.histoPrincipal.size() - 1) {
-					ech.ajouter("refaire", false);
+					ech2.ajouter("refaire", false);
 				} else {
-					ech.ajouter("refaire", true);
+					ech2.ajouter("refaire", true);
 				}
 			}
 		}
-		com.envoyer(ech,joueurCourant.getJoueurID().getNum());
+		System.out.println("Envoi à com pour le joueur : "+joueurCourant.getJoueurID().getNum()+" : "+ech2.toString());
+		com.envoyer(ech2,joueurCourant.getJoueurID().getNum());
 	}
 
 	/**

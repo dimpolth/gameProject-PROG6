@@ -16,6 +16,7 @@ import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 import modele.Case;
+import modele.Terrain;
 import reseau.Echange;
 
 @SuppressWarnings("serial")
@@ -69,19 +70,18 @@ public class TerrainGraphique extends JPanel implements ComponentListener {
 	public void dessinerTerrain(Case[][] c) {
 
 		deselectionner();
-		cacherTrait();
+		//cacherTrait();
 
-		/*
-		 * for (int ligne = 0; ligne < Terrain.LIGNES; ligne++) { for (int
-		 * colonne = 0; colonne < Terrain.COLONNES; colonne++) { if
-		 * (c[ligne][colonne].getOccupation() == Case.Etat.joueur1)
-		 * System.out.print("X"); else if (c[ligne][colonne].getOccupation() ==
-		 * Case.Etat.joueur2) System.out.print("O"); else System.out.print(" ");
-		 * 
-		 * if (colonne < Terrain.INDICE_MAX_COLONNES) ;//System.out.print("-");
-		 * } ;System.out.println();
-		 * 
-		 * }
+		
+		/* for (int ligne = 0; ligne < Terrain.LIGNES; ligne++) { for (int
+		 colonne = 0; colonne < Terrain.COLONNES; colonne++) { if
+		 (c[ligne][colonne].getOccupation() == Case.Etat.joueur1)
+		 System.out.print("X"); else if (c[ligne][colonne].getOccupation() ==
+		 Case.Etat.joueur2) System.out.print("O"); else System.out.print(" ");
+		 if (colonne < Terrain.INDICE_MAX_COLONNES) ;//System.out.print("-");
+		 } ;System.out.println();
+		 
+		}
 		 */
 
 		for (int i = 0; i < 5; i++) {

@@ -78,11 +78,11 @@ public class Serveur implements Runnable{
 	
 	public void envoyer(Object o, int j){
 		
-		if(j >= 1 && j<= 2){
+		if(j >= 1 && j<= 2){			
 			joueurs.get(j).envoyer(o);
-			com.envoyer(o);
 		}
 		else{
+		
 			int exception = 0;
 			if(j < 0)
 				exception = j * -1;

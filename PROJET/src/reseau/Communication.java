@@ -101,7 +101,7 @@ public class Communication {
 	
 	public void envoyer(Object e, int j){
 		
-		//;//System.out.println(""+canaux_nom[loc]+" : envoyer -> "+e.toString());
+		System.out.println(""+canaux_nom[loc]+" : envoyer -> "+e.toString());
 		
 		if(e instanceof Echange && ((Echange)e).infos.size() == 0)
 			return;
@@ -116,7 +116,8 @@ public class Communication {
 		else if(loc == Communication.MOTEUR && !reseau){
 			Communication.canaux[ Communication.IHM ].recevoir(e,0);			
 		}
-		else if(loc == Communication.MOTEUR && reseau){			
+		else if(loc == Communication.MOTEUR && reseau){
+			System.out.println("Serveur envoie à j="+j+" : "+e.toString());
 			Communication.canaux[ Communication.MOTEUR ].serveur.envoyer(e,j);		
 		}
 		else{

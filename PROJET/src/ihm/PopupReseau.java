@@ -36,7 +36,7 @@ public class PopupReseau extends Popup {
 		contraintes.gridwidth = GridBagConstraints.REMAINDER;
 		add(selectJoueurEtiq, contraintes);
 
-		identifiant = new JTextField("Joueur-" + System.currentTimeMillis() / 1000 / 1000);
+		identifiant = new JTextField("Joueur-" + System.currentTimeMillis() % 100);
 		contraintes.gridwidth = 1;
 		add(identifiant, contraintes_groupe_fin);
 
