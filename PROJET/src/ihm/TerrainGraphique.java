@@ -67,23 +67,9 @@ public class TerrainGraphique extends JPanel implements ComponentListener {
 	}
 
 	public void dessinerTerrain(Case[][] c) {
-
+		ihm.popupV.arreter();
 		deselectionner();
 		cacherTrait();
-
-		/*
-		 * for (int ligne = 0; ligne < Terrain.LIGNES; ligne++) { for (int
-		 * colonne = 0; colonne < Terrain.COLONNES; colonne++) { if
-		 * (c[ligne][colonne].getOccupation() == Case.Etat.joueur1)
-		 * System.out.print("X"); else if (c[ligne][colonne].getOccupation() ==
-		 * Case.Etat.joueur2) System.out.print("O"); else System.out.print(" ");
-		 * 
-		 * if (colonne < Terrain.INDICE_MAX_COLONNES) ;//System.out.print("-");
-		 * } ;System.out.println();
-		 * 
-		 * }
-		 */
-
 		for (int i = 0; i < 5; i++) {
 			for (int j = 0; j < 9; j++) {
 				pions[i][j].setCouleur(c[i][j].getOccupation());
@@ -113,12 +99,6 @@ public class TerrainGraphique extends JPanel implements ComponentListener {
 	}
 
 	public void deplacer(Point o, Point a) {
-
-		// deselectionner();
-
-		// Pour repositionner l'autre pion ( sinon pas cliquable )
-		pions[a.x][a.y].deplacer((Point) a.clone(), (Point) o.clone());
-
 		pions[o.x][o.y].deplacer((Point) o.clone(), (Point) a.clone());
 		Point tmp = pions[o.x][o.y].coord;
 		pions[o.x][o.y].coord = pions[a.x][a.y].coord;
@@ -126,6 +106,7 @@ public class TerrainGraphique extends JPanel implements ComponentListener {
 		Pion tmpP = pions[o.x][o.y];
 		pions[o.x][o.y] = pions[a.x][a.y];
 		pions[a.x][a.y] = tmpP;
+		pions[o.x][o.y].majPosition();
 
 	}
 

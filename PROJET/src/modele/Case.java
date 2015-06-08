@@ -3,7 +3,13 @@ import java.awt.*;
 import java.io.Serializable;
 import java.util.*;
 
+/**
+ * Classe définissant l'occupation d'une case.
+ */
 public class Case implements Serializable {
+	/**
+	 * Définit l'occupation d'une case. 
+	 */
 	public enum Etat {
 		joueur1(1),
 		joueur2(2),
@@ -13,48 +19,91 @@ public class Case implements Serializable {
 		Etat(int i){
 			entier=i;
 		}
+		/**
+		 * Permet d'obtenir l'entier associé à une occupation.
+		 * @return L'entier correspondant à l'occupation de la case.
+		 */
 		public int getNum(){
 			return entier;
 		}
 	}
 	
-	
+	/**
+	 * Liste des cases accessibles depuis la case courante.
+	 */
 	public ArrayList<Point> succ;
+	/**
+	 * Occupation de la case courante.
+	 */
 	public Etat occupation;
+	/**
+	 * Position de la case sur le terrain.
+	 */
 	public Point pos;
 	
 	
-	
+	/**
+	 * Constructeur unique.
+	 * @param p Position de la case à construir.
+	 * @param e Occupation de la case.
+	 */
 	public Case(Point p, Etat e) {
 		occupation = e;
 		pos = p;
 		this.initSuccesseurs();
 	} 
 	
+	/**
+	 * Réalise une copie de la case courante.
+	 * @return La copie de la case.
+	 */
 	public Case copie(){
 		return new Case(pos,occupation); 
 	}
 	
+	/**
+	 * Permet d'obtenir l'occupation de la case.
+	 * @return L'occuopation de la case courante.
+	 */
 	public Etat getOccupation() {
 		return occupation;
 	}
 	
+	/**
+	 * Permet d'obtenir la position de la case.
+	 * @return Un point représentant la position de la case.
+	 */
 	Point getPos(){
 		return pos;
 	}
 	
+	/**
+	 * Modifie l'occupation de la case. Utilisé lors d'une prise.
+	 * @param e Nouvelle occupation de la case.
+	 */
 	void setOccupation(Etat e) {
 		occupation = e;
 	}
 	
+	/**
+	 * Permet d'obtenir la référence de la case.
+	 * @return La référence de la case;
+	 */
 	Case getCase() {
 		return this;
 	}
 	
+	/**
+	 * Permet d'obtenir la liste des positions atteignables depuis la case courante.
+	 * @return Liste de points atteignables.
+	 */
 	public ArrayList<Point> getSucc() {
 		return succ;
 	}
 	
+	/**
+	 * Créer la liste des cases atteignables depuis la case courante.
+	 */
 	void initSuccesseurs(){
 		this.succ = new ArrayList<Point>();
 		boolean diagonales = false;
