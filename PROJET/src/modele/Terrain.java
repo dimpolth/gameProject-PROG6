@@ -5,23 +5,47 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+/**
+ *Classe contenant tout ce qui touche au terrain de jeu. 
+ */
 public class Terrain implements Serializable {
+	/**
+	 * Définit les directions des déplacements. 
+	 */
 	public enum Direction {
 		haut, bas, gauche, droite, hautGauche, hautDroite, basGauche, basDroite
 	}
-
+	/**
+	 * Définit une prise lors d'un choix. 
+	 */
 	public enum ChoixPrise {
 		parPercussion, parAspiration
 	}
 
+	/**
+	 * Largeur du terrain de jeu.
+	 */
 	public final static int LIGNES = 5;
+	/**
+	 * Longueur du terrain dej= jeu.
+	 */
 	public final static int COLONNES = 9;
+	/**
+	 * Indice maximal en largeur du tableau représentant le terrain;
+	 */
 	public final static int INDICE_MAX_LIGNES = LIGNES - 1;
+	/**
+	 * Indice maximal en longueur du tableau représentant le terrain.
+	 */
 	public final static int INDICE_MAX_COLONNES = COLONNES - 1;
+	/**
+	 * Représente le terrain de jeu.
+	 */
 	public Case tableau[][] = new Case[LIGNES][COLONNES];
 
-	// private Scanner sc;
-
+	/**
+	 * Constructeur par défaut.
+	 */
 	public Terrain() {
 		for (int ligne = 0; ligne < Terrain.LIGNES; ligne++)
 			for (int colonne = 0; colonne < Terrain.COLONNES; colonne++) {
@@ -40,10 +64,18 @@ public class Terrain implements Serializable {
 			}
 	}
 
+	/**
+	 * Constructeur par copie.
+	 * @param t Terrain à copier.
+	 */
 	public Terrain(Terrain t) {
 		tableau = t.getTableau();
 	}
 
+	/**
+	 * Génère des terrains alternatifs pour les tests.
+	 * @param numTest Numéro du terrain de test à générer.
+	 */
 	public void TerrainTest(int numTest) {
 		for (int ligne = 0; ligne < Terrain.LIGNES; ligne++)
 			for (int colonne = 0; colonne < Terrain.COLONNES; colonne++)
@@ -163,6 +195,10 @@ public class Terrain implements Serializable {
 		}
 	}
 
+	/**
+	 * Réalise une copie du terrain actuel.
+	 * @return La copie du terrain.
+	 */
 	public Terrain copie() {
 		Terrain copieTerrain = new Terrain();
 		for (int i = 0; i < LIGNES; i++) {
@@ -175,22 +211,45 @@ public class Terrain implements Serializable {
 		return copieTerrain;
 	}
 
+	/**
+	 * Permet d'obtenir le terrain de jeu.
+	 * @return La matrice du terrain de jeu.
+	 */
 	public Case[][] getTableau() {
 		return tableau;
 	}
 
+	/**
+	 * Remplace le terrain de jeu.
+	 * @param tableau Terrain de jeu à charger.
+	 */
 	public void setTableau(Case tableau[][]) {
 		this.tableau = tableau;
 	}
 
+	/**
+	 * Permet d'obtenir le contenu d'une case de la matrice.
+	 * @param ligne Ligne de la case.
+	 * @param colonne Colonne de la case.
+	 * @return Case correspondante.
+	 */
 	public Case getCase(int ligne, int colonne) {
 		return tableau[ligne][colonne];
 	}
 
+	/**
+	 * Modifie l'occupation d'une case.
+	 * @param e La nouvelle occupation de la case.
+	 * @param ligne Ligne de la case à modifier.
+	 * @param colonne Colonne de la case à modifier.
+	 */
 	public void setCase(Case.Etat e, int ligne, int colonne) {
 		tableau[ligne][colonne].setOccupation(e);
 	}
 
+	/**
+	 * Dessine le terrain en console. Utilisé pour le debug.
+	 */
 	public void dessineTableauAvecIntersections() {
 		for (int ligne = 0; ligne < Terrain.LIGNES; ligne++) {
 			for (int colonne = 0; colonne < Terrain.COLONNES; colonne++) {
@@ -216,9 +275,17 @@ public class Terrain implements Serializable {
 
 		System.out.println();
 	}
-
+	
+	/**
+	 * Réalise le déplacement d'un pion.
+	 * @param depart Point de départ du pion.
+	 * @param arrive Point d'arrivé du pion;
+	 * @param joueurCourant Joueur qui à réaliser le déplacement.
+	 * @param listePredecesseurs Liste des coups précédents du tour en cours.
+	 * @return 0 si déplacement réalisé avec succès. 1 si le point d'arrivé n'est pas un successeur. 2 si la case d'arrivé n'est pas vide.
+	 * 3 si le point de départ n'appartient pas au joueur courant. 4 si le point d'arrivé a déjà servit pendant le tour.
+	 */
 	public int deplacement(Point depart, Point arrive, Joueur joueurCourant, ArrayList<Point> listePredecesseurs) {
-
 		if (!listePredecesseurs.isEmpty()) {
 			Iterator<Point> iterator = listePredecesseurs.iterator();
 			while (iterator.hasNext()) {
@@ -227,17 +294,13 @@ public class Terrain implements Serializable {
 					return 4;
 			}
 		}
-
 		if (tableau[depart.x][depart.y].getOccupation() != joueurCourant.getJoueurID()) {
 			return 3;
 		} else {
 			if (tableau[arrive.x][arrive.y].getOccupation() != Case.Etat.vide) {
 				return 2;
-
 			} else {
-
 				ArrayList<Point> l = tableau[depart.x][depart.y].getSucc(); // on regarde si la case d'arrivée est bien un successeur
-
 				for (int it = 0; it < l.size(); it++) {
 					Point p = l.get(it);
 					if (arrive.equals(p)) {
@@ -251,6 +314,12 @@ public class Terrain implements Serializable {
 		}
 	}
 
+	/**
+	 * Définit la direction du déplacement.
+	 * @param depart Point de départ du déplacement.
+	 * @param arrive Point d'arrivé du déplacement.
+	 * @return Direction du déplacement.
+	 */
 	public Direction recupereDirection(Point depart, Point arrive) {
 		Direction dir = null;
 		if ((arrive.x == depart.x - 1) && (arrive.y == depart.y - 1))
@@ -273,13 +342,21 @@ public class Terrain implements Serializable {
 		return dir;
 	}
 
+	/**
+	 * Effectue la prise de pions.
+	 * @param joueurCourant Le joueur qui réalise la prise.
+	 * @param dir La direction du coup qui effectue la prise.
+	 * @param pDepart Point d edépart du coup.
+	 * @param pArrivee Point d'arrivé du coup.
+	 * @param c La type de prise à réaliser. 
+	 * @return La liste des pions qui ont été mangés.
+	 */
 	public ArrayList<Point> manger(Joueur joueurCourant, Direction dir, Point pDepart, Point pArrivee, ChoixPrise c) {
 
 		ArrayList<Point> listePionsManges = new ArrayList<Point>();
 		Case.Etat joueurOppose;
 
-		// On indique dans une variable qui est l'adversaire pour reconnaître
-		// ses pions
+		// On indique dans une variable qui est l'adversaire pour reconnaître ses pions
 
 		if (joueurCourant.getJoueurID() == Case.Etat.joueur1)
 			joueurOppose = Case.Etat.joueur2;
@@ -299,11 +376,14 @@ public class Terrain implements Serializable {
 	}
 
 	/*
-	 * Méthode récursive permettant la prise de pions par percussion et de
-	 * renvoyer le nombre de pions capturés paramètres : - pArrivee, le point
-	 * précédent le point testé (potentiellement mangé) - dir, la direction
-	 * explorée permettant de trouver l'offset nécessaire - le type de pion du
-	 * joueur opposé (joueur1 ou joueur2)
+	 *  paramètres : - pArrivee,  - dir,  -  (joueur1 ou joueur2)
+	 */
+	/**
+	 * Méthode récursive permettant la prise de pions par percussion.
+	 * @param pArrivee Le point précédent le point testé (potentiellement mangé).
+	 * @param dir La direction explorée permettant de trouver l'offset nécessaire.
+	 * @param joueurOppose le type de pion du joueur opposé.
+	 * @param listePionsManges Retour par référence. Liste des pions mangés par la prise.
 	 */
 	public void prisePercussion(Point pArrivee, Direction dir, Case.Etat joueurOppose, ArrayList<Point> listePionsManges) {
 
@@ -319,9 +399,12 @@ public class Terrain implements Serializable {
 
 	}
 
-	/*
-	 * Idem à la méthode "prisePercussion" mais adaptée à la prise par
-	 * aspiration
+	/**
+	 * Méthode récursive permettant la prise de pions par aspiration.
+	 * @param pDepart Le point précédent le point testé (potentiellement mangé).
+	 * @param dir La direction explorée permettant de trouver l'offset nécessaire.
+	 * @param joueurOppose le type de pion du joueur opposé.
+	 * @param listePionsManges Retour par référence. Liste des pions mangés par la prise.
 	 */
 	public void priseAspiration(Point pDepart, Direction dir, Case.Etat joueurOppose, ArrayList<Point> listePionsManges) {
 
@@ -337,6 +420,12 @@ public class Terrain implements Serializable {
 
 	}
 
+	/**
+	 * Calcul le décalage nécessaire à une prise par percussion.
+	 * @param dir Direction de la prise.
+	 * @param pArrivee Point d'arrivé de la prise.
+	 * @return Un décalage sous forme de point.
+	 */
 	public Point offsetPercussion(Direction dir, Point pArrivee) {
 		Point offsetPercu = new Point(0, 0);
 
@@ -390,10 +479,11 @@ public class Terrain implements Serializable {
 		return offsetPercu;
 	}
 
-	/*
-	 * Trés similairement à la méthode "offsetPercussion" les valeurs attribuées
-	 * par l'offset sont ici inversées. En effet si la direction de déplacement
-	 * est par exempe hautGauche il faudra explorer la diagonale basDroite
+	/**
+	 * Trés similairement à la méthode "offsetPercussion" les valeurs attribuées par l'offset sont ici inversées.
+	 * En effet si la direction de déplacement est par exempe hautGauche il faudra explorer la diagonale basDroite
+	 * @param dir Direction de la prise.
+	 * @param pDepart Point de départ de la prise.
 	 */
 	public Point offsetAspiration(Direction dir, Point pDepart) {
 		Point offsetAspi = new Point(0, 0);
@@ -446,24 +536,12 @@ public class Terrain implements Serializable {
 		return offsetAspi;
 	}
 
-	/*
-	 * Cette méthode intervient lorsque le joueur peut lors d'un déplacement
-	 * effectuer soit une prise par percussion soit par aspiration, il doit donc
-	 * choisir entre une des deux solutions
+	/**
+	 * Test si une prise se fait par percussion.
+	 * @param depart Point de départ de la prise.
+	 * @param d Direction de la prise.
+	 * @return Vrai si la prise est par percussion, faux sinon.
 	 */
-	/*
-	 * ChoixPrise choixPriseHumain(){
-	 * 
-	 * this.sc = new Scanner(System.in); char choixPrise = 'Y';
-	 * 
-	 * do { ;//System.out.println("Prise par percussion ? (Y/N) : "); choixPrise =
-	 * this.sc.nextLine().charAt(0); } while (choixPrise != 'Y' && choixPrise !=
-	 * 'N');
-	 * 
-	 * if (choixPrise == 'Y') return ChoixPrise.parPercussion; else return
-	 * ChoixPrise.parAspiration; }
-	 */
-
 	public boolean estUnePrisePercussion(Point depart, Direction d) {
 		Point cible = new Point();
 		boolean b = false;
@@ -508,6 +586,12 @@ public class Terrain implements Serializable {
 		return b;
 	}
 
+	/**
+	 * Test si une prise se fait par aspiration.
+	 * @param depart Point de départ de la prise.
+	 * @param d Direction de la prise.
+	 * @return Vrai si la prise se fait par aspiration, faux sinon.
+	 */
 	public boolean estUnePriseAspiration(Point depart, Direction d) {
 		Point cible = new Point();
 		boolean b = false;
@@ -554,6 +638,11 @@ public class Terrain implements Serializable {
 		return b;
 	}
 
+	/**
+	 * Permet de savoir quels sont les coups réalisant une prise jouables.
+	 * @param joueurCourant Joueur dont le tour est en cours.
+	 * @return La liste des pions qui peuvent jouer.
+	 */
 	public ArrayList<Point> couplibre(Case.Etat joueurCourant) {
 		ArrayList<Point> reponse = new ArrayList<Point>();
 
@@ -565,7 +654,6 @@ public class Terrain implements Serializable {
 				int z = 0;
 				boolean drap = true;
 				while (z < nbSucc && drap) {
-
 					Point pointSucc = c.getSucc().get(z);
 					Direction d = recupereDirection(c.getPos(), pointSucc);
 					if (c.getOccupation() == joueurCourant) {
@@ -581,6 +669,11 @@ public class Terrain implements Serializable {
 		return reponse;
 	}
 
+	/**
+	 * Permet de savoir quels sont les coups réalisant une prise jouables. Utilisé par l'IA.
+	 * @param joueurCourant Joueur dont le tour est en cours.
+	 * @return La liste des coups qui peuvent être joués.
+	 */
 	public ArrayList<Coup> coupsObligatoires(Joueur joueurCourant) {
 		ArrayList<Coup> listeCoupsRes = new ArrayList<Coup>();
 		ArrayList<Point> listePointsDep = this.listePionsJouables(joueurCourant, null), listeSuc;
@@ -610,17 +703,10 @@ public class Terrain implements Serializable {
 
 	/**
 	 * Détermine quels sont les déplacements possibles
-	 * 
-	 * @param p
-	 *            Point à partir du quel on veut déterminer les déplacements
-	 *            possibles.
-	 * @param listePredecesseurs
-	 *            ArrayList de Points. Liste des points par lesquels est passé
-	 *            le pion durant le tour.
-	 * @param copieTerrainEventuelle
-	 *            Terrain. Utilisé par l'IA pour simuler des coups.
-	 * @return ArrayList de Points. Liste des emplacements vers lequel le pion
-	 *         courant peut se déplacer.
+	 * @param p Point à partir du quel on veut déterminer les déplacements possibles.
+	 * @param listePredecesseurs ArrayList de Points. Liste des points par lesquels est passé le pion durant le tour.
+	 * @param copieTerrainEventuelle Terrain. Utilisé par l'IA pour simuler des coups.
+	 * @return ArrayList de Points. Liste des emplacements vers lequel le pion courant peut se déplacer.
 	 */
 	public ArrayList<Point> deplacementPossible(Point p, ArrayList<Point> listePredecesseurs, Case[][] copieTerrainEventuelle) {
 		ArrayList<Point> listeSuc = tableau[p.x][p.y].getSucc();
@@ -648,6 +734,12 @@ public class Terrain implements Serializable {
 		return listeSolution;
 	}
 
+	/**
+	 * Génère une liste de pions jouables
+	 * @param j Joueur courant.
+	 * @param copieTerrainEventuelle Vrai si une copie du terrain doit être faite, faux sinon. Utilisé par l'IA.
+	 * @return
+	 */
 	public ArrayList<Point> listePionsJouables(Joueur j, Terrain copieTerrainEventuelle) {
 		Terrain terr = this;
 		if (copieTerrainEventuelle != null) // Utile à l'IA pour travailler sur
