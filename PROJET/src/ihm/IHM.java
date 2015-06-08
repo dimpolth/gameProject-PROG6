@@ -194,7 +194,6 @@ public class IHM extends JFrame implements ComponentListener {
 	}
 
 	public void nouvellePartie() {
-		System.out.println("Nouvelle Partie");
 		Echange e = new Echange();
 		e.ajouter("nouvellePartie", true);
 		e.ajouter("parametres", getParametres());
@@ -366,21 +365,16 @@ public class IHM extends JFrame implements ComponentListener {
 			popupM.setVisible(true);
 			break;
 
-		case RESEAU_ANNULER:
+		case RESEAU_RETOUR:
 			popupReseau.setVisible(false);
 			popupM.setVisible(true);
 			break;
-
-		case RESEAU_VALIDER:
-
+		case RESEAU_HEBERGER:
 			String errReseau = null;
-			String identifiant = popupReseau.identifiant.getText();
-			;
+			String identifiant = popupReseau.champId.getText();
 			// Nouveau serveur
-			if (popupReseau.etreHote.isSelected()) {
 				errReseau = Communication.modeReseau("", identifiant);
 				if (errReseau == null) {
-
 					// 2 joueurs humain si on lance une partie réseau
 					Parametres param = new Parametres();
 					param.j1_type = Parametres.NiveauJoueur.HUMAIN;
@@ -391,30 +385,32 @@ public class IHM extends JFrame implements ComponentListener {
 					com.envoyer(ec);
 					JOptionPane.showMessageDialog(this, "Le serveur est ouvert sur le port : " + Communication.getPort() + "", "Port " + Communication.getPort() + "", 1);
 				}
-
-			} else {
-				// ;//System.out.println("1");
-				String hoteComplet = popupReseau.hote.getText();
-				if (!hoteComplet.equals("")) {
-					// ;//System.out.println("2");
-					errReseau = Communication.modeReseau(hoteComplet, identifiant);
-					// ;//System.out.println(errReseau);
-				}
-			}
-
 			if (errReseau == null) {
 				popupReseau.setVisible(false);
 				popupB.setVisible(false);
 				setModeReseau(true);
 				popupReseau.message.setText(errReseau);
-
 			} else {
 				popupReseau.message.setText(errReseau);
 			}
-
+			break;
+		case RESEAU_REJOINDRE:
+			errReseau = null;
+			identifiant = popupReseau.champId.getText();
+				String hoteComplet = popupReseau.champRejoindre.getText()+":"+popupReseau.champRejoindrePort.getText();
+				if (!hoteComplet.equals("")) {
+					errReseau = Communication.modeReseau(hoteComplet, identifiant);
+				}
+			if (errReseau == null) {
+				popupReseau.setVisible(false);
+				popupB.setVisible(false);
+				setModeReseau(true);
+				popupReseau.message.setText(errReseau);
+			} else {
+				popupReseau.message.setText(errReseau);
+			}
 			break;
 		}
-
 	}
 
 	public void envoyerIdentifiantReseau() {
@@ -491,7 +487,7 @@ public class IHM extends JFrame implements ComponentListener {
 		popupO.setBounds(getWidth() / 2 - 320, getHeight() / 2 - 200, 640, 400);
 		popupR.setBounds(getWidth() / 2 - 400, getHeight() / 2 - 250, 800, 500);
 
-		popupReseau.setBounds(getWidth() / 2 - 175, getHeight() / 2 - 275, 350, 550);
+		popupReseau.setBounds(getWidth() / 2 - 320, getHeight() / 2 - 200, 640, 400);
 		popupV.setBounds(0, 0, getWidth(), getHeight());
 
 	}
@@ -597,6 +593,6 @@ public class IHM extends JFrame implements ComponentListener {
 			else quitter(false);
 			
 		}
-		
+
 	}
 }

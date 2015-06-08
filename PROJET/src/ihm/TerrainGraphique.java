@@ -16,7 +16,6 @@ import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 import modele.Case;
-import modele.Terrain;
 import reseau.Echange;
 
 @SuppressWarnings("serial")

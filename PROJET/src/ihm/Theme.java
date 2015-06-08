@@ -125,9 +125,11 @@ public class Theme {
 			ihm.bandeauInfos.j2_score.setForeground(couleurTDefaut);
 			ihm.bandeauInfos.texteInf.setForeground(couleurInf);
 			ihm.bandeauInfos.texteSup.setForeground(couleurSup);
-			ihm.popupReseau.selectJoueur1Etiq.setForeground(couleurMenu);
-			ihm.popupReseau.selectJoueur2Etiq.setForeground(couleurMenu);
-			ihm.popupReseau.selectJoueurEtiq.setForeground(couleurMenu);
+			ihm.popupReseau.etiqId.setForeground(couleurMenu);
+			ihm.popupReseau.etiqHeberger.setForeground(couleurMenu);
+			ihm.popupReseau.etiqRejoindre.setForeground(couleurMenu);
+			ihm.popupReseau.etiqHebergerPort.setForeground(couleurMenu);
+			ihm.popupReseau.etiqRejoindrePort.setForeground(couleurMenu);
 			ihm.popupO.selectJoueur1Etiq.setForeground(couleurMenu);
 			ihm.popupO.selectJoueur2Etiq.setForeground(couleurMenu);
 			ihm.popupO.themeEtiq.setForeground(couleurMenu);
@@ -141,7 +143,7 @@ public class Theme {
 				ihm.popupM.setImage(imgMenuFin);
 				ihm.popupO.setImage(imgMenuLarge);
 				ihm.popupR.setImage(imgMenuLarge);
-				ihm.popupReseau.setImage(imgMenuFin);
+				ihm.popupReseau.setImage(imgMenuLarge);
 				ihm.coucheJeu.add(ihm.tg, BorderLayout.CENTER);
 			} catch (IOException e) {
 				e.printStackTrace();
