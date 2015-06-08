@@ -164,7 +164,6 @@ public class IHM extends JFrame implements ComponentListener {
 
 		popupV = new PopupVictoire();
 		gestionCouche.add(popupV, new Integer(4));
-		popupV.setVisible(false);
 
 		theme.setTheme(Theme.Type.BOIS);
 
@@ -195,6 +194,7 @@ public class IHM extends JFrame implements ComponentListener {
 	}
 
 	public void nouvellePartie() {
+		System.out.println("Nouvelle Partie");
 		Echange e = new Echange();
 		e.ajouter("nouvellePartie", true);
 		e.ajouter("parametres", getParametres());

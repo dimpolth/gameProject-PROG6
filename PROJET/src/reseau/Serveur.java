@@ -101,20 +101,13 @@ public class Serveur implements Runnable{
 	}
 	
 	public void nouveauJoueur(Connexion c){		
-		Echange e = new Echange();
-		Parametres params = new Parametres();
 		
-		if(joueurs.get(1) == null){			
-			joueurs.put(1,c);		
-			params.j1_identifiant = c.identifiant;			
-		}
-		else if(joueurs.get(2) == null){			
-			joueurs.put(2,c);			
-			params.j2_identifiant = c.identifiant;			
-		}		
-	
-		e.ajouter("parametres", params);	
-		com.recevoir(e, 0);
+		// Premier joueur = serveur
+		if(joueurs.get(1) == null)		
+			joueurs.put(1,c);			
+		
+		else if(joueurs.get(2) == null)			
+			joueurs.put(2,c);
 			
 	}
 	
@@ -122,16 +115,33 @@ public class Serveur implements Runnable{
 		connexions.add(c);	
 		if(joueurs.size() < 2)
 			nouveauJoueur(c);
-	}
-	public void terminerConnexions(){
-		Iterator<Connexion>it = connexions.iterator();
-		while(it.hasNext()){
-			System.out.println("Fin de connion (stopperServeur)");
-			terminerConnexion(it.next());
+		
+		Echange e = new Echange();
+		Parametres params = new Parametres();	
+		
+		if(joueurs.get(1) != null)
+			params.j1_identifiant = joueurs.get(1).identifiant;
+		
+		if(joueurs.get(2) != null){
+			params.j2_identifiant = joueurs.get(2).identifiant;
+		}else{
+			params.j2_identifiant = "En attente...";
+		}
+		
+		e.ajouter("parametres", params);	
+		com.recevoir(e, 0);		
+		
+		
+		if(joueurs.size() > 1){
+			Echange ech = new Echange();
+			ech.ajouter("terrain", com.moteur.t.getTableau());
+			c.envoyer(ech);
 		}
 	}
+	
 	public void terminerConnexion(Connexion c){
-		c.fermer();
+		c.fermer();	
+	
 		connexions.remove(c);
 		
 		
@@ -149,8 +159,9 @@ public class Serveur implements Runnable{
 				joueurs.remove(c);
 				stopperServeur();		
 			}
-			else{			
-				joueurs.remove(c);
+			else{
+				
+				joueurs.remove(2);				
 				Iterator<Connexion>it = connexions.iterator();
 				while(it.hasNext()){
 					Connexion con = it.next();
@@ -168,8 +179,15 @@ public class Serveur implements Runnable{
 	}
 	
 	public void stopperServeur(){
+		Iterator<Connexion>it = connexions.iterator();
+		while(it.hasNext()){
+			Connexion c = it.next();
+			System.out.println("Fin de connion (stopperServeur)");
+			c.fermer();
+			connexions.remove(c);
+		}
+		
 		try{			
-			terminerConnexions();
 			passiveSocket.close();
 		}
 		catch(Exception e){
