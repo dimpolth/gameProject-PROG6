@@ -8,13 +8,17 @@ public class Historique implements Serializable {
 
 	public ArrayList<Terrain> histoPrincipal;
 	public ArrayList<Point> histoTour;
-	private int itPrincipal, itTour;
-	boolean joueur; //true = j1, false = j2
+	public ArrayList<Coup> hisTourCoup;
+	private int itPrincipal, itTour, itCoup;
+
 	
 	public Historique() {
 		histoPrincipal = new ArrayList<Terrain>();
 		histoTour = new ArrayList<Point>();
-		itPrincipal = 0;
+		hisTourCoup =new ArrayList<Coup>();
+ 		itPrincipal = 0;
+		itTour = 0;
+		itCoup = 0 ;
 	}
 	
 	public Historique(Historique h) {
@@ -22,7 +26,7 @@ public class Historique implements Serializable {
 		histoTour = h.histoTour;
 		itPrincipal = h.itPrincipal;
 		itTour = h.itTour;
-		joueur = h.joueur;
+		itCoup = h.itCoup;
 	}
 	
 	public int getItPrincipal(){
@@ -38,15 +42,27 @@ public class Historique implements Serializable {
 		Terrain c = t.copie();
 		histoPrincipal.add(c);
 		itPrincipal = histoPrincipal.size()-1;
+		
+		itTour=0;
+		itCoup=0;
+		hisTourCoup = new ArrayList<Coup>() ;
+		
 		//;//System.out.println("itprincipal"+itPrincipal);
 		
 	}
 	
-	public void ajouterCoup(Point p) {
-		histoTour.add((Point)p.clone());
+	public void ajouterCoup(Point pDepart,Point pArrive) {
+		histoTour.add((Point)pDepart.clone());
+		hisTourCoup.add(new Coup(pDepart,pArrive));
 		itTour++;
+		itCoup++;
 		
 	}
+	
+	public Coup getDernierCoup(){
+		return hisTourCoup.get(hisTourCoup.size()-1);
+	}
+	
 	
 	public Terrain annuler() {
 		if(itPrincipal<=0){
@@ -70,6 +86,9 @@ public class Historique implements Serializable {
 	
 	public void effacerHistoTour() {
 		histoTour = new ArrayList<Point>();
+		itTour=0;
+		itCoup=0;
+		
 	}
 	
 	public void afficher() {
