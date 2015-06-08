@@ -64,6 +64,10 @@ class BandeauInfos extends JPanel {
 	 * Cadre des textes.
 	 */
 	JPanel panTextes;
+	/**
+	 * Identifiant du joueur en cours.
+	 */
+	int idSelect;
 	
 	/**
 	 * Constructeur unique.
@@ -205,6 +209,7 @@ class BandeauInfos extends JPanel {
 	 * @param id Identifiant du joueur courant.
 	 */
 	public void setJoueurActif(int id) {
+		idSelect = id;
 		if (id == 1) {
 			panJ1.setBackground(tg.ihm.theme.couleurJ1);
 			panJ2.setBackground(tg.ihm.theme.couleurDefaut);

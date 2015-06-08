@@ -255,6 +255,32 @@ public class IHM extends JFrame implements ComponentListener {
 			com.envoyer(e);
 		}
 	}
+	
+	public void quitter(boolean confirmation){
+		if ((Communication.enReseau())) {
+			String[] choix = { "Oui", "Non" };
+			int retour;
+			if(confirmation)
+				retour = JOptionPane.showOptionDialog(this, "Vous êtes actuellement sur une partie en réseau. Voulez-vous vraiment quitter ?", "Attention", 1, 1, null, choix, choix[0]);
+			else retour = 0;
+			if (retour == 0) {
+				com.envoyer("/QUIT");
+				System.exit(0);
+			}
+		} else {
+			String[] choix = { "Oui", "Non" };
+			int retour;
+			if(confirmation)
+				retour = JOptionPane.showOptionDialog(this, "Voulez-vous sauvegarder la partie avant de quitter ?", "Attention", 1, 1, null, choix, choix[1]);
+			else retour = 1;
+			if (retour == 1) {
+				System.exit(0);
+			} else if (retour == 0) {
+				action(Ecouteur.Bouton.SAUVEGARDER);
+				System.exit(0);
+			}
+		}
+	}
 
 	/**
 	 * Gestion de toutes les entrées de l'IHM.
@@ -299,23 +325,7 @@ public class IHM extends JFrame implements ComponentListener {
 			popupB.setVisible(false);
 			break;
 		case QUITTER:
-			if ((Communication.enReseau())) {
-				String[] choix = { "Non", "Oui" };
-				int retour = JOptionPane.showOptionDialog(this, "Vous êtes actuellement sur une partie en réseau. Voulez-vous vraiment quitter ?", "Attention", 1, 1, null, choix, choix[1]);
-				if (retour == 1) {
-					com.envoyer("/QUIT");
-					System.exit(0);
-				}
-			} else {
-				String[] choix = { "Non", "Oui" };
-				int retour = JOptionPane.showOptionDialog(this, "Voulez-vous sauvegarder la partie avant de quitter ?", "Attention", 1, 1, null, choix, choix[1]);
-				if (retour == 0) {
-					System.exit(0);
-				} else if (retour == 1) {
-					action(Ecouteur.Bouton.SAUVEGARDER);
-					System.exit(0);
-				}
-			}
+			quitter(true);
 			break;
 		case MENU:
 			popupB.setVisible(true);
@@ -357,7 +367,6 @@ public class IHM extends JFrame implements ComponentListener {
 		case OPTION_VALIDER:
 
 			Parametres params = getParametres();
-
 			if (popupO.theme.getSelectedItem() == "Standard")
 				theme.setTheme(Theme.Type.STANDARD);
 			else if (popupO.theme.getSelectedItem() == "Boisé")
@@ -391,21 +400,16 @@ public class IHM extends JFrame implements ComponentListener {
 			popupM.setVisible(true);
 			break;
 
-		case RESEAU_ANNULER:
+		case RESEAU_RETOUR:
 			popupReseau.setVisible(false);
 			popupM.setVisible(true);
 			break;
-
-		case RESEAU_VALIDER:
-
+		case RESEAU_HEBERGER:
 			String errReseau = null;
-			String identifiant = popupReseau.identifiant.getText();
-			;
+			String identifiant = popupReseau.champId.getText();
 			// Nouveau serveur
-			if (popupReseau.etreHote.isSelected()) {
 				errReseau = Communication.modeReseau("", identifiant);
 				if (errReseau == null) {
-
 					// 2 joueurs humain si on lance une partie réseau
 					Parametres param = new Parametres();
 					param.j1_type = Parametres.NiveauJoueur.HUMAIN;
@@ -416,30 +420,32 @@ public class IHM extends JFrame implements ComponentListener {
 					com.envoyer(ec);
 					JOptionPane.showMessageDialog(this, "Le serveur est ouvert sur le port : " + Communication.getPort() + "", "Port " + Communication.getPort() + "", 1);
 				}
-
-			} else {
-				// ;//System.out.println("1");
-				String hoteComplet = popupReseau.hote.getText();
-				if (!hoteComplet.equals("")) {
-					// ;//System.out.println("2");
-					errReseau = Communication.modeReseau(hoteComplet, identifiant);
-					// ;//System.out.println(errReseau);
-				}
-			}
-
 			if (errReseau == null) {
 				popupReseau.setVisible(false);
 				popupB.setVisible(false);
 				setModeReseau(true);
 				popupReseau.message.setText(errReseau);
-
 			} else {
 				popupReseau.message.setText(errReseau);
 			}
-
+			break;
+		case RESEAU_REJOINDRE:
+			errReseau = null;
+			identifiant = popupReseau.champId.getText();
+				String hoteComplet = popupReseau.champRejoindre.getText()+":"+popupReseau.champRejoindrePort.getText();
+				if (!hoteComplet.equals("")) {
+					errReseau = Communication.modeReseau(hoteComplet, identifiant);
+				}
+			if (errReseau == null) {
+				popupReseau.setVisible(false);
+				popupB.setVisible(false);
+				setModeReseau(true);
+				popupReseau.message.setText(errReseau);
+			} else {
+				popupReseau.message.setText(errReseau);
+			}
 			break;
 		}
-
 	}
 
 	public void envoyerIdentifiantReseau() {
@@ -527,7 +533,7 @@ public class IHM extends JFrame implements ComponentListener {
 		popupO.setBounds(getWidth() / 2 - 320, getHeight() / 2 - 200, 640, 400);
 		popupR.setBounds(getWidth() / 2 - 400, getHeight() / 2 - 250, 800, 500);
 
-		popupReseau.setBounds(getWidth() / 2 - 175, getHeight() / 2 - 275, 350, 550);
+		popupReseau.setBounds(getWidth() / 2 - 320, getHeight() / 2 - 200, 640, 400);
 		popupV.setBounds(0, 0, getWidth(), getHeight());
 
 	}
@@ -542,12 +548,13 @@ public class IHM extends JFrame implements ComponentListener {
 	 */
 	public void notifier(Echange e) {
 	
-
+		
 		Object dataValue;
-		/*
-		 * if ((dataValue = e.get("terrain")) != null) {
-		 * tg.dessinerTerrain((Case[][]) dataValue); }
-		 */
+		
+		if ((dataValue = e.get("terrain")) != null) {
+			tg.dessinerTerrain((modele.Case[][]) dataValue); 
+		}
+		
 		if ((dataValue = e.get("coup")) != null) {
 			tg.lCoups.addLast((EvenementGraphique) dataValue);
 			EvenementGraphique.afficherCoups(tg);
@@ -596,6 +603,9 @@ public class IHM extends JFrame implements ComponentListener {
 		if ((dataValue = e.get("refaire")) != null) {
 			boutonRefaire.setEnabled((boolean) dataValue);
 		}
+		if ((dataValue = e.get("finTour")) != null) {
+			boutonValidation.setEnabled((boolean) dataValue);
+		}
 		if ((dataValue = e.get("score")) != null) {
 			int[] score = (int[]) dataValue;
 			bandeauInfos.setScore(1, score[0]);
@@ -603,14 +613,13 @@ public class IHM extends JFrame implements ComponentListener {
 		}
 		if ((dataValue = e.get("parametres")) != null) {
 			Parametres params = (Parametres) dataValue;
+			System.out.println(params.j2_identifiant);
 			if (params.j1_identifiant != null)
 				bandeauInfos.setIdentifiant(1, params.j1_identifiant);
 			if (params.j2_identifiant != null)
 				bandeauInfos.setIdentifiant(2, params.j2_identifiant);
 		}
-		if ((dataValue = e.get("finTour")) != null) {
-			boutonValidation.setEnabled((boolean) dataValue);
-		}
+		
 
 	}
 	
@@ -636,8 +645,9 @@ public class IHM extends JFrame implements ComponentListener {
 			setModeReseau(false);
 			
 			if (reponse == JOptionPane.YES_OPTION) nouvellePartie();
+			else quitter(false);
 			
 		}
-		
+
 	}
 }

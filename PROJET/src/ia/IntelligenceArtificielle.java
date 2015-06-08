@@ -141,7 +141,7 @@ public class IntelligenceArtificielle implements Serializable {
 		TourDeJeu tourSolution = new TourDeJeu();
 		int profondeur = 6;
 		int iterateurProf = 0;
-		boolean evalGeometrie = false;
+		boolean evalGeometrie = true;
 		
 		// ALPHA BETA
 		tourSolution = alphaBeta(profondeur,evalGeometrie, false, iterateurProf); // simule x-profondeur tours
@@ -162,7 +162,7 @@ public class IntelligenceArtificielle implements Serializable {
 	 * Application de l'algorithme alpha beta
 	 */
 	private TourDeJeu alphaBeta(int profondeur, boolean evalGeometrie, boolean profondeurDynamique, int iterateurProf){
-		ArrayList<TourDeJeu> listeToursJouables = new ArrayList<TourDeJeu>(), listeOld = new ArrayList<TourDeJeu>();
+		ArrayList<TourDeJeu> listeToursJouables = new ArrayList<TourDeJeu>();
 		Iterator<TourDeJeu> it;
 		TourDeJeu tourCourant, tourSolution = new TourDeJeu();
 		Random rand = new Random();
@@ -338,7 +338,7 @@ public class IntelligenceArtificielle implements Serializable {
 		Point pDepartCourant, pArriveeCourante;
 		ArrayList<Coup> listeCoupsObligatoires, listeCoupsDepart = new ArrayList<Coup>();
 		ArrayList<Point> listePointsDeDepart, listeVide = new ArrayList<Point>(), listePionsManges = new ArrayList<Point>();
-		ArrayList<TourDeJeu> listeToursJouables = new ArrayList<TourDeJeu>(), listeToursTemp, listeToursVide = new ArrayList<TourDeJeu>();
+		ArrayList<TourDeJeu> listeToursJouables = new ArrayList<TourDeJeu>(), listeToursTemp;
 		TourDeJeu tourTemp;
 		Coup coupTemp = new Coup();
 		
@@ -488,21 +488,24 @@ public class IntelligenceArtificielle implements Serializable {
 	int evalGeometrie(Terrain terrainCourant, Joueur joueurCourant){
 		int resultat = 0;
 		
-		for(int ligne = 0; ligne < 5; ligne++){
-			for(int colonne = 0; colonne < 9; colonne++){
-				if(terrainCourant.tableau[ligne][colonne].getOccupation() == joueurCourant.getJoueurID()){
-					if(ligne >= 1 && ligne <= 3 && colonne >= 2 && colonne <= 6){
-						resultat++;
-						if(colonne >= 3 && colonne <= 5)
-							resultat++;
-					}
-				}
-			}
-		}
-		
+		for(int ligne = 1; ligne <= 3; ligne++)
+			for(int colonne = 3; colonne <= 5; colonne++)
+				if(terrainCourant.tableau[ligne][colonne].getOccupation() == joueurCourant.getJoueurID())
+					resultat += 2;
+				
+			
+		// 4 cases formant les extrémités du losange central
+		if(terrainCourant.tableau[0][4].getOccupation() == joueurCourant.getJoueurID())
+			resultat++;
+		else if(terrainCourant.tableau[2][2].getOccupation() == joueurCourant.getJoueurID())
+			resultat++;
+		else if(terrainCourant.tableau[2][6].getOccupation() == joueurCourant.getJoueurID())
+			resultat++;
+		else if(terrainCourant.tableau[4][4].getOccupation() == joueurCourant.getJoueurID())
+			resultat++;
 		// Case centrale
-		if(terrainCourant.tableau[2][4].getOccupation() == joueurCourant.getJoueurID())
-			resultat += 3;
+		else if(terrainCourant.tableau[2][4].getOccupation() == joueurCourant.getJoueurID())
+			resultat ++;
 		
 		return resultat;
 	}

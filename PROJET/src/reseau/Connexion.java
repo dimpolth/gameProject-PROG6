@@ -36,9 +36,7 @@ public class Connexion implements Runnable{
 			oos = new ObjectOutputStream(socket.getOutputStream());
 			
 			// Premier envoi = identifiant
-			identifiant = (String)ois.readObject();
-			System.out.println(identifiant);			
-		
+			identifiant = (String)ois.readObject();	
 
 			Thread t = new Thread(this, "recep");
 			t.start();
@@ -101,8 +99,7 @@ public class Connexion implements Runnable{
 					else{
 						String ordre = (String)recu;
 						
-						if(ordre.equals("/QUIT")){
-							System.out.println("recu /quit");
+						if(ordre.equals("/QUIT")){						
 							serveur.terminerConnexion(this);
 						}
 					}

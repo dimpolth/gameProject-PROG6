@@ -1,90 +1,103 @@
 package ihm;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.Insets;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 @SuppressWarnings("serial")
 public class PopupReseau extends Popup {
 
-	JCheckBox etreHote;
-	JTextField hote;
-	JLabel message;
-	JTextField identifiant;
+	protected JLabel etiqId;
+	protected JTextField champId;
+	protected JLabel etiqHeberger;
+	protected JTextField champHeberger;
+	protected JLabel etiqRejoindre;
+	protected JTextField champRejoindre;
+	protected JLabel etiqHebergerPort;
+	protected JTextField champHebergerPort;
+	protected JLabel etiqRejoindrePort;
+	protected JTextField champRejoindrePort;
+	protected JLabel message;
+	protected Bouton boutonHeberger, boutonRetour, boutonRejoindre;
 
 	public PopupReseau(IHM i) {
-		super(new GridBagLayout());
+		super(new GridLayout(5, 1));
+		JPanel panneauNord = new JPanel();
+		this.add(panneauNord);
+		panneauNord.setOpaque(false);
+		etiqId = new JLabel("Mon identifiant");
+		panneauNord.add(etiqId);
+		champId = new JTextField("Joueur-" + System.currentTimeMillis() % 100);
+		panneauNord.add(champId);
 
-		GridBagConstraints contraintes = new GridBagConstraints();
-		contraintes.gridwidth = GridBagConstraints.REMAINDER;
-		contraintes.fill = GridBagConstraints.BOTH;
-		contraintes.insets = new Insets(5, 5, 5, 5);
-		contraintes.ipady = 15;
-		contraintes.ipadx = 15;
+		JPanel panneauCentre = new JPanel(new GridLayout(1, 2));
+		panneauCentre.setOpaque(false);
+		this.add(panneauCentre);
+		JPanel panneauCentreOuest = new JPanel();
+		panneauCentre.add(panneauCentreOuest);
+		panneauCentreOuest.setOpaque(false);
+		etiqHeberger = new JLabel("Votre adresse IP :");
+		panneauCentreOuest.add(etiqHeberger);
+		try {
+			champHeberger = new JTextField(InetAddress.getLocalHost().getHostAddress());
+		} catch (UnknownHostException e) {
+			champHeberger = new JTextField("UNKNOWN");
+		}
+		panneauCentreOuest.add(champHeberger);
+		JPanel panneauCentreEst = new JPanel();
+		panneauCentre.add(panneauCentreEst);
+		panneauCentreEst.setOpaque(false);
+		etiqRejoindre = new JLabel("IP à rejoindre :");
+		panneauCentreEst.add(etiqRejoindre);
+		try {
+			champRejoindre = new JTextField(InetAddress.getLocalHost().getHostAddress());
+		} catch (UnknownHostException e) {
+			champRejoindre = new JTextField("UNKNOWN");
+		}
+		panneauCentreEst.add(champRejoindre);
 
-		GridBagConstraints contraintes_groupe = (GridBagConstraints) contraintes.clone();
-		contraintes_groupe.gridwidth = 1;
-		GridBagConstraints contraintes_groupe_fin = (GridBagConstraints) contraintes.clone();
-		contraintes_groupe_fin.gridwidth = GridBagConstraints.REMAINDER;
-
-		JLabel selectJoueurEtiq = new JLabel("Mon identifiant");
-		contraintes.gridwidth = GridBagConstraints.REMAINDER;
-		add(selectJoueurEtiq, contraintes);
-
-		identifiant = new JTextField("Joueur-" + System.currentTimeMillis() / 1000 / 1000);
-		contraintes.gridwidth = 1;
-		add(identifiant, contraintes_groupe_fin);
-
-		JLabel selectJoueur1Etiq = new JLabel("Nouveau serveur");
-		contraintes.gridwidth = GridBagConstraints.REMAINDER;
-		add(selectJoueur1Etiq, contraintes);
-
-		etreHote = new JCheckBox("Lancer un serveur sur cette machine");
-
-		contraintes_groupe.gridwidth = GridBagConstraints.REMAINDER;
-		add(etreHote, contraintes_groupe);
-
-		/*
-		 * hote = new JTextField(); contraintes.gridwidth =
-		 * GridBagConstraints.REMAINDER;
-		 * 
-		 * add(hote, contraintes);
-		 */
-
-		JLabel selectJoueur2Etiq = new JLabel("Rejoindre une partie");
-		contraintes.gridwidth = GridBagConstraints.REMAINDER;
-
-		add(selectJoueur2Etiq, contraintes);
-		hote = new JTextField("127.0.0.1:55555");
-		contraintes.gridwidth = 1;
-		add(hote, contraintes_groupe_fin);
-
-		/*
-		 * JLabel tourEtiq = new JLabel("Premier joueur alÃ©atoire : ");
-		 * contraintes.gridwidth = 1; add(tourEtiq,contraintes); JCheckBox tour
-		 * = new JCheckBox(); contraintes.gridwidth =
-		 * GridBagConstraints.REMAINDER;; add(tour,contraintes);
-		 */
+		panneauCentre = new JPanel(new GridLayout(1, 2));
+		panneauCentre.setOpaque(false);
+		this.add(panneauCentre);
+		panneauCentreOuest = new JPanel();
+		panneauCentre.add(panneauCentreOuest);
+		panneauCentreOuest.setOpaque(false);
+		etiqHebergerPort = new JLabel("Votre adresse IP :");
+		panneauCentreOuest.add(etiqHebergerPort);
+		champHebergerPort = new JTextField("55555");
+		panneauCentreOuest.add(champHebergerPort);
+		panneauCentreEst = new JPanel();
+		panneauCentre.add(panneauCentreEst);
+		panneauCentreEst.setOpaque(false);
+		etiqRejoindrePort = new JLabel("IP à rejoindre :");
+		panneauCentreEst.add(etiqRejoindrePort);
+		champRejoindrePort = new JTextField("55555");
+		panneauCentreEst.add(champRejoindrePort);
 
 		message = new JLabel("");
-		message.setForeground(Color.RED);
-		contraintes.gridwidth = GridBagConstraints.REMAINDER;
-		add(message, contraintes);
+		this.add(message);
 
-		Bouton annuler = new Bouton("Annuler");
-		annuler.addActionListener(new Ecouteur(Ecouteur.Bouton.RESEAU_ANNULER, i));
-		contraintes.gridwidth = 1;
-		add(annuler, contraintes);
-		Bouton valider = new Bouton("Valider");
-		valider.addActionListener(new Ecouteur(Ecouteur.Bouton.RESEAU_VALIDER, i));
-		contraintes.gridwidth = GridBagConstraints.REMAINDER;
-
-		add(valider, contraintes);
-
+		JPanel panneauSud = new JPanel();
+		this.add(panneauSud);
+		panneauSud.setOpaque(false);
+		boutonHeberger = new Bouton("Héberger");
+		boutonHeberger.addActionListener(new Ecouteur(Ecouteur.Bouton.RESEAU_HEBERGER, i));
+		panneauSud.add(boutonHeberger);
+		boutonRetour = new Bouton("Retour");
+		boutonRetour.addActionListener(new Ecouteur(Ecouteur.Bouton.RESEAU_RETOUR, i));
+		panneauSud.add(boutonRetour);
+		boutonRejoindre = new Bouton("Rejoindre");
+		boutonRejoindre.addActionListener(new Ecouteur(Ecouteur.Bouton.RESEAU_REJOINDRE, i));
+		panneauSud.add(boutonRejoindre);
 	}
 }
