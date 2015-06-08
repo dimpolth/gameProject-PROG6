@@ -32,7 +32,7 @@ public class PopupOptions extends Popup {
 		}
 	}
 
-	JLabel selectJoueur1Etiq, selectJoueur2Etiq;
+	JLabel selectJoueur1Etiq, selectJoueur2Etiq, themeEtiq;
 	JTextField identifiantJoueur1, identifiantJoueur2;
 	JComboBox<String> selectJoueur1, selectJoueur2;
 
@@ -84,7 +84,7 @@ public class PopupOptions extends Popup {
 
 		add(selectJoueur2, contraintes);
 
-		JLabel themeEtiq = new JLabel("Thème graphique : ");
+		themeEtiq = new JLabel("Thème graphique : ");
 		contraintes.gridwidth = GridBagConstraints.REMAINDER;
 
 		add(themeEtiq, contraintes);

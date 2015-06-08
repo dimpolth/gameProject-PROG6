@@ -224,7 +224,7 @@ public class Moteur {
 	 */
 	public ArrayList<Point> prisePossible(Point p, ArrayList<Point> listePredecesseurs) {
 		ArrayList<Point> listePrise = new ArrayList<Point>();
-		ArrayList<Point> listeMouvement = t.deplacementPossible(p, listePredecesseurs, null);
+		ArrayList<Point> listeMouvement = t.deplacementPossible(p, listePredecesseurs);
 		Iterator<Point> it = listeMouvement.iterator();
 		while (it.hasNext()) {
 			Point temp = (Point) it.next().clone();
@@ -288,7 +288,7 @@ public class Moteur {
 		
 		if (t.getCase(p.x, p.y).getOccupation() != joueurCourant.getJoueurID()) {
 		} else {
-			listePointDebut = t.listePionsJouables(joueurCourant, null);
+			listePointDebut = t.listePionsJouables(joueurCourant);
 			if (listePointDebut.isEmpty())
 				partieTerminee(true);
 			if (listePointDebut.contains(p)) {
@@ -322,7 +322,7 @@ public class Moteur {
 		} else {
 			ArrayList<Point> l = prisePossible(pDepart, h.histoTour);
 			if (l.isEmpty()) {
-				l = t.deplacementPossible(pDepart, h.histoTour, null);
+				l = t.deplacementPossible(pDepart, h.histoTour);
 			}
 			if (l.contains(p)) {
 				pArrive = p;

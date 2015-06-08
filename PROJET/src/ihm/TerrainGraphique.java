@@ -89,6 +89,8 @@ public class TerrainGraphique extends JPanel implements ComponentListener {
 	}
 
 	public void selectionner(Point p) {
+		if (select != null)
+			deselectionner();
 		select = new AnimSelect(pions[p.x][p.y]);
 	}
 
