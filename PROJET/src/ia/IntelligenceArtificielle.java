@@ -139,7 +139,7 @@ public class IntelligenceArtificielle implements Serializable {
 	 */
 	private TourDeJeu coupDifficile(){
 		TourDeJeu tourSolution = new TourDeJeu();
-		int profondeur = 6;
+		int profondeur = 7;
 		int iterateurProf = 0;
 		boolean evalGeometrie = true;
 		

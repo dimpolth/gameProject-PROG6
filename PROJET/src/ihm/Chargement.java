@@ -39,6 +39,7 @@ public class Chargement extends JComponent implements ActionListener {
 	public void cacher() {
 		afficher = false;
 		horloge.stop();
+		repaint();
 	}
 
 	public void paintComponent(Graphics g) {
