@@ -44,6 +44,7 @@ public class TerrainGraphique extends JPanel implements ComponentListener {
 	protected Pion[][] pions;
 
 	protected ArrayList<Point> trait;
+	protected TraitDeplacement td;
 
 	private ArrayList<Point> prisesPossibles = new ArrayList<Point>(2);
 	protected Point pionSelectionne = null;
@@ -63,6 +64,8 @@ public class TerrainGraphique extends JPanel implements ComponentListener {
 				add(pions[j][k]);
 			}
 		}
+		td = new TraitDeplacement();
+		add(td);
 		addComponentListener(this);
 	}
 
@@ -190,6 +193,7 @@ public class TerrainGraphique extends JPanel implements ComponentListener {
 				pions[i][j].componentResized(null);
 			}
 		}
+		td.setBounds(0, 0, getWidth(), getHeight());
 	}
 
 	@Override
