@@ -9,7 +9,7 @@ import modele.Case;
 @SuppressWarnings("serial")
 public class EvenementGraphique implements Runnable, Serializable {
 	public enum FinPartie {
-		VICTOIRE, DEFAITE, AUCUNE
+		VICTOIRE, DEFAITE, AUCUNE, NUL
 	};
 
 	private Case[][] terrain;
@@ -153,8 +153,8 @@ public class EvenementGraphique implements Runnable, Serializable {
 		} else {
 			EvenementGraphique.animationEnCours = false;
 		}
-		if(finPartie == FinPartie.VICTOIRE) {
-			tg.ihm.popupV.lancer();
+		if(finPartie != FinPartie.AUCUNE) {
+			tg.ihm.popupV.lancer(finPartie);
 		}
 	}
 

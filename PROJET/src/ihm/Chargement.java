@@ -15,7 +15,7 @@ import javax.swing.Timer;
 @SuppressWarnings("serial")
 public class Chargement extends JComponent implements ActionListener {
 	private double facteur;
-	private Image img;
+	protected Image img;
 	private boolean afficher;
 	private Timer horloge;
 
@@ -39,6 +39,7 @@ public class Chargement extends JComponent implements ActionListener {
 	public void cacher() {
 		afficher = false;
 		horloge.stop();
+		repaint();
 	}
 
 	public void paintComponent(Graphics g) {

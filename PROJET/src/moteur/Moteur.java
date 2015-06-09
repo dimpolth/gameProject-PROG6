@@ -269,14 +269,9 @@ public class Moteur {
 	}
 
 	/**
-	 * <<<<<<< HEAD 
 	 * Etat de l'automate où le moteur reçoit le pion sélectionné par le joueur ou l'IA. Test si le pion sélectionné correspond aux règles.
 	 * * @param p
 	 *            Pion sélectionné
-	 * ======= 
-	 * Etat de l'automate où le moteur reçoit le pion sélectionné par le joueur ou l'IA. Test si le pion sélectionné correspond aux règles.
-	 * @param p
-	 *            Pion sélectionné >>>>>>> branch 'master' of https://github.com/dimpolth/gameProject-PROG6.git
 	 */
 	public void selectionPion(Point p) {
 		tourEnCours = false;

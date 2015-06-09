@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.Point;
 import java.awt.Toolkit;
@@ -108,7 +109,16 @@ public class IHM extends JFrame implements ComponentListener {
 
 		theme = new Theme(this);
 
-		coucheJeu = new JPanel(new BorderLayout());
+		coucheJeu = new JPanel(new BorderLayout()) {
+			@Override
+			public void paintComponent(Graphics g) {
+				for(int i=0 ; i<getWidth() ; i += theme.imgFond.getWidth(this)) {
+					for(int j=0 ; j<getHeight() ; j += theme.imgFond.getHeight(this)) {
+						g.drawImage(theme.imgFond, i, j, theme.imgFond.getWidth(this), theme.imgFond.getHeight(this), null);
+					}
+				}
+			}
+		};
 		coucheJeu.setBounds(0, 0, getSize().width, getSize().height);
 		add(coucheJeu);
 
@@ -449,10 +459,6 @@ public class IHM extends JFrame implements ComponentListener {
 		}
 	}
 
-	public void envoyerIdentifiantReseau() {
-
-	}
-
 	/**
 	 * Création de la mini-fenêtre.
 	 * @param b Vrai si on affiche, faux sinon.
@@ -619,6 +625,16 @@ public class IHM extends JFrame implements ComponentListener {
 				bandeauInfos.setIdentifiant(1, params.j1_identifiant);
 			if (params.j2_identifiant != null)
 				bandeauInfos.setIdentifiant(2, params.j2_identifiant);
+		}
+		
+		if((dataValue = e.get("chargement")) != null){
+			
+			if((boolean) dataValue == true){
+				System.out.println("Chargement");
+				chargement.afficher();
+			}
+			else
+				chargement.cacher();
 		}
 		
 
