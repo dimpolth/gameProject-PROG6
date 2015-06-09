@@ -36,11 +36,12 @@ class AnimDeplacement extends Animation {
 		horloge.start();
 	}
 
-	@Override
+	
 	/**
 	 * Effectue l'animation lors de la récéption d'un évènement.
 	 * @param e Evènement déclacheur.
 	 */
+	@Override
 	public void actionPerformed(ActionEvent e) {
 
 		long actuel = System.currentTimeMillis();

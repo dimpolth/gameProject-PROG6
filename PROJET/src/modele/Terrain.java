@@ -709,7 +709,6 @@ public class Terrain implements Serializable {
 	 * Détermine quels sont les déplacements possibles
 	 * @param p Point à partir du quel on veut déterminer les déplacements possibles.
 	 * @param listePredecesseurs ArrayList de Points. Liste des points par lesquels est passé le pion durant le tour.
-	 * @param copieTerrainEventuelle Terrain. Utilisé par l'IA pour simuler des coups.
 	 * @return ArrayList de Points. Liste des emplacements vers lequel le pion courant peut se déplacer.
 	 */
 	public ArrayList<Point> deplacementPossible(Point p, ArrayList<Point> listePredecesseurs) {
@@ -740,8 +739,7 @@ public class Terrain implements Serializable {
 	/**
 	 * Génère une liste de pions jouables
 	 * @param j Joueur courant.
-	 * @param copieTerrainEventuelle Vrai si une copie du terrain doit être faite, faux sinon. Utilisé par l'IA.
-	 * @return
+	 * @return Liste des pions jouables par le joueur.
 	 */
 	public ArrayList<Point> listePionsJouables(Joueur j) {
 		Terrain terr = this;

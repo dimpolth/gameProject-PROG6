@@ -86,7 +86,8 @@ public class Historique implements Serializable {
 	
 	/**
 	 * Ajoute un coup à l'historique du tour.
-	 * @param p Le point où s'est déplacé un pion.
+	 * @param pDepart Le point de départ du pion.
+	 * @param pArrive Le point d'arrivé du point.
 	 */
 	public void ajouterCoup(Point pDepart,Point pArrive) {
 		histoTour.add((Point)pDepart.clone());

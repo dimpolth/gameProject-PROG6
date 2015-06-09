@@ -143,13 +143,7 @@ public class Moteur {
 
 	/**
 	 * Constructeur utilisé dans le cas d'un chargement de partie.
-<<<<<<< HEAD
-	 * 
-	 * @param t
-	 *            Le terrain à charger pour reprendre la partie.
-=======
 	 * @param t Le terrain à charger pour reprendre la partie.
->>>>>>> branch 'master' of https://github.com/dimpolth/gameProject-PROG6.git
 	 */
 	public Moteur(Terrain t) {
 		this.t = t;
@@ -242,17 +236,9 @@ public class Moteur {
 
 	/**
 	 * Test à chaque fin de tour si la partie est terminée.
-<<<<<<< HEAD
-	 * 
-	 * @param aucunDeplacement
-	 *            Permet de savoir si la partie est bloquée.
-	 * @return Vrai si la partie a été gagnée par un joueur, si elle est bloquée
-	 *         ou si c'est un match nul. Faux sinon.
-=======
 	 * @param aucunDeplacement Permet de savoir si la partie est bloquée.
 	 * @return Vrai si la partie a été gagnée par un joueur, si elle est bloquée ou si c'est un match nul.
 	 * Faux sinon.
->>>>>>> branch 'master' of https://github.com/dimpolth/gameProject-PROG6.git
 	 */
 	public boolean partieTerminee(boolean aucunDeplacement) {
 		ech.vider();
@@ -293,17 +279,9 @@ public class Moteur {
 	}
 
 	/**
-<<<<<<< HEAD
-	 * Etat de l'automate où le moteur reçoit le pion sélectionné par le joueur
-	 * ou l'IA. Test si le pion sélectionné correspond aux règles.
-	 * 
-	 * @param p
-	 *            Pion sélectionné
-=======
 	 * Etat de l'automate où le moteur reçoit le pion sélectionné par le joueur ou l'IA.
 	 * Test si le pion sélectionné correspond aux règles. 
 	 * @param p Pion sélectionné
->>>>>>> branch 'master' of https://github.com/dimpolth/gameProject-PROG6.git
 	 */
 	public void selectionPion(Point p) {
 		tourEnCours = false;
@@ -328,17 +306,9 @@ public class Moteur {
 	}
 
 	/**
-<<<<<<< HEAD
-	 * Etat de l'automate où le moteur reçoit la destination sélectionnée par le
-	 * joueur ou l'IA Test si la destination est conforme aux règles.
-	 * 
-	 * @param p
-	 *            Point sélectionné pour effectuer un déplacement.
-=======
 	 * Etat de l'automate où le moteur reçoit la destination sélectionnée par le joueur ou l'IA
 	 * Test si la destination est conforme aux règles.
 	 * @param p Point sélectionné pour effectuer un déplacement.
->>>>>>> branch 'master' of https://github.com/dimpolth/gameProject-PROG6.git
 	 */
 	public void selectionDestination(Point p) {
 		if (!tourEnCours && listePointDebut.contains(p)) {
@@ -497,13 +467,7 @@ public class Moteur {
 
 	/**
 	 * Met à jour le score de l'adversaire du joueur courant après une prise.
-<<<<<<< HEAD
-	 * 
-	 * @param nbPionsManges
-	 *            Nombre de pions mangés à l'adversaire
-=======
 	 * @param nbPionsManges Nombre de pions mangés à l'adversaire.
->>>>>>> branch 'master' of https://github.com/dimpolth/gameProject-PROG6.git
 	 */
 	public void majScore(int nbPionsManges) {
 		Joueur.recupereJoueurOpposant(joueurCourant, j1, j2, false).setScore(nbPionsManges);
@@ -511,16 +475,8 @@ public class Moteur {
 
 	/**
 	 * Envoie un message à afficher sur un bandeau de l'IHM.
-<<<<<<< HEAD
-	 * 
-	 * @param destination
-	 *            Bandeau de destination.
-	 * @param message
-	 *            Message à afficher.
-=======
 	 * @param destination Bandeau de destination.
 	 * @param message Message à afficher.
->>>>>>> branch 'master' of https://github.com/dimpolth/gameProject-PROG6.git
 	 */
 	public void message(String destination, String message) {
 		ech.vider();
@@ -529,22 +485,6 @@ public class Moteur {
 	}
 
 	/**
-<<<<<<< HEAD
-	 * Envoie toutes les informations necessaires à l'IHM pour réaliser
-	 * l'actualisation de l'affichage lié à un coup.
-	 * 
-	 * @param deplacement
-	 *            Tableau de deux Points contenant le point de départ et le
-	 *            point d'arrivé. Peut être à null en fonction de la situation.
-	 * @param choixPrise
-	 *            Tableau de deux Points contenant un choix à faire entre une
-	 *            prise par aspiration ou par percussion. Peut être null s'il
-	 *            n'y a pas de choix à faire.
-	 * @param pionsManges
-	 *            Liste des pions mangés pendant le coup.
-	 * @param score
-	 *            Score des joueurs mis à jour en fonctions des pions mangés.
-=======
 	 * Envoie toutes les informations necessaires à l'IHM pour réaliser l'actualisation de l'affichage lié à un coup.
 	 * @param deplacement Tableau de deux Points contenant le point de départ et le point d'arrivé.
 	 * Peut être à null en fonction de la situation.
@@ -552,7 +492,6 @@ public class Moteur {
 	 * Peut être null s'il n'y a pas de choix à faire.
 	 * @param pionsManges Liste des pions mangés pendant le coup.
 	 * @param score Score des joueurs mis à jour en fonctions des pions mangés.
->>>>>>> branch 'master' of https://github.com/dimpolth/gameProject-PROG6.git
 	 */
 	public void gestionEvenementGraphique(Point[] deplacement, Point[] choixPrise, ArrayList<Point> pionsManges, int[] score) {
 		ech.vider();
@@ -562,26 +501,6 @@ public class Moteur {
 	}
 
 	/**
-<<<<<<< HEAD
-	 * Surchage de gestionEvenementGraphique pour le cas ou on coup inclut un
-	 * changement de bandeau.
-	 * 
-	 * @param deplacement
-	 *            Tableau de deux Points contenant le point de départ et le
-	 *            point d'arrivé. Peut être à null en fonction de la situation.
-	 * @param choixPrise
-	 *            Tableau de deux Points contenant un choix à faire entre une
-	 *            prise par aspiration ou par percussion. Peut être null s'il
-	 *            n'y a pas de choix à faire.
-	 * @param pionsManges
-	 *            Liste des pions mangés pendant le coup.
-	 * @param score
-	 *            Score des joueurs mis à jour en fonctions des pions mangés.
-	 * @param chaine1
-	 *            Définie sur quel bandeau ira le message.
-	 * @param chaine2
-	 *            Le message à afficher sur le bandeau.
-=======
 	 * Surchage de gestionEvenementGraphique pour le cas ou on coup inclut un changement de bandeau.
 	 * @param deplacement Tableau de deux Points contenant le point de départ et le point d'arrivé.
 	 * Peut être à null en fonction de la situation.
@@ -591,7 +510,6 @@ public class Moteur {
 	 * @param score Score des joueurs mis à jour en fonctions des pions mangés.
 	 * @param chaine1 Définie sur quel bandeau ira le message.
 	 * @param chaine2 Le message à afficher sur le bandeau.
->>>>>>> branch 'master' of https://github.com/dimpolth/gameProject-PROG6.git
 	 */
 	public void gestionEvenementGraphique(Point[] deplacement, Point[] choixPrise, ArrayList<Point> pionsManges, int[] score, String chaine1, String chaine2) {
 		ech.vider();
