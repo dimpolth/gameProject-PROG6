@@ -1,9 +1,6 @@
 package ihm;
 
-import ihm.EvenementGraphique.FinPartie;
-
 import java.awt.BasicStroke;
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -14,7 +11,6 @@ import java.awt.event.ComponentListener;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 import modele.Case;
@@ -71,7 +67,6 @@ public class TerrainGraphique extends JPanel implements ComponentListener {
 
 	public void dessinerTerrain(Case[][] c) {
 		ihm.popupV.arreter();
-		ihm.popupV.lancer(FinPartie.VICTOIRE);
 		deselectionner();
 		for (int i = 0; i < 5; i++) {
 			for (int j = 0; j < 9; j++) {
@@ -156,7 +151,7 @@ public class TerrainGraphique extends JPanel implements ComponentListener {
 			int d = (int) (dim.echelle / 4);
 			Point p = trait.get(0);
 			gra.setStroke(new BasicStroke(6));
-			gra.setColor(ihm.theme.couleurChemin);
+			gra.setColor(Theme.couleurChemin);
 			for (int i = 1; i < trait.size(); i++) {
 				gra.drawLine((int) ((p.y + 0.5) * dim.echelle + dim.origX) + d, (int) ((p.x + 0.5) * dim.echelle + dim.origY) + d, (int) ((trait.get(i).y + 0.5) * dim.echelle + dim.origX) + d, (int) ((trait.get(i).x + 0.5) * dim.echelle + dim.origY) + d);
 				gra.fillOval((int) ((p.y + 0.5) * dim.echelle + dim.origX) + d - 10, (int) ((p.x + 0.5) * dim.echelle + dim.origY) + d - 10, 20, 20);
