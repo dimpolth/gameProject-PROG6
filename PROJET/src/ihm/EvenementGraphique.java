@@ -9,7 +9,7 @@ import modele.Case;
 @SuppressWarnings("serial")
 public class EvenementGraphique implements Runnable, Serializable {
 	public enum FinPartie {
-		VICTOIRE, DEFAITE, AUCUNE
+		VICTOIRE, DEFAITE, AUCUNE, NUL
 	};
 
 	private Case[][] terrain;

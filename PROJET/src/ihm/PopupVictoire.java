@@ -54,13 +54,13 @@ public class PopupVictoire extends JPanel implements ActionListener {
 		fin = f;
 		if (fin == FinPartie.VICTOIRE) {
 			horloge.start();
-		} else if (fin == FinPartie.DEFAITE) {
+		} else {
 			repaint();
 		}
 	}
 
 	public void arreter() {
-		if (fin == FinPartie.DEFAITE) {
+		if (fin != FinPartie.VICTOIRE) {
 			setVisible(false);
 		} else {
 			setVisible(false);
@@ -71,14 +71,21 @@ public class PopupVictoire extends JPanel implements ActionListener {
 
 	@Override
 	protected void paintComponent(Graphics g) {
-		if (fin == FinPartie.DEFAITE) {
+		if (fin == FinPartie.NUL) {
 			g.setColor(new Color(0, 0, 0, 96));
 			g.fillRect(0, 0, getWidth(), getHeight());
 			g.setColor(Theme.couleurTImportant);
 			Font f = new Font(" TimesRoman ",Font.BOLD+Font.ITALIC,50);
 			g.setFont(f);
-			g.drawString("Défaite !", getWidth()/2-121, getHeight()/2-18);
-		} else {
+			g.drawString("Match Nul", getWidth()/2-121, getHeight()/2-18);
+		}else if (fin == FinPartie.DEFAITE) {
+				g.setColor(new Color(0, 0, 0, 96));
+				g.fillRect(0, 0, getWidth(), getHeight());
+				g.setColor(Theme.couleurTImportant);
+				Font f = new Font(" TimesRoman ",Font.BOLD+Font.ITALIC,50);
+				g.setFont(f);
+				g.drawString("Défaite !", getWidth()/2-121, getHeight()/2-18);
+		} else if (fin == FinPartie.VICTOIRE){
 			Graphics2D gra = (Graphics2D) g;
 			Iterator<Fusee> it = fusees.iterator();
 			while (it.hasNext()) {
