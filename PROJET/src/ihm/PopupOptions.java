@@ -143,6 +143,7 @@ public class PopupOptions extends Popup {
 	
 	public void bloquer(boolean b){
 		
+		//System.out.println("Bloquer: "+b+" donc inverse = "+!b);
 		identifiantJoueur1.setEnabled(!b);
 		identifiantJoueur2.setEnabled(!b);
 		

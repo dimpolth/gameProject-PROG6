@@ -12,7 +12,7 @@ public class EvenementGraphique implements Runnable, Serializable {
 		VICTOIRE, DEFAITE, AUCUNE, NUL
 	};
 	
-	private static TerrainGraphique tg;
+	private static TerrainGraphique tg=null;
 	public static boolean animationEnCours = false;
 		
 	private Case[][] terrain;
@@ -51,8 +51,7 @@ public class EvenementGraphique implements Runnable, Serializable {
 		choixPrise = null;
 		pionsManges = null;
 		chemin = null;
-		score = null;
-		tg = null;
+		score = null;		
 		bandeauSup = null;
 		bandeauInf = null;
 	}
@@ -63,8 +62,7 @@ public class EvenementGraphique implements Runnable, Serializable {
 		choixPrise = null;
 		pionsManges = null;
 		chemin = null;
-		score = null;
-		tg = null;
+		score = null;		
 		bandeauSup = null;
 		bandeauInf = null;
 		this.chemin = new ArrayList<Point>();
@@ -185,10 +183,9 @@ public class EvenementGraphique implements Runnable, Serializable {
 	public static void animationEnCours(boolean b){
 		EvenementGraphique.animationEnCours = b;
 		tg.ihm.popupO.bloquer(b);	
-		try{
-			tg.ihm.popupM.bloquerSauverCharger(b);
-		}
-		catch(Exception e){			
-		}
+		tg.ihm.popupM.bloquerSauverCharger(b);
+		
+			
+		
 	}
 }
