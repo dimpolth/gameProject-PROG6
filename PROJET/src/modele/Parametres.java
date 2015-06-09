@@ -27,6 +27,18 @@ public class Parametres implements Serializable{
 				return DIFFICILE;
 			}
 		}
+		static public int getToIndex(NiveauJoueur  e) {
+			switch(e) {
+			case HUMAIN:
+				return 0;
+			case FACILE:
+				return 1;
+			case MOYEN:
+				return 2;
+			default:
+				return 3;
+			}
+		}
 	}
 	
 	/**

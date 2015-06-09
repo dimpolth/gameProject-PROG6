@@ -103,12 +103,12 @@ public class EvenementGraphique implements Runnable, Serializable {
 		if (terrain != null) {
 			
 			tg.dessinerTerrain(terrain);
-
-			latence(200);
+			latence(300);
 		}
 
 		if (deplacement != null) {
-			tg.deplacer(deplacement[0], deplacement[1]);
+			System.out.println(deplacement[0]+"-"+deplacement[1]);
+			tg.deplacer(deplacement[0], deplacement[1]);			
 			latence(TerrainGraphique.ANIM_DEPL);
 		}
 
@@ -184,6 +184,11 @@ public class EvenementGraphique implements Runnable, Serializable {
 	
 	public static void animationEnCours(boolean b){
 		EvenementGraphique.animationEnCours = b;
-		tg.ihm.popupO.bloquer(b);		 
+		tg.ihm.popupO.bloquer(b);	
+		try{
+			tg.ihm.popupM.bloquerSauverCharger(b);
+		}
+		catch(Exception e){			
+		}
 	}
 }

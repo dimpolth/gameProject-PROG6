@@ -38,7 +38,7 @@ class Client implements Runnable{
 	
 	// DECONNEXION DU SERVEUR
 	public void deconnexion(){		
-		
+		envoyer("/QUIT");
 		try{
 			socket.close();		
 		}
@@ -87,7 +87,8 @@ class Client implements Runnable{
 					
 					com.recevoir(recu,0);					
 				}
-				catch (Exception ex) {				
+				catch (Exception ex) {
+					ex.printStackTrace();
 					deconnexion();
 				}
 				

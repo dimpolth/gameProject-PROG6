@@ -17,7 +17,7 @@ public class PopupOptions extends Popup {
 
 	public enum TypeJoueur {
 
-		HUMAIN("Humain"), IA1("IA Facile"), IA2("IA moyenne"), IA3("IA difficile");
+		HUMAIN("Humain"), IA1("IA facile"), IA2("IA moyenne"), IA3("IA difficile");
 
 		private String texte;
 
@@ -142,9 +142,10 @@ public class PopupOptions extends Popup {
 	}
 	
 	public void bloquer(boolean b){
-
+		
 		identifiantJoueur1.setEnabled(!b);
 		identifiantJoueur2.setEnabled(!b);
+		
 		selectJoueur1.setEnabled(!b);
 		selectJoueur2.setEnabled(!b);
 		

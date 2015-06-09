@@ -37,6 +37,14 @@ public class Communication {
 		
 	}
 	
+	public static void quitterReseau(){
+		Communication.canaux[ Communication.IHM ].client.deconnexion();
+		reseau=false;
+		Communication.canaux[ Communication.MOTEUR ].serveur=null;
+		Communication.canaux[ Communication.IHM ].serveur=null;
+		Communication.canaux[ Communication.MOTEUR ].client=null;
+		Communication.canaux[ Communication.IHM ].serveur=null;
+	}
 	
 	public static int reseauHeberger(int port){
 		if(port != 0){

@@ -74,7 +74,7 @@ public class Joueur implements Serializable {
 	public Joueur(Case.Etat joueurID, typeJoueur joueur, IntelligenceArtificielle.difficulteIA niveau, Joueur adversaire, Terrain t){
 		this.setJoueurID(joueurID);
 		resetScore();
-		this.nom = "Ordinateur";
+		this.nom = "Joueur";
 		this.setJoueurHumain(false);
 		ia = new IntelligenceArtificielle(niveau, this, adversaire, t);
 	}

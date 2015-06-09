@@ -5,8 +5,6 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
-import java.util.Random;
-
 import javax.swing.JComponent;
 import javax.swing.Timer;
 
@@ -83,7 +81,7 @@ class TraitDeplacement extends JComponent {
 	public void paintComponent(Graphics g) {
 		Graphics2D gra = (Graphics2D)g;
 		if (pion != null) {
-			gra.setColor(pion.tg.ihm.theme.couleurChemin);
+			gra.setColor(Theme.couleurChemin);
 			gra.setStroke(new BasicStroke(6));
 			int d = (int) (pion.dim.echelle / 4);
 			gra.fillOval((int) ((depart.y + 0.5) * pion.dim.echelle + pion.dim.origX) + d - 10, (int) ((depart.x + 0.5) * pion.dim.echelle + pion.dim.origY) + d - 10, 20, 20);
