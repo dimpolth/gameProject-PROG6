@@ -4,10 +4,23 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.Timer;
 
+/**
+ * Classe gérant les animations de séléction.
+ */
 public class AnimSelect extends Animation {
+	/**
+	 * Définit si l'animation est croissante ou décroissante.
+	 */
 	private boolean grandir;
+	/**
+	 * Averti si l'animation doit s'arrêter.
+	 */
 	private boolean stop;
-
+	
+	/**
+	 * Constructeur unique.
+	 * @param p Pion à animer.
+	 */
 	public AnimSelect(Pion p) {
 		pion = p;
 		tempsDepart = System.currentTimeMillis();
@@ -17,11 +30,18 @@ public class AnimSelect extends Animation {
 		horloge.start();
 	}
 
+	/**
+	 * Arrête l'animation.
+	 */
 	public void stop() {
 		stop = true;
 	}
 
 	@Override
+	/**
+	 * Lance l'animation du pion.
+	 * @param e Action qui initie l'animation.
+	 */
 	public void actionPerformed(ActionEvent e) {
 		long actuel = System.currentTimeMillis();
 		if (actuel - tempsDepart > TerrainGraphique.ANIM_SELECT) {

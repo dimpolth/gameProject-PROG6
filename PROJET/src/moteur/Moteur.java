@@ -5,21 +5,19 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import javax.jws.soap.SOAPBinding.ParameterStyle;
-
 import ia.*;
 import ihm.*;
 import modele.*;
 import modele.Case.Etat;
+import modele.Terrain.Direction;
 import modele.Parametres.NiveauJoueur;
 //import modele.Joueur.typeJoueur;
 import reseau.*;
 
 /**
- *Classe contenant l'ensemble des règles du jeu.
- *Fait office de contrôleur et donne les instructions d'affichage à l'IHM.
- *Instancie les classes Terrain et IHM.
- *Fonctionne comme un automate.
+ * Classe contenant l'ensemble des règles du jeu. Fait office de contrôleur et
+ * donne les instructions d'affichage à l'IHM. Instancie les classes Terrain et
+ * IHM. Fonctionne comme un automate.
  */
 public class Moteur {
 	public static void main(String[] args) {
@@ -33,7 +31,7 @@ public class Moteur {
 	}
 
 	/**
-	 *Définit les différents états de l'automate
+	 * Définit les différents états de l'automate
 	 */
 	public enum EtatTour {
 		/**
@@ -112,7 +110,8 @@ public class Moteur {
 	 */
 	private boolean tourEnCours;
 	/**
-	 * Liste des points jouables en début de tour (coups obligatoires ou disponibilité de coups libres).
+	 * Liste des points jouables en début de tour (coups obligatoires ou
+	 * disponibilité de coups libres).
 	 */
 	private ArrayList<Point> listePointDebut;
 	/**
@@ -128,22 +127,29 @@ public class Moteur {
 	 * Nombre de coups sans prise.
 	 */
 	private int compteurNul;
-	
-	private long instance;
 
+	/**
+	 * Intelligence artificelle utiliser pour l'aide.
+	 */
+	private IntelligenceArtificielle iaAide;
 
 	/**
 	 * Constructeur par défaut.
 	 */
 	public Moteur() {
-		instance=System.currentTimeMillis();
-		j1 = new Joueur(Case.Etat.joueur1, Joueur.typeJoueur.humain, "Joueur 1");		
+		j1 = new Joueur(Case.Etat.joueur1, Joueur.typeJoueur.humain, "Joueur 1");
 		j2 = new Joueur(Case.Etat.joueur2, Joueur.typeJoueur.ordinateur, IntelligenceArtificielle.difficulteIA.normal, j1, t);
 	}
 
 	/**
 	 * Constructeur utilisé dans le cas d'un chargement de partie.
+<<<<<<< HEAD
+	 * 
+	 * @param t
+	 *            Le terrain à charger pour reprendre la partie.
+=======
 	 * @param t Le terrain à charger pour reprendre la partie.
+>>>>>>> branch 'master' of https://github.com/dimpolth/gameProject-PROG6.git
 	 */
 	public Moteur(Terrain t) {
 		this.t = t;
@@ -159,29 +165,29 @@ public class Moteur {
 	public void init() {
 		t = new Terrain();
 
-		//t.TerrainTest(11);
+		// t.TerrainTest(11);
 		j1.resetScore();
 		j2.resetScore();
 		h = new Historique();
 		h.ajouterTour(t);
 		ech = new Echange();
 		listePointDebut = new ArrayList<Point>();
-		
+
 		// j2 = new Joueur(Case.Etat.joueur2, Joueur.typeJoueur.humain,
 		// "Joueur 2");
 		// j1 = new Joueur(Case.Etat.joueur1, Joueur.typeJoueur.ordinateur,
 		// IntelligenceArtificielle.difficulteIA.facile, j2, this);
-		
+
 		joueurCourant = j1;
 		compteurNul = 0;
-		//calculerScore();
-		
-		//message("bandeauSup", joueurCourant.getNom());
-		//message("bandeauInf", "Selection du pion");
-		
-	    gestionEvenementGraphique(joueurCourant.getNom(),"Selection du pion",joueurCourant.getJoueurID().getNum());
-		
-	    if (joueurCourant.isJoueurHumain()) {
+		// calculerScore();
+
+		// message("bandeauSup", joueurCourant.getNom());
+		// message("bandeauInf", "Selection du pion");
+
+		gestionEvenementGraphique(joueurCourant.getNom(), "Selection du pion", joueurCourant.getJoueurID().getNum());
+
+		if (joueurCourant.isJoueurHumain()) {
 			e = EtatTour.selectionPion;
 		} else {
 			e = EtatTour.jeuxIa;
@@ -189,25 +195,23 @@ public class Moteur {
 		}
 
 	}
-	
-	
-	public void init(Object dataValue){
+
+	public void init(Object dataValue) {
 		t = new Terrain();
 
-		//t.TerrainTest(11);
-		
+		// t.TerrainTest(11);
 
 		h = new Historique();
 		h.ajouterTour(t);
 		ech = new Echange();
 		listePointDebut = new ArrayList<Point>();
 		actionParametre(dataValue);
-		
-		//message("bandeauSup", joueurCourant.getNom());
-		//message("bandeauInf", "Selection du pion");
-		
-		gestionEvenementGraphique(joueurCourant.getNom(),"Selection du pion");
-		
+
+		// message("bandeauSup", joueurCourant.getNom());
+		// message("bandeauInf", "Selection du pion");
+
+		gestionEvenementGraphique(joueurCourant.getNom(), "Selection du pion");
+
 		if (joueurCourant.isJoueurHumain()) {
 			e = EtatTour.selectionPion;
 		} else {
@@ -235,12 +239,20 @@ public class Moteur {
 		}
 		return listePrise;
 	}
-	
+
 	/**
 	 * Test à chaque fin de tour si la partie est terminée.
+<<<<<<< HEAD
+	 * 
+	 * @param aucunDeplacement
+	 *            Permet de savoir si la partie est bloquée.
+	 * @return Vrai si la partie a été gagnée par un joueur, si elle est bloquée
+	 *         ou si c'est un match nul. Faux sinon.
+=======
 	 * @param aucunDeplacement Permet de savoir si la partie est bloquée.
 	 * @return Vrai si la partie a été gagnée par un joueur, si elle est bloquée ou si c'est un match nul.
 	 * Faux sinon.
+>>>>>>> branch 'master' of https://github.com/dimpolth/gameProject-PROG6.git
 	 */
 	public boolean partieTerminee(boolean aucunDeplacement) {
 		ech.vider();
@@ -248,21 +260,21 @@ public class Moteur {
 			Joueur gagnant = joueurCourant.recupereJoueurOpposant(joueurCourant, j1, j2, false);
 			Joueur perdant = joueurCourant;
 			System.out.println("FIN DE PARTIE");
-			String BandeauSup = "<html><font color=#FF0000>" + gagnant.getNom() + "</font></html>";
-			String BandeauInf = "<html><font color=#FF0000>a remporté la partie</font></html>";
+			String BandeauSup = gagnant.getNom();
+			String BandeauInf = "a remporté la partie";
 			EvenementGraphique cgv = new EvenementGraphique(BandeauSup, BandeauInf, EvenementGraphique.FinPartie.VICTOIRE);
 			EvenementGraphique cgd = new EvenementGraphique(BandeauSup, BandeauInf, EvenementGraphique.FinPartie.DEFAITE);
-			if(com.enReseau()) {
+			if (com.enReseau()) {
 				ech.ajouter("coup", cgv);
 				com.envoyer(ech, gagnant.getJoueurID().getNum());
 				ech.vider();
 				ech.ajouter("coup", cgd);
 				com.envoyer(ech, perdant.getJoueurID().getNum());
 			} else {
-				if(j1.isJoueurHumain() == j2.isJoueurHumain())
+				if (j1.isJoueurHumain() == j2.isJoueurHumain())
 					gestionEvenementGraphique(BandeauSup, BandeauInf, EvenementGraphique.FinPartie.VICTOIRE);
 				else {
-					if(joueurCourant.isJoueurHumain())
+					if (joueurCourant.isJoueurHumain())
 						gestionEvenementGraphique(BandeauSup, BandeauInf, EvenementGraphique.FinPartie.DEFAITE);
 					else
 						gestionEvenementGraphique(BandeauSup, BandeauInf, EvenementGraphique.FinPartie.VICTOIRE);
@@ -271,22 +283,31 @@ public class Moteur {
 			gestionEvenementGraphique(BandeauSup, BandeauInf);
 			com.envoyer(ech);
 			return true;
-		} else if(compteurNul == 24) {
-			String BandeauSup = "<html><font color=#FF0000>Match nul</font></html>";
-			String BandeauInf = "<html><font color=#FF0000>Trop de coups sans prise joués</font></html>";
+		} else if (compteurNul == 24) {
+			String BandeauSup = "Match nul";
+			String BandeauInf = "Trop de coups sans prise joués";
 			gestionEvenementGraphique(BandeauSup, BandeauInf);
 			return true;
 		}
-			return false;
+		return false;
 	}
+
 	/**
+<<<<<<< HEAD
+	 * Etat de l'automate où le moteur reçoit le pion sélectionné par le joueur
+	 * ou l'IA. Test si le pion sélectionné correspond aux règles.
+	 * 
+	 * @param p
+	 *            Pion sélectionné
+=======
 	 * Etat de l'automate où le moteur reçoit le pion sélectionné par le joueur ou l'IA.
 	 * Test si le pion sélectionné correspond aux règles. 
 	 * @param p Pion sélectionné
+>>>>>>> branch 'master' of https://github.com/dimpolth/gameProject-PROG6.git
 	 */
 	public void selectionPion(Point p) {
 		tourEnCours = false;
-		
+
 		if (t.getCase(p.x, p.y).getOccupation() != joueurCourant.getJoueurID()) {
 		} else {
 			listePointDebut = t.listePionsJouables(joueurCourant);
@@ -296,20 +317,28 @@ public class Moteur {
 				pDepart = p;
 				if (joueurCourant.isJoueurHumain()) {
 					ech.vider();
-					;//System.out.println("ON est passé a selection direction");
 					ech.ajouter("pionSelectionne", pDepart);
 					com.envoyer(ech);
+					e = EtatTour.selectionDestination;
 				}
-				message("bandeauInf", "Choisir la destination");
-				e = EtatTour.selectionDestination;
+				gestionEvenementGraphique(null, "Choisir la destination");
+
 			}
 		}
 	}
-	
+
 	/**
+<<<<<<< HEAD
+	 * Etat de l'automate où le moteur reçoit la destination sélectionnée par le
+	 * joueur ou l'IA Test si la destination est conforme aux règles.
+	 * 
+	 * @param p
+	 *            Point sélectionné pour effectuer un déplacement.
+=======
 	 * Etat de l'automate où le moteur reçoit la destination sélectionnée par le joueur ou l'IA
 	 * Test si la destination est conforme aux règles.
 	 * @param p Point sélectionné pour effectuer un déplacement.
+>>>>>>> branch 'master' of https://github.com/dimpolth/gameProject-PROG6.git
 	 */
 	public void selectionDestination(Point p) {
 		if (!tourEnCours && listePointDebut.contains(p)) {
@@ -348,7 +377,7 @@ public class Moteur {
 	public void prise(boolean priseAspi, boolean prisePercu) {
 		Terrain.Direction d = t.recupereDirection(pDepart, pArrive);
 		ArrayList<Point> l = new ArrayList<Point>();
-		h.ajouterCoup(pDepart);
+		h.ajouterCoup(pDepart, pArrive);
 		if (priseAspi && prisePercu) {
 			compteurNul = 0;
 			Terrain.ChoixPrise choix;
@@ -369,40 +398,40 @@ public class Moteur {
 				int[] score = { j1.getScore(), j2.getScore() };
 
 				gestionEvenementGraphique(null, null, l, score);
-				//traceTerrain();
+				// traceTerrain();
 
 			}
 		} else if (priseAspi && !prisePercu) {
 			compteurNul = 0;
-			//System.out.println("aspi");
+			// System.out.println("aspi");
 			l = t.manger(joueurCourant, d, pDepart, pArrive, Terrain.ChoixPrise.parAspiration);
 			majScore(l.size());
 			int[] score = { j1.getScore(), j2.getScore() };
 
 			gestionEvenementGraphique(null, null, l, score);
-			//traceTerrain();
+			// traceTerrain();
 
 			if (joueurCourant.isJoueurHumain()) {
 				testFinTour();
 				ech.vider();
 				ech.ajouter("finTour", true);
-				com.envoyer(ech,joueurCourant.getJoueurID().getNum());
+				com.envoyer(ech, joueurCourant.getJoueurID().getNum());
 			}
 
 		} else if (!priseAspi && prisePercu) {
 			compteurNul = 0;
-			//System.out.println("percu");
+			// System.out.println("percu");
 			l = t.manger(joueurCourant, d, pDepart, pArrive, Terrain.ChoixPrise.parPercussion);
 			majScore(l.size());
 			int[] score = { j1.getScore(), j2.getScore() };
 
 			gestionEvenementGraphique(null, null, l, score);
-			//traceTerrain();
+			// traceTerrain();
 			if (joueurCourant.isJoueurHumain()) {
 				testFinTour();
 				ech.vider();
 				ech.ajouter("finTour", true);
-				com.envoyer(ech,joueurCourant.getJoueurID().getNum());
+				com.envoyer(ech, joueurCourant.getJoueurID().getNum());
 			}
 		} else {
 			compteurNul++;
@@ -410,13 +439,14 @@ public class Moteur {
 				finTour();
 		}
 	}
-	 /**
-	  * Termine le tour en cours et change le joueur courant.
-	  * Peut être appelée automatiquement si le joueur courant ne peut plus effectuer de prise,
-	  * ou manuellement s'il décide de s'arrêter pendant un enchaînement.
-	  */
+
+	/**
+	 * Termine le tour en cours et change le joueur courant. Peut être appelée
+	 * automatiquement si le joueur courant ne peut plus effectuer de prise, ou
+	 * manuellement s'il décide de s'arrêter pendant un enchaînement.
+	 */
 	public void finTour() {
-		//traceTerrain();
+		// traceTerrain();
 		if (joueurCourant.getJoueurID() == Case.Etat.joueur1)
 			joueurCourant = j2;
 		else
@@ -428,17 +458,20 @@ public class Moteur {
 		ech.ajouter("annuler", false);
 		ech.ajouter("refaire", false);
 		ech.ajouter("finTour", false);
+
 		com.envoyer(ech);
+
 		ech.vider();
 		gestionBouton();
 		if (partieTerminee(false)) {
 			e = EtatTour.partieFinie;
-			//System.out.println("FIN DE PARTIE");
+			// System.out.println("FIN DE PARTIE");
 		} else {
-			//System.out.println("FIN DE TOUR ");
-			//traceTerrain();
+			tourEnCours=false;
+			// System.out.println("FIN DE TOUR ");
+			// traceTerrain();
 			gestionEvenementGraphique();
-			gestionEvenementGraphique(joueurCourant.getNom(),"Selection du pion",joueurCourant.getJoueurID().getNum());
+			gestionEvenementGraphique(joueurCourant.getNom(), "Selection du pion", joueurCourant.getJoueurID().getNum());
 			if (joueurCourant.isJoueurHumain()) {
 				e = EtatTour.selectionPion;
 			} else {
@@ -449,7 +482,8 @@ public class Moteur {
 	}
 
 	/**
-	 * Test après chaque prise si le tour peut se terminer ou si un enchaînement est réalisable.
+	 * Test après chaque prise si le tour peut se terminer ou si un enchaînement
+	 * est réalisable.
 	 */
 	public void testFinTour() {
 		pDepart = pArrive;
@@ -460,10 +494,16 @@ public class Moteur {
 			gestionEvenementGraphique(null, "Selection destination");
 		}
 	}
-	
+
 	/**
 	 * Met à jour le score de l'adversaire du joueur courant après une prise.
+<<<<<<< HEAD
+	 * 
+	 * @param nbPionsManges
+	 *            Nombre de pions mangés à l'adversaire
+=======
 	 * @param nbPionsManges Nombre de pions mangés à l'adversaire.
+>>>>>>> branch 'master' of https://github.com/dimpolth/gameProject-PROG6.git
 	 */
 	public void majScore(int nbPionsManges) {
 		Joueur.recupereJoueurOpposant(joueurCourant, j1, j2, false).setScore(nbPionsManges);
@@ -471,8 +511,16 @@ public class Moteur {
 
 	/**
 	 * Envoie un message à afficher sur un bandeau de l'IHM.
+<<<<<<< HEAD
+	 * 
+	 * @param destination
+	 *            Bandeau de destination.
+	 * @param message
+	 *            Message à afficher.
+=======
 	 * @param destination Bandeau de destination.
 	 * @param message Message à afficher.
+>>>>>>> branch 'master' of https://github.com/dimpolth/gameProject-PROG6.git
 	 */
 	public void message(String destination, String message) {
 		ech.vider();
@@ -481,6 +529,22 @@ public class Moteur {
 	}
 
 	/**
+<<<<<<< HEAD
+	 * Envoie toutes les informations necessaires à l'IHM pour réaliser
+	 * l'actualisation de l'affichage lié à un coup.
+	 * 
+	 * @param deplacement
+	 *            Tableau de deux Points contenant le point de départ et le
+	 *            point d'arrivé. Peut être à null en fonction de la situation.
+	 * @param choixPrise
+	 *            Tableau de deux Points contenant un choix à faire entre une
+	 *            prise par aspiration ou par percussion. Peut être null s'il
+	 *            n'y a pas de choix à faire.
+	 * @param pionsManges
+	 *            Liste des pions mangés pendant le coup.
+	 * @param score
+	 *            Score des joueurs mis à jour en fonctions des pions mangés.
+=======
 	 * Envoie toutes les informations necessaires à l'IHM pour réaliser l'actualisation de l'affichage lié à un coup.
 	 * @param deplacement Tableau de deux Points contenant le point de départ et le point d'arrivé.
 	 * Peut être à null en fonction de la situation.
@@ -488,6 +552,7 @@ public class Moteur {
 	 * Peut être null s'il n'y a pas de choix à faire.
 	 * @param pionsManges Liste des pions mangés pendant le coup.
 	 * @param score Score des joueurs mis à jour en fonctions des pions mangés.
+>>>>>>> branch 'master' of https://github.com/dimpolth/gameProject-PROG6.git
 	 */
 	public void gestionEvenementGraphique(Point[] deplacement, Point[] choixPrise, ArrayList<Point> pionsManges, int[] score) {
 		ech.vider();
@@ -497,6 +562,26 @@ public class Moteur {
 	}
 
 	/**
+<<<<<<< HEAD
+	 * Surchage de gestionEvenementGraphique pour le cas ou on coup inclut un
+	 * changement de bandeau.
+	 * 
+	 * @param deplacement
+	 *            Tableau de deux Points contenant le point de départ et le
+	 *            point d'arrivé. Peut être à null en fonction de la situation.
+	 * @param choixPrise
+	 *            Tableau de deux Points contenant un choix à faire entre une
+	 *            prise par aspiration ou par percussion. Peut être null s'il
+	 *            n'y a pas de choix à faire.
+	 * @param pionsManges
+	 *            Liste des pions mangés pendant le coup.
+	 * @param score
+	 *            Score des joueurs mis à jour en fonctions des pions mangés.
+	 * @param chaine1
+	 *            Définie sur quel bandeau ira le message.
+	 * @param chaine2
+	 *            Le message à afficher sur le bandeau.
+=======
 	 * Surchage de gestionEvenementGraphique pour le cas ou on coup inclut un changement de bandeau.
 	 * @param deplacement Tableau de deux Points contenant le point de départ et le point d'arrivé.
 	 * Peut être à null en fonction de la situation.
@@ -506,6 +591,7 @@ public class Moteur {
 	 * @param score Score des joueurs mis à jour en fonctions des pions mangés.
 	 * @param chaine1 Définie sur quel bandeau ira le message.
 	 * @param chaine2 Le message à afficher sur le bandeau.
+>>>>>>> branch 'master' of https://github.com/dimpolth/gameProject-PROG6.git
 	 */
 	public void gestionEvenementGraphique(Point[] deplacement, Point[] choixPrise, ArrayList<Point> pionsManges, int[] score, String chaine1, String chaine2) {
 		ech.vider();
@@ -515,7 +601,8 @@ public class Moteur {
 	}
 
 	/**
-	 * Surchage de gestionEvenementGraphique pour le cas ou l'on envoie un terrain uniquement.
+	 * Surchage de gestionEvenementGraphique pour le cas ou l'on envoie un
+	 * terrain uniquement.
 	 */
 	public void gestionEvenementGraphique() {
 		ech.vider();
@@ -527,7 +614,6 @@ public class Moteur {
 		com.envoyer(ech);
 	}
 
-	
 	/**
 	 * Surchage de gestion gestionEvenementGraphique pour le cas ou l'on ne met à jour que les bandeaux.
 	 * @param bandeauSup Message pour le bandeau supérieur.
@@ -537,9 +623,9 @@ public class Moteur {
 		ech.vider();
 		EvenementGraphique cg;
 		if (tourEnCours)
-			cg= new EvenementGraphique(null, null, null, null, bandeauSup, bandeauInf, calculChemin());
-		else 
-			cg= new EvenementGraphique(null, null, null, null, bandeauSup, bandeauInf, null);
+			cg = new EvenementGraphique(null, null, null, null, bandeauSup, bandeauInf, calculChemin());
+		else
+			cg = new EvenementGraphique(null, null, null, null, bandeauSup, bandeauInf, null);
 		ech.ajouter("coup", cg);
 		com.envoyer(ech);
 	}
@@ -553,7 +639,7 @@ public class Moteur {
 	public void gestionEvenementGraphique(String bandeauSup, String bandeauInf, int i) {
 		ech.vider();
 		EvenementGraphique cg;
-		cg = new EvenementGraphique(bandeauSup,bandeauInf,i);
+		cg = new EvenementGraphique(bandeauSup, bandeauInf, i);
 		ech.ajouter("coup", cg);
 		com.envoyer(ech);
 	}
@@ -571,10 +657,10 @@ public class Moteur {
 		ech.ajouter("coup", cg);
 		com.envoyer(ech);
 	}
-	
+
 	/**
-	 * Permet de recalculer les scores des joueurs.
-	 * Utilisée dans les cas de annuler/refaire et lors d'un chargement de partie.
+	 * Permet de recalculer les scores des joueurs. Utilisée dans les cas de
+	 * annuler/refaire et lors d'un chargement de partie.
 	 */
 	public void calculerScore() {
 		int scoreJ1 = 0;
@@ -605,7 +691,8 @@ public class Moteur {
 	}
 
 	/**
-	 * Fait jouer l'IA lors de son tour et gère les échanges entre l'IA et le moteur.
+	 * Fait jouer l'IA lors de son tour et gère les échanges entre l'IA et le
+	 * moteur.
 	 */
 	public void jouerIa() {
 		Thread th = new Thread() {
@@ -615,7 +702,7 @@ public class Moteur {
 					jeuIa = joueurCourant.jouer();
 					selectionPion(jeuIa.getpDepart());
 					selectionDestination(jeuIa.getpArrivee());
-					//traceTerrain();
+					// traceTerrain();
 				} while (joueurCourant.IaContinue());
 				com.envoyer(new Echange("chargement",false));
 				finTour();
@@ -625,7 +712,8 @@ public class Moteur {
 	}
 
 	/**
-	 * Permet de griser ou d'afficher les boutons annuler/refaire en fonction de l'état d'affiche de l'historique.
+	 * Permet de griser ou d'afficher les boutons annuler/refaire en fonction de
+	 * l'état d'affiche de l'historique.
 	 */
 	public void gestionBouton() {
 		Echange ech2 = new Echange();
@@ -659,7 +747,8 @@ public class Moteur {
 	}
 
 	/**
-	 * Affiche l'état actuel du terrain en console. Utilisée uniquement en debug.
+	 * Affiche l'état actuel du terrain en console. Utilisée uniquement en
+	 * debug.
 	 */
 	public void traceTerrain() {
 		if (trace)
@@ -672,13 +761,13 @@ public class Moteur {
 	 */
 	public void actionPoint(Object dataValue) {
 		if (e == EtatTour.selectionPion) {
-			//System.out.println("e : " + e);
+			// System.out.println("e : " + e);
 			selectionPion((Point) dataValue);
 		} else if (e == EtatTour.selectionDestination) {
-			//System.out.println("e : " + e);
+			// System.out.println("e : " + e);
 			selectionDestination((Point) dataValue);
 		} else if (e == EtatTour.attenteChoix) {
-			//System.out.println("e : " + e);
+			// System.out.println("e : " + e);
 			Terrain.Direction d = t.recupereDirection(pDepart, pArrive);
 			ArrayList<Point> l = new ArrayList<Point>();
 			boolean tperc = perc.equals((Point) dataValue);
@@ -694,19 +783,20 @@ public class Moteur {
 				gestionEvenementGraphique(null, null, l, score);
 				ech.vider();
 				ech.ajouter("finTour", true);
-				com.envoyer(ech,joueurCourant.getJoueurID().getNum());
-				//traceTerrain();
+				com.envoyer(ech, joueurCourant.getJoueurID().getNum());
+				// traceTerrain();
 				testFinTour();
 			}
 		}
 	}
-	
+
 	/**
-	 * Réalise une annulation sur commande de l'IHM et lui envoi les modifications necessaires.
+	 * Réalise une annulation sur commande de l'IHM et lui envoi les
+	 * modifications necessaires.
 	 */
 	public void actionAnnuler() {
 		if (e != EtatTour.partieFinie) {
-			if(compteurNul != 0) {
+			if (compteurNul != 0) {
 				compteurNul--;
 			}
 			ech.vider();
@@ -741,9 +831,10 @@ public class Moteur {
 			}
 		}
 	}
-	
+
 	/**
-	 * Refait un coup sur commande de l'IHM et lui envoi les modifications necessaires.
+	 * Refait un coup sur commande de l'IHM et lui envoi les modifications
+	 * necessaires.
 	 */
 	public void actionRefaire() {
 		if (e != EtatTour.partieFinie) {
@@ -779,7 +870,7 @@ public class Moteur {
 			}
 		}
 	}
-	
+
 	/**
 	 * Sérialise et sauvegarde la partie dans un fichier.
 	 * @param dataValue Référence du fichier sur lequel la sauvegarde sera effectuée.
@@ -804,7 +895,7 @@ public class Moteur {
 			}
 		}
 	}
-	
+
 	/**
 	 * Déserialise et charge un partie à partir d'un fichier.
 	 * @param dataValue Référence du fichier à partir duquel charger.
@@ -850,7 +941,7 @@ public class Moteur {
 		ech.ajouter("score", tabScore);
 		com.envoyer(ech);
 	}
-	
+
 	/**
 	 * Met à jour les paramètres de la partie en fonction de ce qui est envoyé par l'IHM.
 	 * @param dataValue Paramètres de la partie.
@@ -872,7 +963,7 @@ public class Moteur {
 					j1.chargerIa(IntelligenceArtificielle.difficulteIA.difficile, j2, t);
 			}
 		}
-		if(p.j2_type != null ){
+		if (p.j2_type != null) {
 			if (p.j2_type == Parametres.NiveauJoueur.HUMAIN) {
 				j2.setJoueurHumain(true);
 				j2.viderIa();
@@ -910,7 +1001,58 @@ public class Moteur {
 			e = EtatTour.jeuxIa;
 			jouerIa();
 		}
-		
+
+	}
+
+	public void actionAide() {
+		iaAide = new IntelligenceArtificielle(IntelligenceArtificielle.difficulteIA.normal, joueurCourant, Joueur.recupereJoueurOpposant(joueurCourant, j1, j2, false), t);
+		Thread th = new Thread() {
+			public void run() {
+				Coup coupAide = new Coup();
+				//System.out.println("PUUUUUUTTTTTTAZAAAIINNN   :"+tourEnCours );
+				if (tourEnCours) {
+					ArrayList<TourDeJeu> tour = new ArrayList<TourDeJeu>();
+					Iterator<TourDeJeu> it;
+					iaAide.getListeToursPourCoupDepart(new ArrayList<Point>(), tour, new TourDeJeu(), h.getDernierCoup(), t.copie(), (ArrayList<Point>) h.histoTour.clone(), 0, joueurCourant);
+					it = tour.iterator();
+					int valeurMax = 0;
+					int posMax = 0;
+					int pos = 0;
+					
+					while (it.hasNext()) {
+						TourDeJeu tdj = it.next();
+						if (tdj.getValeurResultat() > valeurMax) {
+							posMax = pos;
+							valeurMax = tdj.getValeurResultat();
+						}
+						pos++;
+					}
+					tour.get(posMax).getListeCoups().remove(h.getDernierCoup());
+					coupAide = tour.get(posMax).getListeCoups().get(0);
+					tour.get(posMax).getListeCoups().remove(0);
+				} else
+					coupAide = iaAide.jouerIA();
+				
+				Point tempDebut = coupAide.getpDepart();
+				Point tempArrive = coupAide.getpArrivee();
+				//System.out.println("debut :"+tempDebut+"arrivé"+tempArrive);
+				selectionPion(tempDebut);
+				selectionDestination(tempArrive);
+				if (coupAide.getChoixPrise() == Terrain.ChoixPrise.parAspiration) {
+					Direction dir = t.recupereDirection(tempDebut, tempArrive);
+					Point offset = t.offsetAspiration(dir, tempArrive);
+					Point temp = new Point(tempDebut.x + offset.x, tempArrive.y + offset.y);
+					actionPoint((Object) temp);
+				} else if (coupAide.getChoixPrise() == Terrain.ChoixPrise.parPercussion) {
+					Direction dir = t.recupereDirection(tempDebut, tempArrive);
+					Point offset = t.offsetPercussion(dir, tempArrive);
+					Point temp = new Point(tempDebut.x + offset.x, tempArrive.y + offset.y);
+					actionPoint((Object) temp);
+				}
+				//t.dessineTableauAvecIntersections();
+			}
+		};
+		th.start();
 	}
 
 	/**
@@ -919,9 +1061,9 @@ public class Moteur {
 	 * @param j Identifiant de joueur pour le réseau.
 	 */
 	public void action(Object o, int j) {
-		
-		Echange echange = (Echange)o;
-		
+
+		Echange echange = (Echange) o;
+
 		Case.Etat joueurReception = null;
 		if (j == 1)
 			joueurReception = Etat.joueur1;
@@ -929,26 +1071,22 @@ public class Moteur {
 			joueurReception = Etat.joueur2;
 
 		if (Communication.enReseau() && trace) {
-			;//System.out.println("reception :" + joueurReception);
-			//System.out.println("courant :" + joueurCourant.getJoueurID());
-			//System.out.println("comparaison "+!joueurCourant.getJoueurID().equals(joueurReception));
+			;// System.out.println("reception :" + joueurReception);
+				// System.out.println("courant :" +
+				// joueurCourant.getJoueurID());
+				// System.out.println("comparaison "+!joueurCourant.getJoueurID().equals(joueurReception));
 		}
-		
-		
-
 		for (String dataType : echange.getAll()) {
 			Object dataValue = echange.get(dataType);
-			
-			
-			
-			if (Communication.enReseau() && (joueurCourant.getJoueurID() != joueurReception) && (dataType.equals("point")  || dataType.equals("annuler") || dataType.equals("refaire") || dataType.equals("finTour")))
+			if (Communication.enReseau() && (joueurCourant.getJoueurID() != joueurReception)
+					&& (dataType.equals("point") || dataType.equals("annuler") || dataType.equals("refaire") || dataType.equals("finTour")))
 				return;
 			// System.out.println(dataType);
 			// System.out.println("e : " + e);
 			switch (dataType) {
 			case "nouvellePartie":
 				init();
-				//init(datavalue);
+				// init(datavalue);
 				break;
 			case "point":
 				actionPoint(dataValue);
@@ -959,21 +1097,11 @@ public class Moteur {
 			case "annuler":
 				actionAnnuler();
 				break;
-			case "joueurs":
-				/*Joueur[] tabJoueurIntit = (Joueur[]) dataValue;
-				// recuperer les noms et les type des joueurs.
-				j1.setNom(tabJoueurIntit[0].getNom());
-				j2.setNom(tabJoueurIntit[1].getNom());
-				ech.vider();
-				Joueur[] tabJoueur = { j1, j2 };
-				ech.ajouter("joueurs", tabJoueur);
-				com.envoyer(ech);*/
-				break;
 			case "refaire":
 				actionRefaire();
 				break;
 			case "finTour":
-				if (tourEnCours && e==EtatTour.selectionDestination)
+				if (tourEnCours && e == EtatTour.selectionDestination)
 					finTour();
 				break;
 			case "sauvegarder":
@@ -982,9 +1110,11 @@ public class Moteur {
 			case "charger":
 				actionCharger(dataValue);
 				break;
-
 			case "parametres":
 				actionParametre(dataValue);
+				break;
+			case "aide":
+				actionAide();
 				break;
 			}
 		}
