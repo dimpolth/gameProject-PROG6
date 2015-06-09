@@ -598,7 +598,7 @@ public class IHM extends JFrame implements ComponentListener {
 		
 		if ((dataValue = e.get("coup")) != null) {
 			tg.lCoups.addLast((EvenementGraphique) dataValue);
-			EvenementGraphique.afficherCoups(tg);
+			EvenementGraphique.lancer(tg);
 		}
 
 		/* Gardez cet ordre */

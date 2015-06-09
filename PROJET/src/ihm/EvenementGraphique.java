@@ -11,14 +11,15 @@ public class EvenementGraphique implements Runnable, Serializable {
 	public enum FinPartie {
 		VICTOIRE, DEFAITE, AUCUNE, NUL
 	};
-
+	
+	private static TerrainGraphique tg;
+	public static boolean animationEnCours = false;
+		
 	private Case[][] terrain;
 	private Point[] deplacement;
 	private Point[] choixPrise;
 	private ArrayList<Point> pionsManges, chemin;
 	private int[] score;
-	private static TerrainGraphique tg;
-	public static boolean animationEnCours = false;
 	private String bandeauSup, bandeauInf;
 	private int joueurCourant = 0;
 	private FinPartie finPartie = FinPartie.AUCUNE;
@@ -93,7 +94,7 @@ public class EvenementGraphique implements Runnable, Serializable {
 		joueurCourant = i;
 	}
 
-	public void lancer() {
+	public void lancer() {	
 		Thread t = new Thread(this);
 		t.start();
 	}
@@ -153,7 +154,7 @@ public class EvenementGraphique implements Runnable, Serializable {
 		if (tg.lCoups.size() != 0) {
 			tg.lCoups.pollFirst().lancer();
 		} else {
-			EvenementGraphique.animationEnCours = false;
+			animationEnCours(false);
 		}
 		if(finPartie != FinPartie.AUCUNE) {
 			tg.ihm.popupV.lancer(finPartie);
@@ -168,11 +169,17 @@ public class EvenementGraphique implements Runnable, Serializable {
 		}
 	}
 
-	public static void afficherCoups(TerrainGraphique tg) {
+	public static void lancer(TerrainGraphique tg) {
 		EvenementGraphique.tg = tg;
 		if (!EvenementGraphique.animationEnCours) {
-			EvenementGraphique.animationEnCours = true;
+			animationEnCours(true);
 			tg.lCoups.pollFirst().lancer();
 		}
+	}
+	
+	public static void animationEnCours(boolean b){
+		EvenementGraphique.animationEnCours = b;
+		tg.ihm.popupO.bloquer(b);
+		 
 	}
 }
