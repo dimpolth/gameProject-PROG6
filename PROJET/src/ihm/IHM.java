@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.Point;
 import java.awt.Toolkit;
@@ -83,6 +84,7 @@ public class IHM extends JFrame implements ComponentListener {
 	Bouton boutonAnnuler;
 	Bouton boutonRefaire;
 	Bouton boutonValidation;
+	Bouton boutonAide;
 
 	
 	/**
@@ -110,7 +112,16 @@ public class IHM extends JFrame implements ComponentListener {
 
 		theme = new Theme(this);
 
-		coucheJeu = new JPanel(new BorderLayout());
+		coucheJeu = new JPanel(new BorderLayout()) {
+			@Override
+			public void paintComponent(Graphics g) {
+				for(int i=0 ; i<getWidth() ; i += theme.imgFond.getWidth(this)) {
+					for(int j=0 ; j<getHeight() ; j += theme.imgFond.getHeight(this)) {
+						g.drawImage(theme.imgFond, i, j, theme.imgFond.getWidth(this), theme.imgFond.getHeight(this), null);
+					}
+				}
+			}
+		};
 		coucheJeu.setBounds(0, 0, getSize().width, getSize().height);
 		add(coucheJeu);
 
@@ -158,7 +169,7 @@ public class IHM extends JFrame implements ComponentListener {
 		voletSudEst.setOpaque(false);
 		voletSud.add(voletSudEst, BorderLayout.EAST);
 
-		Bouton boutonAide = new Bouton("Aide");
+		boutonAide = new Bouton("Aide");
 		boutonAide.addActionListener(new Ecouteur(Ecouteur.Bouton.AIDE, this));
 		voletSudOuest.add(boutonAide);
 
@@ -228,8 +239,9 @@ public class IHM extends JFrame implements ComponentListener {
 
 	public void nouvellePartie() {
 		Echange e = new Echange();
-		e.ajouter("nouvellePartie", true);
-		e.ajouter("parametres", getParametres());
+		//e.ajouter("nouvellePartie", true);
+		e.ajouter("nouvellePartie", getParametres());
+		//e.ajouter("parametres", );
 		e.ajouter("terrain", true);
 		com.envoyer(e);
 	}
@@ -475,7 +487,6 @@ public class IHM extends JFrame implements ComponentListener {
         Desktop.getDesktop().open(f);
     }
 
-	
 
 	/**
 	 * Création de la mini-fenêtre.
@@ -627,6 +638,9 @@ public class IHM extends JFrame implements ComponentListener {
 		}
 		if ((dataValue = e.get("refaire")) != null) {
 			boutonRefaire.setEnabled((boolean) dataValue);
+		}
+		if ((dataValue = e.get("aide")) != null) {
+			boutonAide.setEnabled((boolean) dataValue);
 		}
 		if ((dataValue = e.get("finTour")) != null) {
 			boutonValidation.setEnabled((boolean) dataValue);
