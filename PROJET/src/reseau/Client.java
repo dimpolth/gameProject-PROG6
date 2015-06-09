@@ -22,36 +22,17 @@ class Client implements Runnable{
 	}
 	
 	// CONNEXION AU SEVEUR
-	public boolean connexion(String pHost) throws UnknownHostException, IOException {
-		
-		host = pHost;
-		// On récupère le nom de la machine
-		final InetAddress addr;
-		try {
-			addr = InetAddress.getLocalHost();			
-		}
-		catch (final Exception e) {
-			return false;
-		}
-		
-		//;//System.out.println(addr.toString());
-		
-		String[] hostInfos = host.split(":");
-		if(hostInfos[1] == null)
-			;//System.out.println("Pas de port");
+	public void connexion(String host, int port) throws UnknownHostException, IOException {
 		
 		
-		int port = Integer.valueOf(hostInfos[1]);
 		// Nouveau socket pour la connexion
-		socket = new Socket(hostInfos[0], port);
+		socket = new Socket(host, port);
 		oos = new ObjectOutputStream(socket.getOutputStream());
 		ois = new ObjectInputStream(socket.getInputStream());		
 		
 		// Démarrage de threads pour le dialogue Client/Serveur (envoi/reception)	
 		Thread thReception = new Thread(this, "recep");
-		thReception.start();	
-		
-		return true;
+		thReception.start();		
 
 	}
 	
@@ -79,6 +60,7 @@ class Client implements Runnable{
 			}
 		}
 		catch (Exception ex) {
+			System.out.println("CATCH CLIENT");
 		}
 	}
 	

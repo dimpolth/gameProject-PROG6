@@ -32,8 +32,10 @@ public class Chargement extends JComponent implements ActionListener {
 	}
 
 	public void afficher() {
-		afficher = true;
-		horloge.start();
+		if(!afficher){
+			afficher = true;
+			horloge.start();
+		}
 	}
 
 	public void cacher() {

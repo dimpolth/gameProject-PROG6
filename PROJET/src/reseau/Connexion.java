@@ -37,6 +37,7 @@ public class Connexion implements Runnable{
 			
 			// Premier envoi = identifiant
 			identifiant = (String)ois.readObject();	
+			System.out.println("1ere reception : identifiant : "+identifiant +" (connexion)");
 
 			Thread t = new Thread(this, "recep");
 			t.start();

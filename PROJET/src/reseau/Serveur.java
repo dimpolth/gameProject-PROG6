@@ -29,11 +29,11 @@ public class Serveur implements Runnable{
 		com = c;		
 	}
 	
-	public int demarrer(){
+	public int demarrer(int pPort){
 		try{
-			port = 55555;
-			passiveSocket = new ServerSocket(port);
-			port = passiveSocket.getLocalPort();
+			
+			passiveSocket = new ServerSocket(pPort);
+			port = passiveSocket.getLocalPort();			
 			Thread th = new Thread(this);
 			th.start();
 			return port;
@@ -58,13 +58,15 @@ public class Serveur implements Runnable{
 				
 				try{
 					Socket activeSocket = this.passiveSocket.accept();
-					;//System.out.println("Nouvelle connexion");
+					System.out.println("Nouvelle connexion run serveur");
 				
 					// Lorsqu'un utilisateur se connecte, on créé une nouvelle instance
 					Connexion connexion = new Connexion(this,activeSocket);
 					
 					// On sauvegarde la nouvelle connexion
 					nouvelleConnexion(connexion);
+					
+					
 				
 				}
 				catch(Exception ex){
@@ -116,7 +118,6 @@ public class Serveur implements Runnable{
 		if(joueurs.size() < 2)
 			nouveauJoueur(c);
 		
-		Echange e = new Echange();
 		Parametres params = new Parametres();	
 		
 		if(joueurs.get(1) != null)
@@ -128,11 +129,10 @@ public class Serveur implements Runnable{
 			params.j2_identifiant = "En attente...";
 		}
 		
-		e.ajouter("parametres", params);	
-		com.recevoir(e, 0);		
+		System.out.println("Envoi des paramètres vers le moteur ->");
+		com.recevoir(new Echange("parametres",params), 0);		
 		
-		
-		if(joueurs.size() > 1){
+		if(joueurs.size() >= 1){
 			Echange ech = new Echange();
 			ech.ajouter("terrain", com.moteur.t.getTableau());
 			c.envoyer(ech);
