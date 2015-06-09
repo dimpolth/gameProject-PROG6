@@ -9,6 +9,10 @@ import java.util.ArrayList;
 public class Historique implements Serializable {
 
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	/**
 	 * Historique de la partie.
 	 */
 	public ArrayList<Terrain> histoPrincipal;
@@ -50,6 +54,7 @@ public class Historique implements Serializable {
 		histoPrincipal = h.histoPrincipal;
 		histoTour = h.histoTour;
 		itPrincipal = h.itPrincipal;
+		hisTourCoup = h.hisTourCoup;
 		itTour = h.itTour;
 		itCoup = h.itCoup;
 	}
@@ -103,7 +108,7 @@ public class Historique implements Serializable {
 	
 	
 	public Terrain getDernierTerrain(){
-		return histoPrincipal.get(itPrincipal-1);
+		return histoPrincipal.get(histoPrincipal.size()-1);
 	}
 	
 	
@@ -140,9 +145,15 @@ public class Historique implements Serializable {
 	 */
 	public void effacerHistoTour() {
 		histoTour = new ArrayList<Point>();
+		hisTourCoup = new ArrayList<Coup>();
 		itTour=0;
 		itCoup=0;
 		
+	}
+	
+	public void effacerHistoCoup() {
+		hisTourCoup = new ArrayList<Coup>();
+		itCoup=0;
 	}
 	
 	/**

@@ -14,7 +14,9 @@ import java.awt.event.ComponentListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFileChooser;
@@ -293,6 +295,51 @@ public class IHM extends JFrame implements ComponentListener {
 			}
 		}
 	}
+	
+	public void reseau_heberger(){
+		
+		String errReseau = null;
+	
+		// Nouveau serveur
+			errReseau = Communication.modeReseau("", popupReseau.champId.getText());
+			if (errReseau == null) {
+				// 2 joueurs humain si on lance une partie réseau
+				Parametres param = new Parametres();
+				param.j1_type = Parametres.NiveauJoueur.HUMAIN;
+				param.j2_type = Parametres.NiveauJoueur.HUMAIN;
+				Echange ec = new Echange();
+				ec.ajouter("nouvellePartie", param);				
+				com.envoyer(ec);
+				JOptionPane.showMessageDialog(this, "Le serveur est ouvert sur le port : " + Communication.getPort() + "", "Port " + Communication.getPort() + "", 1);
+			}
+		if (errReseau == null) {
+			popupReseau.setVisible(false);
+			popupB.setVisible(false);
+			setModeReseau(true);
+			popupReseau.message.setText(errReseau);
+		} else {
+			popupReseau.message.setText(errReseau);
+		}
+		
+	}
+	
+	public void reseau_rejoindre(){
+		String errReseau = null;
+		
+			String hoteComplet = popupReseau.champRejoindreIp.getText()+":"+popupReseau.champRejoindrePort.getText();
+			if (!hoteComplet.equals("")) {
+				errReseau = Communication.modeReseau(hoteComplet, popupReseau.champId.getText());
+			}
+		if (errReseau == null) {
+			popupReseau.setVisible(false);
+			popupB.setVisible(false);
+			setModeReseau(true);
+			popupReseau.message.setText(errReseau);
+		} else {
+			popupReseau.message.setText(errReseau);
+		}
+		
+	}
 
 	/**
 	 * Gestion de toutes les entrées de l'IHM.
@@ -321,7 +368,7 @@ public class IHM extends JFrame implements ComponentListener {
 				}
 				popupB.setVisible(false);
 			} else {
-				popupReseau.message.setText("");
+				//popupReseau.message.setText("");
 				popupReseau.setVisible(true);
 			}
 			popupM.setVisible(false);
@@ -400,12 +447,10 @@ public class IHM extends JFrame implements ComponentListener {
 			popupB.setVisible(false);
 			break;
 		case REGLES_PLUS:
-			try {
-				Desktop.getDesktop().open(new File(getClass().getResource("/documents/regles.pdf").toURI()));
-			} catch (Exception e) {
-				e.printStackTrace();
+			try{
+			ouvrirPDF("/documents/regles.pdf");
 			}
-			;
+			catch(Exception e){}
 			break;
 		case REGLES_RETOUR:
 			popupR.setVisible(false);
@@ -417,48 +462,31 @@ public class IHM extends JFrame implements ComponentListener {
 			popupM.setVisible(true);
 			break;
 		case RESEAU_HEBERGER:
-			String errReseau = null;
-			String identifiant = popupReseau.champId.getText();
-			// Nouveau serveur
-				errReseau = Communication.modeReseau("", identifiant);
-				if (errReseau == null) {
-					// 2 joueurs humain si on lance une partie réseau
-					Parametres param = new Parametres();
-					param.j1_type = Parametres.NiveauJoueur.HUMAIN;
-					param.j2_type = Parametres.NiveauJoueur.HUMAIN;
-					Echange ec = new Echange();
-					ec.ajouter("nouvellePartie", true);
-					ec.ajouter("parametres", param);
-					com.envoyer(ec);
-					JOptionPane.showMessageDialog(this, "Le serveur est ouvert sur le port : " + Communication.getPort() + "", "Port " + Communication.getPort() + "", 1);
-				}
-			if (errReseau == null) {
-				popupReseau.setVisible(false);
-				popupB.setVisible(false);
-				setModeReseau(true);
-				popupReseau.message.setText(errReseau);
-			} else {
-				popupReseau.message.setText(errReseau);
-			}
+			reseau_heberger();
 			break;
 		case RESEAU_REJOINDRE:
-			errReseau = null;
-			identifiant = popupReseau.champId.getText();
-				String hoteComplet = popupReseau.champRejoindre.getText()+":"+popupReseau.champRejoindrePort.getText();
-				if (!hoteComplet.equals("")) {
-					errReseau = Communication.modeReseau(hoteComplet, identifiant);
-				}
-			if (errReseau == null) {
-				popupReseau.setVisible(false);
-				popupB.setVisible(false);
-				setModeReseau(true);
-				popupReseau.message.setText(errReseau);
-			} else {
-				popupReseau.message.setText(errReseau);
-			}
+			reseau_rejoindre();
 			break;
 		}
 	}
+	
+	
+    
+    public void ouvrirPDF(String src) throws IOException
+    {
+    	InputStream in = IHM.class.getClass().getResourceAsStream(src);
+        File f = File.createTempFile("JAR_", ".pdf");
+        FileOutputStream out = new FileOutputStream(f);
+        
+        byte[] buf = new byte[1024];
+        for (int n; (n=in.read(buf))!=-1; out.write(buf, 0, n));
+        
+        out.close();
+        in.close();
+        
+        Desktop.getDesktop().open(f);
+    }
+
 
 	/**
 	 * Création de la mini-fenêtre.
@@ -634,7 +662,7 @@ public class IHM extends JFrame implements ComponentListener {
 		if((dataValue = e.get("chargement")) != null){
 			
 			if((boolean) dataValue == true){
-				System.out.println("Chargement");
+				
 				chargement.afficher();
 			}
 			else

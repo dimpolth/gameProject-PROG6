@@ -10,6 +10,11 @@ import java.util.Iterator;
  */
 public class Terrain implements Serializable {
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
 	 * Définit les directions des déplacements. 
 	 */
 	public enum Direction {

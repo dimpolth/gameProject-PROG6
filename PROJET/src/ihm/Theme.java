@@ -136,8 +136,8 @@ public class Theme {
 			ihm.bandeauInfos.texteInf.setForeground(couleurInf);
 			ihm.bandeauInfos.texteSup.setForeground(couleurSup);
 			ihm.popupReseau.etiqId.setForeground(couleurMenu);
-			ihm.popupReseau.etiqHeberger.setForeground(couleurMenu);
-			ihm.popupReseau.etiqRejoindre.setForeground(couleurMenu);
+			ihm.popupReseau.etiqHebergerIp.setForeground(couleurMenu);
+			ihm.popupReseau.etiqRejoindreIp.setForeground(couleurMenu);
 			ihm.popupReseau.etiqHebergerPort.setForeground(couleurMenu);
 			ihm.popupReseau.etiqRejoindrePort.setForeground(couleurMenu);
 			ihm.popupReseau.message.setForeground(couleurReseauMessage);

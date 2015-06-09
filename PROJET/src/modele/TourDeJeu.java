@@ -9,6 +9,10 @@ import java.util.ArrayList;
 public class TourDeJeu implements Serializable {
 	
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	/**
 	 * Liste des coups joués par l'IA.
 	 */
 	private ArrayList<Coup> listeCoups;
