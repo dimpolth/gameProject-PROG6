@@ -108,12 +108,14 @@ public class EvenementGraphique implements Runnable, Serializable {
 
 		if (deplacement != null) {
 			tg.deplacer(deplacement[0], deplacement[1]);
+			latence(TerrainGraphique.ANIM_DEPL / 4);
 		}
 
-		latence(TerrainGraphique.ANIM_DEPL / 4);
+		
 
 		if (pionsManges != null) {
 			tg.manger(pionsManges);
+			latence(TerrainGraphique.ANIM_DISP);
 		}
 		if (choixPrise != null) {
 			tg.afficherPrisesPossibles(choixPrise);
@@ -121,7 +123,7 @@ public class EvenementGraphique implements Runnable, Serializable {
 			tg.cacherPrisesPossibles();
 		}
 
-		latence(TerrainGraphique.ANIM_DISP);
+		
 
 		if (chemin != null) {
 			if(chemin.size() != 0) {

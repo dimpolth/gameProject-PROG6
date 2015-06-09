@@ -2,13 +2,16 @@ package ihm;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
+import java.awt.LayoutManager;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
+import javax.swing.BorderFactory;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -19,10 +22,10 @@ public class PopupReseau extends Popup {
 
 	protected JLabel etiqId;
 	protected JTextField champId;
-	protected JLabel etiqHeberger;
-	protected JTextField champHeberger;
-	protected JLabel etiqRejoindre;
-	protected JTextField champRejoindre;
+	protected JLabel etiqHebergerIp;
+	protected JTextField champHebergerIp;
+	protected JLabel etiqRejoindreIp;
+	protected JTextField champRejoindreIp;
 	protected JLabel etiqHebergerPort;
 	protected JTextField champHebergerPort;
 	protected JLabel etiqRejoindrePort;
@@ -31,8 +34,101 @@ public class PopupReseau extends Popup {
 	protected Bouton boutonHeberger, boutonRetour, boutonRejoindre;
 
 	public PopupReseau(IHM i) {
-		super(new GridLayout(5, 1));
-		JPanel panneauNord = new JPanel();
+		
+		
+		
+		super(  new BorderLayout()  );
+		this.setOpaque(false);
+		PanelReseau nord = new PanelReseau();
+		
+		PanelReseau identifiant = new PanelReseau( new GridLayout(2,1) );
+		etiqId = new JLabel("Mon identifiant");
+		champId = formater(new JTextField("Joueur-" + System.currentTimeMillis() % 100));
+		identifiant.add(etiqId);
+		identifiant.add(champId);		
+		nord.add(identifiant);
+		
+		PanelReseau heberger_rejoindre = new PanelReseau( new BorderLayout() );
+		
+		PanelReseau gauche = new PanelReseau();
+		PanelReseau droite = new PanelReseau();
+		PanelReseau milieu = new PanelReseau();
+		//gauche.setBorder(BorderFactory.createLineBorder(Color.black));
+		gauche.setPreferredSize(new Dimension(300,0));
+		droite.setPreferredSize(new Dimension(300,0));
+		heberger_rejoindre.add(gauche, BorderLayout.WEST);
+		heberger_rejoindre.add(milieu, BorderLayout.CENTER);
+		heberger_rejoindre.add(droite, BorderLayout.EAST);
+		
+		add(nord, BorderLayout.NORTH);
+		add(heberger_rejoindre, BorderLayout.CENTER);
+		
+		PanelReseau heberger = new PanelReseau( new GridLayout(3,1) );
+		PanelReseau rejoindre = new PanelReseau( new GridLayout(3,1) );
+		gauche.add(heberger, BorderLayout.WEST);
+		//heberger_rejoindre.add(new PanelReseau(),BorderLayout.CENTER);
+		droite.add(rejoindre, BorderLayout.EAST);
+		
+		PanelReseau hebergerIp = new PanelReseau(  new GridLayout(2,1)  );
+		etiqHebergerIp = new JLabel( "Mon adresse ip" );
+		champHebergerIp = formater(new JTextField(""));
+		champHebergerIp.setEditable(false);
+		hebergerIp.add(etiqHebergerIp);
+		hebergerIp.add(champHebergerIp);
+		heberger.add(hebergerIp);
+		
+		PanelReseau hebergerPort = new PanelReseau(  new GridLayout(2,1)  );
+		etiqHebergerPort = new JLabel( "Port" );
+		champHebergerPort = formater(new JTextField("bla"));
+		hebergerPort.add(etiqHebergerPort);
+		hebergerPort.add(champHebergerPort);
+		heberger.add(hebergerPort);
+		
+		PanelReseau hebergerBoutons = new PanelReseau();
+		boutonHeberger = new Bouton("Heberger");
+		boutonHeberger.addActionListener(new Ecouteur(Ecouteur.Bouton.RESEAU_HEBERGER, i));
+		hebergerBoutons.add(boutonHeberger);
+		heberger.add(hebergerBoutons);		
+		
+		
+		PanelReseau rejoindreIp = new PanelReseau(  new GridLayout(2,1)  );
+		etiqRejoindreIp = new JLabel( "Hôte" );
+		champRejoindreIp = formater(new JTextField(""));
+		rejoindreIp.add(etiqRejoindreIp);
+		rejoindreIp.add(champRejoindreIp);
+		rejoindre.add(rejoindreIp);
+		
+		PanelReseau rejoindrePort = new PanelReseau(  new GridLayout(2,1)  );
+		etiqRejoindrePort = new JLabel( "Le port" );
+		champRejoindrePort = formater(new JTextField(""));
+		rejoindrePort.add(etiqRejoindrePort);
+		rejoindrePort.add(champRejoindrePort);
+		rejoindre.add(rejoindrePort);
+		
+		PanelReseau rejoindreBoutons = new PanelReseau();
+		boutonRejoindre = new Bouton("Rejoindre");
+		boutonRejoindre.addActionListener(new Ecouteur(Ecouteur.Bouton.RESEAU_REJOINDRE, i));
+		rejoindreBoutons.add(boutonRejoindre);
+		rejoindre.add(rejoindreBoutons);
+		
+		
+		boutonRetour = new Bouton("Retour");
+		boutonRetour.addActionListener(new Ecouteur(Ecouteur.Bouton.RESEAU_RETOUR, i));
+		PanelReseau sud = new PanelReseau();
+		
+		PanelReseau bas = new PanelReseau(new GridLayout(2,1));
+		message = new JLabel("");	
+		bas.add(message);
+		bas.add(boutonRetour);
+		sud.add(bas);
+		
+		add(sud, BorderLayout.SOUTH);
+		
+		
+		
+		
+		/*
+		 JPanel panneauNord = new JPanel();
 		this.add(panneauNord);
 		panneauNord.setOpaque(false);
 		etiqId = new JLabel("Mon identifiant");
@@ -99,5 +195,46 @@ public class PopupReseau extends Popup {
 		boutonRejoindre = new Bouton("Rejoindre");
 		boutonRejoindre.addActionListener(new Ecouteur(Ecouteur.Bouton.RESEAU_REJOINDRE, i));
 		panneauSud.add(boutonRejoindre);
+		*/
+		
 	}
+	
+	JLabel formater(JLabel j){
+		
+		j.setOpaque(false);
+		j.setPreferredSize(new Dimension(200,20));
+		
+		return j;
+	}
+	
+	JTextField formater(JTextField e){
+		
+		e.setOpaque(true);
+		e.setPreferredSize(new Dimension(160,35));
+		
+		return e;
+	}
+	
+	JPanel formater(JPanel e){
+		
+		e.setOpaque(false);	
+		
+		return e;
+	}
+	
+	class PanelReseau extends JPanel{
+		PanelReseau(){
+			super();
+			this.formater();
+		}
+		PanelReseau(LayoutManager l){
+			super(l);
+			this.formater();
+		}
+		
+		void formater(){
+			this.setOpaque(false);	
+		}
+	}
+	
 }
