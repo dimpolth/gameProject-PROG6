@@ -30,7 +30,7 @@ public class IntelligenceArtificielle implements Serializable {
 	private Terrain terrain;
 	private TourDeJeu tourDeJeuCourant;
 	private boolean tourEnCours;
-	private final int coeffPionsManges = 3;
+	private final int coeffPionsManges = 5;
 	private final int coeffPositionPions = 1;
 	private final int MAX = 1000;
 	private final int MIN = -1000;
@@ -128,7 +128,7 @@ public class IntelligenceArtificielle implements Serializable {
 		boolean evalGeometrie = false;
 		
 		// ALPHA BETA
-		tourSolution = alphaBeta(profondeur,evalGeometrie, false, iterateurProf); // simule x-profondeur tours
+		tourSolution = alphaBeta(profondeur,evalGeometrie, iterateurProf); // simule x-profondeur tours
 											  				 // exemple : profondeur = 3
 											  				 // on va simuler un tour jCourant puis un tour jAdv puis 
 		return tourSolution;				 				 // de nouveau un tour jCourant	
@@ -144,7 +144,7 @@ public class IntelligenceArtificielle implements Serializable {
 		boolean evalGeometrie = true;
 		
 		// ALPHA BETA
-		tourSolution = alphaBeta(profondeur,evalGeometrie, false, iterateurProf); // simule x-profondeur tours
+		tourSolution = alphaBeta(profondeur,evalGeometrie, iterateurProf); // simule x-profondeur tours
 											  				 // exemple : profondeur = 3
 											  				 // on va simuler un tour jCourant puis un tour jAdv puis 
 		return tourSolution;	
@@ -161,7 +161,7 @@ public class IntelligenceArtificielle implements Serializable {
 	/*
 	 * Application de l'algorithme alpha beta
 	 */
-	private TourDeJeu alphaBeta(int profondeur, boolean evalGeometrie, boolean profondeurDynamique, int iterateurProf){
+	private TourDeJeu alphaBeta(int profondeur, boolean evalGeometrie, int iterateurProf){
 		ArrayList<TourDeJeu> listeToursJouables = new ArrayList<TourDeJeu>();
 		Iterator<TourDeJeu> it;
 		TourDeJeu tourCourant, tourSolution = new TourDeJeu();
@@ -172,24 +172,7 @@ public class IntelligenceArtificielle implements Serializable {
 		double tempsDepart = (double) System.currentTimeMillis(), temp; // pour tests
 		
 		// Récupération de tous les tours jouables pour le terrain et le joueur courant
-		listeToursJouables = getToursJouables(terrain, this.getJoueurIA());
-
-		
-		if(profondeurDynamique){ 	// Adaptation dynamique de la profondeur explorée
-			nbPionsRestantsJCourant = joueurIA.getScore();
-			nbPionsRestantsJAdv = joueurAdversaire.getScore();
-			nbPionsRestantsTot = nbPionsRestantsJCourant + nbPionsRestantsJAdv;
-		
-			if((nbPionsRestantsTot <= 4) && (nbPionsRestantsJCourant <= nbPionsRestantsJAdv))
-				profondeur += 3;
-
-			else if(nbPionsRestantsTot <= 6 && (nbPionsRestantsJCourant <= nbPionsRestantsJAdv))
-				profondeur += 2;
-			
-			else if(nbPionsRestantsTot <= 14 && (nbPionsRestantsJCourant < nbPionsRestantsJAdv))
-				profondeur += 1;
-		}
-		
+		listeToursJouables = getToursJouables(terrain, this.getJoueurIA());	
 		
 		if(listeToursJouables.size() > 0)
 			tourSolution = listeToursJouables.get(0);
