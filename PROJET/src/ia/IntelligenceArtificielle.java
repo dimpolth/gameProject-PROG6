@@ -141,7 +141,7 @@ public class IntelligenceArtificielle implements Serializable {
 		TourDeJeu tourSolution = new TourDeJeu();
 		int profondeur = 7;
 		int iterateurProf = 0;
-		boolean evalGeometrie = false;
+		boolean evalGeometrie = true;
 		
 		// ALPHA BETA
 		tourSolution = alphaBeta(profondeur,evalGeometrie, false, iterateurProf); // simule x-profondeur tours

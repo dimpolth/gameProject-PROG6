@@ -12,14 +12,67 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 @SuppressWarnings("serial")
+/**
+ * Classe du bandeau en haut de fenêtre.
+ */
 class BandeauInfos extends JPanel {
-
+	/**
+	 * Plateau de jeu.
+	 */
 	TerrainGraphique tg;
-	JLabel j1_identifiant, j1_score, j2_identifiant, j2_score, texteSup, texteInf;
-	JPanel j1_pion, j2_pion;
-	JPanel panJ1, panJ2, panTextes;
+	/**
+	 * Nom du joueur 1.
+	 */
+	JLabel j1_identifiant;
+	/**
+	 * Score du joueur 1.
+	 */
+	JLabel j1_score;
+	/**
+	 * Nom du joueur 2.
+	 */
+	JLabel j2_identifiant;
+	/**
+	 * Score du joueur 2.
+	 */
+	JLabel j2_score;
+	/**
+	 * Texte supérieur du bandeau.
+	 */
+	JLabel texteSup;
+	/**
+	 * Texte inférieur du bandeau.
+	 */
+	JLabel texteInf;
+	/**
+	 * Pion du joueur 1.
+	 */
+	JPanel j1_pion;
+	/**
+	 * Pion du joueur 2.
+	 */
+	JPanel j2_pion;
+	/**
+	 * Cadre du joueur 1.
+	 */
+	JPanel panJ1;
+	/**
+	 * Cadre du joueur 2.
+	 */
+	JPanel panJ2;
+	/**
+	 * Cadre des textes.
+	 */
+	JPanel panTextes;
+	/**
+	 * Identifiant du joueur en cours.
+	 */
 	int idSelect;
-
+	
+	/**
+	 * Constructeur unique.
+	 * @param pTg Plateau de jeu.
+	 */
 	BandeauInfos(TerrainGraphique pTg) {
 		super(new BorderLayout(15, 15));
 		tg = pTg;
@@ -95,7 +148,11 @@ class BandeauInfos extends JPanel {
 		add(marge, BorderLayout.SOUTH);
 
 	}
-
+	/**
+	 * Applique un style au bandeau.
+	 * @param lab Style à appliquer.
+	 * @return Bandeau avec le nouveau style.
+	 */
 	JLabel formater(JLabel lab) {
 		// lab.setBorder(BorderFactory.createLineBorder(Color.black));
 		lab.setOpaque(false);
@@ -106,6 +163,11 @@ class BandeauInfos extends JPanel {
 		return lab;
 	}
 
+	/**
+	 * Modifie le nom d'un joueur.
+	 * @param j Joueur dont le nom doit être modifié.
+	 * @param nom Nouveau nom du joueur.
+	 */
 	void setIdentifiant(int j, String nom) {
 		if (j == 1)
 			j1_identifiant.setText(nom);
@@ -114,6 +176,11 @@ class BandeauInfos extends JPanel {
 
 	}
 
+	/**
+	 * Modifie le score d'un joueur.
+	 * @param j Joueur dont le score doit être modifié.
+	 * @param val Nouvelle valeur du score.
+	 */
 	void setScore(int j, int val) {
 		if (j == 1)
 			j1_score.setText("Score: " + Integer.toString(val));
@@ -121,14 +188,26 @@ class BandeauInfos extends JPanel {
 			j2_score.setText("Score: " + Integer.toString(val));
 	}
 
+	/**
+	 * Modifie le texte du bandeau supérieur.
+	 * @param txt Nouveau texte.
+	 */
 	void setTexteSup(String txt) {
 		texteSup.setText(txt);
 	}
 
+	/**
+	 * Modifie le texte du bandeau inférieur.
+	 * @param txt Nouveau texte.
+	 */
 	void setTexteInf(String txt) {
 		texteInf.setText(txt);
 	}
 
+	/**
+	 * Met en valeur le bandeau du joueur courant.
+	 * @param id Identifiant du joueur courant.
+	 */
 	public void setJoueurActif(int id) {
 		idSelect = id;
 		if (id == 1) {

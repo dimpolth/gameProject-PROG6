@@ -28,6 +28,10 @@ public class Echange implements Serializable{
 		
 	}
 	
+	public Echange(String id, Object donnee){
+		ajouter(id, donnee);
+	}
+	
 	public void vider(){
 		infos.clone();
 		infos.clear();

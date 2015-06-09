@@ -8,6 +8,9 @@ import javax.swing.JPanel;
 
 @SuppressWarnings("serial")
 public abstract class Popup extends JPanel {
+	/**
+	 * Image de fond du popup.
+	 */
 	public Image img;
 
 	public Popup() {

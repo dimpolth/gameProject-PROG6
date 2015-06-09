@@ -16,11 +16,13 @@ import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 import modele.Case;
-import modele.Terrain;
 import reseau.Echange;
 
 @SuppressWarnings("serial")
 public class TerrainGraphique extends JPanel implements ComponentListener {
+	/**
+	 * Durée de l'animation de déplacement.
+	 */
 	public static final int ANIM_DEPL = 1000;
 	public static final int ANIM_DISP = 500;
 	public static final int ANIM_SELECT = 500;
@@ -32,7 +34,9 @@ public class TerrainGraphique extends JPanel implements ComponentListener {
 	public IHM ihm;
 	private AnimSelect select;
 	protected LinkedList<EvenementGraphique> lCoups = new LinkedList<EvenementGraphique>();
-
+	/**
+	 * Temps de gel du programme.
+	 */
 	protected long tempsGele;
 	private Dimensions dim;
 	protected Pion[][] pions;
@@ -44,14 +48,7 @@ public class TerrainGraphique extends JPanel implements ComponentListener {
 
 	public TerrainGraphique(IHM i) {
 		super(null);
-		try {
-			imgPlateau = ImageIO.read(getClass().getResource("/images/themes/bois/plateau.png"));
-			imgPion1 = ImageIO.read(getClass().getResource("/images/themes/bois/pion1.png"));
-			imgPion2 = ImageIO.read(getClass().getResource("/images/themes/bois/pion2.png"));
-			imgCroix = ImageIO.read(getClass().getResource("/images/themes/bois/croix.png"));
-		} catch (Exception e) {
-
-		}
+		
 
 		ihm = i;
 		select = null;
@@ -200,10 +197,23 @@ public class TerrainGraphique extends JPanel implements ComponentListener {
 	}
 }
 
+/**
+ * Paramètres de dimensions du plateau.
+ */
 class Dimensions {
+	/**
+	 * Abscisse en pixels du premier point du plateau.
+	 */
 	public int origX;
+	/**
+	 * Ordonnée en pixels du premier point du plateau.
+	 */
 	public int origY;
+	/**
+	 * Facteur de redimensionnement.
+	 */
 	public double echelle;
+	
 	public double largeur;
 	public double hauteur;
 }
