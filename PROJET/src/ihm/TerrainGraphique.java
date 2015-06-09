@@ -1,5 +1,7 @@
 package ihm;
 
+import ihm.EvenementGraphique.FinPartie;
+
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -150,8 +152,8 @@ public class TerrainGraphique extends JPanel implements ComponentListener {
 			int d = (int) (dim.echelle / 4);
 			Point p = trait.get(0);
 			gra.setStroke(new BasicStroke(6));
+			gra.setColor(ihm.theme.couleurChemin);
 			for (int i = 1; i < trait.size(); i++) {
-				gra.setColor(Color.WHITE);
 				gra.drawLine((int) ((p.y + 0.5) * dim.echelle + dim.origX) + d, (int) ((p.x + 0.5) * dim.echelle + dim.origY) + d, (int) ((trait.get(i).y + 0.5) * dim.echelle + dim.origX) + d, (int) ((trait.get(i).x + 0.5) * dim.echelle + dim.origY) + d);
 				gra.fillOval((int) ((p.y + 0.5) * dim.echelle + dim.origX) + d - 10, (int) ((p.x + 0.5) * dim.echelle + dim.origY) + d - 10, 20, 20);
 				p = trait.get(i);

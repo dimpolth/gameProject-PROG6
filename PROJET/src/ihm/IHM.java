@@ -236,8 +236,9 @@ public class IHM extends JFrame implements ComponentListener {
 
 	public void nouvellePartie() {
 		Echange e = new Echange();
-		e.ajouter("nouvellePartie", true);
-		e.ajouter("parametres", getParametres());
+		//e.ajouter("nouvellePartie", true);
+		e.ajouter("nouvellePartie", getParametres());
+		//e.ajouter("parametres", );
 		e.ajouter("terrain", true);
 		com.envoyer(e);
 	}
