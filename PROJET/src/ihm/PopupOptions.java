@@ -136,8 +136,22 @@ public class PopupOptions extends Popup {
 	
 	public void changementTypeJoueur(int j){
 		if(j==1)
-			identifiantJoueur1.setEditable( selectJoueur1.getSelectedIndex() <= 0  );
+			identifiantJoueur1.setEnabled( selectJoueur1.getSelectedIndex() <= 0  );
 		else if(j==2)
-			identifiantJoueur2.setEditable( selectJoueur2.getSelectedIndex() <= 0  );
+			identifiantJoueur2.setEnabled( selectJoueur2.getSelectedIndex() <= 0  );
+	}
+	
+	public void bloquer(boolean b){
+
+		identifiantJoueur1.setEnabled(!b);
+		identifiantJoueur2.setEnabled(!b);
+		selectJoueur1.setEnabled(!b);
+		selectJoueur2.setEnabled(!b);
+		
+		if(!b){
+			changementTypeJoueur(1);
+			changementTypeJoueur(2);
+		}
+		
 	}
 }

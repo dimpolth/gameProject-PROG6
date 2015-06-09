@@ -920,7 +920,7 @@ public class Moteur {
 		else
 			p.j1_identifiant = j1.getNom();
 
-		if (p.j2_identifiant != null && j1.isJoueurHumain())
+		if (p.j2_identifiant != null && j2.isJoueurHumain())
 			j2.setNom(p.j2_identifiant);
 		else
 			p.j2_identifiant = j2.getNom();
