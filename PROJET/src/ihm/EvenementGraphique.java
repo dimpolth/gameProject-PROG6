@@ -108,7 +108,7 @@ public class EvenementGraphique implements Runnable, Serializable {
 
 		if (deplacement != null) {
 			tg.deplacer(deplacement[0], deplacement[1]);
-			latence(TerrainGraphique.ANIM_DEPL / 4);
+			latence(TerrainGraphique.ANIM_DEPL);
 		}
 
 		
