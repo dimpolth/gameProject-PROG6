@@ -160,15 +160,15 @@ public class Historique implements Serializable {
 	 * Affiche l'historique en console. Utilisé pour le debug.
 	 */
 	public void afficher() {
-		;//System.out.println("----------------");
+		System.out.println("----------------");
 		for(int it = 0; it < histoPrincipal.size(); it++) {
 			Terrain tmp = histoPrincipal.get(it);
 			//Terrain tmp = histoPrincipal.get(itPrincipal);
 			//tmp.dessineTableauAvecIntersections();
 		}
-		;//System.out.println("----------------");
-		;//System.out.println(itPrincipal);
-		;//System.out.println("----------------");
+		System.out.println("----------------");
+		System.out.println(itPrincipal);
+		System.out.println("----------------");
 	}
 	
 }
