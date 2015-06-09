@@ -82,6 +82,7 @@ public class IHM extends JFrame implements ComponentListener {
 	Bouton boutonAnnuler;
 	Bouton boutonRefaire;
 	Bouton boutonValidation;
+	Bouton boutonAide;
 
 	
 	/**
@@ -166,7 +167,7 @@ public class IHM extends JFrame implements ComponentListener {
 		voletSudEst.setOpaque(false);
 		voletSud.add(voletSudEst, BorderLayout.EAST);
 
-		Bouton boutonAide = new Bouton("Aide");
+		boutonAide = new Bouton("Aide");
 		boutonAide.addActionListener(new Ecouteur(Ecouteur.Bouton.AIDE, this));
 		voletSudOuest.add(boutonAide);
 
@@ -609,6 +610,9 @@ public class IHM extends JFrame implements ComponentListener {
 		}
 		if ((dataValue = e.get("refaire")) != null) {
 			boutonRefaire.setEnabled((boolean) dataValue);
+		}
+		if ((dataValue = e.get("aide")) != null) {
+			boutonAide.setEnabled((boolean) dataValue);
 		}
 		if ((dataValue = e.get("finTour")) != null) {
 			boutonValidation.setEnabled((boolean) dataValue);
