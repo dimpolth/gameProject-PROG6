@@ -30,7 +30,7 @@ public class IntelligenceArtificielle implements Serializable {
 	private Terrain terrain;
 	private TourDeJeu tourDeJeuCourant;
 	private boolean tourEnCours;
-	private final int coeffPionsManges = 3;
+	private final int coeffPionsManges = 4;
 	private final int coeffPositionPions = 1;
 	private final int MAX = 1000;
 	private final int MIN = -1000;
@@ -139,7 +139,7 @@ public class IntelligenceArtificielle implements Serializable {
 	 */
 	private TourDeJeu coupDifficile(){
 		TourDeJeu tourSolution = new TourDeJeu();
-		int profondeur = 6;
+		int profondeur = 7;
 		int iterateurProf = 0;
 		boolean evalGeometrie = false;
 		
