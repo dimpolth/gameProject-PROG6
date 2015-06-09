@@ -101,6 +101,11 @@ public class Historique implements Serializable {
 	}
 	
 	
+	public Terrain getDernierTerrain(){
+		return histoPrincipal.get(itPrincipal-1);
+	}
+	
+	
 	/**
 	 * Fait revenir le terrain au tour précédant.
 	 * @return Terrain du tour précédant.
