@@ -192,21 +192,21 @@ public class IHM extends JFrame implements ComponentListener {
 		gestionCouche.add(popupB, new Integer(1));
 		popupB.setVisible(false);
 		popupM = new PopupMenu(this);
-		gestionCouche.add(popupM, new Integer(2));
+		gestionCouche.add(popupM, new Integer(3));
 		popupM.setVisible(false);
 		popupO = new PopupOptions(this);
-		gestionCouche.add(popupO, new Integer(3));
+		gestionCouche.add(popupO, new Integer(4));
 		popupO.setVisible(false);
 		popupR = new PopupRegles(this);
-		gestionCouche.add(popupR, new Integer(3));
+		gestionCouche.add(popupR, new Integer(4));
 		popupR.setVisible(false);
 
 		popupReseau = new PopupReseau(this);
-		gestionCouche.add(popupReseau, new Integer(3));
+		gestionCouche.add(popupReseau, new Integer(4));
 		popupReseau.setVisible(false);
 
 		popupV = new PopupVictoire();
-		gestionCouche.add(popupV, new Integer(4));
+		gestionCouche.add(popupV, new Integer(2));
 
 		theme.setTheme(Theme.Type.BOIS);
 
