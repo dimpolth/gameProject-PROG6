@@ -166,7 +166,7 @@ public class IntelligenceArtificielle implements Serializable {
 		Iterator<TourDeJeu> it;
 		TourDeJeu tourCourant, tourSolution = new TourDeJeu();
 		Random rand = new Random();
-		int valMax = MIN, valTemp, nbPionsManges, nbPionsRestantsJCourant, nbPionsRestantsJAdv, nbPionsRestantsTot;
+		int valMax = MIN, valTemp, nbPionsManges;
 		Integer alpha = new Integer(MIN), beta = new Integer(MAX);
 		
 		double tempsDepart = (double) System.currentTimeMillis(), temp; // pour tests
@@ -237,16 +237,8 @@ public class IntelligenceArtificielle implements Serializable {
 
 			valTemp = -(tourCourant.getValeurResultat() * this.coeffPionsManges); // nombre de pions perdus (mangés par l'adversaire) en négatif
 		
-			if(evalGeometrie){
-				/*
-				System.out.println("/////");
-				tourCourant.getTerrainFinal().dessineTableauAvecIntersections();
-				System.out.println("Min rés eval ("+ this.getJoueurAdv().getJoueurID()+ ") : " + evalGeometrie(tourCourant.getTerrainFinal(), this.getJoueurAdv()));
-				System.out.println("/////\n\n");
-				*/
+			if(evalGeometrie)
 				valTemp -= evalGeometrie(tourCourant.getTerrainFinal(), this.getJoueurAdv())  * this.coeffPositionPions;
-			}
-			
 			
 			valTemp += max(profondeur-1, alpha, beta, tourCourant.getTerrainFinal(), evalGeometrie, iterateurProf+1);
 
@@ -289,15 +281,8 @@ public class IntelligenceArtificielle implements Serializable {
 			
 			valTemp = tourCourant.getValeurResultat() * this.coeffPionsManges;
 			
-			if(evalGeometrie){
-				/*
-				System.out.println("/////");
-				tourCourant.getTerrainFinal().dessineTableauAvecIntersections();
-				System.out.println("Max rés eval  ("+ this.getJoueurIA().getJoueurID()+ ") : " + evalGeometrie(tourCourant.getTerrainFinal(), this.getJoueurAdv()));
-				System.out.println("/////\n\n");
-				*/
+			if(evalGeometrie)
 				valTemp += evalGeometrie(tourCourant.getTerrainFinal(), this.getJoueurIA()) * this.coeffPositionPions;
-			}
 		
 			valTemp += min(profondeur-1, alpha, beta, tourCourant.getTerrainFinal(), evalGeometrie, iterateurProf+1);
 
