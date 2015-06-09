@@ -238,12 +238,27 @@ public class IHM extends JFrame implements ComponentListener {
 	}
 
 	public void nouvellePartie() {
+		
+		EvenementGraphique.stopper();
+		
+		Parametres params = getParametres();
+		if(params.j1_type != NiveauJoueur.HUMAIN && params.j2_type != NiveauJoueur.HUMAIN ){
+			popupO.selectJoueur1.setSelectedIndex(0);
+		}
+		
+		chargement.cacher();
+		
 		Echange e = new Echange();
 		//e.ajouter("nouvellePartie", true);
 		e.ajouter("nouvellePartie", getParametres());
 		//e.ajouter("parametres", );
 		e.ajouter("terrain", true);
-		com.envoyer(e);
+		com.envoyer(e);	
+		
+		
+		
+		
+		
 	}
 	
 	public void sauverPartie(){

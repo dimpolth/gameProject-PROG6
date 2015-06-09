@@ -177,9 +177,13 @@ public class EvenementGraphique implements Runnable, Serializable {
 		}
 	}
 	
+	public static void stopper(){
+		if(tg!= null && tg.lCoups.size()>0)
+			tg.lCoups.clear();
+	}
+	
 	public static void animationEnCours(boolean b){
 		EvenementGraphique.animationEnCours = b;
-		tg.ihm.popupO.bloquer(b);
-		 
+		tg.ihm.popupO.bloquer(b);		 
 	}
 }
