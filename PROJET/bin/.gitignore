@@ -1,9 +1,10 @@
 Main.java
 /images/
+/.gitignore
 /ia/
 /ihm/
-/images/
 /modele/
 /moteur/
 /reseau/
 /documents/
+/Main.class

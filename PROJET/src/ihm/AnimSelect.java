@@ -37,11 +37,11 @@ public class AnimSelect extends Animation {
 		stop = true;
 	}
 
-	@Override
 	/**
 	 * Lance l'animation du pion.
 	 * @param e Action qui initie l'animation.
 	 */
+	@Override
 	public void actionPerformed(ActionEvent e) {
 		long actuel = System.currentTimeMillis();
 		if (actuel - tempsDepart > TerrainGraphique.ANIM_SELECT) {
