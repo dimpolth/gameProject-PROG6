@@ -206,7 +206,6 @@ public class IntelligenceArtificielle implements Serializable {
 		
 		tempsMax = (long) Math.max(temp, this.tempsMax);
 		
-		System.out.println(valMax);
 		return tourSolution;
 	}
 	
