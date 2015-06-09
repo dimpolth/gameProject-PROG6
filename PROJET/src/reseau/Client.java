@@ -87,8 +87,7 @@ class Client implements Runnable{
 					
 					com.recevoir(recu,0);					
 				}
-				catch (Exception ex) {
-					ex.printStackTrace();
+				catch (Exception ex) {					
 					deconnexion();
 				}
 				

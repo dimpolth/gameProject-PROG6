@@ -102,22 +102,7 @@ public class Serveur implements Runnable{
 		}
 	}
 	
-	public void nouveauJoueur(Connexion c){		
-		
-		// Premier joueur = serveur
-		if(joueurs.get(1) == null)		
-			joueurs.put(1,c);			
-		
-		else if(joueurs.get(2) == null)			
-			joueurs.put(2,c);
-			
-	}
-	
-	public void nouvelleConnexion(Connexion c){		
-		connexions.add(c);	
-		if(joueurs.size() < 2)
-			nouveauJoueur(c);
-		
+	public void getInfosJoueurs(){
 		Parametres params = new Parametres();	
 		
 		if(joueurs.get(1) != null)
@@ -129,14 +114,38 @@ public class Serveur implements Runnable{
 			params.j2_identifiant = "En attente...";
 		}
 		
-		System.out.println("Envoi des paramètres vers le moteur ->");
-		com.recevoir(new Echange("parametres",params), 0);		
+		com.recevoir(new Echange("parametres",params), 0);	
+	}
+	
+	public void nouveauJoueur(Connexion c){		
+		
+		// Premier joueur = serveur
+		if(joueurs.get(1) == null)		
+			joueurs.put(1,c);			
+		
+		else if(joueurs.get(2) == null)			
+			joueurs.put(2,c);
+		
+			
+		getInfosJoueurs();
+		
+			
+	}
+	
+	public void nouvelleConnexion(Connexion c){		
+		connexions.add(c);	
+		if(joueurs.size() < 2)
+			nouveauJoueur(c);
+		
+		getInfosJoueurs();
 		
 		if(joueurs.size() >= 1){
 			Echange ech = new Echange();
 			ech.ajouter("terrain", com.moteur.t.getTableau());
 			c.envoyer(ech);
 		}
+		
+		
 	}
 	
 	public void terminerConnexion(Connexion c){
