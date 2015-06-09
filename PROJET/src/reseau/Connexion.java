@@ -25,7 +25,7 @@ public class Connexion implements Runnable{
 	// Flux d'entrée pour recevoir des données du joueur
 	private ObjectInputStream ois;
 	
-	private boolean running = true;
+	
 	
 	Connexion(Serveur serveur, Socket socket) throws UnknownHostException, IOException {
 		
@@ -62,7 +62,7 @@ public class Connexion implements Runnable{
 	public void fermer(){
 		try{
 			this.socket.close();
-			running=false;
+			socket=null;
 		}
 		catch(Exception e){}
 	}
@@ -73,10 +73,9 @@ public class Connexion implements Runnable{
 		Thread currentTh = Thread.currentThread();
 		
 		
-		while (running) {
+		while (socket!=null && !socket.isClosed()) {
 			
-			
-			
+					
 			// Réception de données
 			if (currentTh.getName().equals("recep")) {
 				
@@ -100,7 +99,8 @@ public class Connexion implements Runnable{
 					else{
 						String ordre = (String)recu;
 						
-						if(ordre.equals("/QUIT")){						
+						if(ordre.equals("/QUIT")){	
+							System.out.println("Déconnexion de "+identifiant+" reçue");
 							serveur.terminerConnexion(this);
 						}
 					}
@@ -108,7 +108,7 @@ public class Connexion implements Runnable{
 					
 					
 				} catch (Exception ex) {
-					running = false;
+					System.out.println("catch connexion");					
 				}				
 
 			}

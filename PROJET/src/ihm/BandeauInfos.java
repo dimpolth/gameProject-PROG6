@@ -182,10 +182,11 @@ class BandeauInfos extends JPanel {
 	 * @param val Nouvelle valeur du score.
 	 */
 	void setScore(int j, int val) {
+		String s = (val>1)?"s":"";
 		if (j == 1)
-			j1_score.setText("Score: " + Integer.toString(val));
+			j1_score.setText(Integer.toString(val)+" pion"+s);
 		else
-			j2_score.setText("Score: " + Integer.toString(val));
+			j2_score.setText(Integer.toString(val)+" pion"+s);
 	}
 
 	/**

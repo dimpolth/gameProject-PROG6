@@ -235,18 +235,22 @@ public class IHM extends JFrame implements ComponentListener {
 		return params;
 
 	}
+	
+	
 
 	public void nouvellePartie() {
 		
-		EvenementGraphique.stopper();
+		
 		
 		Parametres params = getParametres();
 		if(params.j1_type != NiveauJoueur.HUMAIN && params.j2_type != NiveauJoueur.HUMAIN ){
 			popupO.selectJoueur1.setSelectedIndex(0);
+			popupO.identifiantJoueur1.setText("Joueur 1");
 		}
 		
-		chargement.cacher();
 		
+		EvenementGraphique.stopper();
+		chargement.cacher();
 		Echange e = new Echange();
 		//e.ajouter("nouvellePartie", true);
 		e.ajouter("nouvellePartie", getParametres());
@@ -292,10 +296,12 @@ public class IHM extends JFrame implements ComponentListener {
 				retour = JOptionPane.showOptionDialog(this, "Vous êtes actuellement sur une partie en réseau. Voulez-vous vraiment quitter ?", "Attention", 1, 1, null, choix, choix[0]);
 			else retour = 0;
 			if (retour == 0) {
-				com.envoyer("/QUIT");
+				Communication.quitterReseau();
 				System.exit(0);
 			}
 		} else {
+			System.exit(0);
+			/*
 			String[] choix = { "Oui", "Non" };
 			int retour;
 			if(confirmation)
@@ -307,6 +313,7 @@ public class IHM extends JFrame implements ComponentListener {
 				action(Ecouteur.Bouton.SAUVEGARDER);
 				System.exit(0);
 			}
+			*/
 		}
 	}
 	
@@ -329,12 +336,16 @@ public class IHM extends JFrame implements ComponentListener {
 			
 			Parametres param = new Parametres();
 			param.j1_type = Parametres.NiveauJoueur.HUMAIN;
-			param.j2_type = Parametres.NiveauJoueur.HUMAIN;
+			param.j2_type = Parametres.NiveauJoueur.HUMAIN;			
 			Echange ec = new Echange("nouvellePartie",param);					
 			com.envoyer(ec);
-			System.out.println(port);
+			
+			
 			// On lance un client
 			reseau_rejoindre("127.0.0.1",port);
+			
+			
+		
 		}
 	}
 	
@@ -383,7 +394,9 @@ public class IHM extends JFrame implements ComponentListener {
 				int retour = JOptionPane.showOptionDialog(this, "Revenir au jeu local quittera la partie réseau.", "Attention", 1, JOptionPane.INFORMATION_MESSAGE, null, choix, choix[1]);
 
 				if (retour == 0) {
+					Communication.quitterReseau();
 					setModeReseau(false);
+					nouvellePartie();
 				}
 				popupB.setVisible(false);
 			} else {
@@ -531,6 +544,8 @@ public class IHM extends JFrame implements ComponentListener {
 		popupO.selectJoueur2.setVisible(!r);
 		popupM.boutonMenuSauvegarder.setEnabled(!r);
 		popupM.boutonMenuCharger.setEnabled(!r);
+		
+		popupM.bloquerSauverCharger(r);
 
 		
 	}
@@ -637,10 +652,25 @@ public class IHM extends JFrame implements ComponentListener {
 		}
 		if ((dataValue = e.get("parametres")) != null) {
 			Parametres params = (Parametres) dataValue;
-			if (params.j1_identifiant != null)
+			if (params.j1_identifiant != null){
 				bandeauInfos.setIdentifiant(1, params.j1_identifiant);
-			if (params.j2_identifiant != null)
+				if(!Communication.enReseau())
+					popupO.identifiantJoueur1.setText(params.j1_identifiant);
+			}
+			if (params.j2_identifiant != null){
 				bandeauInfos.setIdentifiant(2, params.j2_identifiant);
+				if(!Communication.enReseau()){
+					popupO.identifiantJoueur2.setText(params.j2_identifiant);
+					System.out.println("recevoir parametres : "+params.j2_identifiant+" ("+Communication.enReseau()+")");
+				}
+			}
+			
+			if (params.j1_type != null){
+				popupO.selectJoueur1.setSelectedIndex(  Parametres.NiveauJoueur.getToIndex(params.j1_type)  );
+			}
+			if (params.j2_type != null){
+				popupO.selectJoueur2.setSelectedIndex(  Parametres.NiveauJoueur.getToIndex(params.j2_type)  );
+			}
 		}
 		
 		if((dataValue = e.get("chargement")) != null){

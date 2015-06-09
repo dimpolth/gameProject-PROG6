@@ -38,7 +38,7 @@ class Client implements Runnable{
 	
 	// DECONNEXION DU SERVEUR
 	public void deconnexion(){		
-		
+		envoyer("/QUIT");
 		try{
 			socket.close();		
 		}

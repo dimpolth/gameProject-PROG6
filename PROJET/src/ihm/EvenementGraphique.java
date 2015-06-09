@@ -185,5 +185,6 @@ public class EvenementGraphique implements Runnable, Serializable {
 	public static void animationEnCours(boolean b){
 		EvenementGraphique.animationEnCours = b;
 		tg.ihm.popupO.bloquer(b);		 
+		tg.ihm.popupM.bloquerSauverCharger(b);
 	}
 }
