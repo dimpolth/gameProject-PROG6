@@ -19,17 +19,6 @@ public class IntelligenceArtificielle implements Serializable {
 		difficile
 	}
 	
-	/* Variables temporaires pour tests */
-	public double tempsExe = 0; 
-	public double tempsMax = 0;
-	public int nbExe = 0; 		
-	public double profondeurExploree = 0;
-	public double nbExplorations = 0;
-	public boolean victoire = false;
-	public boolean nul = false;
-	/*									*/
-
-	
 	private difficulteIA niveauDifficulte;
 	private Joueur joueurIA, joueurAdversaire;
 	private Terrain terrain;
@@ -129,11 +118,10 @@ public class IntelligenceArtificielle implements Serializable {
 	private TourDeJeu coupNormal(){
 		TourDeJeu tourSolution = new TourDeJeu();
 		int profondeur = 4;
-		int iterateurProf = 0;
 		boolean evalGeometrie = false;
 		
 		// ALPHA BETA
-		tourSolution = alphaBeta(profondeur,evalGeometrie, iterateurProf); // simule x-profondeur tours
+		tourSolution = alphaBeta(profondeur,evalGeometrie);  // simule x-profondeur tours
 											  				 // exemple : profondeur = 3
 											  				 // on va simuler un tour jCourant puis un tour jAdv puis 
 		return tourSolution;				 				 // de nouveau un tour jCourant	
@@ -145,11 +133,10 @@ public class IntelligenceArtificielle implements Serializable {
 	private TourDeJeu coupDifficile(){
 		TourDeJeu tourSolution = new TourDeJeu();
 		int profondeur = 7;
-		int iterateurProf = 0;
 		boolean evalGeometrie = true;
 		
 		// ALPHA BETA
-		tourSolution = alphaBeta(profondeur,evalGeometrie, iterateurProf); // simule x-profondeur tours
+		tourSolution = alphaBeta(profondeur,evalGeometrie);  // simule x-profondeur tours
 											  				 // exemple : profondeur = 3
 											  				 // on va simuler un tour jCourant puis un tour jAdv puis 
 		return tourSolution;	
@@ -166,15 +153,13 @@ public class IntelligenceArtificielle implements Serializable {
 	/*
 	 * Application de l'algorithme alpha beta
 	 */
-	private TourDeJeu alphaBeta(int profondeur, boolean evalGeometrie, int iterateurProf){
+	private TourDeJeu alphaBeta(int profondeur, boolean evalGeometrie){
 		ArrayList<TourDeJeu> listeToursJouables = new ArrayList<TourDeJeu>();
 		Iterator<TourDeJeu> it;
 		TourDeJeu tourCourant, tourSolution = new TourDeJeu();
 		Random rand = new Random();
 		int valMax = MIN, valTemp, nbPionsManges;
 		Integer alpha = new Integer(MIN), beta = new Integer(MAX);
-		
-		double tempsDepart = (double) System.currentTimeMillis(), temp; // pour tests
 		
 		// Récupération de tous les tours jouables pour le terrain et le joueur courant
 		listeToursJouables = getToursJouables(terrain, this.getJoueurIA());	
@@ -191,7 +176,7 @@ public class IntelligenceArtificielle implements Serializable {
 			
 			nbPionsManges = tourCourant.getValeurResultat() * this.coeffPionsManges;
 		
-			valTemp = nbPionsManges + min(profondeur-1, alpha, beta, tourCourant.getTerrainFinal(), evalGeometrie, iterateurProf+1);
+			valTemp = nbPionsManges + min(profondeur-1, alpha, beta, tourCourant.getTerrainFinal(), evalGeometrie);
 	
 			if(valTemp > valMax){
 				valMax = valTemp;
@@ -204,12 +189,6 @@ public class IntelligenceArtificielle implements Serializable {
 			}
 			
 		}
-		this.nbExe++;
-		
-		temp = (double) (System.currentTimeMillis() - tempsDepart);
-		this.tempsExe += temp;
-		
-		tempsMax = (long) Math.max(temp, this.tempsMax);
 		
 		return tourSolution;
 	}
@@ -217,17 +196,14 @@ public class IntelligenceArtificielle implements Serializable {
 	/*
 	 * Min :
 	 */
-	private int min(int profondeur, Integer alpha, Integer beta, Terrain terrainCourant, boolean evalGeometrie, int iterateurProf){
+	private int min(int profondeur, Integer alpha, Integer beta, Terrain terrainCourant, boolean evalGeometrie){
 		ArrayList<TourDeJeu> listeToursJouables = new ArrayList<TourDeJeu>();
 		Iterator<TourDeJeu> it;
 		TourDeJeu tourCourant;
 		int valTemp = MAX, valRes = MAX;
 		
-		if(profondeur == 0){
-			this.nbExplorations++;
-			this.profondeurExploree += iterateurProf;
+		if(profondeur == 0)
 			return 0;
-		}
 		
 		// Récupération de tous les tours jouables pour le terrain et le joueur courant
 		listeToursJouables = getToursJouables(terrainCourant, this.getJoueurAdv());
@@ -245,7 +221,7 @@ public class IntelligenceArtificielle implements Serializable {
 			if(evalGeometrie)
 				valTemp -= evalGeometrie(tourCourant.getTerrainFinal(), this.getJoueurAdv())  * this.coeffPositionPions;
 			
-			valTemp += max(profondeur-1, alpha, beta, tourCourant.getTerrainFinal(), evalGeometrie, iterateurProf+1);
+			valTemp += max(profondeur-1, alpha, beta, tourCourant.getTerrainFinal(), evalGeometrie);
 
 			valRes = Math.min(valTemp, valRes);
 			
@@ -261,17 +237,14 @@ public class IntelligenceArtificielle implements Serializable {
 	/*
 	 * Max :
 	 */
-	private int max(int profondeur, Integer alpha, Integer beta,  Terrain terrainCourant, boolean evalGeometrie, int iterateurProf){
+	private int max(int profondeur, Integer alpha, Integer beta,  Terrain terrainCourant, boolean evalGeometrie){
 		ArrayList<TourDeJeu> listeToursJouables = new ArrayList<TourDeJeu>();
 		Iterator<TourDeJeu> it;
 		TourDeJeu tourCourant;
 		int valTemp = MIN, valRes = MIN;
 		
-		if(profondeur == 0){
-			this.nbExplorations++;
-			this.profondeurExploree += iterateurProf;
+		if(profondeur == 0)
 			return 0;
-		}
 		
 		// Récupération de tous les tours jouables pour le terrain et le joueur courant
 		listeToursJouables = getToursJouables(terrainCourant, this.getJoueurIA());	
@@ -289,7 +262,7 @@ public class IntelligenceArtificielle implements Serializable {
 			if(evalGeometrie)
 				valTemp += evalGeometrie(tourCourant.getTerrainFinal(), this.getJoueurIA()) * this.coeffPositionPions;
 		
-			valTemp += min(profondeur-1, alpha, beta, tourCourant.getTerrainFinal(), evalGeometrie, iterateurProf+1);
+			valTemp += min(profondeur-1, alpha, beta, tourCourant.getTerrainFinal(), evalGeometrie);
 
 			valRes = Math.max(valTemp, valRes);
 			

@@ -252,7 +252,7 @@ public class Moteur {
 			gestionEvenementGraphique(BandeauSup, BandeauInf);
 			com.envoyer(ech);
 			return true;
-		} else if (compteurNul == 24) {
+		} else if (compteurNul == 40) {
 			String BandeauSup = "Match nul";
 			String BandeauInf = "Trop de coups sans prise joués";
 			gestionEvenementGraphique(BandeauSup, BandeauInf, EvenementGraphique.FinPartie.NUL);
