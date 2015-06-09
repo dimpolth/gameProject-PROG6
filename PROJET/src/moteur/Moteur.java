@@ -702,7 +702,7 @@ public class Moteur {
 				compteurNul--;
 			}
 			if (tourEnCours) {
-				t = h.getDernierTerrain().copie();
+				t.setTableau(h.getDernierTerrain().copie().getTableau());
 				e = EtatTour.selectionPion;
 				tourEnCours=false;
 				h.effacerHistoTour();
@@ -732,6 +732,7 @@ public class Moteur {
 				calculerScore();
 				int[] tabScore = { j1.getScore(), j2.getScore() };
 				ech.ajouter("score", tabScore);
+				ech.ajouter("pionDeselectionne",true);
 				com.envoyer(ech);
 				gestionBouton();
 				message("bandeauSup", joueurCourant.getNom());
@@ -772,6 +773,7 @@ public class Moteur {
 			calculerScore();
 			int[] tabScore = { j1.getScore(), j2.getScore() };
 			ech.ajouter("score", tabScore);
+			ech.ajouter("pionDeselectionne",true);
 			com.envoyer(ech);
 			gestionBouton();
 			message("bandeauSup", joueurCourant.getNom());
