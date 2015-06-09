@@ -25,7 +25,8 @@ public class Theme {
 	private IHM ihm;
 	private Type id = null;
 	private Image imgMenuLarge, imgMenuFin;
-	public Color couleurFond = null, couleurDefaut = null, couleurJ1 = null, couleurJ2 = null, couleurPolice = null, couleurPoliceGrisee = null, couleurBordures = null, couleurMenu = null;
+	protected Image imgFond;
+	public Color couleurDefaut = null, couleurJ1 = null, couleurJ2 = null, couleurPolice = null, couleurPoliceGrisee = null, couleurBordures = null, couleurMenu = null;
 	public Color couleurSup = null, couleurInf = null, couleurTDefaut = null, couleurReseauMessage = null;
 
 	Theme(IHM ihm) {
@@ -41,7 +42,6 @@ public class Theme {
 			this.id = pId;
 			switch (pId) {
 			case STANDARD:
-				couleurFond = new Color(238, 238, 238);
 				couleurDefaut = Color.LIGHT_GRAY;
 				couleurJ1 = Color.WHITE;
 				couleurJ2 = Color.DARK_GRAY;
@@ -55,7 +55,6 @@ public class Theme {
 				couleurReseauMessage = Color.ORANGE;
 				break;
 			case BOIS:
-				couleurFond = new Color(0, 0, 0);
 				couleurDefaut = new Color(240, 230, 140);
 				couleurJ1 = new Color(218, 165, 32);
 				couleurJ2 = new Color(160, 82, 45);
@@ -69,7 +68,6 @@ public class Theme {
 				couleurReseauMessage = Color.ORANGE;
 				break;
 			case MARBRE:
-				couleurFond = new Color(238, 238, 238);
 				couleurDefaut = Color.LIGHT_GRAY;
 				couleurJ1 = Color.WHITE;
 				couleurJ2 = Color.DARK_GRAY;
@@ -83,7 +81,6 @@ public class Theme {
 				couleurReseauMessage = Color.ORANGE;
 				break;
 			case SOMBRE:
-				couleurFond = new Color(12, 20, 31);
 				couleurDefaut = new Color(12, 20, 31);
 				couleurJ1 = new Color(111, 195, 223);
 				couleurJ2 = new Color(223, 116, 12);
@@ -97,7 +94,6 @@ public class Theme {
 				couleurReseauMessage = Color.RED;
 				break;
 			case COCHON:
-				couleurFond = new Color(238, 238, 238);
 				couleurDefaut = Color.LIGHT_GRAY;
 				couleurJ1 = Color.PINK;
 				couleurJ2 = Color.ORANGE;
@@ -111,7 +107,6 @@ public class Theme {
 				couleurReseauMessage = Color.ORANGE;
 				break;
 			}
-			ihm.coucheJeu.setBackground(couleurFond);
 			ihm.bandeauInfos.panTextes.setBackground(couleurDefaut);
 			ihm.bandeauInfos.panTextes.setBorder(BorderFactory.createLineBorder(couleurBordures));
 			if (ihm.bandeauInfos.idSelect == 1) {
@@ -140,7 +135,6 @@ public class Theme {
 			ihm.popupO.selectJoueur2Etiq.setForeground(couleurMenu);
 			ihm.popupO.themeEtiq.setForeground(couleurMenu);
 			try {
-				ihm.tg.imgPlateau = ImageIO.read(getClass().getResource("/images/themes/" + pId.s + "/plateau.jpg"));
 				ihm.tg.imgPion1 = ImageIO.read(getClass().getResource("/images/themes/" + pId.s + "/pion1.png"));
 				ihm.tg.imgPion2 = ImageIO.read(getClass().getResource("/images/themes/" + pId.s + "/pion2.png"));
 				ihm.tg.imgCroix = ImageIO.read(getClass().getResource("/images/themes/" + pId.s + "/croix.png"));
@@ -152,8 +146,18 @@ public class Theme {
 				ihm.popupR.setImage(imgMenuLarge);
 				ihm.popupReseau.setImage(imgMenuLarge);
 				ihm.coucheJeu.add(ihm.tg, BorderLayout.CENTER);
+				imgFond = ImageIO.read(getClass().getResource("/images/themes/" + pId.s + "/fond.jpg"));
 			} catch (IOException e) {
 				e.printStackTrace();
+			}
+			try {
+				ihm.tg.imgPlateau = ImageIO.read(getClass().getResource("/images/themes/" + pId.s + "/plateau.jpg"));
+			} catch (Exception e) {
+				try {
+					ihm.tg.imgPlateau = ImageIO.read(getClass().getResource("/images/themes/" + pId.s + "/plateau.png"));
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
 			}
 		}
 	}

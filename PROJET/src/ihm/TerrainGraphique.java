@@ -48,7 +48,7 @@ public class TerrainGraphique extends JPanel implements ComponentListener {
 
 	public TerrainGraphique(IHM i) {
 		super(null);
-		
+		setOpaque(false);
 
 		ihm = i;
 		select = null;
@@ -137,8 +137,6 @@ public class TerrainGraphique extends JPanel implements ComponentListener {
 	public void paintComponent(Graphics g) {
 		Graphics2D gra = (Graphics2D) g;
 		gra.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-		gra.setColor(ihm.theme.couleurFond);
-		gra.fillRect(0, 0, getWidth(), getHeight());
 		double largeur = getWidth(), hauteur = getHeight(), origX = 0, origY = 0;
 		if (largeur / hauteur > 19.0 / 11.0) {
 			origX = (int) ((largeur - (hauteur * 19.0 / 11.0)) / 2.0);
