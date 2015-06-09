@@ -149,6 +149,7 @@ public class EvenementGraphique implements Runnable, Serializable {
 		}
 
 		if (tg.lCoups.size() != 0) {
+			animationEnCours(true);
 			tg.lCoups.pollFirst().lancer();
 		} else {
 			animationEnCours(false);
@@ -181,7 +182,7 @@ public class EvenementGraphique implements Runnable, Serializable {
 	
 	public static void animationEnCours(boolean b){
 		EvenementGraphique.animationEnCours = b;		
+		tg.ihm.popupM.bloquerSauverCharger(b);
 		tg.ihm.popupO.bloquer(b);	
-		tg.ihm.popupM.bloquerSauverCharger(b);		
 	}
 }
