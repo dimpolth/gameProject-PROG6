@@ -43,7 +43,7 @@ public class IHM extends JFrame implements ComponentListener {
 	/**
 	 * Mini-fenêtre à afficher au lancement du jeu.
 	 */
-	JFrame fenetreChargement;
+	FenetreChargement fenetreChargement;
 	/**
 	 * Theme de la fenêtre.
 	 */
@@ -94,9 +94,8 @@ public class IHM extends JFrame implements ComponentListener {
 
 		// Initialisation de la fenêtre
 		super("Fanorona");
-		fenetreChargement(true);
+		fenetreChargement = new FenetreChargement();
 		try {
-			fenetreChargement.setIconImage(ImageIO.read(getClass().getResource("/images/icone.png")));
 			setIconImage(ImageIO.read(getClass().getResource("/images/icone.png")));
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -220,7 +219,7 @@ public class IHM extends JFrame implements ComponentListener {
 		setLocation(dFen.width / 2 - getSize().width / 2, dFen.height / 2 - getSize().height / 2);
 
 		setSize(new Dimension(800, 600));
-		fenetreChargement(false);
+		fenetreChargement.setVisible(false);
 		setVisible(true);
 
 	}
@@ -491,40 +490,6 @@ public class IHM extends JFrame implements ComponentListener {
         
         Desktop.getDesktop().open(f);
     }
-
-
-	/**
-	 * Création de la mini-fenêtre.
-	 * @param b Vrai si on affiche, faux sinon.
-	 */
-	public void fenetreChargement(boolean b) {
-		if (b) {
-
-			Toolkit screen = Toolkit.getDefaultToolkit();
-			Dimension dFen = screen.getScreenSize();
-			fenetreChargement = new JFrame();
-			fenetreChargement.setLayout(new GridLayout(2, 1));
-			JLabel texte = new JLabel("Chargement en cours...", SwingConstants.CENTER);
-			texte.setFont(new Font("Arial", Font.BOLD, 25));
-			fenetreChargement.add(texte);
-			JPanel p = new JPanel();
-			chargement2 = new Chargement();
-			chargement2.afficher();
-			p.add(chargement2);
-			fenetreChargement.add(p);
-			fenetreChargement.setUndecorated(true);
-			// fenetreChargement.setSize(300,200);
-			fenetreChargement.setSize(dFen.width / 5, dFen.height / 5);
-			fenetreChargement.setResizable(false);
-			fenetreChargement.setLocation(dFen.width / 2 - fenetreChargement.getSize().width / 2, dFen.height / 2 - fenetreChargement.getSize().height / 2);
-			fenetreChargement.setVisible(true);
-
-		} else {
-			chargement2.cacher();
-			fenetreChargement.setVisible(false);
-		}
-
-	}
 
 	/**
 	 * Change l'agencement des boutons si la partie est en réseau.
