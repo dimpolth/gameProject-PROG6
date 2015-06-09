@@ -132,8 +132,8 @@ class Fusee {
 	}
 
 	public boolean maj() {
+		var += PopupVictoire.VITESSE;
 		if (var < taille) {
-			var += PopupVictoire.VITESSE;
 			points.clear();
 			for (int i = 0; i < 10; i++) {
 				points.add(new Point((int) (centre.x + var * Math.cos((PopupVictoire.MULTIPLY_FACTOR * i * PopupVictoire.PI) / PopupVictoire.DIVIDER)), (int) (centre.y + var
@@ -148,7 +148,7 @@ class Fusee {
 	public void afficher(Graphics2D g) {
 		Stroke stroke = new BasicStroke(20, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 5, new float[] { 9 }, 0);
 		g.setStroke(stroke);
-		g.setColor(couleur);
+		g.setColor(new Color(couleur.getRed(),couleur.getGreen(),couleur.getBlue(),(int)((1-((double)var/(double)taille))*255)));
 		for (int i = 0; i < points.size(); i++) {
 			g.drawLine(points.get(i).x, points.get(i).y, points.get(i).x + PopupVictoire.LINE_LENGTH, points.get(i).y + PopupVictoire.LINE_LENGTH);
 		}
