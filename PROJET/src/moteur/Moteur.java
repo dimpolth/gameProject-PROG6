@@ -702,7 +702,7 @@ public class Moteur {
 				compteurNul--;
 			}
 			if (tourEnCours) {
-				t = h.getDernierTerrain().copie();
+				t.setTableau(h.getDernierTerrain().copie().getTableau());
 				e = EtatTour.selectionPion;
 				tourEnCours=false;
 				h.effacerHistoTour();
