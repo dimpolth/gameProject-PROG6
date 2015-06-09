@@ -608,7 +608,7 @@ public class Moteur {
 					jeuIa = joueurCourant.jouer();
 					selectionPion(jeuIa.getpDepart());
 					selectionDestination(jeuIa.getpArrivee());
-					System.out.println("l'Ia joue"+jeuIa.getpDepart()+" | "+jeuIa.getpArrivee());
+					//System.out.println("l'Ia joue"+jeuIa.getpDepart()+" | "+jeuIa.getpArrivee());
 					// traceTerrain();
 				} while (joueurCourant.IaContinue());
 				com.envoyer(new Echange("chargement",false));
@@ -885,6 +885,7 @@ public class Moteur {
 	 */
 	public void actionParametre(Object dataValue) {
 		Parametres p = (Parametres) dataValue;
+		
 		if (p.j1_type != null) {
 			if (p.j1_type == Parametres.NiveauJoueur.HUMAIN) {
 				j1.setJoueurHumain(true);
@@ -914,15 +915,16 @@ public class Moteur {
 			}
 		}
 
-		if (p.j1_identifiant != null && p.j1_type == Parametres.NiveauJoueur.HUMAIN)
+		if (p.j1_identifiant != null && j1.isJoueurHumain())
 			j1.setNom(p.j1_identifiant);
 		else
 			p.j1_identifiant = j1.getNom();
 
-		if (p.j2_identifiant != null && p.j2_type == Parametres.NiveauJoueur.HUMAIN)
+		if (p.j2_identifiant != null && j1.isJoueurHumain())
 			j2.setNom(p.j2_identifiant);
 		else
 			p.j2_identifiant = j2.getNom();
+		
 		
 		ech.vider();
 		ech.ajouter("parametres", p);

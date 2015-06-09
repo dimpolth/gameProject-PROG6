@@ -296,49 +296,54 @@ public class IHM extends JFrame implements ComponentListener {
 		}
 	}
 	
-	public void reseau_heberger(){
+	public void reseau_heberger(){		
 		
-		String errReseau = null;
-	
-		// Nouveau serveur
-			errReseau = Communication.modeReseau("", popupReseau.champId.getText());
-			if (errReseau == null) {
-				// 2 joueurs humain si on lance une partie réseau
-				Parametres param = new Parametres();
-				param.j1_type = Parametres.NiveauJoueur.HUMAIN;
-				param.j2_type = Parametres.NiveauJoueur.HUMAIN;
-				Echange ec = new Echange();
-				ec.ajouter("nouvellePartie", param);				
-				com.envoyer(ec);
-				JOptionPane.showMessageDialog(this, "Le serveur est ouvert sur le port : " + Communication.getPort() + "", "Port " + Communication.getPort() + "", 1);
-			}
-		if (errReseau == null) {
-			popupReseau.setVisible(false);
-			popupB.setVisible(false);
-			setModeReseau(true);
-			popupReseau.message.setText(errReseau);
-		} else {
-			popupReseau.message.setText(errReseau);
+		int port;
+		try{
+			port = Integer.valueOf( popupReseau.champHebergerPort.getText() );			
 		}
+		catch(Exception e){
+			port=0;
+		}
+		port = Communication.reseauHeberger(port);
 		
+		// erreur
+		if(port == 0){
+			popupReseau.message.setText("Impossible d'ouvrir une partie sur le port specifié");
+		}
+		else{
+			
+			Parametres param = new Parametres();
+			param.j1_type = Parametres.NiveauJoueur.HUMAIN;
+			param.j2_type = Parametres.NiveauJoueur.HUMAIN;
+			Echange ec = new Echange("nouvellePartie",param);					
+			com.envoyer(ec);
+			System.out.println(port);
+			// On lance un client
+			reseau_rejoindre("127.0.0.1",port);
+		}
 	}
 	
-	public void reseau_rejoindre(){
-		String errReseau = null;
+	public void reseau_rejoindre(String host, int port){
 		
-			String hoteComplet = popupReseau.champRejoindreIp.getText()+":"+popupReseau.champRejoindrePort.getText();
-			if (!hoteComplet.equals("")) {
-				errReseau = Communication.modeReseau(hoteComplet, popupReseau.champId.getText());
-			}
-		if (errReseau == null) {
+		
+		if(host == null){
+			host =popupReseau.champRejoindreIp.getText();
+		}
+		if(port == 0){
+			port = Integer.valueOf( popupReseau.champRejoindrePort.getText() );
+		}
+		String identifiant = popupReseau.champId.getText();
+		String retour = Communication.reseauRejoindre(host, port, identifiant);
+		if(retour != null){
+			popupReseau.message.setText(retour);
+		}
+		else{
 			popupReseau.setVisible(false);
 			popupB.setVisible(false);
 			setModeReseau(true);
-			popupReseau.message.setText(errReseau);
-		} else {
-			popupReseau.message.setText(errReseau);
+			popupReseau.message.setText("");
 		}
-		
 	}
 
 	/**
@@ -465,7 +470,7 @@ public class IHM extends JFrame implements ComponentListener {
 			reseau_heberger();
 			break;
 		case RESEAU_REJOINDRE:
-			reseau_rejoindre();
+			reseau_rejoindre(null,0);
 			break;
 		}
 	}
