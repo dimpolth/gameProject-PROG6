@@ -71,6 +71,7 @@ public class TerrainGraphique extends JPanel implements ComponentListener {
 
 	public void dessinerTerrain(Case[][] c) {
 		ihm.popupV.arreter();
+		ihm.popupV.lancer(FinPartie.VICTOIRE);
 		deselectionner();
 		for (int i = 0; i < 5; i++) {
 			for (int j = 0; j < 9; j++) {
