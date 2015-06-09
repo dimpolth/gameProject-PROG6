@@ -11,10 +11,10 @@ import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-@SuppressWarnings("serial")
 /**
  * Classe du bandeau en haut de fenêtre.
  */
+@SuppressWarnings("serial")
 class BandeauInfos extends JPanel {
 	/**
 	 * Plateau de jeu.

@@ -21,11 +21,11 @@ class AnimDisparition extends Animation {
 		horloge.start();
 	}
 
-	@Override
 	/**
 	 * Fait disparaître un pion.
 	 * @param e Action qui initie la disparition.
 	 */
+	@Override
 	public void actionPerformed(ActionEvent e) {
 		long actuel = System.currentTimeMillis();
 		if (actuel - tempsDepart > TerrainGraphique.ANIM_DISP) {

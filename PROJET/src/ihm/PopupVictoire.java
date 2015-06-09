@@ -1,7 +1,10 @@
 package ihm;
 
+import ihm.EvenementGraphique.FinPartie;
+
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -9,6 +12,7 @@ import java.awt.Stroke;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
@@ -16,29 +20,19 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 
 @SuppressWarnings("serial")
-public class PopupVictoire extends JPanel {
+public class PopupVictoire extends JPanel implements ActionListener {
 
-	private Timer timer;
-	private static final int DELAY = 30, DIVIDER = 180, MULTIPLY_FACTOR = 36, LINE_LENGTH = 2, FIREWORK_RADIUS = 100;
-	private static final int ARRAY_LENGTH = 11;
-	private Point CENTER;
-	private Random r;
-	private static Color colors[] = new Color[ARRAY_LENGTH];
-	private static final double PI = 3.14159;
-	int x[] = new int[10], y[] = new int[10];
-	private int x1, moveX, color_index;
-	List<Integer> xx = new ArrayList<Integer>();
-	List<Integer> yy = new ArrayList<Integer>();
+	protected static final int DELAI = 30, DIVIDER = 180, MULTIPLY_FACTOR = 36, LINE_LENGTH = 2, FEU_RAYON_MIN = 100, FEU_RAYON_MAX = 200;
+	private static final int NOMBRE_COULEURS = 11;
+	private static Color colors[] = new Color[NOMBRE_COULEURS];
+	protected static final double PI = 3.14159, VITESSE = 5;
+	private Timer horloge;
+	private long prochainLancement;
+	private FinPartie fin = FinPartie.AUCUNE;
+	List<Fusee> fusees = new ArrayList<Fusee>();
 
 	public PopupVictoire() {
 		setOpaque(false);
-
-		x1 = color_index = 0;
-		moveX = 3;
-		timer = new Timer(DELAY, new MyChangeListener());
-		CENTER = new Point(100, 100);
-
-		r = new Random();
 
 		colors[0] = Color.ORANGE;
 		colors[1] = Color.BLUE;
@@ -52,106 +46,111 @@ public class PopupVictoire extends JPanel {
 		colors[9] = Color.GRAY;
 		colors[10] = Color.MAGENTA;
 
-		setBackground(Color.black);
+		horloge = new Timer(DELAI, this);
 	}
-	
-	public void lancer() {
+
+	public void lancer(FinPartie f) {
 		setVisible(true);
-		timer.start();
+		fin = f;
+		if (fin == FinPartie.VICTOIRE) {
+			horloge.start();
+		} else {
+			repaint();
+		}
 	}
+
 	public void arreter() {
-		setVisible(false);
-		timer.stop();
+		if (fin != FinPartie.VICTOIRE) {
+			setVisible(false);
+		} else {
+			setVisible(false);
+			horloge.stop();
+			fusees.clear();
+		}
 	}
 
 	@Override
 	protected void paintComponent(Graphics g) {
-		super.paintComponent(g);
-		Graphics2D graphics2d = (Graphics2D) g;
-
-		Stroke stroke = new BasicStroke(20, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 5, new float[] { 9 }, 0);
-		graphics2d.setStroke(stroke);
-		graphics2d.setColor(colors[color_index]);
-		for (int i = 0; i < xx.size(); i++) {
-			graphics2d.drawLine(xx.get(i), yy.get(i), xx.get(i) + LINE_LENGTH, yy.get(i) + LINE_LENGTH);
+		if (fin == FinPartie.NUL) {
+			g.setColor(new Color(0, 0, 0, 96));
+			g.fillRect(0, 0, getWidth(), getHeight());
+			g.setColor(Theme.couleurTImportant);
+			Font f = new Font(" TimesRoman ",Font.BOLD+Font.ITALIC,50);
+			g.setFont(f);
+			g.drawString("Match Nul", getWidth()/2-121, getHeight()/2-18);
+		}else if (fin == FinPartie.DEFAITE) {
+				g.setColor(new Color(0, 0, 0, 96));
+				g.fillRect(0, 0, getWidth(), getHeight());
+				g.setColor(Theme.couleurTImportant);
+				Font f = new Font(" TimesRoman ",Font.BOLD+Font.ITALIC,50);
+				g.setFont(f);
+				g.drawString("Défaite !", getWidth()/2-121, getHeight()/2-18);
+		} else if (fin == FinPartie.VICTOIRE){
+			Graphics2D gra = (Graphics2D) g;
+			Iterator<Fusee> it = fusees.iterator();
+			while (it.hasNext()) {
+				it.next().afficher(gra);
+			}
 		}
 	}
 
-	class MyChangeListener implements ActionListener {
-		@Override
-		public void actionPerformed(ActionEvent arg0) {
-			x1 += moveX;
-			if (x1 == 0 || x1 >= FIREWORK_RADIUS) {
-				x1 = 0;
-				CENTER.x = r.nextInt(getWidth() - 200) + 100;
-				CENTER.y = r.nextInt(getHeight() - 200) + 100;
-				color_index = r.nextInt(ARRAY_LENGTH);
-			}
-			xx.clear();
-			yy.clear();
-			for (int i = 0; i < 10; i++) {
-				xx.add((int) (CENTER.x + x1 * Math.cos((MULTIPLY_FACTOR * i * PI) / DIVIDER)));
-				yy.add((int) (CENTER.y + x1 * Math.sin((MULTIPLY_FACTOR * i * PI) / DIVIDER)));
-			}
-			repaint();
+	private void tirer() {
+		Random r = new Random();
+		prochainLancement = System.currentTimeMillis() + r.nextInt(1000) + 2000;
+		for (int i = 0; i < r.nextInt(4) + 1; i++) {
+			fusees.add(new Fusee(new Point(r.nextInt(getWidth() - 200) + 100, r.nextInt(getHeight() - 200) + 100), colors[r.nextInt(NOMBRE_COULEURS)]));
 		}
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent arg0) {
+		if (System.currentTimeMillis() > prochainLancement) {
+			tirer();
+		}
+		Iterator<Fusee> it = fusees.iterator();
+		while (it.hasNext()) {
+			if (it.next().maj())
+				it.remove();
+		}
+		repaint();
 	}
 }
 
-/*
- * @SuppressWarnings("serial") public class PopupVictoire extends JPanel
- * implements ActionListener { private Timer t; private long prochainLancement,
- * precTemps; private LinkedList<Particule> particules = new
- * LinkedList<Particule>(); private Random aleat;
- * 
- * public PopupVictoire() { super(); setOpaque(false); t = new Timer(10, this);
- * precTemps = 0; aleat = new Random(); }
- * 
- * public void lancer() { setVisible(true); repaint(); tirer(aleat); precTemps =
- * System.currentTimeMillis(); t.start(); }
- * 
- * public void arreter() { setVisible(false); t.stop(); }
- * 
- * private void tirer(Random a) { prochainLancement = System.currentTimeMillis()
- * + a.nextInt(3000)+2000; for(int i=0 ; i<aleat.nextInt(500)+2 ; i++) {
- * particules.add(new Fusee(aleat, Forme.FUSEE, Color.GRAY, particules)); } }
- * 
- * public void paintComponent(Graphics g) { Iterator<Particule> it =
- * particules.iterator(); while(it.hasNext()) { it.next().afficher(g,
- * getWidth(), getHeight()); } }
- * 
- * @Override public void actionPerformed(ActionEvent e) { float facteurSeconde =
- * (System.currentTimeMillis()-precTemps)/1000f; precTemps =
- * System.currentTimeMillis(); if(precTemps > prochainLancement) { tirer(aleat);
- * } Iterator<Particule> it = particules.iterator(); while(it.hasNext()) {
- * if(it.next().maj(facteurSeconde)) it.remove(); } repaint(); } }
- * 
- * enum Forme {OVALE, FUSEE};
- * 
- * class Particule { private LinkedList<Particule> particules;
- * 
- * public Float coord; public Float vecteur; public Forme forme; public Color
- * couleur; public Float taille;
- * 
- * public Particule(Random a, Forme f, Color c, LinkedList<Particule> p) { coord
- * = new Float(a.nextFloat(), 1); vecteur = new
- * Float((a.nextFloat()/2)-0.5f,a.nextFloat()/3); forme = f; couleur = c;
- * if(forme == Forme.OVALE || forme == Forme.FUSEE) { taille = new Float(0.01f,
- * 0.03f); } particules = p; //;//System.out.println("POP"); } public boolean
- * maj(float facteurSeconde) { coord.x = coord.x + vecteur.x*facteurSeconde;
- * //;//System.out.println(coord.x+"-"+vecteur.x+"-"+facteurSeconde); coord.y =
- * coord.y + vecteur.y*facteurSeconde; vecteur.x = vecteur.x *0.75f; vecteur.y =
- * vecteur.y - 0.2f*facteurSeconde; return false; } public void
- * afficher(Graphics g, int w, int h) { g.setColor(couleur); if(forme ==
- * Forme.OVALE || forme == Forme.FUSEE) { g.fillOval((int)(coord.x*w),
- * (int)(coord.y*h), (int)(taille.x*w), (int)(taille.y*h)); } } }
- * 
- * class Fusee extends Particule { public long tempsExplosion; public
- * Fusee(Random a, Forme f, Color c, LinkedList<Particule> p) { super(a, f, c,
- * p); tempsExplosion = System.currentTimeMillis()+a.nextInt(2000)+3000; }
- * public boolean maj(float facteurSeconde) { super.maj(facteurSeconde);
- * if(System.currentTimeMillis() > tempsExplosion) {
- * //;//System.out.println("ANIHILIATION !"); return true; } return false; }
- * 
- * }
- */
+class Fusee {
+	Point centre;
+	Color couleur;
+	int var;
+	int taille;
+	List<Point> points = new ArrayList<Point>();
+
+	public Fusee(Point p, Color c) {
+		centre = p;
+		couleur = c;
+		var = 0;
+		Random a = new Random();
+		taille = a.nextInt(PopupVictoire.FEU_RAYON_MAX - PopupVictoire.FEU_RAYON_MIN) + PopupVictoire.FEU_RAYON_MIN;
+	}
+
+	public boolean maj() {
+		if (var < taille) {
+			var += PopupVictoire.VITESSE;
+			points.clear();
+			for (int i = 0; i < 10; i++) {
+				points.add(new Point((int) (centre.x + var * Math.cos((PopupVictoire.MULTIPLY_FACTOR * i * PopupVictoire.PI) / PopupVictoire.DIVIDER)), (int) (centre.y + var
+						* Math.sin((PopupVictoire.MULTIPLY_FACTOR * i * PopupVictoire.PI) / PopupVictoire.DIVIDER))));
+			}
+			return false;
+		} else {
+			return true;
+		}
+	}
+
+	public void afficher(Graphics2D g) {
+		Stroke stroke = new BasicStroke(20, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 5, new float[] { 9 }, 0);
+		g.setStroke(stroke);
+		g.setColor(couleur);
+		for (int i = 0; i < points.size(); i++) {
+			g.drawLine(points.get(i).x, points.get(i).y, points.get(i).x + PopupVictoire.LINE_LENGTH, points.get(i).y + PopupVictoire.LINE_LENGTH);
+		}
+	}
+}
