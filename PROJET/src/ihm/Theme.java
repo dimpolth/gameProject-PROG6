@@ -146,6 +146,7 @@ public class Theme {
 				ihm.tg.imgCroix = ImageIO.read(getClass().getResource("/images/themes/" + pId.s + "/croix.png"));
 				imgMenuFin = ImageIO.read(getClass().getResource("/images/themes/" + pId.s + "/fondMenuFin.png"));
 				imgMenuLarge = ImageIO.read(getClass().getResource("/images/themes/" + pId.s + "/fondMenuLarge.png"));
+				ihm.chargement.img = ImageIO.read(getClass().getResource("/images/themes/" + pId.s + "/chargement.png"));
 				ihm.popupM.setImage(imgMenuFin);
 				ihm.popupO.setImage(imgMenuLarge);
 				ihm.popupR.setImage(imgMenuLarge);
