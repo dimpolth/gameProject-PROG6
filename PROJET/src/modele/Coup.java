@@ -1,12 +1,17 @@
 package modele;
 
 import java.awt.Point;
+import java.io.Serializable;
 
 /**
  * Un coup est un couple de case jouées : une case de départ et une case d'arrivée
  */
-public class Coup {
+public class Coup implements Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	/**
 	 * Point de départ du coup.
 	 */

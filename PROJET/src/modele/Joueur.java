@@ -3,13 +3,17 @@ import java.io.Serializable;
 
 import ia.*;
 import ia.IntelligenceArtificielle.difficulteIA;
-import moteur.*;
 /**
  *Classe contenant tout ce qui définit un joueur. 
  *Instancie l'IA.
  */
 public class Joueur implements Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Définit si le joueur est un humain ou un IA.
 	 */
@@ -264,4 +268,9 @@ public class Joueur implements Serializable {
 	public void viderIa() {
 		ia = null;
 	}
+	
+	public IntelligenceArtificielle getIA(){
+		return ia;
+	}
+	
 }

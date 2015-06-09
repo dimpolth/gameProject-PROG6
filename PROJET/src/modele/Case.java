@@ -8,6 +8,11 @@ import java.util.*;
  */
 public class Case implements Serializable {
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
 	 * Définit l'occupation d'une case. 
 	 */
 	public enum Etat {

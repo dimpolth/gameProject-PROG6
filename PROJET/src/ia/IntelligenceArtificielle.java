@@ -8,6 +8,11 @@ import java.util.Iterator;
 import modele.*;
 
 public class IntelligenceArtificielle implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public enum difficulteIA{
 		facile,
 		normal,
