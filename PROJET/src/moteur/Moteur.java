@@ -193,7 +193,10 @@ public class Moteur {
 		ech = new Echange();
 		listePointDebut = new ArrayList<Point>();
 		joueurCourant = j1;
+		int[] score = { j1.getScore(), j2.getScore() };
+		gestionEvenementGraphique(null,null,null, score, null,null);
 		actionParametre(dataValue);
+		
 	}
 
 	/**
@@ -243,7 +246,7 @@ public class Moteur {
 					if (joueurCourant.isJoueurHumain())
 						gestionEvenementGraphique(BandeauSup, BandeauInf, EvenementGraphique.FinPartie.DEFAITE);
 					else
-						gestionEvenementGraphique(BandeauSup, BandeauInf, EvenementGraphique.FinPartie.NUL);
+						gestionEvenementGraphique(BandeauSup, BandeauInf, EvenementGraphique.FinPartie.VICTOIRE);
 				}
 			}
 			gestionEvenementGraphique(BandeauSup, BandeauInf);
@@ -252,7 +255,7 @@ public class Moteur {
 		} else if (compteurNul == 24) {
 			String BandeauSup = "Match nul";
 			String BandeauInf = "Trop de coups sans prise joués";
-			gestionEvenementGraphique(BandeauSup, BandeauInf, EvenementGraphique.FinPartie.DEFAITE);
+			gestionEvenementGraphique(BandeauSup, BandeauInf, EvenementGraphique.FinPartie.NUL);
 			return true;
 		}
 		return false;
@@ -329,7 +332,6 @@ public class Moteur {
 	public void prise(boolean priseAspi, boolean prisePercu) {
 		Terrain.Direction d = t.recupereDirection(pDepart, pArrive);
 		ArrayList<Point> l = new ArrayList<Point>();
-		System.out.println("TOTOTOT : depart :"+pDepart+"arrivé"+pArrive);
 		
 		h.ajouterCoup(pDepart, pArrive);
 		if (priseAspi && prisePercu) {
@@ -445,6 +447,7 @@ public class Moteur {
 	 */
 	public void testFinTour() {
 		pDepart = pArrive;
+		System.out.println("test FIN DE TOUR");
 		if (prisePossible(pDepart, h.histoTour).isEmpty()) {
 			finTour();
 		} else {
@@ -601,9 +604,11 @@ public class Moteur {
 			public void run() {
 				com.envoyer(new Echange("chargement",true));
 				do {
+					
 					jeuIa = joueurCourant.jouer();
 					selectionPion(jeuIa.getpDepart());
 					selectionDestination(jeuIa.getpArrivee());
+					System.out.println("l'Ia joue"+jeuIa.getpDepart()+" | "+jeuIa.getpArrivee());
 					// traceTerrain();
 				} while (joueurCourant.IaContinue());
 				com.envoyer(new Echange("chargement",false));
@@ -697,9 +702,15 @@ public class Moteur {
 				compteurNul--;
 			}
 			if (tourEnCours) {
-				t = h.getDernierTerrain();
+				t = h.getDernierTerrain().copie();
 				e = EtatTour.selectionPion;
+				tourEnCours=false;
+				h.effacerHistoTour();
+				gestionEvenementGraphique(null,"selection Pion");
 				gestionEvenementGraphique();
+				
+				
+				
 			} else {
 				ech.vider();
 				Terrain annulation = h.annuler();
@@ -729,6 +740,7 @@ public class Moteur {
 					e = EtatTour.selectionPion;
 				} else {
 					e = EtatTour.jeuxIa;
+					j2 = new Joueur(j2); 
 					jouerIa();
 				}
 			}

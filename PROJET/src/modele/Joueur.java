@@ -95,7 +95,8 @@ public class Joueur implements Serializable {
 		score = j.getScore();
 		joueurHumain = j.isJoueurHumain();
 		nom = j.getNom();
-		ia = j.ia;
+		ia = new IntelligenceArtificielle(j.ia.getNiveauDifficulte(), j.ia.getJoueurIA(), j.ia.getJoueurAdv(), j.ia.getTerrain());
+		j.ia.getTerrain().dessineTableauAvecIntersections();
 	}
 
 	/**

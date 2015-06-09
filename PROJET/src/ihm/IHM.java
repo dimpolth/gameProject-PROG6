@@ -662,7 +662,7 @@ public class IHM extends JFrame implements ComponentListener {
 		if((dataValue = e.get("chargement")) != null){
 			
 			if((boolean) dataValue == true){
-				System.out.println("Chargement");
+				
 				chargement.afficher();
 			}
 			else
