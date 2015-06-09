@@ -82,9 +82,9 @@ public class Connexion implements Runnable{
 				
 				try {				
 					Object recu = ois.readObject();		
-					
+					System.out.println("Réception connexion");
 					if(recu instanceof Echange){
-						
+						System.out.println("Réception connexion (échange)");
 						Echange ech = (Echange)recu;					
 						
 						int j = 0;
@@ -108,7 +108,8 @@ public class Connexion implements Runnable{
 					
 					
 				} catch (Exception ex) {
-					System.out.println("catch connexion");					
+					System.out.println("catch connexion");
+					ex.printStackTrace();
 				}				
 
 			}

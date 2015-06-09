@@ -142,9 +142,10 @@ public class PopupOptions extends Popup {
 	}
 	
 	public void bloquer(boolean b){
-
+		
 		identifiantJoueur1.setEnabled(!b);
 		identifiantJoueur2.setEnabled(!b);
+		
 		selectJoueur1.setEnabled(!b);
 		selectJoueur2.setEnabled(!b);
 		
