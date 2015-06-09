@@ -196,6 +196,7 @@ public class Moteur {
 		joueurCourant = j1;
 		int[] score = { j1.getScore(), j2.getScore() };
 		gestionEvenementGraphique(null,null,null, score, null,null);
+		gestionBouton();
 		actionParametre(dataValue);
 		
 	}
@@ -626,10 +627,12 @@ public class Moteur {
 		if (Joueur.recupereJoueurOpposant(joueurCourant, j1, j2, false).isJoueurHumain()) {
 			if (i <= 0) {
 				ech2.ajouter("annuler", false);
-				ech2.ajouter("refaire", true);
+				if (i < h.histoPrincipal.size()-1) {
+					ech2.ajouter("refaire", true);
+					}
 			} else {
 				ech2.ajouter("annuler", true);
-				if (i == h.histoPrincipal.size() - 1) {
+				if (i == h.histoPrincipal.size()-1) {
 					ech2.ajouter("refaire", false);
 				} else {
 					ech2.ajouter("refaire", true);
@@ -638,10 +641,12 @@ public class Moteur {
 		} else {
 			if (i <= 1) {
 				ech2.ajouter("annuler", false);
-				ech2.ajouter("refaire", true);
+				if (i < h.histoPrincipal.size()-1) {
+					ech2.ajouter("refaire", true);
+					}
 			} else {
 				ech2.ajouter("annuler", true);
-				if (i == h.histoPrincipal.size() - 1) {
+				if (i == h.histoPrincipal.size()-1) {
 					ech2.ajouter("refaire", false);
 				} else {
 					ech2.ajouter("refaire", true);
@@ -865,6 +870,7 @@ public class Moteur {
 		ech.ajouter("score", tabScore);
 		com.envoyer(ech);
 		envoiParametre();
+		gestionBouton();
 		
 		if (joueurCourant.isJoueurHumain()) {
 			e = EtatTour.selectionPion;
