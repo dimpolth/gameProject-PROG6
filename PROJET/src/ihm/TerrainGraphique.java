@@ -48,14 +48,7 @@ public class TerrainGraphique extends JPanel implements ComponentListener {
 
 	public TerrainGraphique(IHM i) {
 		super(null);
-		try {
-			imgPlateau = ImageIO.read(getClass().getResource("/images/themes/bois/plateau.png"));
-			imgPion1 = ImageIO.read(getClass().getResource("/images/themes/bois/pion1.png"));
-			imgPion2 = ImageIO.read(getClass().getResource("/images/themes/bois/pion2.png"));
-			imgCroix = ImageIO.read(getClass().getResource("/images/themes/bois/croix.png"));
-		} catch (Exception e) {
-
-		}
+		
 
 		ihm = i;
 		select = null;

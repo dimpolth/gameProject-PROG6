@@ -697,12 +697,14 @@ public class Moteur {
 	public void jouerIa() {
 		Thread th = new Thread() {
 			public void run() {
+				com.envoyer(new Echange("chargement",true));
 				do {
 					jeuIa = joueurCourant.jouer();
 					selectionPion(jeuIa.getpDepart());
 					selectionDestination(jeuIa.getpArrivee());
 					// traceTerrain();
 				} while (joueurCourant.IaContinue());
+				com.envoyer(new Echange("chargement",false));
 				finTour();
 			}
 		};
