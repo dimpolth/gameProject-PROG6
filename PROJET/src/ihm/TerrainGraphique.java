@@ -1,5 +1,7 @@
 package ihm;
 
+import ihm.EvenementGraphique.FinPartie;
+
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;

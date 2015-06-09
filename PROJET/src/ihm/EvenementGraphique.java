@@ -153,8 +153,8 @@ public class EvenementGraphique implements Runnable, Serializable {
 		} else {
 			EvenementGraphique.animationEnCours = false;
 		}
-		if(finPartie == FinPartie.VICTOIRE) {
-			tg.ihm.popupV.lancer();
+		if(finPartie != FinPartie.AUCUNE) {
+			tg.ihm.popupV.lancer(finPartie);
 		}
 	}
 

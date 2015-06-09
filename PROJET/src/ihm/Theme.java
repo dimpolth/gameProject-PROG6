@@ -27,7 +27,7 @@ public class Theme {
 	private Image imgMenuLarge, imgMenuFin;
 	protected Image imgFond;
 	public Color couleurDefaut = null, couleurJ1 = null, couleurJ2 = null, couleurPolice = null, couleurPoliceGrisee = null, couleurBordures = null, couleurMenu = null;
-	public Color couleurSup = null, couleurInf = null, couleurTDefaut = null, couleurReseauMessage = null, couleurChemin = null;
+	static public Color couleurSup = null, couleurInf = null, couleurTDefaut = null, couleurReseauMessage = null, couleurChemin = null, couleurTImportant = null;
 
 	Theme(IHM ihm) {
 		this.ihm = ihm;
@@ -54,6 +54,7 @@ public class Theme {
 				couleurMenu = Color.BLACK;
 				couleurReseauMessage = Color.ORANGE;
 				couleurChemin = Color.WHITE;
+				couleurTImportant = Color.RED;
 				break;
 			case BOIS:
 				couleurDefaut = new Color(240, 230, 140);
@@ -68,6 +69,7 @@ public class Theme {
 				couleurMenu = Color.WHITE;
 				couleurReseauMessage = Color.ORANGE;
 				couleurChemin = Color.WHITE;
+				couleurTImportant = Color.RED;
 				break;
 			case MARBRE:
 				couleurDefaut = Color.LIGHT_GRAY;
@@ -82,6 +84,7 @@ public class Theme {
 				couleurMenu = Color.BLACK;
 				couleurReseauMessage = Color.ORANGE;
 				couleurChemin = Color.WHITE;
+				couleurTImportant = Color.RED;
 				break;
 			case SOMBRE:
 				couleurDefaut = new Color(12, 20, 31);
@@ -96,6 +99,7 @@ public class Theme {
 				couleurMenu = new Color(230, 255, 255);
 				couleurReseauMessage = Color.RED;
 				couleurChemin = new Color(230, 255, 255);
+				couleurTImportant = Color.RED;
 				break;
 			case COCHON:
 				couleurDefaut = Color.LIGHT_GRAY;
@@ -110,6 +114,7 @@ public class Theme {
 				couleurMenu = Color.BLACK;
 				couleurReseauMessage = Color.ORANGE;
 				couleurChemin = Color.WHITE;
+				couleurTImportant = Color.RED;
 				break;
 			}
 			ihm.bandeauInfos.panTextes.setBackground(couleurDefaut);
