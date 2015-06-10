@@ -1,18 +1,10 @@
 package ihm;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.GridLayout;
-import java.awt.Insets;
 import java.awt.LayoutManager;
 import java.net.InetAddress;
-import java.net.UnknownHostException;
-
-import javax.swing.BorderFactory;
-import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -33,17 +25,30 @@ public class PopupReseau extends Popup {
 	protected JLabel message;
 	protected Bouton boutonHeberger, boutonRetour, boutonRejoindre;
 
-	public PopupReseau(IHM i) {
-		
-		
-		
+	public PopupReseau(IHM i) {		
 		super(  new BorderLayout()  );
+		
+		String hostip = null;
+		String hostname = null;
+		String monId = null;
+	    try {
+	      final InetAddress addr = InetAddress.getLocalHost();
+	      hostip = addr.getHostAddress();
+	      hostname = new String(addr.getHostName());
+	    } catch(final Exception e) {	    
+	    }
+	    
+	    if(hostname != null) monId = hostname;
+	    else if(hostip != null) monId = hostip;
+	    else monId = "Joueur-" + (System.currentTimeMillis() % 100);
+	    
+		
 		this.setOpaque(false);
 		PanelReseau nord = new PanelReseau();
 		
 		PanelReseau identifiant = new PanelReseau( new GridLayout(2,1) );
-		etiqId = new JLabel("Mon identifiant");
-		champId = formater(new JTextField("Joueur-" + System.currentTimeMillis() % 100));
+		etiqId = new JLabel("Mon identifiant :");
+		champId = formater(new JTextField(monId));
 		identifiant.add(etiqId);
 		identifiant.add(champId);		
 		nord.add(identifiant);
@@ -70,37 +75,37 @@ public class PopupReseau extends Popup {
 		droite.add(rejoindre, BorderLayout.EAST);
 		
 		PanelReseau hebergerIp = new PanelReseau(  new GridLayout(2,1)  );
-		etiqHebergerIp = new JLabel( "Mon adresse ip" );
-		champHebergerIp = formater(new JTextField(""));
+		etiqHebergerIp = new JLabel( "Mon adresse ip :" );
+		champHebergerIp = formater(new JTextField(monId));
 		champHebergerIp.setEditable(false);
 		hebergerIp.add(etiqHebergerIp);
 		hebergerIp.add(champHebergerIp);
 		heberger.add(hebergerIp);
 		
 		PanelReseau hebergerPort = new PanelReseau(  new GridLayout(2,1)  );
-		etiqHebergerPort = new JLabel( "Port" );
-		champHebergerPort = formater(new JTextField("bla"));
+		etiqHebergerPort = new JLabel( "Port :" );
+		champHebergerPort = formater(new JTextField("55555"));
 		hebergerPort.add(etiqHebergerPort);
 		hebergerPort.add(champHebergerPort);
 		heberger.add(hebergerPort);
 		
 		PanelReseau hebergerBoutons = new PanelReseau();
-		boutonHeberger = new Bouton("Heberger");
+		boutonHeberger = new Bouton("Héberger");
 		boutonHeberger.addActionListener(new Ecouteur(Ecouteur.Bouton.RESEAU_HEBERGER, i));
 		hebergerBoutons.add(boutonHeberger);
 		heberger.add(hebergerBoutons);		
 		
 		
 		PanelReseau rejoindreIp = new PanelReseau(  new GridLayout(2,1)  );
-		etiqRejoindreIp = new JLabel( "Hôte" );
-		champRejoindreIp = formater(new JTextField(""));
+		etiqRejoindreIp = new JLabel( "Hôte de la partie :" );
+		champRejoindreIp = formater(new JTextField("127.0.0.1"));
 		rejoindreIp.add(etiqRejoindreIp);
 		rejoindreIp.add(champRejoindreIp);
 		rejoindre.add(rejoindreIp);
 		
 		PanelReseau rejoindrePort = new PanelReseau(  new GridLayout(2,1)  );
-		etiqRejoindrePort = new JLabel( "Le port" );
-		champRejoindrePort = formater(new JTextField(""));
+		etiqRejoindrePort = new JLabel( "Port :" );
+		champRejoindrePort = formater(new JTextField("55555"));
 		rejoindrePort.add(etiqRejoindrePort);
 		rejoindrePort.add(champRejoindrePort);
 		rejoindre.add(rejoindrePort);
@@ -116,10 +121,12 @@ public class PopupReseau extends Popup {
 		boutonRetour.addActionListener(new Ecouteur(Ecouteur.Bouton.RESEAU_RETOUR, i));
 		PanelReseau sud = new PanelReseau();
 		
-		PanelReseau bas = new PanelReseau(new GridLayout(2,1));
+		PanelReseau bas = new PanelReseau(new BorderLayout());
 		message = new JLabel("");	
-		bas.add(message);
-		bas.add(boutonRetour);
+		bas.add(message, BorderLayout.NORTH);
+		JPanel zoneBoutonRetour = new PanelReseau();
+		zoneBoutonRetour.add(boutonRetour, BorderLayout.SOUTH);
+		bas.add(zoneBoutonRetour);
 		sud.add(bas);
 		
 		add(sud, BorderLayout.SOUTH);
@@ -200,18 +207,18 @@ public class PopupReseau extends Popup {
 	}
 	
 	JLabel formater(JLabel j){
-		
+		j.setHorizontalAlignment(JLabel.CENTER);
+		j.setHorizontalTextPosition(JLabel.CENTER);
 		j.setOpaque(false);
 		j.setPreferredSize(new Dimension(200,20));
 		
 		return j;
 	}
 	
-	JTextField formater(JTextField e){
-		
+	JTextField formater(JTextField e){		
 		e.setOpaque(true);
 		e.setPreferredSize(new Dimension(160,35));
-		
+		e. setHorizontalAlignment(JTextField.CENTER);		
 		return e;
 	}
 	

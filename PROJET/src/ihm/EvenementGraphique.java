@@ -11,14 +11,15 @@ public class EvenementGraphique implements Runnable, Serializable {
 	public enum FinPartie {
 		VICTOIRE, DEFAITE, AUCUNE, NUL
 	};
-
+	
+	private static TerrainGraphique tg=null;
+	public static boolean animationEnCours = false;
+		
 	private Case[][] terrain;
 	private Point[] deplacement;
 	private Point[] choixPrise;
 	private ArrayList<Point> pionsManges, chemin;
 	private int[] score;
-	private static TerrainGraphique tg;
-	public static boolean animationEnCours = false;
 	private String bandeauSup, bandeauInf;
 	private int joueurCourant = 0;
 	private FinPartie finPartie = FinPartie.AUCUNE;
@@ -50,8 +51,7 @@ public class EvenementGraphique implements Runnable, Serializable {
 		choixPrise = null;
 		pionsManges = null;
 		chemin = null;
-		score = null;
-		tg = null;
+		score = null;		
 		bandeauSup = null;
 		bandeauInf = null;
 	}
@@ -62,8 +62,7 @@ public class EvenementGraphique implements Runnable, Serializable {
 		choixPrise = null;
 		pionsManges = null;
 		chemin = null;
-		score = null;
-		tg = null;
+		score = null;		
 		bandeauSup = null;
 		bandeauInf = null;
 		this.chemin = new ArrayList<Point>();
@@ -93,7 +92,7 @@ public class EvenementGraphique implements Runnable, Serializable {
 		joueurCourant = i;
 	}
 
-	public void lancer() {
+	public void lancer() {	
 		Thread t = new Thread(this);
 		t.start();
 	}
@@ -102,12 +101,11 @@ public class EvenementGraphique implements Runnable, Serializable {
 		if (terrain != null) {
 			
 			tg.dessinerTerrain(terrain);
-
-			latence(200);
+			latence(300);
 		}
 
-		if (deplacement != null) {
-			tg.deplacer(deplacement[0], deplacement[1]);
+		if (deplacement != null) {			
+			tg.deplacer(deplacement[0], deplacement[1]);			
 			latence(TerrainGraphique.ANIM_DEPL);
 		}
 
@@ -151,9 +149,10 @@ public class EvenementGraphique implements Runnable, Serializable {
 		}
 
 		if (tg.lCoups.size() != 0) {
+			animationEnCours(true);
 			tg.lCoups.pollFirst().lancer();
 		} else {
-			EvenementGraphique.animationEnCours = false;
+			animationEnCours(false);
 		}
 		if(finPartie != FinPartie.AUCUNE) {
 			tg.ihm.popupV.lancer(finPartie);
@@ -168,11 +167,22 @@ public class EvenementGraphique implements Runnable, Serializable {
 		}
 	}
 
-	public static void afficherCoups(TerrainGraphique tg) {
+	public static void lancer(TerrainGraphique tg) {
 		EvenementGraphique.tg = tg;
 		if (!EvenementGraphique.animationEnCours) {
-			EvenementGraphique.animationEnCours = true;
+			animationEnCours(true);
 			tg.lCoups.pollFirst().lancer();
 		}
+	}
+	
+	public static void stopper(){
+		if(tg!= null && tg.lCoups.size()>0)
+			tg.lCoups.clear();
+	}
+	
+	public static void animationEnCours(boolean b){
+		EvenementGraphique.animationEnCours = b;		
+		tg.ihm.popupM.bloquerSauverCharger(b);
+		tg.ihm.popupO.bloquer(b);	
 	}
 }

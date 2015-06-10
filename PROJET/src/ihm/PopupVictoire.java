@@ -27,9 +27,9 @@ public class PopupVictoire extends JPanel implements ActionListener {
 	private static Color colors[] = new Color[NOMBRE_COULEURS];
 	protected static final double PI = 3.14159, VITESSE = 5;
 	private Timer horloge;
-	private long prochainLancement;
 	private FinPartie fin = FinPartie.AUCUNE;
-	List<Fusee> fusees = new ArrayList<Fusee>();
+	private Random r;
+	private List<Fusee> fusees = new ArrayList<Fusee>();
 
 	public PopupVictoire() {
 		setOpaque(false);
@@ -46,6 +46,7 @@ public class PopupVictoire extends JPanel implements ActionListener {
 		colors[9] = Color.GRAY;
 		colors[10] = Color.MAGENTA;
 
+		r = new Random();
 		horloge = new Timer(DELAI, this);
 	}
 
@@ -95,18 +96,15 @@ public class PopupVictoire extends JPanel implements ActionListener {
 	}
 
 	private void tirer() {
-		Random r = new Random();
-		prochainLancement = System.currentTimeMillis() + r.nextInt(1000) + 2000;
-		for (int i = 0; i < r.nextInt(4) + 1; i++) {
+		for (int i = 0; i < r.nextInt(2) + 1; i++) {
 			fusees.add(new Fusee(new Point(r.nextInt(getWidth() - 200) + 100, r.nextInt(getHeight() - 200) + 100), colors[r.nextInt(NOMBRE_COULEURS)]));
 		}
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		if (System.currentTimeMillis() > prochainLancement) {
+		if(r.nextInt(100)<10)
 			tirer();
-		}
 		Iterator<Fusee> it = fusees.iterator();
 		while (it.hasNext()) {
 			if (it.next().maj())

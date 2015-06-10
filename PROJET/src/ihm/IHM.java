@@ -4,9 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.GridLayout;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ComponentEvent;
@@ -21,11 +19,9 @@ import java.io.InputStream;
 import javax.imageio.ImageIO;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.SwingConstants;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import modele.Parametres;
@@ -43,7 +39,7 @@ public class IHM extends JFrame implements ComponentListener {
 	/**
 	 * Mini-fenêtre à afficher au lancement du jeu.
 	 */
-	JFrame fenetreChargement;
+	FenetreChargement fenetreChargement;
 	/**
 	 * Theme de la fenêtre.
 	 */
@@ -94,9 +90,8 @@ public class IHM extends JFrame implements ComponentListener {
 
 		// Initialisation de la fenêtre
 		super("Fanorona");
-		fenetreChargement(true);
+		fenetreChargement = new FenetreChargement();
 		try {
-			fenetreChargement.setIconImage(ImageIO.read(getClass().getResource("/images/icone.png")));
 			setIconImage(ImageIO.read(getClass().getResource("/images/icone.png")));
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -193,21 +188,21 @@ public class IHM extends JFrame implements ComponentListener {
 		gestionCouche.add(popupB, new Integer(1));
 		popupB.setVisible(false);
 		popupM = new PopupMenu(this);
-		gestionCouche.add(popupM, new Integer(2));
+		gestionCouche.add(popupM, new Integer(3));
 		popupM.setVisible(false);
 		popupO = new PopupOptions(this);
-		gestionCouche.add(popupO, new Integer(3));
+		gestionCouche.add(popupO, new Integer(4));
 		popupO.setVisible(false);
 		popupR = new PopupRegles(this);
-		gestionCouche.add(popupR, new Integer(3));
+		gestionCouche.add(popupR, new Integer(4));
 		popupR.setVisible(false);
 
 		popupReseau = new PopupReseau(this);
-		gestionCouche.add(popupReseau, new Integer(3));
+		gestionCouche.add(popupReseau, new Integer(4));
 		popupReseau.setVisible(false);
 
 		popupV = new PopupVictoire();
-		gestionCouche.add(popupV, new Integer(4));
+		gestionCouche.add(popupV, new Integer(2));
 
 		theme.setTheme(Theme.Type.BOIS);
 
@@ -220,7 +215,7 @@ public class IHM extends JFrame implements ComponentListener {
 		setLocation(dFen.width / 2 - getSize().width / 2, dFen.height / 2 - getSize().height / 2);
 
 		setSize(new Dimension(800, 600));
-		fenetreChargement(false);
+		fenetreChargement.setVisible(false);
 		setVisible(true);
 
 	}
@@ -236,14 +231,33 @@ public class IHM extends JFrame implements ComponentListener {
 		return params;
 
 	}
+	
+	
 
 	public void nouvellePartie() {
+		
+		
+		
+		Parametres params = getParametres();
+		if(params.j1_type != NiveauJoueur.HUMAIN && params.j2_type != NiveauJoueur.HUMAIN ){
+			popupO.selectJoueur1.setSelectedIndex(0);
+			popupO.identifiantJoueur1.setText("Joueur 1");
+		}
+		
+		
+		EvenementGraphique.stopper();
+		chargement.cacher();
 		Echange e = new Echange();
 		//e.ajouter("nouvellePartie", true);
 		e.ajouter("nouvellePartie", getParametres());
 		//e.ajouter("parametres", );
 		e.ajouter("terrain", true);
-		com.envoyer(e);
+		com.envoyer(e);	
+		
+		
+		
+		
+		
 	}
 	
 	public void sauverPartie(){
@@ -278,10 +292,12 @@ public class IHM extends JFrame implements ComponentListener {
 				retour = JOptionPane.showOptionDialog(this, "Vous êtes actuellement sur une partie en réseau. Voulez-vous vraiment quitter ?", "Attention", 1, 1, null, choix, choix[0]);
 			else retour = 0;
 			if (retour == 0) {
-				com.envoyer("/QUIT");
+				Communication.quitterReseau();
 				System.exit(0);
 			}
 		} else {
+			System.exit(0);
+			/*
 			String[] choix = { "Oui", "Non" };
 			int retour;
 			if(confirmation)
@@ -293,52 +309,62 @@ public class IHM extends JFrame implements ComponentListener {
 				action(Ecouteur.Bouton.SAUVEGARDER);
 				System.exit(0);
 			}
+			*/
 		}
 	}
 	
-	public void reseau_heberger(){
+	public void reseau_heberger(){		
 		
-		String errReseau = null;
-	
-		// Nouveau serveur
-			errReseau = Communication.modeReseau("", popupReseau.champId.getText());
-			if (errReseau == null) {
-				// 2 joueurs humain si on lance une partie réseau
-				Parametres param = new Parametres();
-				param.j1_type = Parametres.NiveauJoueur.HUMAIN;
-				param.j2_type = Parametres.NiveauJoueur.HUMAIN;
-				Echange ec = new Echange();
-				ec.ajouter("nouvellePartie", param);				
-				com.envoyer(ec);
-				JOptionPane.showMessageDialog(this, "Le serveur est ouvert sur le port : " + Communication.getPort() + "", "Port " + Communication.getPort() + "", 1);
-			}
-		if (errReseau == null) {
-			popupReseau.setVisible(false);
-			popupB.setVisible(false);
-			setModeReseau(true);
-			popupReseau.message.setText(errReseau);
-		} else {
-			popupReseau.message.setText(errReseau);
+		int port;
+		try{
+			port = Integer.valueOf( popupReseau.champHebergerPort.getText() );			
 		}
+		catch(Exception e){
+			port=0;
+		}
+		port = Communication.reseauHeberger(port);
 		
+		// erreur
+		if(port == 0){
+			popupReseau.message.setText("Impossible d'ouvrir une partie sur le port specifié");
+		}
+		else{
+			
+			Parametres param = new Parametres();
+			param.j1_type = Parametres.NiveauJoueur.HUMAIN;
+			param.j2_type = Parametres.NiveauJoueur.HUMAIN;			
+			Echange ec = new Echange("nouvellePartie",param);					
+			com.envoyer(ec);
+			
+			
+			// On lance un client
+			reseau_rejoindre("127.0.0.1",port);
+			
+			
+		
+		}
 	}
 	
-	public void reseau_rejoindre(){
-		String errReseau = null;
+	public void reseau_rejoindre(String host, int port){
 		
-			String hoteComplet = popupReseau.champRejoindreIp.getText()+":"+popupReseau.champRejoindrePort.getText();
-			if (!hoteComplet.equals("")) {
-				errReseau = Communication.modeReseau(hoteComplet, popupReseau.champId.getText());
-			}
-		if (errReseau == null) {
+		
+		if(host == null){
+			host =popupReseau.champRejoindreIp.getText();
+		}
+		if(port == 0){
+			port = Integer.valueOf( popupReseau.champRejoindrePort.getText() );
+		}
+		String identifiant = popupReseau.champId.getText();
+		String retour = Communication.reseauRejoindre(host, port, identifiant);
+		if(retour != null){
+			popupReseau.message.setText(retour);
+		}
+		else{
 			popupReseau.setVisible(false);
 			popupB.setVisible(false);
 			setModeReseau(true);
-			popupReseau.message.setText(errReseau);
-		} else {
-			popupReseau.message.setText(errReseau);
+			popupReseau.message.setText("");
 		}
-		
 	}
 
 	/**
@@ -364,7 +390,9 @@ public class IHM extends JFrame implements ComponentListener {
 				int retour = JOptionPane.showOptionDialog(this, "Revenir au jeu local quittera la partie réseau.", "Attention", 1, JOptionPane.INFORMATION_MESSAGE, null, choix, choix[1]);
 
 				if (retour == 0) {
+					Communication.quitterReseau();
 					setModeReseau(false);
+					nouvellePartie();
 				}
 				popupB.setVisible(false);
 			} else {
@@ -465,7 +493,7 @@ public class IHM extends JFrame implements ComponentListener {
 			reseau_heberger();
 			break;
 		case RESEAU_REJOINDRE:
-			reseau_rejoindre();
+			reseau_rejoindre(null,0);
 			break;
 		}
 	}
@@ -486,40 +514,6 @@ public class IHM extends JFrame implements ComponentListener {
         
         Desktop.getDesktop().open(f);
     }
-
-
-	/**
-	 * Création de la mini-fenêtre.
-	 * @param b Vrai si on affiche, faux sinon.
-	 */
-	public void fenetreChargement(boolean b) {
-		if (b) {
-
-			Toolkit screen = Toolkit.getDefaultToolkit();
-			Dimension dFen = screen.getScreenSize();
-			fenetreChargement = new JFrame();
-			fenetreChargement.setLayout(new GridLayout(2, 1));
-			JLabel texte = new JLabel("Chargement en cours...", SwingConstants.CENTER);
-			texte.setFont(new Font("Arial", Font.BOLD, 25));
-			fenetreChargement.add(texte);
-			JPanel p = new JPanel();
-			chargement2 = new Chargement();
-			chargement2.afficher();
-			p.add(chargement2);
-			fenetreChargement.add(p);
-			fenetreChargement.setUndecorated(true);
-			// fenetreChargement.setSize(300,200);
-			fenetreChargement.setSize(dFen.width / 5, dFen.height / 5);
-			fenetreChargement.setResizable(false);
-			fenetreChargement.setLocation(dFen.width / 2 - fenetreChargement.getSize().width / 2, dFen.height / 2 - fenetreChargement.getSize().height / 2);
-			fenetreChargement.setVisible(true);
-
-		} else {
-			chargement2.cacher();
-			fenetreChargement.setVisible(false);
-		}
-
-	}
 
 	/**
 	 * Change l'agencement des boutons si la partie est en réseau.
@@ -546,6 +540,8 @@ public class IHM extends JFrame implements ComponentListener {
 		popupO.selectJoueur2.setVisible(!r);
 		popupM.boutonMenuSauvegarder.setEnabled(!r);
 		popupM.boutonMenuCharger.setEnabled(!r);
+		
+		popupM.bloquerSauverCharger(r);
 
 		
 	}
@@ -593,7 +589,7 @@ public class IHM extends JFrame implements ComponentListener {
 		
 		if ((dataValue = e.get("coup")) != null) {
 			tg.lCoups.addLast((EvenementGraphique) dataValue);
-			EvenementGraphique.afficherCoups(tg);
+			EvenementGraphique.lancer(tg);
 		}
 
 		/* Gardez cet ordre */
@@ -652,11 +648,25 @@ public class IHM extends JFrame implements ComponentListener {
 		}
 		if ((dataValue = e.get("parametres")) != null) {
 			Parametres params = (Parametres) dataValue;
-			System.out.println(params.j2_identifiant);
-			if (params.j1_identifiant != null)
+			if (params.j1_identifiant != null){
 				bandeauInfos.setIdentifiant(1, params.j1_identifiant);
-			if (params.j2_identifiant != null)
+				if(!Communication.enReseau())
+					popupO.identifiantJoueur1.setText(params.j1_identifiant);
+			}
+			if (params.j2_identifiant != null){
 				bandeauInfos.setIdentifiant(2, params.j2_identifiant);
+				if(!Communication.enReseau()){
+					popupO.identifiantJoueur2.setText(params.j2_identifiant);
+					System.out.println("recevoir parametres : "+params.j2_identifiant+" ("+Communication.enReseau()+")");
+				}
+			}
+			
+			if (params.j1_type != null){
+				popupO.selectJoueur1.setSelectedIndex(  Parametres.NiveauJoueur.getToIndex(params.j1_type)  );
+			}
+			if (params.j2_type != null){
+				popupO.selectJoueur2.setSelectedIndex(  Parametres.NiveauJoueur.getToIndex(params.j2_type)  );
+			}
 		}
 		
 		if((dataValue = e.get("chargement")) != null){

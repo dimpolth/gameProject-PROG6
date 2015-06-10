@@ -37,6 +37,57 @@ public class Communication {
 		
 	}
 	
+	public static void quitterReseau(){
+		Communication.canaux[ Communication.IHM ].client.deconnexion();
+		reseau=false;
+		Communication.canaux[ Communication.MOTEUR ].serveur=null;
+		Communication.canaux[ Communication.IHM ].serveur=null;
+		Communication.canaux[ Communication.MOTEUR ].client=null;
+		Communication.canaux[ Communication.IHM ].serveur=null;
+	}
+	
+	public static int reseauHeberger(int port){
+		if(port != 0){
+			
+			Serveur s = new Serveur( Communication.canaux[ Communication.MOTEUR ] );
+			int retour = s.demarrer(port);
+			if(retour > 0){
+				Communication.canaux[ Communication.MOTEUR ].serveur = s;
+				return port;
+			}
+					
+		}
+		
+		return 0;
+		
+	}
+	
+	public static String reseauRejoindre(String host, int port, String identifiant){
+		Client cl = new Client( Communication.canaux[ Communication.IHM ] );
+		
+		try{			
+			cl.connexion(host, port);			
+			cl.envoyer(identifiant);			
+			Communication.canaux[ Communication.IHM ].client = cl;
+			reseau = true;
+		}
+		catch(UnknownHostException ex){
+			return "Host introuvable";
+			
+		}
+		catch(IOException ex){
+			return "Impossible de se connecter à l'hôte indiqué.";
+			
+		}
+		catch(Exception ex){
+			return "Une erreur est survenue.";			
+		}
+		
+		return null;
+		
+	}
+	
+	/*
 	public static String modeReseau(String host, String identifiant){
 		// Si il y a une modification
 		if(host == null && reseau || host != null && !reseau){
@@ -94,6 +145,7 @@ public class Communication {
 		
 		return null;
 	}
+	*/
 	
 	public void envoyer( Object e ){
 		envoyer(e,0);

@@ -74,7 +74,7 @@ public class Joueur implements Serializable {
 	public Joueur(Case.Etat joueurID, typeJoueur joueur, IntelligenceArtificielle.difficulteIA niveau, Joueur adversaire, Terrain t){
 		this.setJoueurID(joueurID);
 		resetScore();
-		this.nom = "Ordinateur";
+		this.nom = "Joueur";
 		this.setJoueurHumain(false);
 		ia = new IntelligenceArtificielle(niveau, this, adversaire, t);
 	}
@@ -95,8 +95,7 @@ public class Joueur implements Serializable {
 		score = j.getScore();
 		joueurHumain = j.isJoueurHumain();
 		nom = j.getNom();
-		ia = new IntelligenceArtificielle(j.ia.getNiveauDifficulte(), j.ia.getJoueurIA(), j.ia.getJoueurAdv(), j.ia.getTerrain());
-		j.ia.getTerrain().dessineTableauAvecIntersections();
+		ia = j.ia;
 	}
 
 	/**

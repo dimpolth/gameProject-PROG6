@@ -29,11 +29,11 @@ public class Serveur implements Runnable{
 		com = c;		
 	}
 	
-	public int demarrer(){
+	public int demarrer(int pPort){
 		try{
-			port = 55555;
-			passiveSocket = new ServerSocket(port);
-			port = passiveSocket.getLocalPort();
+			
+			passiveSocket = new ServerSocket(pPort);
+			port = passiveSocket.getLocalPort();			
 			Thread th = new Thread(this);
 			th.start();
 			return port;
@@ -58,13 +58,15 @@ public class Serveur implements Runnable{
 				
 				try{
 					Socket activeSocket = this.passiveSocket.accept();
-					;//System.out.println("Nouvelle connexion");
+					System.out.println("Nouvelle connexion run serveur");
 				
 					// Lorsqu'un utilisateur se connecte, on créé une nouvelle instance
 					Connexion connexion = new Connexion(this,activeSocket);
 					
 					// On sauvegarde la nouvelle connexion
 					nouvelleConnexion(connexion);
+					
+					
 				
 				}
 				catch(Exception ex){
@@ -100,23 +102,7 @@ public class Serveur implements Runnable{
 		}
 	}
 	
-	public void nouveauJoueur(Connexion c){		
-		
-		// Premier joueur = serveur
-		if(joueurs.get(1) == null)		
-			joueurs.put(1,c);			
-		
-		else if(joueurs.get(2) == null)			
-			joueurs.put(2,c);
-			
-	}
-	
-	public void nouvelleConnexion(Connexion c){		
-		connexions.add(c);	
-		if(joueurs.size() < 2)
-			nouveauJoueur(c);
-		
-		Echange e = new Echange();
+	public void getInfosJoueurs(){
 		Parametres params = new Parametres();	
 		
 		if(joueurs.get(1) != null)
@@ -128,15 +114,38 @@ public class Serveur implements Runnable{
 			params.j2_identifiant = "En attente...";
 		}
 		
-		e.ajouter("parametres", params);	
-		com.recevoir(e, 0);		
+		com.recevoir(new Echange("parametres",params), 0);	
+	}
+	
+	public void nouveauJoueur(Connexion c){		
 		
+		// Premier joueur = serveur
+		if(joueurs.get(1) == null)		
+			joueurs.put(1,c);			
 		
-		if(joueurs.size() > 1){
+		else if(joueurs.get(2) == null)			
+			joueurs.put(2,c);
+		
+			
+		getInfosJoueurs();
+		
+			
+	}
+	
+	public void nouvelleConnexion(Connexion c){		
+		connexions.add(c);	
+		if(joueurs.size() < 2)
+			nouveauJoueur(c);
+		
+		getInfosJoueurs();
+		
+		if(joueurs.size() >= 1){
 			Echange ech = new Echange();
 			ech.ajouter("terrain", com.moteur.t.getTableau());
 			c.envoyer(ech);
 		}
+		
+		
 	}
 	
 	public void terminerConnexion(Connexion c){

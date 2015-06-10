@@ -9,6 +9,7 @@ import ia.*;
 import ihm.*;
 import modele.*;
 import modele.Case.Etat;
+import modele.Parametres.NiveauJoueur;
 import modele.Terrain.Direction;
 import reseau.*;
 
@@ -195,6 +196,7 @@ public class Moteur {
 		joueurCourant = j1;
 		int[] score = { j1.getScore(), j2.getScore() };
 		gestionEvenementGraphique(null,null,null, score, null,null);
+		gestionBouton();
 		actionParametre(dataValue);
 		
 	}
@@ -607,6 +609,7 @@ public class Moteur {
 					jeuIa = joueurCourant.jouer();
 					selectionPion(jeuIa.getpDepart());
 					selectionDestination(jeuIa.getpArrivee());
+					traceTerrain();
 				} while (joueurCourant.IaContinue());
 				com.envoyer(new Echange("chargement",false));
 				finTour();
@@ -624,10 +627,12 @@ public class Moteur {
 		if (Joueur.recupereJoueurOpposant(joueurCourant, j1, j2, false).isJoueurHumain()) {
 			if (i <= 0) {
 				ech2.ajouter("annuler", false);
-				ech2.ajouter("refaire", true);
+				if (i < h.histoPrincipal.size()-1) {
+					ech2.ajouter("refaire", true);
+					}
 			} else {
 				ech2.ajouter("annuler", true);
-				if (i == h.histoPrincipal.size() - 1) {
+				if (i == h.histoPrincipal.size()-1) {
 					ech2.ajouter("refaire", false);
 				} else {
 					ech2.ajouter("refaire", true);
@@ -636,10 +641,12 @@ public class Moteur {
 		} else {
 			if (i <= 1) {
 				ech2.ajouter("annuler", false);
-				ech2.ajouter("refaire", true);
+				if (i < h.histoPrincipal.size()-1) {
+					ech2.ajouter("refaire", true);
+					}
 			} else {
 				ech2.ajouter("annuler", true);
-				if (i == h.histoPrincipal.size() - 1) {
+				if (i == h.histoPrincipal.size()-1) {
 					ech2.ajouter("refaire", false);
 				} else {
 					ech2.ajouter("refaire", true);
@@ -862,6 +869,8 @@ public class Moteur {
 		int[] tabScore = { j1.getScore(), j2.getScore() };
 		ech.ajouter("score", tabScore);
 		com.envoyer(ech);
+		envoiParametre();
+		gestionBouton();
 		if (joueurCourant.isJoueurHumain()) {
 			e = EtatTour.selectionPion;
 		} else {
@@ -876,6 +885,7 @@ public class Moteur {
 	 */
 	public void actionParametre(Object dataValue) {
 		Parametres p = (Parametres) dataValue;
+		
 		if (p.j1_type != null) {
 			if (p.j1_type == Parametres.NiveauJoueur.HUMAIN) {
 				j1.setJoueurHumain(true);
@@ -905,15 +915,16 @@ public class Moteur {
 			}
 		}
 
-		if (p.j1_identifiant != null && p.j1_type == Parametres.NiveauJoueur.HUMAIN)
+		if (p.j1_identifiant != null && j1.isJoueurHumain())
 			j1.setNom(p.j1_identifiant);
 		else
 			p.j1_identifiant = j1.getNom();
 
-		if (p.j2_identifiant != null && p.j2_type == Parametres.NiveauJoueur.HUMAIN)
+		if (p.j2_identifiant != null && j2.isJoueurHumain())
 			j2.setNom(p.j2_identifiant);
 		else
 			p.j2_identifiant = j2.getNom();
+		
 		
 		ech.vider();
 		ech.ajouter("parametres", p);
@@ -977,6 +988,48 @@ public class Moteur {
 		th.start();
 	}
 
+	public void envoiParametre(){
+		Parametres p = new Parametres();
+		p.j1_identifiant = j1.getNom();
+		p.j2_identifiant = j2.getNom();
+		if (j1.isJoueurHumain()){
+			p.j1_type = NiveauJoueur.HUMAIN;
+			}
+		else {
+			switch (j1.getIA().getNiveauDifficulte()){
+			case facile :
+				p.j1_type = NiveauJoueur.FACILE;
+				break;
+			case normal :
+				p.j1_type = NiveauJoueur.MOYEN ;
+				break;
+			case difficile :
+				p.j1_type = NiveauJoueur.DIFFICILE ;
+				break;
+				}
+		}
+		if (j2.isJoueurHumain()){
+			p.j2_type = NiveauJoueur.HUMAIN;
+			}
+		else {
+			switch (j2.getIA().getNiveauDifficulte()){
+			case facile :
+				p.j2_type = NiveauJoueur.FACILE;
+				break;
+			case normal :
+				p.j2_type = NiveauJoueur.MOYEN ;
+				break;
+			case difficile :
+				p.j2_type = NiveauJoueur.DIFFICILE ;
+				break;
+				}
+		}
+		ech.vider();
+		ech.ajouter("parametres", p);
+		com.envoyer(ech);
+	}
+	
+	
 	/**
 	 * Réalise les différentes actions en fonctions des commandes envoyées par l'IHM.
 	 * @param o Contient la commande ainsi qu'un objet qui sera traité dans les actions.

@@ -111,6 +111,9 @@ public class Historique implements Serializable {
 		return histoPrincipal.get(histoPrincipal.size()-1);
 	}
 	
+	public int getSizePrincipal(){
+		return histoPrincipal.size();
+	}
 	
 	/**
 	 * Fait revenir le terrain au tour précédant.
@@ -160,15 +163,15 @@ public class Historique implements Serializable {
 	 * Affiche l'historique en console. Utilisé pour le debug.
 	 */
 	public void afficher() {
-		;//System.out.println("----------------");
+		System.out.println("----------------");
 		for(int it = 0; it < histoPrincipal.size(); it++) {
 			Terrain tmp = histoPrincipal.get(it);
 			//Terrain tmp = histoPrincipal.get(itPrincipal);
-			//tmp.dessineTableauAvecIntersections();
+			tmp.dessineTableauAvecIntersections();
 		}
-		;//System.out.println("----------------");
-		;//System.out.println(itPrincipal);
-		;//System.out.println("----------------");
+		System.out.println("----------------");
+		System.out.println(itPrincipal);
+		System.out.println("----------------");
 	}
 	
 }

@@ -132,13 +132,13 @@ public class IntelligenceArtificielle implements Serializable {
 	 */
 	private TourDeJeu coupDifficile(){
 		TourDeJeu tourSolution = new TourDeJeu();
-		int profondeur = 7;
+		int profondeur = 6;
 		boolean evalGeometrie = true;
 		
 		// ALPHA BETA
 		tourSolution = alphaBeta(profondeur,evalGeometrie);  // simule x-profondeur tours
 											  				 // exemple : profondeur = 3
-											  				 // on va simuler un tour jCourant puis un tour jAdv puis 
+											  				 // on va simuler un tour jCourant puis un tour jAdv puis encore un tour jCourant
 		return tourSolution;	
 	}
 	
@@ -202,12 +202,17 @@ public class IntelligenceArtificielle implements Serializable {
 		TourDeJeu tourCourant;
 		int valTemp = MAX, valRes = MAX;
 		
-		if(profondeur == 0)
-			return 0;
 		
 		// Récupération de tous les tours jouables pour le terrain et le joueur courant
 		listeToursJouables = getToursJouables(terrainCourant, this.getJoueurAdv());
 	
+		if(profondeur == 0){
+			if(evalGeometrie)
+				return -evalGeometrie(terrainCourant, this.getJoueurAdv())  * this.coeffPositionPions;
+			else	
+				return 0;
+		}
+		
 		if(listeToursJouables.isEmpty()) // Si il n'y a plus de tours possibles l'IA a perdu (ou plutôt on a gagné)
 			return MAX;
 
@@ -217,10 +222,7 @@ public class IntelligenceArtificielle implements Serializable {
 			tourCourant = (TourDeJeu) it.next().clone();
 
 			valTemp = -(tourCourant.getValeurResultat() * this.coeffPionsManges); // nombre de pions perdus (mangés par l'adversaire) en négatif
-		
-			if(evalGeometrie)
-				valTemp -= evalGeometrie(tourCourant.getTerrainFinal(), this.getJoueurAdv())  * this.coeffPositionPions;
-			
+					
 			valTemp += max(profondeur-1, alpha, beta, tourCourant.getTerrainFinal(), evalGeometrie);
 
 			valRes = Math.min(valTemp, valRes);
@@ -243,8 +245,12 @@ public class IntelligenceArtificielle implements Serializable {
 		TourDeJeu tourCourant;
 		int valTemp = MIN, valRes = MIN;
 		
-		if(profondeur == 0)
-			return 0;
+		if(profondeur == 0){
+			if(evalGeometrie)
+				return evalGeometrie(terrainCourant, this.getJoueurIA())  * this.coeffPositionPions;
+			else	
+				return 0;
+		}
 		
 		// Récupération de tous les tours jouables pour le terrain et le joueur courant
 		listeToursJouables = getToursJouables(terrainCourant, this.getJoueurIA());	
@@ -258,9 +264,6 @@ public class IntelligenceArtificielle implements Serializable {
 			tourCourant = (TourDeJeu) it.next().clone();
 			
 			valTemp = tourCourant.getValeurResultat() * this.coeffPionsManges;
-			
-			if(evalGeometrie)
-				valTemp += evalGeometrie(tourCourant.getTerrainFinal(), this.getJoueurIA()) * this.coeffPositionPions;
 		
 			valTemp += min(profondeur-1, alpha, beta, tourCourant.getTerrainFinal(), evalGeometrie);
 

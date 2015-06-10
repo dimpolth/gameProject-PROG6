@@ -4,6 +4,8 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 
+import reseau.Communication;
+
 @SuppressWarnings("serial")
 class PopupMenu extends Popup {
 	Bouton boutonMenuReseau, boutonMenuLocal;
@@ -51,5 +53,18 @@ class PopupMenu extends Popup {
 		Bouton boutonMenuQuitter = new Bouton("Quitter le jeu");
 		boutonMenuQuitter.addActionListener(new Ecouteur(Ecouteur.Bouton.QUITTER, i));
 		add(boutonMenuQuitter, contraintes);
+	}
+	
+	public void bloquerSauverCharger(boolean b){
+		
+		if(Communication.enReseau()){			
+			b=true;			
+		}
+		
+		boutonMenuSauvegarder.setEnabled(!b);
+		boutonMenuCharger.setEnabled(!b);
+		
+		
+		
 	}
 }

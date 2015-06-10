@@ -27,6 +27,18 @@ public class Parametres implements Serializable{
 				return DIFFICILE;
 			}
 		}
+		static public int getToIndex(NiveauJoueur  e) {
+			switch(e) {
+			case HUMAIN:
+				return 0;
+			case FACILE:
+				return 1;
+			case MOYEN:
+				return 2;
+			default:
+				return 3;
+			}
+		}
 	}
 	
 	/**
@@ -45,5 +57,12 @@ public class Parametres implements Serializable{
 	 * Type du joueur 2.
 	 */
 	public NiveauJoueur j2_type=null;
+	
+	/**
+	 * Renvoie sous forme de chaîne de caractère le contenu de la classe
+	 */
+	public String toString(){
+		return j1_identifiant+"-"+j2_identifiant+"  -  "+j1_type+"-"+j2_type;
+	}
 
 }

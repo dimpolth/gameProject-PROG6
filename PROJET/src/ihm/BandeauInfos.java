@@ -93,7 +93,7 @@ class BandeauInfos extends JPanel {
 		sPanJ1.setOpaque(false);
 		j1_identifiant = formater(new JLabel("Joueur 1"));
 		sPanJ1.add(j1_identifiant);
-		j1_score = formater(new JLabel("Score : 22"));
+		j1_score = formater(new JLabel("Pions : 22"));
 		sPanJ1.add(j1_score);
 
 		panJ1.add(sPanJ1, BorderLayout.CENTER);
@@ -133,7 +133,7 @@ class BandeauInfos extends JPanel {
 		sPanJ2.setOpaque(false);
 		j2_identifiant = formater(new JLabel("Joueur 2"));
 		sPanJ2.add(j2_identifiant);
-		j2_score = formater(new JLabel("Score : 22"));
+		j2_score = formater(new JLabel("Pions : 22"));
 		sPanJ2.add(j2_score);
 
 		panJ2.setPreferredSize(new Dimension(230, 0));
@@ -182,10 +182,11 @@ class BandeauInfos extends JPanel {
 	 * @param val Nouvelle valeur du score.
 	 */
 	void setScore(int j, int val) {
+		String s = (val>1)?"s":"";
 		if (j == 1)
-			j1_score.setText("Score: " + Integer.toString(val));
+			j1_score.setText(Integer.toString(val)+" pion"+s);
 		else
-			j2_score.setText("Score: " + Integer.toString(val));
+			j2_score.setText(Integer.toString(val)+" pion"+s);
 	}
 
 	/**
