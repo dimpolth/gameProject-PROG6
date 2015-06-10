@@ -117,7 +117,7 @@ public class Moteur {
 	 * Vrai si affichage sur console. Faux sinon. Utilisé en debug.
 	 */
 
-	private boolean trace = true;
+	private boolean trace = false;
 	/**
 	 * Nombre de coups sans prise.
 	 */
@@ -354,7 +354,7 @@ public class Moteur {
 				int[] score = { j1.getScore(), j2.getScore() };
 
 				gestionEvenementGraphique(null, null, l, score);
-				// traceTerrain();
+				traceTerrain();
 
 			}
 		} else if (priseAspi && !prisePercu) {
@@ -364,7 +364,7 @@ public class Moteur {
 			int[] score = { j1.getScore(), j2.getScore() };
 
 			gestionEvenementGraphique(null, null, l, score);
-			// traceTerrain();
+			traceTerrain();
 
 			if (joueurCourant.isJoueurHumain()) {
 				testFinTour();
@@ -380,7 +380,7 @@ public class Moteur {
 			int[] score = { j1.getScore(), j2.getScore() };
 
 			gestionEvenementGraphique(null, null, l, score);
-			// traceTerrain();
+			traceTerrain();
 			if (joueurCourant.isJoueurHumain()) {
 				testFinTour();
 				ech.vider();
@@ -399,7 +399,7 @@ public class Moteur {
 	 * enchaînement.
 	 */
 	public void finTour() {
-		// traceTerrain();
+		traceTerrain();
 		if (joueurCourant.getJoueurID() == Case.Etat.joueur1)
 			joueurCourant = j2;
 		else
@@ -421,7 +421,7 @@ public class Moteur {
 			e = EtatTour.partieFinie;
 		} else {
 			tourEnCours = false;
-			// traceTerrain();
+			traceTerrain();
 			gestionEvenementGraphique();
 			if (joueurCourant.isJoueurHumain())	
 				gestionEvenementGraphique(joueurCourant.getNom(), "Selection du pion", joueurCourant.getJoueurID().getNum());
@@ -447,7 +447,6 @@ public class Moteur {
 	 */
 	public void testFinTour() {
 		pDepart = pArrive;
-		System.out.println("test FIN DE TOUR");
 		if (prisePossible(pDepart, h.histoTour).isEmpty()) {
 			finTour();
 		} else {
@@ -514,7 +513,7 @@ public class Moteur {
 	 */
 	public void gestionEvenementGraphique() {
 		ech.vider();
-		// traceTerrain();
+		traceTerrain();
 		Terrain t2 = t.copie();
 		EvenementGraphique cg = new EvenementGraphique(t2.getTableau());
 		ech.ajouter("coup", cg);
@@ -608,8 +607,6 @@ public class Moteur {
 					jeuIa = joueurCourant.jouer();
 					selectionPion(jeuIa.getpDepart());
 					selectionDestination(jeuIa.getpArrivee());
-					System.out.println("l'Ia joue"+jeuIa.getpDepart()+" | "+jeuIa.getpArrivee());
-					// traceTerrain();
 				} while (joueurCourant.IaContinue());
 				com.envoyer(new Echange("chargement",false));
 				finTour();
@@ -687,7 +684,7 @@ public class Moteur {
 				ech.vider();
 				ech.ajouter("finTour", true);
 				com.envoyer(ech, joueurCourant.getJoueurID().getNum());
-				// traceTerrain();
+				traceTerrain();
 				testFinTour();
 			}
 		}
@@ -865,12 +862,6 @@ public class Moteur {
 		int[] tabScore = { j1.getScore(), j2.getScore() };
 		ech.ajouter("score", tabScore);
 		com.envoyer(ech);
-		
-		System.out.println("joueur 1 :"+j1.isJoueurHumain());
-		System.out.println("joueur 2 :"+j2.isJoueurHumain());
-		System.out.println("joueur 2 :"+j2.getIA().getNiveauDifficulte());
-		
-		
 		if (joueurCourant.isJoueurHumain()) {
 			e = EtatTour.selectionPion;
 		} else {
@@ -927,7 +918,6 @@ public class Moteur {
 		ech.vider();
 		ech.ajouter("parametres", p);
 		com.envoyer(ech);
-		//message("bandeauSup", joueurCourant.getNom());
 		if (joueurCourant.isJoueurHumain()) {
 			gestionEvenementGraphique(joueurCourant.getNom(), "Selection du pion", joueurCourant.getJoueurID().getNum());
 			e = EtatTour.selectionPion;
@@ -981,7 +971,7 @@ public class Moteur {
 					Point temp = new Point(tempDebut.x + offset.x, tempArrive.y + offset.y);
 					actionPoint((Object) temp);
 				}
-				// t.dessineTableauAvecIntersections();
+				traceTerrain();
 			}
 		};
 		th.start();
