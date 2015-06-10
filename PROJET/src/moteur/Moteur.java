@@ -195,6 +195,9 @@ public class Moteur {
 		listePointDebut = new ArrayList<Point>();
 		joueurCourant = j1;
 		int[] score = { j1.getScore(), j2.getScore() };
+		ech.vider();
+		ech.ajouter("aide",false);
+		com.envoyer(ech,joueurCourant.getJoueurID().getNum());
 		gestionEvenementGraphique(null,null,null, score, null,null);
 		gestionBouton();
 		actionParametre(dataValue);
@@ -413,6 +416,7 @@ public class Moteur {
 		ech.ajouter("annuler", false);
 		ech.ajouter("refaire", false);
 		ech.ajouter("finTour", false);
+		ech.ajouter("aide",false);
 		ech.ajouter("aide", false);
 
 		com.envoyer(ech);
@@ -432,7 +436,7 @@ public class Moteur {
 			if (joueurCourant.isJoueurHumain()) {
 				ech.vider();
 				ech.ajouter("aide", true);
-				com.envoyer(ech);
+				com.envoyer(ech,joueurCourant.getJoueurID().getNum());
 				e = EtatTour.selectionPion;
 			} else {
 				ech.vider();
@@ -931,6 +935,9 @@ public class Moteur {
 		com.envoyer(ech);
 		if (joueurCourant.isJoueurHumain()) {
 			gestionEvenementGraphique(joueurCourant.getNom(), "Selection du pion", joueurCourant.getJoueurID().getNum());
+			ech.vider();
+			ech.ajouter("aide", true);
+			com.envoyer(ech,joueurCourant.getJoueurID().getNum());
 			e = EtatTour.selectionPion;
 		} else {
 			gestionEvenementGraphique(joueurCourant.getNom(), "en train de jouer", joueurCourant.getJoueurID().getNum());
