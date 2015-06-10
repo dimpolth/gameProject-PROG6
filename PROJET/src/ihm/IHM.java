@@ -657,7 +657,6 @@ public class IHM extends JFrame implements ComponentListener {
 				bandeauInfos.setIdentifiant(2, params.j2_identifiant);
 				if(!Communication.enReseau()){
 					popupO.identifiantJoueur2.setText(params.j2_identifiant);
-					System.out.println("recevoir parametres : "+params.j2_identifiant+" ("+Communication.enReseau()+")");
 				}
 			}
 			
